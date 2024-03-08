@@ -24,6 +24,7 @@
 #include <afx.h>
 #include <memory>
 #include <array>
+#include <string>
 
 bool deleteFile(const std::string& u8FilePath);
 
@@ -52,6 +53,10 @@ void HSVToRGB(const unsigned char hsv[3], unsigned char rgb[3]);
 std::array<unsigned char, 3> HSVToRGB(float h, float s, float v);
 std::array<unsigned char, 3> HSVToRGB(const unsigned char hsv[3]);
 
+bool IsNullOrEmpty(const char* pSource);
+bool IsNullOrWhitespace(const char* pSource);
+bool IsNoneOrEmpty(const char* pSource);
+
 void GetDrawBorder(const BYTE* data, int width, int line, int& left, int& right, unsigned int flags, BOOL* TranspInside = NULL);
 
 // String conversion
@@ -61,16 +66,16 @@ std::string utf16ToUtf8(const std::wstring& utf16);
 std::string utf16ToACP(const std::wstring& utf16);
 
 // map functions
-int GetNodeAt(string& owner, string& type, int x, int y);
-int SetNodeAt(string owner, string type, int x, int y);
-void ClearNode(int n, string owner);
+int GetNodeAt(std::string& owner, std::string& type, int x, int y);
+int SetNodeAt(std::string owner, std::string type, int x, int y);
+void ClearNode(int n, std::string owner);
 CString GetFreeID();
 
 
 void HandleParamList(CComboBox &cb, int type);
 
 // sets 0 if there is a space in the string, so truncates it at the first space occupation
-void TruncSpace(string& str);
+void TruncSpace(std::string& str);
 void TruncSpace(CString& str);
 
 // checks if a file exists

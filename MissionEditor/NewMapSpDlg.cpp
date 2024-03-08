@@ -84,9 +84,9 @@ BOOL CNewMapSpDlg::OnInitDialog()
 	
 	CComboBox& house=*((CComboBox*)(GetDlgItem(IDC_HOUSE)));
 	int i;
-	for(i=0;i<rules.sections[HOUSES].values.size();i++)
+	for(i=0;i<CIniFile::Rules.sections[HOUSES].values.size();i++)
 	{
-		house.AddString(TranslateHouse(*rules.sections[HOUSES].GetValue(i), TRUE));
+		house.AddString(TranslateHouse(*CIniFile::Rules.sections[HOUSES].GetValue(i), TRUE));
 	}
 
 	m_PrepareHouses=TRUE;

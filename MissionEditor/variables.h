@@ -29,25 +29,12 @@
 #include "FinalSun.h"
 #include "MapData.h"
 
+#include "MultimapHelper.h"
+
 // the map
 extern CMapData* Map;
 
-// the ini files:
-extern CIniFile rules;
-extern CIniFile art;
-extern CIniFile ai;
-extern CIniFile sound;
-extern CIniFile eva;
-extern CIniFile theme;
-extern CIniFile g_data;
-extern CIniFile language;
-extern CIniFile tiles_t;
-extern CIniFile tiles_s;
-extern CIniFile tiles_u;
-extern CIniFile tiles_un; // new urbannmd.ini
-extern CIniFile tiles_l; // new lunarmd.ini
-extern CIniFile tiles_d; // new desertmd.ini
-extern CIniFile* tiles;
+extern MultimapHelper MapRules;
 
 // first time options are shown (at startup)
 extern BOOL bOptionsStartup;

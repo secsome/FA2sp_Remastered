@@ -50,31 +50,31 @@ inline BOOL isFalse(CString expr)
 // retrieve the picture filename of a unit (as it is saved in the pics map). The returned file may not exist in the pics map (you need to do a check!).
 inline CString GetUnitPictureFilename(LPCTSTR lpUnitName, DWORD dwPicIndex)
 {
-	CIniFile& ini = Map->GetIniFile();
+	CIniFile& ini = Map->UpdateAndGetIniFile();
 
 	CString UnitName = lpUnitName;
 
-	UnitName = rules.sections[lpUnitName].GetValueByName("Image", lpUnitName);
+	UnitName = CIniFile::Rules.sections[lpUnitName].GetValueByName("Image", lpUnitName);
 
 	if (ini.sections.find(lpUnitName) != ini.sections.end())
 		UnitName = ini.sections[lpUnitName].GetValueByName("Image", UnitName);
 
-	if (rules.sections[lpUnitName].values.find("Image") != rules.sections[lpUnitName].values.end())
-		UnitName = rules.sections[lpUnitName].values["Image"];
+	if (CIniFile::Rules.sections[lpUnitName].values.find("Image") != CIniFile::Rules.sections[lpUnitName].values.end())
+		UnitName = CIniFile::Rules.sections[lpUnitName].values["Image"];
 
 	CString artname = UnitName;
 
-	if (art.sections[UnitName].values.find("Image") != art.sections[UnitName].values.end())
+	if (CIniFile::Art.sections[UnitName].values.find("Image") != CIniFile::Art.sections[UnitName].values.end())
 	{
-		if (!isTrue(g_data.sections["IgnoreArtImage"].AccessValueByName(UnitName)))
-			artname = art.sections[UnitName].AccessValueByName("Image");
+		if (!isTrue(CIniFile::FAData.sections["IgnoreArtImage"].AccessValueByName(UnitName)))
+			artname = CIniFile::Art.sections[UnitName].AccessValueByName("Image");
 	}
 		
 
 	CString filename = UnitName;
 
-	if (art.sections[UnitName].FindName("NewTheater") >= 0 && art.sections[UnitName].AccessValueByName("DemandLoad") != "yes")
-		if (art.sections[UnitName].AccessValueByName("NewTheater") == "yes")
+	if (CIniFile::Art.sections[UnitName].FindName("NewTheater") >= 0 && CIniFile::Art.sections[UnitName].AccessValueByName("DemandLoad") != "yes")
+		if (CIniFile::Art.sections[UnitName].AccessValueByName("NewTheater") == "yes")
 			filename.SetAt(1, 'T');
 
 	char n[50];

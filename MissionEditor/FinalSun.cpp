@@ -164,14 +164,14 @@ BOOL CFinalSunApp::InitInstance()
 	std::string datafile = ExePath;
 	datafile += "\\FAData.ini";
 
-	g_data.LoadFile(datafile);
+	CIniFile::FAData.LoadFile(datafile);
 
 	// Load language data
 	std::string languagefile = ExePath;
 	languagefile += "\\FALanguage.ini";
-	language.LoadFile(languagefile);
+	CIniFile::FALanguage.LoadFile(languagefile);
 
-	if (language.sections.size() == 0)
+	if (CIniFile::FALanguage.sections.size() == 0)
 	{
 		MessageBox(0, "FALanguage.ini does not exist or is not valid (download corrupt?)", "", 0);
 		exit(0);
@@ -268,6 +268,7 @@ BOOL CFinalSunApp::InitInstance()
 	{
 		std::unique_ptr<CMapData> mapData(new CMapData());
 		Map = mapData.get();
+		MapRules.AddINI(&Map->GetIniFile());
 
 		CLoading loading(NULL);
 		m_loading = &loading;

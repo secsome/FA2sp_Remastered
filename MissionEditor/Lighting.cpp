@@ -87,7 +87,7 @@ END_MESSAGE_MAP()
 
 void CLighting::UpdateDialog()
 {
-	CIniFile& ini=Map->GetIniFile();
+	CIniFile& ini=Map->UpdateAndGetIniFile();
 
 	m_Ambient.SetWindowText(ini.sections["Lighting"].values["Ambient"]);
 	m_Ambient2.SetWindowText(ini.sections["Lighting"].values["IonAmbient"]);
@@ -118,7 +118,7 @@ BOOL CLighting::OnInitDialog()
 
 void CLighting::OnChangeAmbient() 
 {
-	CIniFile& ini=Map->GetIniFile();
+	CIniFile& ini=Map->UpdateAndGetIniFile();
 
 	CString ctext;
 	m_Ambient.GetWindowText(ctext);
@@ -129,7 +129,7 @@ void CLighting::OnChangeAmbient()
 
 void CLighting::OnChangeLevel() 
 {
-	CIniFile& ini=Map->GetIniFile();
+	CIniFile& ini=Map->UpdateAndGetIniFile();
 
 	CString ctext;
 	m_Level.GetWindowText(ctext);
@@ -145,7 +145,7 @@ void CLighting::OnKillfocusAmbient()
 
 void CLighting::OnChangeRed() 
 {
-	CIniFile& ini=Map->GetIniFile();
+	CIniFile& ini=Map->UpdateAndGetIniFile();
 
 	CString ctext;
 	m_Red.GetWindowText(ctext);
@@ -155,7 +155,7 @@ void CLighting::OnChangeRed()
 
 void CLighting::OnChangeGreen() 
 {
-	CIniFile& ini=Map->GetIniFile();
+	CIniFile& ini=Map->UpdateAndGetIniFile();
 
 	CString ctext;
 	m_Green.GetWindowText(ctext);
@@ -165,7 +165,7 @@ void CLighting::OnChangeGreen()
 
 void CLighting::OnChangeBlue() 
 {
-	CIniFile& ini=Map->GetIniFile();
+	CIniFile& ini=Map->UpdateAndGetIniFile();
 
 	CString ctext;
 	m_Blue.GetWindowText(ctext);
@@ -175,7 +175,7 @@ void CLighting::OnChangeBlue()
 
 void CLighting::OnChangeAmbient2() 
 {
-	CIniFile& ini=Map->GetIniFile();
+	CIniFile& ini=Map->UpdateAndGetIniFile();
 
 	CString ctext;
 	m_Ambient2.GetWindowText(ctext);
@@ -185,7 +185,7 @@ void CLighting::OnChangeAmbient2()
 
 void CLighting::OnChangeLevel2() 
 {
-	CIniFile& ini=Map->GetIniFile();
+	CIniFile& ini=Map->UpdateAndGetIniFile();
 
 	CString ctext;
 	m_Level2.GetWindowText(ctext);
@@ -195,7 +195,7 @@ void CLighting::OnChangeLevel2()
 
 void CLighting::OnChangeRed2() 
 {
-	CIniFile& ini=Map->GetIniFile();
+	CIniFile& ini=Map->UpdateAndGetIniFile();
 
 	CString ctext;
 	m_Red2.GetWindowText(ctext);
@@ -205,7 +205,7 @@ void CLighting::OnChangeRed2()
 
 void CLighting::OnChangeGreen2() 
 {
-	CIniFile& ini=Map->GetIniFile();
+	CIniFile& ini=Map->UpdateAndGetIniFile();
 
 	CString ctext;
 	m_Green2.GetWindowText(ctext);
@@ -215,7 +215,7 @@ void CLighting::OnChangeGreen2()
 
 void CLighting::OnChangeBlue2() 
 {
-	CIniFile& ini=Map->GetIniFile();
+	CIniFile& ini=Map->UpdateAndGetIniFile();
 
 	CString ctext;
 	m_Blue2.GetWindowText(ctext);

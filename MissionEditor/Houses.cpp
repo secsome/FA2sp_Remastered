@@ -111,9 +111,9 @@ void CHouses::UpdateDialog()
 	ListHouses(m_Side, FALSE, TRUE);
 
 	int i;
-	for(i=0;i<rules.sections[HOUSES].values.size();i++)
+	for(i=0;i<CIniFile::Rules.sections[HOUSES].values.size();i++)
 	{
-		CString j=*rules.sections[HOUSES].GetValue(i);
+		CString j=*CIniFile::Rules.sections[HOUSES].GetValue(i);
 		j.MakeLower();
 		if(j=="nod" || j=="gdi") continue;
 				
@@ -122,11 +122,11 @@ void CHouses::UpdateDialog()
 		itoa(i,house_id,10);
 		houseCString=house_id;
 		houseCString+=" ";
-		houseCString+=TranslateHouse(*rules.sections[HOUSES].GetValue(i), TRUE);
+		houseCString+=TranslateHouse(*CIniFile::Rules.sections[HOUSES].GetValue(i), TRUE);
 		m_ActsLike.AddString(houseCString);
 	}
 
-	CIniFile& ini=Map->GetIniFile();
+	CIniFile& ini=Map->UpdateAndGetIniFile();
 
 	if(ini.sections.find(MAPHOUSES)==ini.sections.end() && ini.sections.size()>0)
 	{
@@ -176,7 +176,7 @@ void CHouses::UpdateDialog()
 
 	
 	// ok now color list
-	const auto& rulesColors = rules.sections["Colors"];
+	const auto& rulesColors = CIniFile::Rules.sections["Colors"];
 	for(i=0;i< rulesColors.values.size();i++)
 	{
 		m_Color.AddString(*rulesColors.GetValueName(i));
@@ -205,7 +205,7 @@ BOOL CHouses::OnInitDialog()
 
 void CHouses::OnSelchangeHouses() 
 {
-	CIniFile& ini=Map->GetIniFile();
+	CIniFile& ini=Map->UpdateAndGetIniFile();
 	
 	int cusel;
 	cusel=m_houses.GetCurSel();
@@ -235,26 +235,26 @@ void CHouses::OnSelchangeHouses()
 
 void CHouses::OnPreparehouses() 
 {
-	CIniFile& ini=Map->GetIniFile();
+	CIniFile& ini=Map->UpdateAndGetIniFile();
 
 	if(Map->IsMultiplayer())
 	{
 		ini.sections["Basic"].values["MultiplayerOnly"]="1";
 
 		int i;
-		for (i=0;i<rules.sections[HOUSES].values.size();i++)
+		for (i=0;i<CIniFile::Rules.sections[HOUSES].values.size();i++)
 		{
 			char c[50];
 			int k=i;
 			itoa(k,c,10);
-			CString country=*rules.sections[HOUSES].GetValue(i);
+			CString country=*CIniFile::Rules.sections[HOUSES].GetValue(i);
 
 			// we now create a MAPHOUSE with the same name as the current rules house
 			ini.sections[MAPHOUSES].values[c]=country;
 			
 			ini.sections[country].values["IQ"]="0";
 			ini.sections[country].values["Edge"]="North";
-			ini.sections[country].values["Color"]=rules.sections[country].values["Color"];
+			ini.sections[country].values["Color"]=CIniFile::Rules.sections[country].values["Color"];
 			ini.sections[country].values["Allies"]=country;
 			ini.sections[country].values["Country"]=country;
 			ini.sections[country].values["Credits"]="0";
@@ -269,7 +269,7 @@ void CHouses::OnPreparehouses()
 		return;
 	}
 
-	// import the rules.ini houses
+	// import the CIniFile::Rules.ini houses
 	if(ini.sections.find(MAPHOUSES)!=ini.sections.end())
 	{
 		if(ini.sections[MAPHOUSES].values.size()>0)
@@ -280,15 +280,15 @@ void CHouses::OnPreparehouses()
 	}
 
 	int i;
-	for(i=0;i<rules.sections[HOUSES].values.size();i++)
+	for(i=0;i<CIniFile::Rules.sections[HOUSES].values.size();i++)
 	{
-		AddHouse(GetHouseSectionName(*rules.sections[HOUSES].GetValue(i)));
+		AddHouse(GetHouseSectionName(*CIniFile::Rules.sections[HOUSES].GetValue(i)));
 	}
 }
 
 void CHouses::AddHouse(const char *name)
 {
-	CIniFile& ini=Map->GetIniFile();
+	CIniFile& ini=Map->UpdateAndGetIniFile();
 
 	if(ini.sections.find(name)!=ini.sections.end())
 	{
@@ -345,7 +345,7 @@ void CHouses::AddHouse(const char *name)
 	ini.sections[TranslateHouse(name)].values["Allies"]=TranslateHouse(name);
 
 	CString side=name;
-	side=rules.sections[TranslateHouse(dlg.m_Country)].values["Side"];
+	side=CIniFile::Rules.sections[TranslateHouse(dlg.m_Country)].values["Side"];
 
 	if(strstr(name, "Nod")!=NULL)
 	{
@@ -368,11 +368,11 @@ void CHouses::AddHouse(const char *name)
 	country=TranslateHouse(country);
     ini.sections[country].values["ParentCountry"]=dlg.m_Country;
 	ini.sections[country].values["Name"]=country;
-	ini.sections[country].values["Suffix"]=rules.sections[dlg.m_Country].values["Suffix"];
-	ini.sections[country].values["Prefix"]=rules.sections[dlg.m_Country].values["Prefix"];
-	ini.sections[country].values["Color"]=rules.sections[dlg.m_Country].values["Color"];
-	ini.sections[country].values["Side"]=rules.sections[dlg.m_Country].values["Side"];
-	ini.sections[country].values["SmartAI"]=rules.sections[dlg.m_Country].values["SmartAI"];
+	ini.sections[country].values["Suffix"]=CIniFile::Rules.sections[dlg.m_Country].values["Suffix"];
+	ini.sections[country].values["Prefix"]=CIniFile::Rules.sections[dlg.m_Country].values["Prefix"];
+	ini.sections[country].values["Color"]=CIniFile::Rules.sections[dlg.m_Country].values["Color"];
+	ini.sections[country].values["Side"]=CIniFile::Rules.sections[dlg.m_Country].values["Side"];
+	ini.sections[country].values["SmartAI"]=CIniFile::Rules.sections[dlg.m_Country].values["SmartAI"];
 	ini.sections[country].values["CostUnitsMult"]="1";
 
 	int cusel=m_houses.GetCurSel();
@@ -385,7 +385,7 @@ void CHouses::OnShowWindow(BOOL bShow, UINT nStatus)
 {
 	CDialog::OnShowWindow(bShow, nStatus);
 
-	CIniFile& ini=Map->GetIniFile();
+	CIniFile& ini=Map->UpdateAndGetIniFile();
 	
 	if(bShow)
 	{
@@ -424,7 +424,7 @@ void CHouses::OnAddhouse()
 
 void CHouses::OnDeletehouse() 
 {
-	CIniFile& ini=Map->GetIniFile();
+	CIniFile& ini=Map->UpdateAndGetIniFile();
 
 	int cusel;
 	cusel=m_houses.GetCurSel();
@@ -461,7 +461,7 @@ void CHouses::OnDeletehouse()
 
 void CHouses::OnKillfocusIq() 
 {
-	CIniFile& ini=Map->GetIniFile();
+	CIniFile& ini=Map->UpdateAndGetIniFile();
 
 	SetMainStatusBarReady();
 
@@ -482,7 +482,7 @@ void CHouses::OnKillfocusIq()
 
 void CHouses::OnKillfocusEdge() 
 {
-	CIniFile& ini=Map->GetIniFile();
+	CIniFile& ini=Map->UpdateAndGetIniFile();
 
 	SetMainStatusBarReady();
 
@@ -503,7 +503,7 @@ void CHouses::OnKillfocusEdge()
 
 void CHouses::OnKillfocusSide() 
 {
-	CIniFile& ini=Map->GetIniFile();
+	CIniFile& ini=Map->UpdateAndGetIniFile();
 
 	SetMainStatusBarReady();
 
@@ -525,7 +525,7 @@ void CHouses::OnKillfocusSide()
 
 void CHouses::OnKillfocusColor() 
 {
-	CIniFile& ini=Map->GetIniFile();
+	CIniFile& ini=Map->UpdateAndGetIniFile();
 
 	SetMainStatusBarReady();
 
@@ -555,7 +555,7 @@ void CHouses::OnKillfocusColor()
 
 void CHouses::OnKillfocusAllies() 
 {
-	CIniFile& ini=Map->GetIniFile();
+	CIniFile& ini=Map->UpdateAndGetIniFile();
 
 	SetMainStatusBarReady();
 
@@ -577,7 +577,7 @@ void CHouses::OnKillfocusAllies()
 
 void CHouses::OnKillfocusCredits() 
 {
-	CIniFile& ini=Map->GetIniFile();
+	CIniFile& ini=Map->UpdateAndGetIniFile();
 
 	SetMainStatusBarReady();
 
@@ -598,7 +598,7 @@ void CHouses::OnKillfocusCredits()
 
 void CHouses::OnEditchangeActslike() 
 {
-	CIniFile& ini=Map->GetIniFile();
+	CIniFile& ini=Map->UpdateAndGetIniFile();
 
 	SetMainStatusBarReady();
 
@@ -623,7 +623,7 @@ void CHouses::OnEditchangeActslike()
 
 void CHouses::OnKillfocusNodecount() 
 {
-	CIniFile& ini=Map->GetIniFile();
+	CIniFile& ini=Map->UpdateAndGetIniFile();
 
 	SetMainStatusBarReady();
 
@@ -644,7 +644,7 @@ void CHouses::OnKillfocusNodecount()
 
 void CHouses::OnKillfocusTechlevel() 
 {
-	CIniFile& ini=Map->GetIniFile();
+	CIniFile& ini=Map->UpdateAndGetIniFile();
 
 	SetMainStatusBarReady();
 
@@ -665,7 +665,7 @@ void CHouses::OnKillfocusTechlevel()
 
 void CHouses::OnKillfocusPercentbuilt() 
 {
-	CIniFile& ini=Map->GetIniFile();
+	CIniFile& ini=Map->UpdateAndGetIniFile();
 
 	SetMainStatusBarReady();
 
@@ -686,7 +686,7 @@ void CHouses::OnKillfocusPercentbuilt()
 
 void CHouses::OnKillfocusPlayercontrol() 
 {
-	CIniFile& ini=Map->GetIniFile();
+	CIniFile& ini=Map->UpdateAndGetIniFile();
 
 	SetMainStatusBarReady();
 
@@ -707,7 +707,7 @@ void CHouses::OnKillfocusPlayercontrol()
 
 void CHouses::OnSelchangeHumanplayer() 
 {
-	CIniFile& ini=Map->GetIniFile();
+	CIniFile& ini=Map->UpdateAndGetIniFile();
 
 	CString pl;
 	m_HumanPlayer.GetLBText(m_HumanPlayer.GetCurSel(),pl);
@@ -725,7 +725,7 @@ void CHouses::OnSelchangeHumanplayer()
 
 void CHouses::OnSelchangeActslike() 
 {
-	CIniFile& ini=Map->GetIniFile();
+	CIniFile& ini=Map->UpdateAndGetIniFile();
 
 	int cusel;
 	cusel=m_houses.GetCurSel();

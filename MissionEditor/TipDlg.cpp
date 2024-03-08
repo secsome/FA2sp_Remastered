@@ -67,7 +67,7 @@ CTipDlg::CTipDlg(CWnd* pParent /*=NULL*/)
 	// try top open the tips file
 	CString tipsfile=ExePath;
 	tipsfile+="\\tips.";
-	tipsfile+=language.sections[theApp.m_Options.LanguageName+"Header"].values["ExtensionName"];
+	tipsfile+=CIniFile::FALanguage.sections[theApp.m_Options.LanguageName+"Header"].values["ExtensionName"];
 
 	m_pStream = fopen(tipsfile, "r");
 	if (m_pStream == NULL) 

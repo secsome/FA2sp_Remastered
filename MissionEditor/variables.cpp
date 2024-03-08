@@ -32,26 +32,14 @@ VARIABLES USED
 #include <Shlobj.h>
 #include "MapTool.h"
 #include "inlines.h"
+#include "MultimapHelper.h"
+
 #include <string>
 #include <codecvt>
 
 /**INI Files**/
-CIniFile rules;
-CIniFile art;
-CIniFile ai;
-CIniFile sound;
-CIniFile eva; 
-CIniFile theme;
-CIniFile g_data;
-CIniFile language;
-CIniFile tiles_t; // temperat.ini shouldn´t be used except in CMapData::UpdateIniFile() and CLoading
-CIniFile tiles_s; // snow.ini shouldn´t be used except in CMapData::UpdateIniFile() and CLoading
-CIniFile tiles_u; // urban.ini ...
-CIniFile tiles_un; // new urbannmd.ini
-CIniFile tiles_l; // lunarmd.ini
-CIniFile tiles_d; // desertmd.ini
-CIniFile* tiles=NULL; // this should be used by every class/function except CMapData::UpdateIniFile();
-/*************/
+
+MultimapHelper MapRules{ &CIniFile::Rules };
 
 /* the mapdata! */
 CMapData* Map;

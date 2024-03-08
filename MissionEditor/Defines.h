@@ -25,7 +25,7 @@
 
 // set NOSURFACES to use palettized tile drawing - probably slower, but using less memory
 #define NOSURFACES
-#define NOSURFACES_EXTRACT // this will cause tiles to be extracted
+#define NOSURFACES_EXTRACT // this will cause CIniFile::CurrentTheater to be extracted
 // #undef NOSURFACES // enable this if display is too slow
 
 // set NOSURFACES_OBJECTS to use palettized object & overlay drawing - slower, but better display
@@ -67,7 +67,7 @@
 #define ACTIONMODE_CELLTAG 4 // any celltag editing
 #define ACTIONMODE_NODE 5 // any node editing
 #define ACTIONMODE_MAPTOOL 6
-#define ACTIONMODE_SETTILE 10 // setting ground tiles
+#define ACTIONMODE_SETTILE 10 // setting ground CIniFile::CurrentTheater
 #define ACTIONMODE_HEIGHTEN 11 // heighten ground
 #define ACTIONMODE_LOWER 12 // lower ground
 #define ACTIONMODE_LOWERTILE 13

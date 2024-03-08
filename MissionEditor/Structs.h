@@ -185,8 +185,8 @@ struct TILEDATA{
 	TILEDATA() = default;
 	~TILEDATA();
 	WORD wTileSet = 0;
-	SUBTILE* tiles = nullptr; // the different tiles
-	WORD wTileCount = 0; // number of tiles	
+	SUBTILE* tiles = nullptr; // the different CIniFile::CurrentTheater
+	WORD wTileCount = 0; // number of CIniFile::CurrentTheater	
 	WORD cx = 0;
 	WORD cy = 0;
 	BOOL bAllowTiberium = 0;
@@ -231,7 +231,7 @@ struct SIDEINFO{
 
 struct HOUSEINFO{
 	CString name;
-	SIDEINFO* side; // side is used for rules.ini owner= settings
+	SIDEINFO* side; // side is used for CIniFile::Rules.ini owner= settings
 	RGBTRIPLE color;
 	BOOL bPlayable;
 };

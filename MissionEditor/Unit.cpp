@@ -86,11 +86,11 @@ END_MESSAGE_MAP()
 
 void CUnit::Init(CString house, CString strength, CString direction, CString action, CString tag, CString flag1, CString flag2, CString flag3, CString flag4, CString flag5, CString flag6)
 {
-	CIniFile& ini=Map->GetIniFile();
+	CIniFile& ini=Map->UpdateAndGetIniFile();
 
 	if(house=="") 
 	{
-		m_house=*rules.sections["Houses"].GetValue(0);
+		m_house=*CIniFile::Rules.sections["Houses"].GetValue(0);
 		if(ini.sections.find("Houses")!=ini.sections.end())
 			if(ini.sections["Houses"].values.size()>0)
 				m_house=TranslateHouse(*ini.sections["Houses"].GetValue(0), TRUE);

@@ -307,7 +307,7 @@ CString GetWaypoint(int n)
 // Behandlungsroutinen für Nachrichten CTeamTypes 
 void CTeamTypes::UpdateDialog()
 {
-	CIniFile& ini=Map->GetIniFile();
+	CIniFile& ini=Map->UpdateAndGetIniFile();
 
 	CComboBox& taskforces=*(CComboBox*)GetDlgItem(IDC_TASKFORCE);
 	CComboBox& scripts=*(CComboBox*)GetDlgItem(IDC_SCRIPT);
@@ -416,7 +416,7 @@ void CTeamTypes::UpdateDialog()
 	house=(CComboBox*)GetDlgItem(IDC_HOUSE);
 
 	/*while(house->DeleteString(0)!=CB_ERR);
-	// houses:  rules.ini + map definitions!
+	// houses:  CIniFile::Rules.ini + map definitions!
 	if(ini.sections.find("Houses")!=ini.sections.end())
 	{
 		if(ini.sections["Houses"].values.size()==0) goto wasnohouse;
@@ -429,9 +429,9 @@ void CTeamTypes::UpdateDialog()
 	else
 	{
 		wasnohouse:
-		for(i=0;i<rules.sections["Houses"].values.size();i++)
+		for(i=0;i<CIniFile::Rules.sections["Houses"].values.size();i++)
 		{
-			house->AddString(*rules.sections["Houses"].GetValue(i));		
+			house->AddString(*CIniFile::Rules.sections["Houses"].GetValue(i));		
 		}				
 	}*/
 	ListHouses(*house, FALSE, TRUE, TRUE);
@@ -440,7 +440,7 @@ void CTeamTypes::UpdateDialog()
 	wayp=(CComboBox*)GetDlgItem(IDC_WAYPOINT);
 
 	while(wayp->DeleteString(0)!=CB_ERR);
-	// houses:  rules.ini + map definitions!
+	// houses:  CIniFile::Rules.ini + map definitions!
 	if(ini.sections.find("Waypoints")!=ini.sections.end())
 	{
 		for(i=0;i<ini.sections["Waypoints"].values.size();i++)
@@ -452,7 +452,7 @@ void CTeamTypes::UpdateDialog()
 	wayp=(CComboBox*)GetDlgItem(IDC_TRANSPORTWAYPOINT);
 
 	while(wayp->DeleteString(0)!=CB_ERR);
-	// houses:  rules.ini + map definitions!
+	// houses:  CIniFile::Rules.ini + map definitions!
 	wayp->SetItemData(wayp->InsertString(0,TranslateStringACP("None")),0);
 	
 	if(ini.sections.find("Waypoints")!=ini.sections.end())
@@ -472,7 +472,7 @@ void CTeamTypes::UpdateDialog()
 
 void CTeamTypes::OnSelchangeTeamtypes() 
 {
-	CIniFile& ini=Map->GetIniFile();
+	CIniFile& ini=Map->UpdateAndGetIniFile();
 
 	if(m_TeamTypes.GetCurSel()<0) return;
 
@@ -560,7 +560,7 @@ void CTeamTypes::OnSelchangeTeamtypes()
 
 void CTeamTypes::OnChangeName() 
 {
-	CIniFile& ini=Map->GetIniFile();
+	CIniFile& ini=Map->UpdateAndGetIniFile();
 
 	UpdateData(TRUE);
 	if(m_TeamTypes.GetCount()==0) return;
@@ -582,7 +582,7 @@ void CTeamTypes::OnChangeName()
 
 void CTeamTypes::OnDeleteteamtype() 
 {
-	CIniFile& ini=Map->GetIniFile();
+	CIniFile& ini=Map->UpdateAndGetIniFile();
 
 	if(m_TeamTypes.GetCurSel()!=-1)
 	{
@@ -594,7 +594,7 @@ void CTeamTypes::OnDeleteteamtype()
 		TruncSpace(str);
 
 		int i;
-		CIniFile& ini=Map->GetIniFile();
+		CIniFile& ini=Map->UpdateAndGetIniFile();
 		for(i=0;i<ini.sections["TeamTypes"].values.size();i++)
 		{
 			if(strcmp(str, *ini.sections["TeamTypes"].GetValue(i))==NULL)
@@ -610,7 +610,7 @@ void CTeamTypes::OnDeleteteamtype()
 
 void CTeamTypes::OnEditchangeVeteranlevel() 
 {
-	CIniFile& ini=Map->GetIniFile();
+	CIniFile& ini=Map->UpdateAndGetIniFile();
 
 	UpdateData(TRUE);
 	if(m_TeamTypes.GetCount()==0) return;
@@ -625,7 +625,7 @@ void CTeamTypes::OnEditchangeVeteranlevel()
 
 void CTeamTypes::OnEditchangeHouse() 
 {
-	CIniFile& ini=Map->GetIniFile();
+	CIniFile& ini=Map->UpdateAndGetIniFile();
 
 	UpdateData(TRUE);
 	if(m_TeamTypes.GetCount()==0) return;
@@ -640,7 +640,7 @@ void CTeamTypes::OnEditchangeHouse()
 
 void CTeamTypes::OnChangePriority() 
 {
-	CIniFile& ini=Map->GetIniFile();
+	CIniFile& ini=Map->UpdateAndGetIniFile();
 
 	UpdateData(TRUE);
 	if(m_TeamTypes.GetCount()==0) return;
@@ -655,7 +655,7 @@ void CTeamTypes::OnChangePriority()
 
 void CTeamTypes::OnChangeMax() 
 {
-	CIniFile& ini=Map->GetIniFile();
+	CIniFile& ini=Map->UpdateAndGetIniFile();
 
 	UpdateData(TRUE);
 	if(m_TeamTypes.GetCount()==0) return;
@@ -670,7 +670,7 @@ void CTeamTypes::OnChangeMax()
 
 void CTeamTypes::OnEditchangeTechlevel() 
 {
-	CIniFile& ini=Map->GetIniFile();
+	CIniFile& ini=Map->UpdateAndGetIniFile();
 
 	UpdateData(TRUE);
 	if(m_TeamTypes.GetCount()==0) return;
@@ -685,7 +685,7 @@ void CTeamTypes::OnEditchangeTechlevel()
 
 void CTeamTypes::OnEditchangeGroup() 
 {
-	CIniFile& ini=Map->GetIniFile();
+	CIniFile& ini=Map->UpdateAndGetIniFile();
 
 	UpdateData(TRUE);
 	if(m_TeamTypes.GetCount()==0) return;
@@ -702,7 +702,7 @@ void CTeamTypes::OnEditchangeGroup()
 
 void CTeamTypes::OnEditchangeWaypoint() 
 {
-	CIniFile& ini=Map->GetIniFile();
+	CIniFile& ini=Map->UpdateAndGetIniFile();
 
 	UpdateData(TRUE);
 	if(m_TeamTypes.GetCount()==0) return;
@@ -719,7 +719,7 @@ void CTeamTypes::OnEditchangeWaypoint()
 
 void CTeamTypes::OnEditchangeScript() 
 {
-	CIniFile& ini=Map->GetIniFile();
+	CIniFile& ini=Map->UpdateAndGetIniFile();
 
 	UpdateData(TRUE);
 	if(m_TeamTypes.GetCount()==0) return;
@@ -737,7 +737,7 @@ void CTeamTypes::OnEditchangeScript()
 
 void CTeamTypes::OnEditchangeTaskforce() 
 {
-	CIniFile& ini=Map->GetIniFile();
+	CIniFile& ini=Map->UpdateAndGetIniFile();
 
 	UpdateData(TRUE);
 	if(m_TeamTypes.GetCount()==0) return;
@@ -812,7 +812,7 @@ void CTeamTypes::OnShowWindow(BOOL bShow, UINT nStatus)
 
 void CTeamTypes::OnLoadable() 
 {
-	CIniFile& ini=Map->GetIniFile();
+	CIniFile& ini=Map->UpdateAndGetIniFile();
 
 	UpdateData(TRUE);
 	if(m_TeamTypes.GetCount()==0) return;
@@ -827,7 +827,7 @@ void CTeamTypes::OnLoadable()
 
 void CTeamTypes::OnFull() 
 {
-	CIniFile& ini=Map->GetIniFile();
+	CIniFile& ini=Map->UpdateAndGetIniFile();
 
 	UpdateData(TRUE);
 	if(m_TeamTypes.GetCount()==0) return;
@@ -842,7 +842,7 @@ void CTeamTypes::OnFull()
 
 void CTeamTypes::OnAnnoyance() 
 {
-	CIniFile& ini=Map->GetIniFile();
+	CIniFile& ini=Map->UpdateAndGetIniFile();
 
 	UpdateData(TRUE);
 	if(m_TeamTypes.GetCount()==0) return;
@@ -857,7 +857,7 @@ void CTeamTypes::OnAnnoyance()
 
 void CTeamTypes::OnGuardslower() 
 {
-	CIniFile& ini=Map->GetIniFile();
+	CIniFile& ini=Map->UpdateAndGetIniFile();
 
 	UpdateData(TRUE);
 	if(m_TeamTypes.GetCount()==0) return;
@@ -872,7 +872,7 @@ void CTeamTypes::OnGuardslower()
 
 void CTeamTypes::OnRecruiter() 
 {
-	CIniFile& ini=Map->GetIniFile();
+	CIniFile& ini=Map->UpdateAndGetIniFile();
 
 	UpdateData(TRUE);
 	if(m_TeamTypes.GetCount()==0) return;
@@ -887,7 +887,7 @@ void CTeamTypes::OnRecruiter()
 
 void CTeamTypes::OnDroppod() 
 {
-	CIniFile& ini=Map->GetIniFile();
+	CIniFile& ini=Map->UpdateAndGetIniFile();
 
 	UpdateData(TRUE);
 	if(m_TeamTypes.GetCount()==0) return;
@@ -902,7 +902,7 @@ void CTeamTypes::OnDroppod()
 
 void CTeamTypes::OnWhiner() 
 {
-	CIniFile& ini=Map->GetIniFile();
+	CIniFile& ini=Map->UpdateAndGetIniFile();
 
 	UpdateData(TRUE);
 	if(m_TeamTypes.GetCount()==0) return;
@@ -917,7 +917,7 @@ void CTeamTypes::OnWhiner()
 
 void CTeamTypes::OnLooserecruit() 
 {
-	CIniFile& ini=Map->GetIniFile();
+	CIniFile& ini=Map->UpdateAndGetIniFile();
 
 	UpdateData(TRUE);
 	if(m_TeamTypes.GetCount()==0) return;
@@ -932,7 +932,7 @@ void CTeamTypes::OnLooserecruit()
 
 void CTeamTypes::OnAggressive() 
 {
-	CIniFile& ini=Map->GetIniFile();
+	CIniFile& ini=Map->UpdateAndGetIniFile();
 
 	UpdateData(TRUE);
 	if(m_TeamTypes.GetCount()==0) return;
@@ -947,7 +947,7 @@ void CTeamTypes::OnAggressive()
 
 void CTeamTypes::OnSuicide() 
 {
-	CIniFile& ini=Map->GetIniFile();
+	CIniFile& ini=Map->UpdateAndGetIniFile();
 
 	UpdateData(TRUE);
 	if(m_TeamTypes.GetCount()==0) return;
@@ -962,7 +962,7 @@ void CTeamTypes::OnSuicide()
 
 void CTeamTypes::OnAutocreate() 
 {
-	CIniFile& ini=Map->GetIniFile();
+	CIniFile& ini=Map->UpdateAndGetIniFile();
 
 	UpdateData(TRUE);
 	if(m_TeamTypes.GetCount()==0) return;
@@ -977,7 +977,7 @@ void CTeamTypes::OnAutocreate()
 
 void CTeamTypes::OnPrebuild() 
 {
-	CIniFile& ini=Map->GetIniFile();
+	CIniFile& ini=Map->UpdateAndGetIniFile();
 
 	UpdateData(TRUE);
 	if(m_TeamTypes.GetCount()==0) return;
@@ -992,7 +992,7 @@ void CTeamTypes::OnPrebuild()
 
 void CTeamTypes::OnOntransonly() 
 {
-	CIniFile& ini=Map->GetIniFile();
+	CIniFile& ini=Map->UpdateAndGetIniFile();
 
 	UpdateData(TRUE);
 	if(m_TeamTypes.GetCount()==0) return;
@@ -1007,7 +1007,7 @@ void CTeamTypes::OnOntransonly()
 
 void CTeamTypes::OnReinforce() 
 {
-	CIniFile& ini=Map->GetIniFile();
+	CIniFile& ini=Map->UpdateAndGetIniFile();
 
 	UpdateData(TRUE);
 	if(m_TeamTypes.GetCount()==0) return;
@@ -1022,7 +1022,7 @@ void CTeamTypes::OnReinforce()
 
 void CTeamTypes::OnAvoidthreats() 
 {
-	CIniFile& ini=Map->GetIniFile();
+	CIniFile& ini=Map->UpdateAndGetIniFile();
 
 	UpdateData(TRUE);
 	if(m_TeamTypes.GetCount()==0) return;
@@ -1037,7 +1037,7 @@ void CTeamTypes::OnAvoidthreats()
 
 void CTeamTypes::OnIonimmune() 
 {
-	CIniFile& ini=Map->GetIniFile();
+	CIniFile& ini=Map->UpdateAndGetIniFile();
 
 	UpdateData(TRUE);
 	if(m_TeamTypes.GetCount()==0) return;
@@ -1052,7 +1052,7 @@ void CTeamTypes::OnIonimmune()
 
 void CTeamTypes::OnTransportreturnsonunload() 
 {
-	CIniFile& ini=Map->GetIniFile();
+	CIniFile& ini=Map->UpdateAndGetIniFile();
 
 	UpdateData(TRUE);
 	if(m_TeamTypes.GetCount()==0) return;
@@ -1067,7 +1067,7 @@ void CTeamTypes::OnTransportreturnsonunload()
 
 void CTeamTypes::OnAreteammembersrecruitable() 
 {
-	CIniFile& ini=Map->GetIniFile();
+	CIniFile& ini=Map->UpdateAndGetIniFile();
 
 	UpdateData(TRUE);
 	if(m_TeamTypes.GetCount()==0) return;
@@ -1082,7 +1082,7 @@ void CTeamTypes::OnAreteammembersrecruitable()
 
 void CTeamTypes::OnIsbasedefense() 
 {
-	CIniFile& ini=Map->GetIniFile();
+	CIniFile& ini=Map->UpdateAndGetIniFile();
 
 	UpdateData(TRUE);
 	if(m_TeamTypes.GetCount()==0) return;
@@ -1097,7 +1097,7 @@ void CTeamTypes::OnIsbasedefense()
 
 void CTeamTypes::OnOnlytargethouseenemy() 
 {
-	CIniFile& ini=Map->GetIniFile();
+	CIniFile& ini=Map->UpdateAndGetIniFile();
 
 	UpdateData(TRUE);
 	if(m_TeamTypes.GetCount()==0) return;
@@ -1114,7 +1114,7 @@ CString GetFree(const char* section);
 
 void CTeamTypes::OnNewteamtype() 
 {
-	CIniFile& ini=Map->GetIniFile();
+	CIniFile& ini=Map->UpdateAndGetIniFile();
 
 	CString id=GetFreeID()	;
 	CString p;
@@ -1187,7 +1187,7 @@ void CTeamTypes::OnNewteamtype()
 
 void CTeamTypes::OnEditchangeTag() 
 {
-	CIniFile& ini=Map->GetIniFile();
+	CIniFile& ini=Map->UpdateAndGetIniFile();
 
 	UpdateData(TRUE);
 	if(m_TeamTypes.GetCount()==0) return;
@@ -1214,7 +1214,7 @@ void CTeamTypes::OnKillfocusTag()
 
 void CTeamTypes::OnEditchangeTransportwaypoint() 
 {
-	CIniFile& ini=Map->GetIniFile();
+	CIniFile& ini=Map->UpdateAndGetIniFile();
 
 	UpdateData(TRUE);
 	if(m_TeamTypes.GetCount()==0) return;
@@ -1244,7 +1244,7 @@ void CTeamTypes::OnKillfocusTransportwaypoint()
 
 void CTeamTypes::OnEditchangeMindcontroldecision() 
 {
-	CIniFile& ini=Map->GetIniFile();
+	CIniFile& ini=Map->UpdateAndGetIniFile();
 
 	UpdateData(TRUE);
 	if(m_TeamTypes.GetCount()==0) return;

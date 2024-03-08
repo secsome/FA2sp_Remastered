@@ -161,7 +161,7 @@ END_MESSAGE_MAP()
 
 void CTriggers::UpdateDialog()
 {
-	CIniFile& ini=Map->GetIniFile();
+	CIniFile& ini=Map->UpdateAndGetIniFile();
 	
 
 	int sel=m_Trigger.GetCurSel();
@@ -205,18 +205,18 @@ void CTriggers::UpdateDialog()
 
 	}
 	
-	for(i=0;i<g_data.sections["Events"].values.size();i++)
+	for(i=0;i<CIniFile::FAData.sections["Events"].values.size();i++)
 	{
-		CString eventid=*g_data.sections["Events"].GetValueName(i);
-		CString eventdata=*g_data.sections["Events"].GetValue(i);
+		CString eventid=*CIniFile::FAData.sections["Events"].GetValueName(i);
+		CString eventdata=*CIniFile::FAData.sections["Events"].GetValue(i);
 		CString text=eventid+" "+GetParam(eventdata,0);
 		m_EventType.AddString(text);
 	}
 
-	for(i=0;i<g_data.sections["Actions"].values.size();i++)
+	for(i=0;i<CIniFile::FAData.sections["Actions"].values.size();i++)
 	{
-		CString actionid=*g_data.sections["Actions"].GetValueName(i);
-		CString actiondata=*g_data.sections["Actions"].GetValue(i);
+		CString actionid=*CIniFile::FAData.sections["Actions"].GetValueName(i);
+		CString actiondata=*CIniFile::FAData.sections["Actions"].GetValue(i);
 		CString text=actionid+" "+GetParam(actiondata,0);
 		m_ActionType.AddString(text);
 	}
@@ -255,7 +255,7 @@ void CTriggers::UpdateDialog()
 
 void CTriggers::OnSelchangeTrigger() 
 {
-	CIniFile& ini=Map->GetIniFile();
+	CIniFile& ini=Map->UpdateAndGetIniFile();
 
 	int sel=m_Trigger.GetCurSel();
 	if(sel<0) return;
@@ -324,7 +324,7 @@ void CTriggers::OnSelchangeTrigger()
 
 void CTriggers::OnSelchangeEvent() 
 {
-	CIniFile& ini=Map->GetIniFile();
+	CIniFile& ini=Map->UpdateAndGetIniFile();
 
 	int sel=m_Trigger.GetCurSel();
 	if(sel<0) return;
@@ -361,7 +361,7 @@ void CTriggers::OnSelchangeEvent()
 
 void CTriggers::OnSelchangeAction() 
 {
-	CIniFile& ini=Map->GetIniFile();
+	CIniFile& ini=Map->UpdateAndGetIniFile();
 
 	int sel=m_Trigger.GetCurSel();
 	if(sel<0) return;
@@ -403,7 +403,7 @@ void CTriggers::OnSelchangeAction()
 
 void CTriggers::OnEditchangeHouse() 
 {
-	CIniFile& ini=Map->GetIniFile();
+	CIniFile& ini=Map->UpdateAndGetIniFile();
 
 	int sel=m_Trigger.GetCurSel();
 	if(sel<0) return;
@@ -422,7 +422,7 @@ void CTriggers::OnEditchangeHouse()
 
 void CTriggers::OnSelchangeHouse() 
 {
-	CIniFile& ini=Map->GetIniFile();
+	CIniFile& ini=Map->UpdateAndGetIniFile();
 
 	int csel=m_House.GetCurSel();
 	CString house;
@@ -434,7 +434,7 @@ void CTriggers::OnSelchangeHouse()
 
 void CTriggers::OnChangeName() 
 {
-	CIniFile& ini=Map->GetIniFile();
+	CIniFile& ini=Map->UpdateAndGetIniFile();
 
 	UpdateData();
 	
@@ -460,7 +460,7 @@ void CTriggers::OnChangeName()
 
 void CTriggers::OnChangeFlag1() 
 {
-	CIniFile& ini=Map->GetIniFile();
+	CIniFile& ini=Map->UpdateAndGetIniFile();
 
 	UpdateData();
 
@@ -478,7 +478,7 @@ void CTriggers::OnChangeFlag1()
 
 void CTriggers::OnChangeFlag2() 
 {
-	CIniFile& ini=Map->GetIniFile();
+	CIniFile& ini=Map->UpdateAndGetIniFile();
 
 	UpdateData();
 
@@ -496,7 +496,7 @@ void CTriggers::OnChangeFlag2()
 
 void CTriggers::OnChangeFlag3() 
 {
-	CIniFile& ini=Map->GetIniFile();
+	CIniFile& ini=Map->UpdateAndGetIniFile();
 
 	UpdateData();
 
@@ -515,7 +515,7 @@ void CTriggers::OnChangeFlag3()
 
 void CTriggers::OnChangeFlag4() 
 {
-	CIniFile& ini=Map->GetIniFile();
+	CIniFile& ini=Map->UpdateAndGetIniFile();
 
 	UpdateData();
 
@@ -533,7 +533,7 @@ void CTriggers::OnChangeFlag4()
 
 void CTriggers::OnChangeFlag5() 
 {
-	CIniFile& ini=Map->GetIniFile();
+	CIniFile& ini=Map->UpdateAndGetIniFile();
 
 	UpdateData();
 
@@ -551,7 +551,7 @@ void CTriggers::OnChangeFlag5()
 
 void CTriggers::OnEditchangeTrigger2() 
 {
-	CIniFile& ini=Map->GetIniFile();
+	CIniFile& ini=Map->UpdateAndGetIniFile();
 
 	int sel=m_Trigger.GetCurSel();
 	if(sel<0) return;
@@ -569,7 +569,7 @@ void CTriggers::OnEditchangeTrigger2()
 
 void CTriggers::OnSelchangeTrigger2() 
 {
-	CIniFile& ini=Map->GetIniFile();
+	CIniFile& ini=Map->UpdateAndGetIniFile();
 
 	int csel=m_Trigger2.GetCurSel();
 	CString trg;
@@ -580,7 +580,7 @@ void CTriggers::OnSelchangeTrigger2()
 
 void CTriggers::OnEditchangeEventtype() 
 {
-	CIniFile& ini=Map->GetIniFile();
+	CIniFile& ini=Map->UpdateAndGetIniFile();
 
 	int sel=m_Trigger.GetCurSel();
 	if(sel<0) return;
@@ -607,16 +607,16 @@ void CTriggers::OnEditchangeEventtype()
 	
 	ini.sections["Events"].values[(LPCTSTR)CurrentTrigger]=SetParam(ini.sections["Events"].values[(LPCTSTR)CurrentTrigger], pos, (LPCTSTR)eventtype);
 
-	if(g_data.sections["Events"].FindName(eventtype)<0) return;
+	if(CIniFile::FAData.sections["Events"].FindName(eventtype)<0) return;
 
 	
 	CString ptype[2];
-	ptype[0]=GetParam(g_data.sections["Events"].values[eventtype],1);
-	ptype[1]=GetParam(g_data.sections["Events"].values[eventtype],2);
+	ptype[0]=GetParam(CIniFile::FAData.sections["Events"].values[eventtype],1);
+	ptype[1]=GetParam(CIniFile::FAData.sections["Events"].values[eventtype],2);
 
 	int pListType[2];
-	pListType[0]=atoi(GetParam(g_data.sections["ParamTypes"].values[ptype[0]], 1));
-	pListType[1]=atoi(GetParam(g_data.sections["ParamTypes"].values[ptype[1]], 1));
+	pListType[0]=atoi(GetParam(CIniFile::FAData.sections["ParamTypes"].values[ptype[0]], 1));
+	pListType[1]=atoi(GetParam(CIniFile::FAData.sections["ParamTypes"].values[ptype[1]], 1));
 
 	int i;
 	for(i=0;i<2;i++)
@@ -641,7 +641,7 @@ void CTriggers::OnEditchangeEventtype()
 			continue;
 		}
 
-		*label=GetParam(g_data.sections["ParamTypes"].values[ptype[i]], 0);
+		*label=GetParam(CIniFile::FAData.sections["ParamTypes"].values[ptype[i]], 0);
 
 		
 
@@ -683,7 +683,7 @@ void CTriggers::OnSelchangeEventtype()
 
 void CTriggers::OnEditchangeEventparam1() 
 {
-	CIniFile& ini=Map->GetIniFile();
+	CIniFile& ini=Map->UpdateAndGetIniFile();
 
 	int sel=m_Trigger.GetCurSel();
 	if(sel<0) return;
@@ -716,7 +716,7 @@ void CTriggers::OnSelchangeEventparam1()
 
 void CTriggers::OnEditchangeEventparam2() 
 {
-	CIniFile& ini=Map->GetIniFile();
+	CIniFile& ini=Map->UpdateAndGetIniFile();
 
 	int sel=m_Trigger.GetCurSel();
 	if(sel<0) return;
@@ -749,7 +749,7 @@ void CTriggers::OnSelchangeEventparam2()
 
 void CTriggers::OnEditchangeActiontype() 
 {
-	CIniFile& ini=Map->GetIniFile();
+	CIniFile& ini=Map->UpdateAndGetIniFile();
 
 	int sel=m_Trigger.GetCurSel();
 	if(sel<0) return;
@@ -789,25 +789,25 @@ void CTriggers::OnEditchangeActiontype()
 	
 	ini.sections["Actions"].values[(LPCTSTR)CurrentTrigger]=SetParam(ini.sections["Actions"].values[(LPCTSTR)CurrentTrigger], pos, (LPCTSTR)actiontype);
 
-	if(g_data.sections["Actions"].FindName(actiontype)<0) return;
+	if(CIniFile::FAData.sections["Actions"].FindName(actiontype)<0) return;
 
 	
 	CString ptype[6];
-	ptype[0]=GetParam(g_data.sections["Actions"].values[actiontype],1);
-	ptype[1]=GetParam(g_data.sections["Actions"].values[actiontype],2);
-	ptype[2]=GetParam(g_data.sections["Actions"].values[actiontype],3);
-	ptype[3]=GetParam(g_data.sections["Actions"].values[actiontype],4);
-	ptype[4]=GetParam(g_data.sections["Actions"].values[actiontype],5);
-	ptype[5]=GetParam(g_data.sections["Actions"].values[actiontype],6);
+	ptype[0]=GetParam(CIniFile::FAData.sections["Actions"].values[actiontype],1);
+	ptype[1]=GetParam(CIniFile::FAData.sections["Actions"].values[actiontype],2);
+	ptype[2]=GetParam(CIniFile::FAData.sections["Actions"].values[actiontype],3);
+	ptype[3]=GetParam(CIniFile::FAData.sections["Actions"].values[actiontype],4);
+	ptype[4]=GetParam(CIniFile::FAData.sections["Actions"].values[actiontype],5);
+	ptype[5]=GetParam(CIniFile::FAData.sections["Actions"].values[actiontype],6);
 
-	if(GetParam(g_data.sections["Actions"].values[actiontype],7)=="0")
+	if(GetParam(CIniFile::FAData.sections["Actions"].values[actiontype],7)=="0")
 		m_LAW="Unused";
 	else
 		m_LAW="Waypoint:";
 
 	int pListType[6];
-	pListType[0]=atoi(GetParam(g_data.sections["ParamTypes"].values[ptype[0]], 1));
-	pListType[1]=atoi(GetParam(g_data.sections["ParamTypes"].values[ptype[1]], 1));
+	pListType[0]=atoi(GetParam(CIniFile::FAData.sections["ParamTypes"].values[ptype[0]], 1));
+	pListType[1]=atoi(GetParam(CIniFile::FAData.sections["ParamTypes"].values[ptype[1]], 1));
 
 	
 
@@ -842,7 +842,7 @@ void CTriggers::OnEditchangeActiontype()
 			continue;
 		}
 
-		*label = GetParam(g_data.sections["ParamTypes"].values[ptype[i]], 0);
+		*label = GetParam(CIniFile::FAData.sections["ParamTypes"].values[ptype[i]], 0);
 
 		
 
@@ -1021,7 +1021,7 @@ void CTriggers::OnSelchangeActiontype()
 
 void CTriggers::OnEditchangeActionwaypoint() 
 {
-	CIniFile& ini=Map->GetIniFile();
+	CIniFile& ini=Map->UpdateAndGetIniFile();
 
 	int sel=m_Trigger.GetCurSel();
 	if(sel<0) return;
@@ -1056,7 +1056,7 @@ void CTriggers::OnSelchangeActionwaypoint()
 
 void CTriggers::OnEditchangeActionparam1() 
 {
-	CIniFile& ini=Map->GetIniFile();
+	CIniFile& ini=Map->UpdateAndGetIniFile();
 
 	int sel=m_Trigger.GetCurSel();
 	if(sel<0) return;
@@ -1089,7 +1089,7 @@ void CTriggers::OnSelchangeActionparam1()
 
 void CTriggers::OnEditchangeActionparam2() 
 {
-	CIniFile& ini=Map->GetIniFile();
+	CIniFile& ini=Map->UpdateAndGetIniFile();
 
 	int sel=m_Trigger.GetCurSel();
 	if(sel<0) return;
@@ -1122,7 +1122,7 @@ void CTriggers::OnSelchangeActionparam2()
 
 void CTriggers::OnEditchangeActionparam3() 
 {
-	CIniFile& ini=Map->GetIniFile();
+	CIniFile& ini=Map->UpdateAndGetIniFile();
 
 	int sel=m_Trigger.GetCurSel();
 	if(sel<0) return;
@@ -1155,7 +1155,7 @@ void CTriggers::OnSelchangeActionparam3()
 
 void CTriggers::OnEditchangeActionparam4() 
 {
-	CIniFile& ini=Map->GetIniFile();
+	CIniFile& ini=Map->UpdateAndGetIniFile();
 
 	int sel=m_Trigger.GetCurSel();
 	if(sel<0) return;
@@ -1188,7 +1188,7 @@ void CTriggers::OnSelchangeActionparam4()
 
 void CTriggers::OnEditchangeActionparam5() 
 {
-	CIniFile& ini=Map->GetIniFile();
+	CIniFile& ini=Map->UpdateAndGetIniFile();
 
 	int sel=m_Trigger.GetCurSel();
 	if(sel<0) return;
@@ -1221,7 +1221,7 @@ void CTriggers::OnSelchangeActionparam5()
 
 void CTriggers::OnEditchangeActionparam6() 
 {
-	CIniFile& ini=Map->GetIniFile();
+	CIniFile& ini=Map->UpdateAndGetIniFile();
 
 	int sel=m_Trigger.GetCurSel();
 	if(sel<0) return;
@@ -1254,7 +1254,7 @@ void CTriggers::OnSelchangeActionparam6()
 
 void CTriggers::OnAddevent() 
 {
-	CIniFile& ini=Map->GetIniFile();
+	CIniFile& ini=Map->UpdateAndGetIniFile();
 
 	int sel=m_Trigger.GetCurSel();
 	if(sel<0) return;
@@ -1286,7 +1286,7 @@ void CTriggers::OnAddevent()
 
 void CTriggers::OnDeleteevent() 
 {
-	CIniFile& ini=Map->GetIniFile();
+	CIniFile& ini=Map->UpdateAndGetIniFile();
 
 	int sel=m_Trigger.GetCurSel();
 	if(sel<0) return;
@@ -1334,7 +1334,7 @@ void CTriggers::OnDeleteevent()
 
 void CTriggers::OnAddaction() 
 {
-	CIniFile& ini=Map->GetIniFile();
+	CIniFile& ini=Map->UpdateAndGetIniFile();
 
 	int sel=m_Trigger.GetCurSel();
 	if(sel<0) return;
@@ -1365,7 +1365,7 @@ void CTriggers::OnAddaction()
 
 void CTriggers::OnDeleteaction() 
 {
-	CIniFile& ini=Map->GetIniFile();
+	CIniFile& ini=Map->UpdateAndGetIniFile();
 
 	int sel=m_Trigger.GetCurSel();
 	if(sel<0) return;
@@ -1415,7 +1415,7 @@ void CTriggers::OnDeleteaction()
 
 void CTriggers::OnDeletetrigger() 
 {
-	CIniFile& ini=Map->GetIniFile();
+	CIniFile& ini=Map->UpdateAndGetIniFile();
 
 	int sel=m_Trigger.GetCurSel();
 	if(sel<0) return;
@@ -1436,7 +1436,7 @@ void CTriggers::OnDeletetrigger()
 
 void CTriggers::OnAddtrigger() 
 {
-	CIniFile& ini=Map->GetIniFile();
+	CIniFile& ini=Map->UpdateAndGetIniFile();
 
 	CString ID_T=GetFreeID();
 	ini.sections["Triggers"].values[ID_T]="GDI,<none>,New trigger,0,1,1,1,0";

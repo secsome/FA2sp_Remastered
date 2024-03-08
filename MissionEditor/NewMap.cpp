@@ -118,12 +118,12 @@ BOOL CNewMap::OnInitDialog()
 
 	CComboBox& house=*((CComboBox*)(GetDlgItem(IDC_HOUSE)));
 	int i;
-	for(i=0;i<rules.sections[HOUSES].values.size();i++)
+	for(i=0;i<CIniFile::Rules.sections[HOUSES].values.size();i++)
 	{
-		house.AddString(*rules.sections[HOUSES].GetValue(i));
+		house.AddString(*CIniFile::Rules.sections[HOUSES].GetValue(i));
 	}
 
-	m_House=rules.sections[HOUSES].values["0"];
+	m_House=CIniFile::Rules.sections[HOUSES].values["0"];
 
 	CComboBox& theater=*((CComboBox*)GetDlgItem(IDC_THEATER));
 	theater.AddString(THEATER0);

@@ -55,7 +55,7 @@ CSaveMapOptionsDlg::CSaveMapOptionsDlg(CWnd* pParent /*=NULL*/)
 	m_TeamGame = FALSE;
 	//}}AFX_DATA_INIT
 	
-	CIniFile& ini=Map->GetIniFile();
+	CIniFile& ini=Map->UpdateAndGetIniFile();
 	if(!Map->IsMultiplayer())
 		m_PreviewMode=1;
 
@@ -95,7 +95,7 @@ BOOL CSaveMapOptionsDlg::OnInitDialog()
 {
 	CDialog::OnInitDialog();
 
-	CIniFile& ini=Map->GetIniFile();
+	CIniFile& ini=Map->UpdateAndGetIniFile();
 	if(!Map->IsMultiplayer())
 	{
 		GetDlgItem(IDC_PREVIEWMODE)->EnableWindow(FALSE);

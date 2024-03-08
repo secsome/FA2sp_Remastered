@@ -123,11 +123,11 @@ void CInfantrie::OnOK()
 
 void CInfantrie::Init(CString house, CString strength, CString action, CString direction, CString tag, CString flag1, CString flag2, CString flag3, CString flag4, CString flag5)
 {
-	CIniFile& ini=Map->GetIniFile();
+	CIniFile& ini=Map->UpdateAndGetIniFile();
 
 	if(house=="") 
 	{
-		/*m_house=*rules.sections[HOUSES].GetValue(0);
+		/*m_house=*CIniFile::Rules.sections[HOUSES].GetValue(0);
 		if(ini.sections.find(HOUSES)!=ini.sections.end())
 			if(ini.sections[HOUSES].values.size()>0)
 				m_house=*ini.sections[HOUSES].GetValue(0);*/

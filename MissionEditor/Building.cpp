@@ -95,14 +95,14 @@ END_MESSAGE_MAP()
 
 CString GetName(CString id)
 {
-	CIniFile& ini=Map->GetIniFile();
+	CIniFile& ini=Map->UpdateAndGetIniFile();
 	if(ini.sections.find(id)!=ini.sections.end())
 	{
 		if(ini.sections[id].values.find("Name")!=ini.sections[id].values.end())
 			return ini.sections[id].values["Name"];
 		
 	}
-	return rules.sections[id].values["Name"];
+	return CIniFile::Rules.sections[id].values["Name"];
 }
 
 void CBuilding::OnOK() 
@@ -134,7 +134,7 @@ BOOL CBuilding::OnInitDialog()
 {
 	CDialog::OnInitDialog();
 	
-	CIniFile& ini=Map->GetIniFile();
+	CIniFile& ini=Map->UpdateAndGetIniFile();
 
 	int i;
 	CComboBox* chouse, *ctag;
@@ -165,14 +165,14 @@ BOOL CBuilding::OnInitDialog()
 		}
 		else
 		{
-			if(rules.sections[m_type].values.find("Upgrades")!=rules.sections[m_type].values.end())
-				upgradecount=atoi(rules.sections[m_type].values["Upgrades"]);
+			if(CIniFile::Rules.sections[m_type].values.find("Upgrades")!=CIniFile::Rules.sections[m_type].values.end())
+				upgradecount=atoi(CIniFile::Rules.sections[m_type].values["Upgrades"]);
 		}
 	}
 	else
 	{
-		if(rules.sections[m_type].values.find("Upgrades")!=rules.sections[m_type].values.end())
-				upgradecount=atoi(rules.sections[m_type].values["Upgrades"]);
+		if(CIniFile::Rules.sections[m_type].values.find("Upgrades")!=CIniFile::Rules.sections[m_type].values.end())
+				upgradecount=atoi(CIniFile::Rules.sections[m_type].values["Upgrades"]);
 	}
 
 	
@@ -180,9 +180,9 @@ BOOL CBuilding::OnInitDialog()
 
 	if(upgradecount>0)
 	{
-		for(i=0;i<rules.sections["BuildingTypes"].values.size();i++)
+		for(i=0;i<CIniFile::Rules.sections["BuildingTypes"].values.size();i++)
 		{
-			const char* unitname=*rules.sections["BuildingTypes"].GetValue(i);
+			const char* unitname=*CIniFile::Rules.sections["BuildingTypes"].GetValue(i);
 
 			// okay, first all the old units
 			if(ini.sections.find(unitname)!=ini.sections.end())
@@ -203,10 +203,10 @@ BOOL CBuilding::OnInitDialog()
 			else
 			{
 				// ini did not specify thing specified
-				if(rules.sections[unitname].values.find("PowersUpBuilding")!=rules.sections[unitname].values.end())
+				if(CIniFile::Rules.sections[unitname].values.find("PowersUpBuilding")!=CIniFile::Rules.sections[unitname].values.end())
 				{
 					// rules file specified new PowersUpBuilding
-					if(_stricmp(rules.sections[unitname].values["PowersUpBuilding"], m_type)==NULL)
+					if(_stricmp(CIniFile::Rules.sections[unitname].values["PowersUpBuilding"], m_type)==NULL)
 					{
 						((CComboBox*)GetDlgItem(IDC_P6))->AddString(((CString)unitname+" ("+GetName(unitname)+")"));
 						((CComboBox*)GetDlgItem(IDC_P7))->AddString(((CString)unitname+" ("+GetName(unitname)+")"));
@@ -264,7 +264,7 @@ BOOL CBuilding::OnInitDialog()
 
 void CBuilding::Init(CString house, CString strength, CString direction, CString tag, CString flag1, CString flag2, CString energy, CString upgradecount, CString spotlight, CString upgrade1, CString upgrade2, CString upgrade3, CString flag3, CString flag4)
 {
-	CIniFile& ini=Map->GetIniFile();
+	CIniFile& ini=Map->UpdateAndGetIniFile();
 
 	if(house=="") 
 	{

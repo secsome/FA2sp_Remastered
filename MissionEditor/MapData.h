@@ -36,14 +36,10 @@ extern TILEDATA** tiledata;
 extern DWORD* tiledata_count;
 extern ofstream errstream;
 extern map<int, int> tilesets_start;
-extern CIniFile* tiles;
 extern CFinalSunApp theApp;
 extern int shoreset;
 
-extern CIniFile rules;
-
 extern TILEDATA* un_tiledata;
-extern CIniFile g_data;
 
 extern int ramp2set;
 extern int pave2set;
@@ -126,7 +122,7 @@ struct FIELDDATA
 	unsigned bHide : 1;
 	unsigned bRedrawTerrain : 1; // force redraw
 	unsigned bCliffHack : 1;
-	unsigned bRNDImage : 4; // for using a,b,c of tmp tiles
+	unsigned bRNDImage : 4; // for using a,b,c of tmp CIniFile::CurrentTheater
 };
 
 struct SNAPSHOTDATA
@@ -315,8 +311,8 @@ public:
 		if (ns == -1 && h[1][2] == -1 && h[0][1] == -1) ns = SLOPE_DOWN_LEFTBOTTOM;
 
 
-		int rampbase = rampset_start;//atoi((*tiles).sections["General"].values["RampBase"]);
-		int rampsmooth = atoi((*tiles).sections["General"].AccessValueByName("RampSmooth"));
+		int rampbase = rampset_start;//atoi((*CIniFile::CurrentTheater).sections["General"].values["RampBase"]);
+		int rampsmooth = atoi((*CIniFile::CurrentTheater).sections["General"].AccessValueByName("RampSmooth"));
 
 		if (ns == -1 && (d.wTileSet == rampset || d.wTileSet == rampsmooth) && d.bMorphable)
 		{
@@ -360,7 +356,7 @@ public:
 		if (dwPos > fielddata_size) return FALSE;
 
 		int replacement = 0; // MW fix: ignore for bridges
-		if ((*tiledata)[dwID].bReplacementCount && atoi((*tiles).sections["General"].AccessValueByName("BridgeSet")) != (*tiledata)[dwID].wTileSet)
+		if ((*tiledata)[dwID].bReplacementCount && atoi((*CIniFile::CurrentTheater).sections["General"].AccessValueByName("BridgeSet")) != (*tiledata)[dwID].wTileSet)
 		{
 			replacement = rand() * (1 + (*tiledata)[dwID].bReplacementCount) / RAND_MAX;
 		}
@@ -587,6 +583,7 @@ public:
 	}
 	void LoadMap(const std::string& file);
 	void UpdateIniFile(DWORD dwFlags = MAPDATA_UPDATE_TO_INI);
+	CIniFile& UpdateAndGetIniFile();
 	CIniFile& GetIniFile();
 	CString GetAITriggerTypeID(DWORD dwAITriggerType);
 	DWORD GetAITriggerTypeIndex(LPCTSTR lpID);

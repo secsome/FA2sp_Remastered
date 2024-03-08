@@ -90,7 +90,7 @@ END_MESSAGE_MAP()
 
 void CTaskForce::UpdateDialog()
 {
-	CIniFile& ini=Map->GetIniFile();
+	CIniFile& ini=Map->UpdateAndGetIniFile();
 
 	int sel=m_TaskForces.GetCurSel();
 	int sel2=m_Units.GetCurSel();
@@ -118,17 +118,17 @@ void CTaskForce::UpdateDialog()
 	}
 
 	CString ss="InfantryTypes";
-	for(i=0;i<rules.sections[ss].values.size();i++)
+	for(i=0;i<CIniFile::Rules.sections[ss].values.size();i++)
 	{
 		CString type;
 		CString s;
-		type=*rules.sections[ss].GetValue(i);
+		type=*CIniFile::Rules.sections[ss].GetValue(i);
 		s=type;
 		s+=" (";
 		/*if(ini.sections.find((char*)(LPCTSTR)type)!=ini.sections.end() && ini.sections[(char*)(LPCTSTR)type].values.find("Name")!=ini.sections[(char*)(LPCTSTR)type].values.end())
 			s+=ini.sections[(char*)(LPCTSTR)type].values["Name"];
 		else
-			s+=rules.sections[(char*)(LPCTSTR)type].values["Name"];
+			s+=CIniFile::Rules.sections[(char*)(LPCTSTR)type].values["Name"];
 		*/
 		s+=Map->GetUnitName((char*)(LPCTSTR)type);
 
@@ -145,7 +145,7 @@ void CTaskForce::UpdateDialog()
 		/*if(ini.sections.find((char*)(LPCTSTR)type)!=ini.sections.end() && ini.sections[(char*)(LPCTSTR)type].values.find("Name")!=ini.sections[(char*)(LPCTSTR)type].values.end())
 			s+=ini.sections[(char*)(LPCTSTR)type].values["Name"];
 		else
-			s+=rules.sections[(char*)(LPCTSTR)type].values["Name"];
+			s+=CIniFile::Rules.sections[(char*)(LPCTSTR)type].values["Name"];
 */
 		s+=Map->GetUnitName((char*)(LPCTSTR)type);
 
@@ -154,17 +154,17 @@ void CTaskForce::UpdateDialog()
 	}
 
 	ss="VehicleTypes";
-	for(i=0;i<rules.sections[ss].values.size();i++)
+	for(i=0;i<CIniFile::Rules.sections[ss].values.size();i++)
 	{
 		CString type;
 		CString s;
-		type=*rules.sections[ss].GetValue(i);
+		type=*CIniFile::Rules.sections[ss].GetValue(i);
 		s=type;
 		s+=" (";
 		/*if(ini.sections.find((char*)(LPCTSTR)type)!=ini.sections.end() && ini.sections[(char*)(LPCTSTR)type].values.find("Name")!=ini.sections[(char*)(LPCTSTR)type].values.end())
 			s+=ini.sections[(char*)(LPCTSTR)type].values["Name"];
 		else
-			s+=rules.sections[(char*)(LPCTSTR)type].values["Name"];
+			s+=CIniFile::Rules.sections[(char*)(LPCTSTR)type].values["Name"];
 */
 		s+=Map->GetUnitName((char*)(LPCTSTR)type);
 
@@ -181,7 +181,7 @@ void CTaskForce::UpdateDialog()
 		/*if(ini.sections.find((char*)(LPCTSTR)type)!=ini.sections.end() && ini.sections[(char*)(LPCTSTR)type].values.find("Name")!=ini.sections[(char*)(LPCTSTR)type].values.end())
 			s+=ini.sections[(char*)(LPCTSTR)type].values["Name"];
 		else
-			s+=rules.sections[(char*)(LPCTSTR)type].values["Name"];
+			s+=CIniFile::Rules.sections[(char*)(LPCTSTR)type].values["Name"];
 */
 		s+=Map->GetUnitName((char*)(LPCTSTR)type);
 
@@ -190,17 +190,17 @@ void CTaskForce::UpdateDialog()
 	}
 
 	ss="AircraftTypes";
-	for(i=0;i<rules.sections[ss].values.size();i++)
+	for(i=0;i<CIniFile::Rules.sections[ss].values.size();i++)
 	{
 		CString type;
 		CString s;
-		type=*rules.sections[ss].GetValue(i);
+		type=*CIniFile::Rules.sections[ss].GetValue(i);
 		s=type;
 		s+=" (";
 		/*if(ini.sections.find((char*)(LPCTSTR)type)!=ini.sections.end() && ini.sections[(char*)(LPCTSTR)type].values.find("Name")!=ini.sections[(char*)(LPCTSTR)type].values.end())
 			s+=ini.sections[(char*)(LPCTSTR)type].values["Name"];
 		else
-			s+=rules.sections[(char*)(LPCTSTR)type].values["Name"];
+			s+=CIniFile::Rules.sections[(char*)(LPCTSTR)type].values["Name"];
 */
 		s+=Map->GetUnitName((char*)(LPCTSTR)type);
 
@@ -217,7 +217,7 @@ void CTaskForce::UpdateDialog()
 		/*if(ini.sections.find((char*)(LPCTSTR)type)!=ini.sections.end() && ini.sections[(char*)(LPCTSTR)type].values.find("Name")!=ini.sections[(char*)(LPCTSTR)type].values.end())
 			s+=ini.sections[(char*)(LPCTSTR)type].values["Name"];
 		else
-			s+=rules.sections[(char*)(LPCTSTR)type].values["Name"];
+			s+=CIniFile::Rules.sections[(char*)(LPCTSTR)type].values["Name"];
 */
 		s+=Map->GetUnitName((char*)(LPCTSTR)type);
 
@@ -258,7 +258,7 @@ void CTaskForce::OnEditchangeTaskforces()
 
 void CTaskForce::OnSelchangeTaskforces() 
 {
-	CIniFile& ini=Map->GetIniFile();
+	CIniFile& ini=Map->UpdateAndGetIniFile();
 
 	CString tf;
 	tf=GetText(&m_TaskForces);
@@ -281,7 +281,7 @@ void CTaskForce::OnSelchangeTaskforces()
 		/*if(ini.sections.find((char*)(LPCTSTR)type)!=ini.sections.end() && ini.sections[(char*)(LPCTSTR)type].values.find("Name")!=ini.sections[(char*)(LPCTSTR)type].values.end())
 			s+=ini.sections[(char*)(LPCTSTR)type].values["Name"];
 		else
-			s+=rules.sections[(char*)(LPCTSTR)type].values["Name"];*/
+			s+=CIniFile::Rules.sections[(char*)(LPCTSTR)type].values["Name"];*/
 		s+=Map->GetUnitName(type);
 		//s+=")";
 		
@@ -298,7 +298,7 @@ void CTaskForce::OnSelchangeTaskforces()
 
 void CTaskForce::OnSelchangeUnits() 
 {
-	CIniFile& ini=Map->GetIniFile();
+	CIniFile& ini=Map->UpdateAndGetIniFile();
 
 	int sel=m_Units.GetCurSel();
 	int u=m_Units.GetItemData(sel);
@@ -317,7 +317,7 @@ void CTaskForce::OnSelchangeUnits()
 	/*if(ini.sections.find((char*)(LPCTSTR)type)!=ini.sections.end() && ini.sections[(char*)(LPCTSTR)type].values.find("Name")!=ini.sections[(char*)(LPCTSTR)type].values.end())
 		s=ini.sections[(char*)(LPCTSTR)type].values["Name"];
 	else
-		s=rules.sections[(char*)(LPCTSTR)type].values["Name"];*/
+		s=CIniFile::Rules.sections[(char*)(LPCTSTR)type].values["Name"];*/
 	s=Map->GetUnitName(type);
 
 	m_UnitType.SetWindowText(((CString)(LPCTSTR)type + (CString)" (" + s + (CString)")"));
@@ -328,7 +328,7 @@ void CTaskForce::OnSelchangeUnits()
 
 void CTaskForce::OnDeleteunit() 
 {
-	CIniFile& ini=Map->GetIniFile();
+	CIniFile& ini=Map->UpdateAndGetIniFile();
 
 	int sel=m_Units.GetCurSel();
 	if(sel<0) return;
@@ -365,7 +365,7 @@ void CTaskForce::OnDeleteunit()
 
 void CTaskForce::OnChangeNumberunits() 
 {
-	CIniFile& ini=Map->GetIniFile();
+	CIniFile& ini=Map->UpdateAndGetIniFile();
 
 	UpdateData();
 
@@ -389,7 +389,7 @@ void CTaskForce::OnChangeNumberunits()
 
 void CTaskForce::OnChangeName() 
 {
-	CIniFile& ini=Map->GetIniFile();
+	CIniFile& ini=Map->UpdateAndGetIniFile();
 
 	UpdateData();
 
@@ -411,7 +411,7 @@ void CTaskForce::OnChangeName()
 
 void CTaskForce::OnEditchangeUnittype() 
 {
-	CIniFile& ini=Map->GetIniFile();
+	CIniFile& ini=Map->UpdateAndGetIniFile();
 
 	int sel=m_Units.GetCurSel();
 	if(sel<0) return;
@@ -441,7 +441,7 @@ void CTaskForce::OnEditchangeUnittype()
 
 void CTaskForce::OnSelchangeUnittype() 
 {
-	CIniFile& ini=Map->GetIniFile();
+	CIniFile& ini=Map->UpdateAndGetIniFile();
 
 	int sel=m_Units.GetCurSel();
 	if(sel<0) return;
@@ -468,7 +468,7 @@ void CTaskForce::OnSelchangeUnittype()
 
 void CTaskForce::OnAddunit() 
 {
-	CIniFile& ini=Map->GetIniFile();
+	CIniFile& ini=Map->UpdateAndGetIniFile();
 
 	CString tf;
 	if(m_TaskForces.GetCurSel()<0) return;
@@ -482,14 +482,14 @@ void CTaskForce::OnAddunit()
 	if(c==LB_ERR) c=0;
 	itoa(c, k, 10);
 	
-	sec.values[k]="1"+(CString)","+*rules.sections["InfantryTypes"].GetValue(0);
+	sec.values[k]="1"+(CString)","+*CIniFile::Rules.sections["InfantryTypes"].GetValue(0);
 	
 	UpdateDialog();
 }
 
 void CTaskForce::OnDeletetaskforce() 
 {
-	CIniFile& ini=Map->GetIniFile();
+	CIniFile& ini=Map->UpdateAndGetIniFile();
 
 	CString tf;
 	if(m_TaskForces.GetCurSel()<0) return;
@@ -515,7 +515,7 @@ void CTaskForce::OnDeletetaskforce()
 CString GetFree(const char* section);
 void CTaskForce::OnAddtaskforce() 
 {
-	CIniFile& ini=Map->GetIniFile();
+	CIniFile& ini=Map->UpdateAndGetIniFile();
 
 	CString ID=GetFreeID();
 	CString tf=GetFree("TaskForces");
@@ -549,7 +549,7 @@ void CTaskForce::OnAddtaskforce()
 
 void CTaskForce::OnChangeGroup() 
 {
-	CIniFile& ini=Map->GetIniFile();
+	CIniFile& ini=Map->UpdateAndGetIniFile();
 
 	UpdateData();
 

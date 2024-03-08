@@ -103,7 +103,7 @@ END_MESSAGE_MAP()
 
 void CSpecialFlags::UpdateDialog()
 {
-	CIniFile& ini=Map->GetIniFile();
+	CIniFile& ini=Map->UpdateAndGetIniFile();
 
 	CIniFileSection *sec;
 	sec=&ini.sections["SpecialFlags"];
@@ -141,7 +141,7 @@ void CSpecialFlags::UpdateDialog()
 
 void CSpecialFlags::OnEditchangeTiberiumgrows() 
 {
-	CIniFile& ini=Map->GetIniFile();
+	CIniFile& ini=Map->UpdateAndGetIniFile();
 
 	CIniFileSection *sec;
 	sec=&ini.sections["SpecialFlags"];
@@ -154,7 +154,7 @@ void CSpecialFlags::OnEditchangeTiberiumgrows()
 
 void CSpecialFlags::OnEditchangeTiberiumspreads() 
 {
-	CIniFile& ini=Map->GetIniFile();
+	CIniFile& ini=Map->UpdateAndGetIniFile();
 
 	CIniFileSection *sec;
 	sec=&ini.sections["SpecialFlags"];
@@ -167,7 +167,7 @@ void CSpecialFlags::OnEditchangeTiberiumspreads()
 
 void CSpecialFlags::OnEditchangeTiberiumexplosive() 
 {
-	CIniFile& ini=Map->GetIniFile();
+	CIniFile& ini=Map->UpdateAndGetIniFile();
 
 	CIniFileSection *sec;
 	sec=&ini.sections["SpecialFlags"];
@@ -180,7 +180,7 @@ void CSpecialFlags::OnEditchangeTiberiumexplosive()
 
 void CSpecialFlags::OnEditchangeDestroyablebridges() 
 {
-	CIniFile& ini=Map->GetIniFile();
+	CIniFile& ini=Map->UpdateAndGetIniFile();
 
 	CIniFileSection *sec;
 	sec=&ini.sections["SpecialFlags"];
@@ -193,7 +193,7 @@ void CSpecialFlags::OnEditchangeDestroyablebridges()
 
 void CSpecialFlags::OnEditchangeMcvdeploy() 
 {
-	CIniFile& ini=Map->GetIniFile();
+	CIniFile& ini=Map->UpdateAndGetIniFile();
 
 	CIniFileSection *sec;
 	sec=&ini.sections["SpecialFlags"];
@@ -206,7 +206,7 @@ void CSpecialFlags::OnEditchangeMcvdeploy()
 
 void CSpecialFlags::OnEditchangeInitialveteran() 
 {
-	CIniFile& ini=Map->GetIniFile();
+	CIniFile& ini=Map->UpdateAndGetIniFile();
 
 	CIniFileSection *sec;
 	sec=&ini.sections["SpecialFlags"];
@@ -219,7 +219,7 @@ void CSpecialFlags::OnEditchangeInitialveteran()
 
 void CSpecialFlags::OnEditchangeFixedalliance() 
 {
-	CIniFile& ini=Map->GetIniFile();
+	CIniFile& ini=Map->UpdateAndGetIniFile();
 
 	CIniFileSection *sec;
 	sec=&ini.sections["SpecialFlags"];
@@ -232,7 +232,7 @@ void CSpecialFlags::OnEditchangeFixedalliance()
 
 void CSpecialFlags::OnEditchangeHarvesterimmune() 
 {
-	CIniFile& ini=Map->GetIniFile();
+	CIniFile& ini=Map->UpdateAndGetIniFile();
 
 	CIniFileSection *sec;
 	sec=&ini.sections["SpecialFlags"];
@@ -245,7 +245,7 @@ void CSpecialFlags::OnEditchangeHarvesterimmune()
 
 void CSpecialFlags::OnEditchangeFogofwar() 
 {
-	CIniFile& ini=Map->GetIniFile();
+	CIniFile& ini=Map->UpdateAndGetIniFile();
 
 	CIniFileSection *sec;
 	sec=&ini.sections["SpecialFlags"];
@@ -258,7 +258,7 @@ void CSpecialFlags::OnEditchangeFogofwar()
 
 void CSpecialFlags::OnEditchangeInert() 
 {
-	CIniFile& ini=Map->GetIniFile();
+	CIniFile& ini=Map->UpdateAndGetIniFile();
 
 	CIniFileSection *sec;
 	sec=&ini.sections["SpecialFlags"];
@@ -271,7 +271,7 @@ void CSpecialFlags::OnEditchangeInert()
 
 void CSpecialFlags::OnEditchangeIonstorms() 
 {
-	CIniFile& ini=Map->GetIniFile();
+	CIniFile& ini=Map->UpdateAndGetIniFile();
 
 	CIniFileSection *sec;
 	sec=&ini.sections["SpecialFlags"];
@@ -284,7 +284,7 @@ void CSpecialFlags::OnEditchangeIonstorms()
 
 void CSpecialFlags::OnEditchangeMeteorites() 
 {
-	CIniFile& ini=Map->GetIniFile();
+	CIniFile& ini=Map->UpdateAndGetIniFile();
 
 	CIniFileSection *sec;
 	sec=&ini.sections["SpecialFlags"];
@@ -297,7 +297,7 @@ void CSpecialFlags::OnEditchangeMeteorites()
 
 void CSpecialFlags::OnEditchangeVisceroids() 
 {
-	CIniFile& ini=Map->GetIniFile();
+	CIniFile& ini=Map->UpdateAndGetIniFile();
 
 	CIniFileSection *sec;
 	sec=&ini.sections["SpecialFlags"];

@@ -85,7 +85,7 @@ void CTriggerOptionsDlg::UpdateDialog()
 {
 	// MW 07/20/01
 
-	CIniFile& ini=Map->GetIniFile();
+	CIniFile& ini=Map->UpdateAndGetIniFile();
 	if(m_currentTrigger.GetLength()==0) return;
 
 	ListHouses(m_House, FALSE, TRUE, FALSE);
@@ -131,7 +131,7 @@ void CTriggerOptionsDlg::OnChangeName()
 {
 	if(m_currentTrigger.GetLength()==0) return;
 	
-	CIniFile& ini=Map->GetIniFile();
+	CIniFile& ini=Map->UpdateAndGetIniFile();
 	
 	if(ini.sections["Triggers"].FindName(m_currentTrigger)<0 || m_currentTrigger.GetLength()==0) return;
 	
@@ -175,7 +175,7 @@ void CTriggerOptionsDlg::OnChangeName()
 
 void CTriggerOptionsDlg::OnEditchangeHouse() 
 {
-	CIniFile& ini=Map->GetIniFile();
+	CIniFile& ini=Map->UpdateAndGetIniFile();
 	
 	if(ini.sections["Triggers"].FindName(m_currentTrigger)<0 || m_currentTrigger.GetLength()==0) return;
 
@@ -200,7 +200,7 @@ void CTriggerOptionsDlg::OnEditchangeHouse()
 
 void CTriggerOptionsDlg::OnEditchangeAttachedtrigger() 
 {
-	CIniFile& ini=Map->GetIniFile();
+	CIniFile& ini=Map->UpdateAndGetIniFile();
 	
 	if(ini.sections["Triggers"].FindName(m_currentTrigger)<0 || m_currentTrigger.GetLength()==0) return;
 
@@ -232,7 +232,7 @@ void CTriggerOptionsDlg::OnKillFocus(CWnd* pNewWnd)
 
 void CTriggerOptionsDlg::OnEditchangeTriggertype() 
 {
-	CIniFile& ini=Map->GetIniFile();
+	CIniFile& ini=Map->UpdateAndGetIniFile();
 	
 	if(ini.sections["Triggers"].FindName(m_currentTrigger)<0 || m_currentTrigger.GetLength()==0) return;
 
@@ -277,7 +277,7 @@ BOOL CTriggerOptionsDlg::OnInitDialog()
 
 void CTriggerOptionsDlg::OnDisabled() 
 {
-	CIniFile& ini=Map->GetIniFile();
+	CIniFile& ini=Map->UpdateAndGetIniFile();
 	
 	if(ini.sections["Triggers"].FindName(m_currentTrigger)<0 || m_currentTrigger.GetLength()==0) return;
 
@@ -297,7 +297,7 @@ void CTriggerOptionsDlg::OnDisabled()
 
 void CTriggerOptionsDlg::OnEasy() 
 {
-	CIniFile& ini=Map->GetIniFile();
+	CIniFile& ini=Map->UpdateAndGetIniFile();
 	
 	if(ini.sections["Triggers"].FindName(m_currentTrigger)<0 || m_currentTrigger.GetLength()==0) return;
 
@@ -316,7 +316,7 @@ void CTriggerOptionsDlg::OnEasy()
 
 void CTriggerOptionsDlg::OnMedium() 
 {
-	CIniFile& ini=Map->GetIniFile();
+	CIniFile& ini=Map->UpdateAndGetIniFile();
 	
 	if(ini.sections["Triggers"].FindName(m_currentTrigger)<0 || m_currentTrigger.GetLength()==0) return;
 
@@ -334,7 +334,7 @@ void CTriggerOptionsDlg::OnMedium()
 
 void CTriggerOptionsDlg::OnHard() 
 {
-	CIniFile& ini=Map->GetIniFile();
+	CIniFile& ini=Map->UpdateAndGetIniFile();
 	
 	if(ini.sections["Triggers"].FindName(m_currentTrigger)<0 || m_currentTrigger.GetLength()==0) return;
 

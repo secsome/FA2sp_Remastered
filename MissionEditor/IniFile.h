@@ -53,6 +53,7 @@ public:
 	virtual ~CIniFileSection();
 
 	CString GetValueByName(const CString& name, const CString& defaultValue = CString()) const;
+	const CString* TryGetValueByName(const CString& name) const;
 	CString& AccessValueByName(const CString& name);
 
 	auto begin() noexcept
@@ -93,6 +94,11 @@ public:
 	[[deprecated("instead use iterators or for_each")]] 
 	CString* GetValue(std::size_t index) noexcept;
 
+	const auto& GetOriginalPosition() const
+	{
+		return value_orig_pos;
+	}
+
 public:
 	map<CString, CString, SortDummy> values;
 	map<CString, int, SortDummy> value_orig_pos;
@@ -110,6 +116,7 @@ public:
 	const CIniFileSection* GetSection(const CString& section) const;
 	CIniFileSection* GetSection(const CString& section);
 	CString GetValueByName(const CString& sectionName, const CString& valueName, const CString& defaultValue) const;
+	const CString* TryGetValueByName(const CString& sectionName, const CString& valueName) const;
 	void Clear();
 	WORD InsertFile(const CString& filename, const char* Section, BOOL bNoSpaces = FALSE);
 	WORD InsertFile(const std::string& filename, const char* Section, BOOL bNoSpaces = FALSE);
@@ -120,6 +127,23 @@ public:
 	WORD LoadFile(const std::string& filename, BOOL bNoSpaces = FALSE);
 	WORD LoadFile(std::istream& file, BOOL bNoSpaces = FALSE);
 
+	std::map<unsigned int, CString> ParseIndiciesData(CString pSection);
+
+	static CIniFile Rules;
+	static CIniFile Art;
+	static CIniFile Sound;
+	static CIniFile Eva;
+	static CIniFile Theme;
+	static CIniFile Ai;
+	static CIniFile Temperate;
+	static CIniFile Snow;
+	static CIniFile Urban;
+	static CIniFile NewUrban;
+	static CIniFile Lunar;
+	static CIniFile Desert;
+	static CIniFile FAData;
+	static CIniFile FALanguage;
+	static CIniFile* CurrentTheater;
 
 	auto begin() noexcept
 	{

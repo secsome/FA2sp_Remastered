@@ -152,16 +152,16 @@ END_MESSAGE_MAP()
 void ListObjects(CComboBox& cb)
 {
 	CComboBox& m_UnitType=cb;
-	CIniFile& ini=Map->GetIniFile();
+	CIniFile& ini=Map->UpdateAndGetIniFile();
 
 	int i;
 
 	CString ss="InfantryTypes";
-	for(i=0;i<rules.sections[ss].values.size();i++)
+	for(i=0;i<CIniFile::Rules.sections[ss].values.size();i++)
 	{
 		CString type;
 		CString s;
-		type=*rules.sections[ss].GetValue(i);
+		type=*CIniFile::Rules.sections[ss].GetValue(i);
 		s=type;
 		s+=" (";
 		
@@ -185,11 +185,11 @@ void ListObjects(CComboBox& cb)
 	}
 
 	ss="VehicleTypes";
-	for(i=0;i<rules.sections[ss].values.size();i++)
+	for(i=0;i<CIniFile::Rules.sections[ss].values.size();i++)
 	{
 		CString type;
 		CString s;
-		type=*rules.sections[ss].GetValue(i);
+		type=*CIniFile::Rules.sections[ss].GetValue(i);
 		s=type;
 		s+=" (";
 		
@@ -213,11 +213,11 @@ void ListObjects(CComboBox& cb)
 	}
 
 	ss="AircraftTypes";
-	for(i=0;i<rules.sections[ss].values.size();i++)
+	for(i=0;i<CIniFile::Rules.sections[ss].values.size();i++)
 	{
 		CString type;
 		CString s;
-		type=*rules.sections[ss].GetValue(i);
+		type=*CIniFile::Rules.sections[ss].GetValue(i);
 		s=type;
 		s+=" (";
 		
@@ -241,11 +241,11 @@ void ListObjects(CComboBox& cb)
 	}
 
 	ss="BuildingTypes";
-	for(i=0;i<rules.sections[ss].values.size();i++)
+	for(i=0;i<CIniFile::Rules.sections[ss].values.size();i++)
 	{
 		CString type;
 		CString s;
-		type=*rules.sections[ss].GetValue(i);
+		type=*CIniFile::Rules.sections[ss].GetValue(i);
 		s=type;
 		s+=" (";
 		
@@ -346,7 +346,7 @@ void CAITriggerTypes::OnSelchangeAitriggertype()
 	m_Hard=isTrue(aitt.hard);
 	
 	m_Enabled=FALSE;
-	CIniFile& ini=Map->GetIniFile();
+	CIniFile& ini=Map->UpdateAndGetIniFile();
 	if(ini.sections["AITriggerTypesEnable"].values.find((LPCTSTR)aitrigger)!=ini.sections["AITriggerTypesEnable"].values.end())
 		if(stricmp(ini.sections["AITriggerTypesEnable"].values[(LPCTSTR)aitrigger], "yes")==NULL)
 			m_Enabled=TRUE;
@@ -547,7 +547,7 @@ void CAITriggerTypes::OnEnabled()
 	m_AITriggerType.GetLBText(sel,aitrigger);
 	TruncSpace(aitrigger);
 
-	CIniFile& ini=Map->GetIniFile();
+	CIniFile& ini=Map->UpdateAndGetIniFile();
 
 	if(m_Enabled)
 	{
@@ -567,14 +567,14 @@ void CAITriggerTypes::SetAITriggerParam(const char *value, int param)
 	m_AITriggerType.GetLBText(sel,aitrigger);
 	TruncSpace(aitrigger);
 
-	CIniFile& ini=Map->GetIniFile();
+	CIniFile& ini=Map->UpdateAndGetIniFile();
 	ini.sections["AITriggerTypes"].values[aitrigger]=SetParam(ini.sections["AITriggerTypes"].values[aitrigger],param,value);
 }
 
 void CAITriggerTypes::OnAdd() 
 {
 	CString ID=GetFreeID();
-	CIniFile& ini=Map->GetIniFile();
+	CIniFile& ini=Map->UpdateAndGetIniFile();
 	CString data="New AI Trigger,";
 	
 	// now try to set a teamtype
@@ -639,7 +639,7 @@ void CAITriggerTypes::OnDelete()
 	m_AITriggerType.GetLBText(sel,aitrigger);
 	TruncSpace(aitrigger);
 
-	CIniFile& ini=Map->GetIniFile();
+	CIniFile& ini=Map->UpdateAndGetIniFile();
 	
 	ini.sections["AITriggerTypes"].values.erase(aitrigger);
 	ini.sections["AITriggerTypesEnable"].values.erase(aitrigger);

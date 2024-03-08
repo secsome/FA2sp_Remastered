@@ -650,7 +650,7 @@ void CUserScriptsDlg::OnOK()
 	CUserScript s;
 	s.LoadFile((CString)ExePath+(CString)"\\Scripts\\"+m_Script);
 
-	CIniFile& ini=Map->GetIniFile();
+	CIniFile& ini=Map->UpdateAndGetIniFile();
 
 	BOOL bUpdate=FALSE;
 	BOOL bUpdateOnlyMission=TRUE;

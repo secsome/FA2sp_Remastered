@@ -77,12 +77,12 @@ BOOL CRTPDlg::OnInitDialog()
 	CDialog::OnInitDialog();
 
 	int i;
-	for(i=0;i<rules.sections["TerrainTypes"].values.size();i++)
+	for(i=0;i<CIniFile::Rules.sections["TerrainTypes"].values.size();i++)
 	{
-		CString unitname=*rules.sections["TerrainTypes"].GetValue(i);
+		CString unitname=*CIniFile::Rules.sections["TerrainTypes"].GetValue(i);
 		CString addedString=unitname;
 
-		if(g_data.sections["IgnoreRA2"].FindValue(unitname)>=0) continue;
+		if(CIniFile::FAData.sections["IgnoreRA2"].FindValue(unitname)>=0) continue;
 	
 		addedString=TranslateStringACP(addedString);
 			
@@ -93,8 +93,8 @@ BOOL CRTPDlg::OnInitDialog()
 						
 			if(unitname.GetLength()>0 && unitname!="VEINTREE") // out with it :-)
 			{
-				int TreeMin=atoi(g_data.sections[Map->GetTheater()+"Limits"].values["TreeMin"]);
-				int TreeMax=atoi(g_data.sections[Map->GetTheater()+"Limits"].values["TreeMax"]);
+				int TreeMin=atoi(CIniFile::FAData.sections[Map->GetTheater()+"Limits"].values["TreeMin"]);
+				int TreeMax=atoi(CIniFile::FAData.sections[Map->GetTheater()+"Limits"].values["TreeMax"]);
 				
 				CString id=unitname;
 				id.Delete(0, 4);

@@ -100,7 +100,7 @@ int GetEventParamStart(CString& EventData, int param)
 
 void CTriggerEventsDlg::OnNewevent() 
 {
-	CIniFile& ini=Map->GetIniFile();
+	CIniFile& ini=Map->UpdateAndGetIniFile();
 
 	if(m_currentTrigger.GetLength()==0) return;
 
@@ -151,7 +151,7 @@ void CTriggerEventsDlg::OnDeleteevent()
 	//itoa(FindTokenX("0,1,2,3,4", ',', 3),d,10);
 	//MessageBox(d);
 
-	CIniFile& ini=Map->GetIniFile();
+	CIniFile& ini=Map->UpdateAndGetIniFile();
 	if(m_currentTrigger.GetLength()==0) return;
 
 	int sel2=m_Event.GetCurSel();
@@ -223,7 +223,7 @@ void CTriggerEventsDlg::OnDeleteevent()
 
 void CTriggerEventsDlg::OnSelchangeEvent() 
 {
-	CIniFile& ini=Map->GetIniFile();
+	CIniFile& ini=Map->UpdateAndGetIniFile();
 
 	if(m_currentTrigger.GetLength()==0) return;
 	int selev=m_Event.GetCurSel();
@@ -253,7 +253,7 @@ void CTriggerEventsDlg::OnSelchangeEvent()
 
 void CTriggerEventsDlg::OnEditchangeEventtype() 
 {
-	CIniFile& ini=Map->GetIniFile();
+	CIniFile& ini=Map->UpdateAndGetIniFile();
 
 	if(m_currentTrigger.GetLength()==0) return;
 	int selev=m_Event.GetCurSel();
@@ -286,11 +286,11 @@ void CTriggerEventsDlg::OnEditchangeEventtype()
 	CString evsec="EventsRA2";
 
 
-	if(g_data.sections[evsec].FindName(eventtype)<0) return;
-	eventdata=g_data.sections[evsec].values[eventtype];
+	if(CIniFile::FAData.sections[evsec].FindName(eventtype)<0) return;
+	eventdata=CIniFile::FAData.sections[evsec].values[eventtype];
 
-	if(g_data.sections["EventsRA2"].FindName(eventtype)>=0)
-		eventdata=g_data.sections["EventsRA2"].values[eventtype];
+	if(CIniFile::FAData.sections["EventsRA2"].FindName(eventtype)>=0)
+		eventdata=CIniFile::FAData.sections["EventsRA2"].values[eventtype];
 
 	CString desc=GetParam(eventdata,5);
 	desc.Replace("%1",",");
@@ -302,10 +302,10 @@ void CTriggerEventsDlg::OnEditchangeEventtype()
 
 
 	int pListType[2];
-	pListType[0]=atoi(GetParam(g_data.sections["ParamTypes"].values[ptype[0]], 1));
-	pListType[1]=atoi(GetParam(g_data.sections["ParamTypes"].values[ptype[1]], 1));
+	pListType[0]=atoi(GetParam(CIniFile::FAData.sections["ParamTypes"].values[ptype[0]], 1));
+	pListType[1]=atoi(GetParam(CIniFile::FAData.sections["ParamTypes"].values[ptype[1]], 1));
 
-	int code=atoi(GetParam(g_data.sections["ParamTypes"].values[ptype[0]], 2)); // usually 0
+	int code=atoi(GetParam(CIniFile::FAData.sections["ParamTypes"].values[ptype[0]], 2)); // usually 0
 
 	// **************************************
 	// MW ADD SUPPORT FOR 2 PARAMS+CODE
@@ -349,7 +349,7 @@ void CTriggerEventsDlg::OnEditchangeEventtype()
 		
 			if(atoi(ptype[i])!=0 && atoi(ptype[i])>0 && atoi(ptype[i])!=47)
 			{
-				CString paramname=GetParam(g_data.sections["ParamTypes"].values[ptype[i]], 0);				
+				CString paramname=GetParam(CIniFile::FAData.sections["ParamTypes"].values[ptype[i]], 0);				
 				
 				m_Parameter.SetItemData(m_Parameter.AddString(paramname), i+add);
 			}
@@ -373,7 +373,7 @@ void CTriggerEventsDlg::OnEditchangeEventtype()
 
 void CTriggerEventsDlg::OnSelchangeParameter() 
 {
-	CIniFile& ini=Map->GetIniFile();
+	CIniFile& ini=Map->UpdateAndGetIniFile();
 
 	if(m_currentTrigger.GetLength()==0) return;
 	int selev=m_Event.GetCurSel();
@@ -400,21 +400,21 @@ void CTriggerEventsDlg::OnSelchangeParameter()
 	
 	// MW FIX FOR CODE!=0
 	int original_cuparam=curparam;
-	CString Param1=GetParam(g_data.sections["EventsRA2"].values[GetParam(EventData,startpos)],1);
-	CString Code=GetParam(g_data.sections["ParamTypes"].values[Param1],2);
+	CString Param1=GetParam(CIniFile::FAData.sections["EventsRA2"].values[GetParam(EventData,startpos)],1);
+	CString Code=GetParam(CIniFile::FAData.sections["ParamTypes"].values[Param1],2);
 	//MessageBox(Param1, Code);
 	if(atoi(Code)!=0) curparam--;
 	// END FIx
 
-	CString ParamType=GetParam(g_data.sections["Events"].values[GetParam(EventData,startpos)],1+curparam);
-	if(g_data.sections["EventsRA2"].FindName(GetParam(EventData, startpos))>=0) ParamType=GetParam(g_data.sections["EventsRA2"].values[GetParam(EventData,startpos)],1+curparam);
+	CString ParamType=GetParam(CIniFile::FAData.sections["Events"].values[GetParam(EventData,startpos)],1+curparam);
+	if(CIniFile::FAData.sections["EventsRA2"].FindName(GetParam(EventData, startpos))>=0) ParamType=GetParam(CIniFile::FAData.sections["EventsRA2"].values[GetParam(EventData,startpos)],1+curparam);
 
 	if(atoi(ParamType)<0)
 	{
 	}
 	else
 	{
-		CString ListType=GetParam(g_data.sections["ParamTypes"].values[ParamType],1);
+		CString ListType=GetParam(CIniFile::FAData.sections["ParamTypes"].values[ParamType],1);
 		
 		HandleParamList(m_ParamValue, atoi(ListType));
 		m_ParamValue.SetWindowText(GetParam(EventData,startpos+1+original_cuparam));
@@ -460,7 +460,7 @@ void CTriggerEventsDlg::OnSelchangeParameter()
 
 void CTriggerEventsDlg::OnEditchangeParamvalue() 
 {
-	CIniFile& ini=Map->GetIniFile();
+	CIniFile& ini=Map->UpdateAndGetIniFile();
 
 	if(m_currentTrigger.GetLength()==0) return;
 	int selev=m_Event.GetCurSel();
@@ -502,7 +502,7 @@ void CTriggerEventsDlg::UpdateDialog()
 		while(m_Event.DeleteString(0)!=CB_ERR);
 		return;
 	}
-	CIniFile& ini=Map->GetIniFile();
+	CIniFile& ini=Map->UpdateAndGetIniFile();
 
 	while(m_EventType.DeleteString(0)!=CB_ERR);
 	int i;
@@ -510,10 +510,10 @@ void CTriggerEventsDlg::UpdateDialog()
 	//9.3.2001: Only use specified section, do not merge
 	CString sec="EventsRA2";
 
-	for(i=0;i<g_data.sections[sec].values.size();i++)
+	for(i=0;i<CIniFile::FAData.sections[sec].values.size();i++)
 	{
-		CString eventid = *g_data.sections[sec].GetValueName(i); //GetParam(*g_data.sections["Events"].GetValue(i),8);
-		CString eventdata=*g_data.sections[sec].GetValue(i);
+		CString eventid = *CIniFile::FAData.sections[sec].GetValueName(i); //GetParam(*CIniFile::FAData.sections["Events"].GetValue(i),8);
+		CString eventdata=*CIniFile::FAData.sections[sec].GetValue(i);
 
 		CString text=eventid+" "+GetParam(eventdata,0);
 		text.Replace("%1",",");

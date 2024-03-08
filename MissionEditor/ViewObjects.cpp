@@ -126,7 +126,7 @@ CString GetTheaterLanguageString(LPCSTR lpString)
 
 void CViewObjects::OnSelchanged(NMHDR* pNMHDR, LRESULT* pResult) 
 {
-	CIniFile& ini=Map->GetIniFile();
+	CIniFile& ini=Map->UpdateAndGetIniFile();
 	
 	NM_TREEVIEW* pNMTreeView = (NM_TREEVIEW*)pNMHDR;
 
@@ -260,7 +260,7 @@ void CViewObjects::OnSelchanged(NMHDR* pNMHDR, LRESULT* pResult)
 				int i;
 				if(!tiledata_count) break;
 				for(i=0;i<(*tiledata_count);i++)
-					if((*tiledata)[i].wTileSet==atoi((*tiles).sections["General"].values["SandTile"])) break;
+					if((*tiledata)[i].wTileSet==atoi((*CIniFile::CurrentTheater).sections["General"].values["SandTile"])) break;
 				AD.type=i;
 				AD.mode=ACTIONMODE_SETTILE;
 				AD.data=0;
@@ -270,7 +270,7 @@ void CViewObjects::OnSelchanged(NMHDR* pNMHDR, LRESULT* pResult)
 			case 63:
 				if(!tiledata_count) break;
 				for(i=0;i<(*tiledata_count);i++)
-					if((*tiledata)[i].wTileSet==atoi((*tiles).sections["General"].values["RoughTile"])) break;
+					if((*tiledata)[i].wTileSet==atoi((*CIniFile::CurrentTheater).sections["General"].values["RoughTile"])) break;
 				AD.type=i;
 				AD.mode=ACTIONMODE_SETTILE;
 				AD.data=0;
@@ -300,7 +300,7 @@ void CViewObjects::OnSelchanged(NMHDR* pNMHDR, LRESULT* pResult)
 			case 65:
 				if(!tiledata_count) break;
 				for(i=0;i<(*tiledata_count);i++)
-					if((*tiledata)[i].wTileSet==atoi((*tiles).sections["General"].values["GreenTile"])) break;
+					if((*tiledata)[i].wTileSet==atoi((*CIniFile::CurrentTheater).sections["General"].values["GreenTile"])) break;
 				AD.type=i;
 				AD.mode=ACTIONMODE_SETTILE;
 				AD.data=0;
@@ -310,7 +310,7 @@ void CViewObjects::OnSelchanged(NMHDR* pNMHDR, LRESULT* pResult)
 			case 66:
 				if(!tiledata_count) break;
 				for(i=0;i<(*tiledata_count);i++)
-					if((*tiledata)[i].wTileSet==atoi((*tiles).sections["General"].values["PaveTile"])) break;
+					if((*tiledata)[i].wTileSet==atoi((*CIniFile::CurrentTheater).sections["General"].values["PaveTile"])) break;
 				AD.type=i;
 				AD.mode=ACTIONMODE_SETTILE;
 				AD.data=0;
@@ -320,7 +320,7 @@ void CViewObjects::OnSelchanged(NMHDR* pNMHDR, LRESULT* pResult)
 			case 67:
 				if(!tiledata_count) break;
 				for(i=0;i<(*tiledata_count);i++)
-					if((*tiledata)[i].wTileSet==atoi(g_data.sections["NewUrbanInfo"].values["Morphable2"])) break;
+					if((*tiledata)[i].wTileSet==atoi(CIniFile::FAData.sections["NewUrbanInfo"].values["Morphable2"])) break;
 				AD.type=i;
 				AD.mode=ACTIONMODE_SETTILE;
 				AD.data=0;
@@ -344,60 +344,60 @@ void CViewObjects::OnSelchanged(NMHDR* pNMHDR, LRESULT* pResult)
 		{
 			CString sec="InfantryTypes";
 			
-			if(subpos<rules.sections[sec].values.size())
+			if(subpos<CIniFile::Rules.sections[sec].values.size())
 			{
 				// standard unit!
 
-				AD.data_s=*rules.sections[sec].GetValue(subpos);
+				AD.data_s=*CIniFile::Rules.sections[sec].GetValue(subpos);
 			}
 			else{
 
-				AD.data_s=*ini.sections[sec].GetValue(subpos-rules.sections[sec].values.size());
+				AD.data_s=*ini.sections[sec].GetValue(subpos-CIniFile::Rules.sections[sec].values.size());
 			}
 		}
 		else if(pos==2)
 		{
 			CString sec="BuildingTypes";
 			
-			if(subpos<rules.sections[sec].values.size())
+			if(subpos<CIniFile::Rules.sections[sec].values.size())
 			{
 				// standard unit!
 
-				AD.data_s=*rules.sections[sec].GetValue(subpos);
+				AD.data_s=*CIniFile::Rules.sections[sec].GetValue(subpos);
 			}
 			else{
 
-				AD.data_s=*ini.sections[sec].GetValue(subpos-rules.sections[sec].values.size());
+				AD.data_s=*ini.sections[sec].GetValue(subpos-CIniFile::Rules.sections[sec].values.size());
 			}
 		}
 		else if(pos==3)
 		{
 			CString sec="AircraftTypes";
 			
-			if(subpos<rules.sections[sec].values.size())
+			if(subpos<CIniFile::Rules.sections[sec].values.size())
 			{
 				// standard unit!
 
-				AD.data_s=*rules.sections[sec].GetValue(subpos);
+				AD.data_s=*CIniFile::Rules.sections[sec].GetValue(subpos);
 			}
 			else{
 
-				AD.data_s=*ini.sections[sec].GetValue(subpos-rules.sections[sec].values.size());
+				AD.data_s=*ini.sections[sec].GetValue(subpos-CIniFile::Rules.sections[sec].values.size());
 			}
 		}
 		else if(pos==4)
 		{
 			CString sec="VehicleTypes";
 			
-			if(subpos<rules.sections[sec].values.size())
+			if(subpos<CIniFile::Rules.sections[sec].values.size())
 			{
 				// standard unit!
 
-				AD.data_s=*rules.sections[sec].GetValue(subpos);
+				AD.data_s=*CIniFile::Rules.sections[sec].GetValue(subpos);
 			}
 			else{
 
-				AD.data_s=*ini.sections[sec].GetValue(subpos-rules.sections[sec].values.size());
+				AD.data_s=*ini.sections[sec].GetValue(subpos-CIniFile::Rules.sections[sec].values.size());
 			}
 		}
 		else if(pos==5)
@@ -416,15 +416,15 @@ void CViewObjects::OnSelchanged(NMHDR* pNMHDR, LRESULT* pResult)
 			}
 			else
 			{
-				if(subpos<rules.sections[sec].values.size())
+				if(subpos<CIniFile::Rules.sections[sec].values.size())
 				{
 					// standard unit!
 
-					AD.data_s=*rules.sections[sec].GetValue(subpos);
+					AD.data_s=*CIniFile::Rules.sections[sec].GetValue(subpos);
 				}
 				else{
 
-					AD.data_s=*ini.sections[sec].GetValue(subpos-rules.sections[sec].values.size());
+					AD.data_s=*ini.sections[sec].GetValue(subpos-CIniFile::Rules.sections[sec].values.size());
 				}
 			}
 		}
@@ -464,7 +464,7 @@ void CViewObjects::OnSelchanged(NMHDR* pNMHDR, LRESULT* pResult)
 			}
 			else
 			{
-				AD.data_s=*rules.sections[HOUSES].GetValue(subpos);
+				AD.data_s=*CIniFile::Rules.sections[HOUSES].GetValue(subpos);
 			}
 
 			currentOwner=AD.data_s;
@@ -476,15 +476,15 @@ void CViewObjects::OnSelchanged(NMHDR* pNMHDR, LRESULT* pResult)
 			
 			CString sec="SmudgeTypes";
 
-			if(subpos<rules.sections[sec].values.size())
+			if(subpos<CIniFile::Rules.sections[sec].values.size())
 			{
 				// standard unit!
 
-				AD.data_s=*rules.sections[sec].GetValue(subpos);
+				AD.data_s=*CIniFile::Rules.sections[sec].GetValue(subpos);
 			}
 			else
 			{
-				AD.data_s=*ini.sections[sec].GetValue(subpos-rules.sections[sec].values.size());
+				AD.data_s=*ini.sections[sec].GetValue(subpos-CIniFile::Rules.sections[sec].values.size());
 			}
 
 		}
@@ -545,7 +545,7 @@ void CViewObjects::UpdateDialog()
 	OutputDebugString("Objectbrowser redrawn\n");
 
 	CTreeCtrl& tree=GetTreeCtrl();
-	CIniFile& ini=Map->GetIniFile();
+	CIniFile& ini=Map->UpdateAndGetIniFile();
 	
 	tree.Select(0,TVGN_CARET   );
 	tree.DeleteAllItems();
@@ -587,7 +587,7 @@ void CViewObjects::UpdateDialog()
 		BOOL bAllow=TRUE;
 
 		// no tunnels in ra2 mode
-		if(i==9 && !isTrue(g_data.sections["Debug"].values["AllowTunnels"])) bAllow=FALSE;
+		if(i==9 && !isTrue(CIniFile::FAData.sections["Debug"].values["AllowTunnels"])) bAllow=FALSE;
 
 		if(bAllow)
 		rootitems[i]=tree.InsertItem(TVIF_PARAM | TVIF_TEXT,
@@ -725,11 +725,11 @@ void CViewObjects::UpdateDialog()
 
 	}
 
-	if (isTrue(g_data.sections["Debug"].values["AllowTunnels"]))
+	if (isTrue(CIniFile::FAData.sections["Debug"].values["AllowTunnels"]))
 	{
 		tree.InsertItem(TVIF_PARAM | TVIF_TEXT, GetLanguageStringACP("NewTunnelObList"), 0, 0, 0, 0, 50, rootitems[9], TVI_LAST);
 		tree.InsertItem(TVIF_PARAM | TVIF_TEXT, GetLanguageStringACP("ModifyTunnelObList"), 0, 0, 0, 0, 51, rootitems[9], TVI_LAST);
-		if (isTrue(g_data.sections["Debug"].values["AllowUnidirectionalTunnels"]))
+		if (isTrue(CIniFile::FAData.sections["Debug"].values["AllowUnidirectionalTunnels"]))
 		{
 			tree.InsertItem(TVIF_PARAM | TVIF_TEXT, GetLanguageStringACP("NewTunnelSingleObList"), 0, 0, 0, 0, 52, rootitems[9], TVI_LAST);
 			tree.InsertItem(TVIF_PARAM | TVIF_TEXT, GetLanguageStringACP("ModifyTunnelSingleObList"), 0, 0, 0, 0, 53, rootitems[9], TVI_LAST);
@@ -755,15 +755,15 @@ void CViewObjects::UpdateDialog()
 		}
 		else
 		{
-			for(i=0;i<rules.sections[HOUSES].values.size();i++)
+			for(i=0;i<CIniFile::Rules.sections[HOUSES].values.size();i++)
 			{
-				if(rules.sections[HOUSES].GetValueOrigPos(i)<0) continue;
-				//tree.InsertItem(TVIF_PARAM | TVIF_TEXT, CCStrings[*rules.sections[HOUSES].GetValue(i)].cString, 
+				if(CIniFile::Rules.sections[HOUSES].GetValueOrigPos(i)<0) continue;
+				//tree.InsertItem(TVIF_PARAM | TVIF_TEXT, CCStrings[*CIniFile::Rules.sections[HOUSES].GetValue(i)].cString, 
 				//0,0,0,0, valadded*7+i, rootitems[11], TVI_LAST );
-				CString j=*rules.sections[HOUSES].GetValue(i);
+				CString j=*CIniFile::Rules.sections[HOUSES].GetValue(i);
 				j.MakeLower();
 				if(j=="nod" || j=="gdi") continue;
-				TV_InsertItemW(tree.m_hWnd, CCStrings[*rules.sections[HOUSES].GetValue(i)].wString, CCStrings[*rules.sections[HOUSES].GetValue(i)].len, TVI_LAST, rootitems[11],valadded*7+i);
+				TV_InsertItemW(tree.m_hWnd, CCStrings[*CIniFile::Rules.sections[HOUSES].GetValue(i)].wString, CCStrings[*CIniFile::Rules.sections[HOUSES].GetValue(i)].len, TVI_LAST, rootitems[11],valadded*7+i);
 			}
 		}
 	}
@@ -772,37 +772,37 @@ void CViewObjects::UpdateDialog()
 	{
 		if(overlay_visible[i])
 		{
-			if(!overlay_trdebug[i] || isTrue(g_data.sections["Debug"].values["EnableTrackLogic"]))
+			if(!overlay_trdebug[i] || isTrue(CIniFile::FAData.sections["Debug"].values["EnableTrackLogic"]))
 			tree.InsertItem(TVIF_PARAM | TVIF_TEXT, TranslateStringACP(overlay_name[i]), 0,0,0,0, valadded*6+3000+overlay_number[i], alloverlay, TVI_LAST );
 		}
 	}
 
 	e=0;
 	{
-		for(i=0;i<rules.sections["OverlayTypes"].values.size();i++)
+		for(i=0;i<CIniFile::Rules.sections["OverlayTypes"].values.size();i++)
 		{
-			// it seems there is somewhere a bug that lists empty overlay ids... though they are not in the rules.ini
+			// it seems there is somewhere a bug that lists empty overlay ids... though they are not in the CIniFile::Rules.ini
 			// so this here is the workaround:
-			CString id=*rules.sections["OverlayTypes"].GetValue(i);
+			CString id=*CIniFile::Rules.sections["OverlayTypes"].GetValue(i);
 			//if(strchr(id,' ')!=NULL){ id[strchr(id,' ')-id;};		
 			if(id.Find(' ')>=0) id = id.Left(id.Find(' '));
 			if(id.GetLength()>0)
 			{
 				
-				CString unitname=*rules.sections["OverlayTypes"].GetValue(i);
+				CString unitname=*CIniFile::Rules.sections["OverlayTypes"].GetValue(i);
 
-				if (Map->GetTheater()==THEATER0 && g_data.sections["IgnoreTemperateRA2"].FindValue(unitname) >= 0) continue;
-				if (Map->GetTheater()==THEATER1 && g_data.sections["IgnoreSnowRA2"].FindValue(unitname) >= 0) continue;
-				if (Map->GetTheater()==THEATER2 && g_data.sections["IgnoreUrbanRA2"].FindValue(unitname) >= 0) continue;
-				if (Map->GetTheater()==THEATER3 && g_data.sections["IgnoreNewUrbanRA2"].FindValue(unitname) >= 0) continue;
-				if (Map->GetTheater()==THEATER4 && g_data.sections["IgnoreLunarRA2"].FindValue(unitname) >= 0) continue;
-				if (Map->GetTheater()==THEATER5 && g_data.sections["IgnoreDesertRA2"].FindValue(unitname) >= 0) continue;
+				if (Map->GetTheater()==THEATER0 && CIniFile::FAData.sections["IgnoreTemperateRA2"].FindValue(unitname) >= 0) continue;
+				if (Map->GetTheater()==THEATER1 && CIniFile::FAData.sections["IgnoreSnowRA2"].FindValue(unitname) >= 0) continue;
+				if (Map->GetTheater()==THEATER2 && CIniFile::FAData.sections["IgnoreUrbanRA2"].FindValue(unitname) >= 0) continue;
+				if (Map->GetTheater()==THEATER3 && CIniFile::FAData.sections["IgnoreNewUrbanRA2"].FindValue(unitname) >= 0) continue;
+				if (Map->GetTheater()==THEATER4 && CIniFile::FAData.sections["IgnoreLunarRA2"].FindValue(unitname) >= 0) continue;
+				if (Map->GetTheater()==THEATER5 && CIniFile::FAData.sections["IgnoreDesertRA2"].FindValue(unitname) >= 0) continue;
 
 				if((i>=39 && i<=60) || (i>=180 && i<=201) || i==239 || i==178 || i==167 || i==126
 					|| (i>=122 && i<=125) || i==1 || (i>=0x03 && i<=0x17) || (i>=0x3d && i<=0x43)
 					|| (i>=0x4a && i<=0x65) || (i>=0xcd && i<=0xec))
 				{
-					if(!isTrue(g_data.sections["Debug"].values["DisplayAllOverlay"]))
+					if(!isTrue(CIniFile::FAData.sections["Debug"].values["DisplayAllOverlay"]))
 					{
 						e++;
 						continue;
@@ -811,7 +811,7 @@ void CViewObjects::UpdateDialog()
 
 
 
-				CString val=*rules.sections["OverlayTypes"].GetValue(i);
+				CString val=*CIniFile::Rules.sections["OverlayTypes"].GetValue(i);
 				val.Replace("TIB", "ORE");
 
 				tree.InsertItem(TVIF_PARAM | TVIF_TEXT, val , 0,0,0,0, valadded*6+3000+e, everyoverlay, TVI_LAST );
@@ -821,20 +821,20 @@ void CViewObjects::UpdateDialog()
 	}
 	
 	
-	for(i=0;i<rules.sections["InfantryTypes"].values.size();i++)
+	for(i=0;i<CIniFile::Rules.sections["InfantryTypes"].values.size();i++)
 	{
-		CString unitname=*rules.sections["InfantryTypes"].GetValue(i);
+		CString unitname=*CIniFile::Rules.sections["InfantryTypes"].GetValue(i);
 
 		if(unitname.GetLength()==0) continue;
 
-		if (Map->GetTheater()==THEATER0 && g_data.sections["IgnoreTemperateRA2"].FindValue(unitname) >= 0) continue;
-		if (Map->GetTheater()==THEATER1 && g_data.sections["IgnoreSnowRA2"].FindValue(unitname) >= 0) continue;
-		if (Map->GetTheater()==THEATER2 && g_data.sections["IgnoreUrbanRA2"].FindValue(unitname) >= 0) continue;
-		if (Map->GetTheater()==THEATER3 && g_data.sections["IgnoreNewUrbanRA2"].FindValue(unitname) >= 0) continue;
-		if (Map->GetTheater()==THEATER4 && g_data.sections["IgnoreLunarRA2"].FindValue(unitname) >= 0) continue;
-		if (Map->GetTheater()==THEATER5 && g_data.sections["IgnoreDesertRA2"].FindValue(unitname) >= 0) continue;
+		if (Map->GetTheater()==THEATER0 && CIniFile::FAData.sections["IgnoreTemperateRA2"].FindValue(unitname) >= 0) continue;
+		if (Map->GetTheater()==THEATER1 && CIniFile::FAData.sections["IgnoreSnowRA2"].FindValue(unitname) >= 0) continue;
+		if (Map->GetTheater()==THEATER2 && CIniFile::FAData.sections["IgnoreUrbanRA2"].FindValue(unitname) >= 0) continue;
+		if (Map->GetTheater()==THEATER3 && CIniFile::FAData.sections["IgnoreNewUrbanRA2"].FindValue(unitname) >= 0) continue;
+		if (Map->GetTheater()==THEATER4 && CIniFile::FAData.sections["IgnoreLunarRA2"].FindValue(unitname) >= 0) continue;
+		if (Map->GetTheater()==THEATER5 && CIniFile::FAData.sections["IgnoreDesertRA2"].FindValue(unitname) >= 0) continue;
 
-		if(g_data.sections["IgnoreRA2"].FindValue(unitname)>=0) continue;
+		if(CIniFile::FAData.sections["IgnoreRA2"].FindValue(unitname)>=0) continue;
 
 		WCHAR* addedString=Map->GetUnitName(unitname);
 		if(!addedString) continue;
@@ -856,9 +856,9 @@ void CViewObjects::UpdateDialog()
 		if(ini.sections["InfantryTypes"].GetValue(i)->GetLength()==0) continue;
 
 		if(strlen(ini.sections[*ini.sections["InfantryTypes"].GetValue(i)].values["Name"])>0)
-			tree.InsertItem(TVIF_PARAM | TVIF_TEXT, ini.sections[*ini.sections["InfantryTypes"].GetValue(i)].values["Name"], 0,0,0,0, valadded*1+rules.sections["InfantryTypes"].values.size()+i, rootitems[0], TVI_LAST );
+			tree.InsertItem(TVIF_PARAM | TVIF_TEXT, ini.sections[*ini.sections["InfantryTypes"].GetValue(i)].values["Name"], 0,0,0,0, valadded*1+CIniFile::Rules.sections["InfantryTypes"].values.size()+i, rootitems[0], TVI_LAST );
 		else
-			tree.InsertItem(TVIF_PARAM | TVIF_TEXT, (*ini.sections["InfantryTypes"].GetValue(i)+" NOTDEFINED"), 0,0,0,0, valadded*1+rules.sections["InfantryTypes"].values.size()+i, rootitems[0], TVI_LAST );
+			tree.InsertItem(TVIF_PARAM | TVIF_TEXT, (*ini.sections["InfantryTypes"].GetValue(i)+" NOTDEFINED"), 0,0,0,0, valadded*1+CIniFile::Rules.sections["InfantryTypes"].values.size()+i, rootitems[0], TVI_LAST );
 
 
 	}
@@ -870,22 +870,22 @@ void CViewObjects::UpdateDialog()
 	if(tiledata==&s_tiledata) needed_terrain=TheaterChar::A;
 	else if(tiledata==&t_tiledata) needed_terrain=TheaterChar::T;
     
-	for(i=0;i<rules.sections["BuildingTypes"].values.size();i++)
+	for(i=0;i<CIniFile::Rules.sections["BuildingTypes"].values.size();i++)
 	{
 				
-		CString unitname=*rules.sections["BuildingTypes"].GetValue(i);
+		CString unitname=*CIniFile::Rules.sections["BuildingTypes"].GetValue(i);
 
 		if(unitname.GetLength()==0) continue;
 		
-		if (Map->GetTheater()==THEATER0 && g_data.sections["IgnoreTemperateRA2"].FindValue(unitname) >= 0) continue;
-		if (Map->GetTheater()==THEATER1 && g_data.sections["IgnoreSnowRA2"].FindValue(unitname) >= 0) continue;
-		if (Map->GetTheater()==THEATER2 && g_data.sections["IgnoreUrbanRA2"].FindValue(unitname) >= 0) continue;
-		if (Map->GetTheater()==THEATER3 && g_data.sections["IgnoreNewUrbanRA2"].FindValue(unitname) >= 0) continue;
-		if (Map->GetTheater()==THEATER4 && g_data.sections["IgnoreLunarRA2"].FindValue(unitname) >= 0) continue;
-		if (Map->GetTheater()==THEATER5 && g_data.sections["IgnoreDesertRA2"].FindValue(unitname) >= 0) continue;
+		if (Map->GetTheater()==THEATER0 && CIniFile::FAData.sections["IgnoreTemperateRA2"].FindValue(unitname) >= 0) continue;
+		if (Map->GetTheater()==THEATER1 && CIniFile::FAData.sections["IgnoreSnowRA2"].FindValue(unitname) >= 0) continue;
+		if (Map->GetTheater()==THEATER2 && CIniFile::FAData.sections["IgnoreUrbanRA2"].FindValue(unitname) >= 0) continue;
+		if (Map->GetTheater()==THEATER3 && CIniFile::FAData.sections["IgnoreNewUrbanRA2"].FindValue(unitname) >= 0) continue;
+		if (Map->GetTheater()==THEATER4 && CIniFile::FAData.sections["IgnoreLunarRA2"].FindValue(unitname) >= 0) continue;
+		if (Map->GetTheater()==THEATER5 && CIniFile::FAData.sections["IgnoreDesertRA2"].FindValue(unitname) >= 0) continue;
 
-		if (g_data.sections["IgnoreRA2"].FindValue(unitname) >= 0) continue;
-		if (!isTrue(g_data.sections["Debug"].GetValueByName("ShowBuildingsWithToTile", "0")) && !rules.sections[unitname].GetValueByName("ToTile").IsEmpty())
+		if (CIniFile::FAData.sections["IgnoreRA2"].FindValue(unitname) >= 0) continue;
+		if (!isTrue(CIniFile::FAData.sections["Debug"].GetValueByName("ShowBuildingsWithToTile", "0")) && !CIniFile::Rules.sections[unitname].GetValueByName("ToTile").IsEmpty())
 			continue;
 
 
@@ -894,16 +894,16 @@ void CViewObjects::UpdateDialog()
 
 
 
-		CString owner=rules.sections[unitname].values["Owner"];
+		CString owner=CIniFile::Rules.sections[unitname].values["Owner"];
 		int baseplanningside=-1;
 		baseplanningside=-1;
-		if(rules.sections[unitname].values.find("AIBasePlanningSide")!=rules.sections[unitname].values.end())
+		if(CIniFile::Rules.sections[unitname].values.find("AIBasePlanningSide")!=CIniFile::Rules.sections[unitname].values.end())
 		{
-			baseplanningside=atoi(rules.sections[unitname].values["AIBasePlanningSide"]);
+			baseplanningside=atoi(CIniFile::Rules.sections[unitname].values["AIBasePlanningSide"]);
 		}
-		if(g_data.sections.find(unitname)!=g_data.sections.end() && g_data.sections[unitname].values.find("AIBasePlanningSide")!=g_data.sections[unitname].values.end())
+		if(CIniFile::FAData.sections.find(unitname)!=CIniFile::FAData.sections.end() && CIniFile::FAData.sections[unitname].values.find("AIBasePlanningSide")!=CIniFile::FAData.sections[unitname].values.end())
 		{
-			baseplanningside=atoi(g_data.sections[unitname].values["AIBasePlanningSide"]);
+			baseplanningside=atoi(CIniFile::FAData.sections[unitname].values["AIBasePlanningSide"]);
 		}
 
 
@@ -1021,19 +1021,19 @@ void CViewObjects::UpdateDialog()
 
 
 
-	for(i=0;i<rules.sections["AircraftTypes"].values.size();i++)
+	for(i=0;i<CIniFile::Rules.sections["AircraftTypes"].values.size();i++)
 	{
-		CString unitname=*rules.sections["AircraftTypes"].GetValue(i);
+		CString unitname=*CIniFile::Rules.sections["AircraftTypes"].GetValue(i);
 		if(unitname.GetLength()==0) continue;
 
-		if (Map->GetTheater()==THEATER0 && g_data.sections["IgnoreTemperateRA2"].FindValue(unitname) >= 0) continue;
-		if (Map->GetTheater()==THEATER1 && g_data.sections["IgnoreSnowRA2"].FindValue(unitname) >= 0) continue;
-		if (Map->GetTheater()==THEATER2 && g_data.sections["IgnoreUrbanRA2"].FindValue(unitname) >= 0) continue;
-		if (Map->GetTheater()==THEATER3 && g_data.sections["IgnoreNewUrbanRA2"].FindValue(unitname) >= 0) continue;
-		if (Map->GetTheater()==THEATER4 && g_data.sections["IgnoreLunarRA2"].FindValue(unitname) >= 0) continue;
-		if (Map->GetTheater()==THEATER5 && g_data.sections["IgnoreDesertRA2"].FindValue(unitname) >= 0) continue;
+		if (Map->GetTheater()==THEATER0 && CIniFile::FAData.sections["IgnoreTemperateRA2"].FindValue(unitname) >= 0) continue;
+		if (Map->GetTheater()==THEATER1 && CIniFile::FAData.sections["IgnoreSnowRA2"].FindValue(unitname) >= 0) continue;
+		if (Map->GetTheater()==THEATER2 && CIniFile::FAData.sections["IgnoreUrbanRA2"].FindValue(unitname) >= 0) continue;
+		if (Map->GetTheater()==THEATER3 && CIniFile::FAData.sections["IgnoreNewUrbanRA2"].FindValue(unitname) >= 0) continue;
+		if (Map->GetTheater()==THEATER4 && CIniFile::FAData.sections["IgnoreLunarRA2"].FindValue(unitname) >= 0) continue;
+		if (Map->GetTheater()==THEATER5 && CIniFile::FAData.sections["IgnoreDesertRA2"].FindValue(unitname) >= 0) continue;
 
-		if (g_data.sections["IgnoreRA2"].FindValue(unitname) >= 0) continue;
+		if (CIniFile::FAData.sections["IgnoreRA2"].FindValue(unitname) >= 0) continue;
 
 		WCHAR* addedString=Map->GetUnitName(unitname);
 		if(!addedString) continue;
@@ -1055,27 +1055,27 @@ void CViewObjects::UpdateDialog()
 		if(ini.sections["AircraftTypes"].GetValue(i)->GetLength()==0) continue;
 
 		if(strlen(ini.sections[*ini.sections["AircraftTypes"].GetValue(i)].values["Name"])>0)
-			tree.InsertItem(TVIF_PARAM | TVIF_TEXT, ini.sections[*ini.sections["AircraftTypes"].GetValue(i)].values["Name"], 0,0,0,0, valadded*3+i+rules.sections["AircraftTypes"].values.size(), rootitems[2], TVI_LAST );
+			tree.InsertItem(TVIF_PARAM | TVIF_TEXT, ini.sections[*ini.sections["AircraftTypes"].GetValue(i)].values["Name"], 0,0,0,0, valadded*3+i+CIniFile::Rules.sections["AircraftTypes"].values.size(), rootitems[2], TVI_LAST );
 		else
-			tree.InsertItem(TVIF_PARAM | TVIF_TEXT, (*ini.sections["AircraftTypes"].GetValue(i)+" NOTDEFINED"), 0,0,0,0, valadded*3+i+rules.sections["AircraftTypes"].values.size(), rootitems[2], TVI_LAST );
+			tree.InsertItem(TVIF_PARAM | TVIF_TEXT, (*ini.sections["AircraftTypes"].GetValue(i)+" NOTDEFINED"), 0,0,0,0, valadded*3+i+CIniFile::Rules.sections["AircraftTypes"].values.size(), rootitems[2], TVI_LAST );
 
 
 	}
 
 	
-	for(i=0;i<rules.sections["VehicleTypes"].values.size();i++)
+	for(i=0;i<CIniFile::Rules.sections["VehicleTypes"].values.size();i++)
 	{
-		CString unitname=*rules.sections["VehicleTypes"].GetValue(i);
+		CString unitname=*CIniFile::Rules.sections["VehicleTypes"].GetValue(i);
 		if(unitname.GetLength()==0) continue;
 
-		if (Map->GetTheater()==THEATER0 && g_data.sections["IgnoreTemperateRA2"].FindValue(unitname) >= 0) continue;
-		if (Map->GetTheater()==THEATER1 && g_data.sections["IgnoreSnowRA2"].FindValue(unitname) >= 0) continue;
-		if (Map->GetTheater()==THEATER2 && g_data.sections["IgnoreUrbanRA2"].FindValue(unitname) >= 0) continue;
-		if (Map->GetTheater()==THEATER3 && g_data.sections["IgnoreNewUrbanRA2"].FindValue(unitname) >= 0) continue;
-		if (Map->GetTheater()==THEATER4 && g_data.sections["IgnoreLunarRA2"].FindValue(unitname) >= 0) continue;
-		if (Map->GetTheater()==THEATER5 && g_data.sections["IgnoreDesertRA2"].FindValue(unitname) >= 0) continue;
+		if (Map->GetTheater()==THEATER0 && CIniFile::FAData.sections["IgnoreTemperateRA2"].FindValue(unitname) >= 0) continue;
+		if (Map->GetTheater()==THEATER1 && CIniFile::FAData.sections["IgnoreSnowRA2"].FindValue(unitname) >= 0) continue;
+		if (Map->GetTheater()==THEATER2 && CIniFile::FAData.sections["IgnoreUrbanRA2"].FindValue(unitname) >= 0) continue;
+		if (Map->GetTheater()==THEATER3 && CIniFile::FAData.sections["IgnoreNewUrbanRA2"].FindValue(unitname) >= 0) continue;
+		if (Map->GetTheater()==THEATER4 && CIniFile::FAData.sections["IgnoreLunarRA2"].FindValue(unitname) >= 0) continue;
+		if (Map->GetTheater()==THEATER5 && CIniFile::FAData.sections["IgnoreDesertRA2"].FindValue(unitname) >= 0) continue;
 		
-		if (g_data.sections["IgnoreRA2"].FindValue(unitname) >= 0) continue;
+		if (CIniFile::FAData.sections["IgnoreRA2"].FindValue(unitname) >= 0) continue;
 
 		WCHAR* addedString=Map->GetUnitName(unitname);
 		if(!addedString) continue;
@@ -1097,9 +1097,9 @@ void CViewObjects::UpdateDialog()
 		if(ini.sections["VehicleTypes"].GetValue(i)->GetLength()==0) continue;
 
 		if(strlen(ini.sections[*ini.sections["VehicleTypes"].GetValue(i)].values["Name"])>0)
-			tree.InsertItem(TVIF_PARAM | TVIF_TEXT, ini.sections[*ini.sections["VehicleTypes"].GetValue(i)].values["Name"], 0,0,0,0, valadded*4+i+rules.sections["VehicleTypes"].values.size(), rootitems[1], TVI_LAST );
+			tree.InsertItem(TVIF_PARAM | TVIF_TEXT, ini.sections[*ini.sections["VehicleTypes"].GetValue(i)].values["Name"], 0,0,0,0, valadded*4+i+CIniFile::Rules.sections["VehicleTypes"].values.size(), rootitems[1], TVI_LAST );
 		else
-			tree.InsertItem(TVIF_PARAM | TVIF_TEXT, (*ini.sections["VehicleTypes"].GetValue(i)+" NOTDEFINED"), 0,0,0,0, valadded*4+i+rules.sections["VehicleTypes"].values.size(), rootitems[1], TVI_LAST );
+			tree.InsertItem(TVIF_PARAM | TVIF_TEXT, (*ini.sections["VehicleTypes"].GetValue(i)+" NOTDEFINED"), 0,0,0,0, valadded*4+i+CIniFile::Rules.sections["VehicleTypes"].values.size(), rootitems[1], TVI_LAST );
 
 
 	}
@@ -1112,20 +1112,20 @@ void CViewObjects::UpdateDialog()
 	// random tree placer
 	tree.InsertItem(TVIF_PARAM | TVIF_TEXT,  GetLanguageStringACP("RndTreeObList"), 0,0,0,0, valadded*5+999, hTrees, TVI_LAST);
 
-	for(i=0;i<rules.sections["TerrainTypes"].values.size();i++)
+	for(i=0;i<CIniFile::Rules.sections["TerrainTypes"].values.size();i++)
 	{
-		CString unitname=*rules.sections["TerrainTypes"].GetValue(i);
+		CString unitname=*CIniFile::Rules.sections["TerrainTypes"].GetValue(i);
 		CString addedString=Map->GetUnitName(unitname);
 
-		if (Map->GetTheater()==THEATER0 && g_data.sections["IgnoreTemperateRA2"].FindValue(unitname) >= 0) continue;
-		if (Map->GetTheater()==THEATER1 && g_data.sections["IgnoreSnowRA2"].FindValue(unitname) >= 0) continue;
-		if (Map->GetTheater()==THEATER2 && g_data.sections["IgnoreUrbanRA2"].FindValue(unitname) >= 0) continue;
-		if (Map->GetTheater()==THEATER3 && g_data.sections["IgnoreNewUrbanRA2"].FindValue(unitname) >= 0) continue;
-		if (Map->GetTheater()==THEATER4 && g_data.sections["IgnoreLunarRA2"].FindValue(unitname) >= 0) continue;
-		if (Map->GetTheater()==THEATER5 && g_data.sections["IgnoreDesertRA2"].FindValue(unitname) >= 0) continue;
+		if (Map->GetTheater()==THEATER0 && CIniFile::FAData.sections["IgnoreTemperateRA2"].FindValue(unitname) >= 0) continue;
+		if (Map->GetTheater()==THEATER1 && CIniFile::FAData.sections["IgnoreSnowRA2"].FindValue(unitname) >= 0) continue;
+		if (Map->GetTheater()==THEATER2 && CIniFile::FAData.sections["IgnoreUrbanRA2"].FindValue(unitname) >= 0) continue;
+		if (Map->GetTheater()==THEATER3 && CIniFile::FAData.sections["IgnoreNewUrbanRA2"].FindValue(unitname) >= 0) continue;
+		if (Map->GetTheater()==THEATER4 && CIniFile::FAData.sections["IgnoreLunarRA2"].FindValue(unitname) >= 0) continue;
+		if (Map->GetTheater()==THEATER5 && CIniFile::FAData.sections["IgnoreDesertRA2"].FindValue(unitname) >= 0) continue;
 
-		if (g_data.sections["IgnoreRA2"].FindValue(unitname) >= 0) continue;
-		if (g_data.sections["IgnoreTerrainRA2"].FindValue(unitname) >= 0) continue;
+		if (CIniFile::FAData.sections["IgnoreRA2"].FindValue(unitname) >= 0) continue;
+		if (CIniFile::FAData.sections["IgnoreTerrainRA2"].FindValue(unitname) >= 0) continue;
 	
 		addedString=TranslateStringACP(addedString);
 			
@@ -1140,8 +1140,8 @@ void CViewObjects::UpdateDialog()
 		
 		if(howner==hTrees)
 		{
-			int TreeMin=atoi(g_data.sections[Map->GetTheater()+"Limits"].values["TreeMin"]);
-			int TreeMax=atoi(g_data.sections[Map->GetTheater()+"Limits"].values["TreeMax"]);
+			int TreeMin=atoi(CIniFile::FAData.sections[Map->GetTheater()+"Limits"].values["TreeMin"]);
+			int TreeMax=atoi(CIniFile::FAData.sections[Map->GetTheater()+"Limits"].values["TreeMax"]);
 			
 			CString id=unitname;
 			id.Delete(0, 4);
@@ -1157,19 +1157,19 @@ void CViewObjects::UpdateDialog()
 	}
 
 #ifdef SMUDGE_SUPP
-	for(i=0;i<rules.sections["SmudgeTypes"].values.size();i++)
+	for(i=0;i<CIniFile::Rules.sections["SmudgeTypes"].values.size();i++)
 	{
-		CString unitname=*rules.sections["SmudgeTypes"].GetValue(i);
+		CString unitname=*CIniFile::Rules.sections["SmudgeTypes"].GetValue(i);
 		CString addedString=unitname;
 
-		if (Map->GetTheater()==THEATER0 && g_data.sections["IgnoreTemperateRA2"].FindValue(unitname) >= 0) continue;
-		if (Map->GetTheater()==THEATER1 && g_data.sections["IgnoreSnowRA2"].FindValue(unitname) >= 0) continue;
-		if (Map->GetTheater()==THEATER2 && g_data.sections["IgnoreUrbanRA2"].FindValue(unitname) >= 0) continue;
-		if (Map->GetTheater()==THEATER3 && g_data.sections["IgnoreNewUrbanRA2"].FindValue(unitname) >= 0) continue;
-		if (Map->GetTheater()==THEATER4 && g_data.sections["IgnoreLunarRA2"].FindValue(unitname) >= 0) continue;
-		if (Map->GetTheater()==THEATER5 && g_data.sections["IgnoreDesertRA2"].FindValue(unitname) >= 0) continue;
+		if (Map->GetTheater()==THEATER0 && CIniFile::FAData.sections["IgnoreTemperateRA2"].FindValue(unitname) >= 0) continue;
+		if (Map->GetTheater()==THEATER1 && CIniFile::FAData.sections["IgnoreSnowRA2"].FindValue(unitname) >= 0) continue;
+		if (Map->GetTheater()==THEATER2 && CIniFile::FAData.sections["IgnoreUrbanRA2"].FindValue(unitname) >= 0) continue;
+		if (Map->GetTheater()==THEATER3 && CIniFile::FAData.sections["IgnoreNewUrbanRA2"].FindValue(unitname) >= 0) continue;
+		if (Map->GetTheater()==THEATER4 && CIniFile::FAData.sections["IgnoreLunarRA2"].FindValue(unitname) >= 0) continue;
+		if (Map->GetTheater()==THEATER5 && CIniFile::FAData.sections["IgnoreDesertRA2"].FindValue(unitname) >= 0) continue;
 
-		if (g_data.sections["IgnoreRA2"].FindValue(unitname) >= 0) continue;
+		if (CIniFile::FAData.sections["IgnoreRA2"].FindValue(unitname) >= 0) continue;
 	
 		addedString=TranslateStringACP(addedString);
 			
@@ -1230,15 +1230,15 @@ void CViewObjects::HandleBrushSize(int iTile)
 	if(iTile>=*tiledata_count) return;
 
 	int i;
-	for(i=0;i<g_data.sections["StdBrushSize"].values.size();i++)
+	for(i=0;i<CIniFile::FAData.sections["StdBrushSize"].values.size();i++)
 	{
-		CString n=*g_data.sections["StdBrushSize"].GetValueName(i);
-		if((*tiles).sections["General"].FindName(n)>=0)
+		CString n=*CIniFile::FAData.sections["StdBrushSize"].GetValueName(i);
+		if((*CIniFile::CurrentTheater).sections["General"].FindName(n)>=0)
 		{
-			int tset=atoi((*tiles).sections["General"].values[n]);
+			int tset=atoi((*CIniFile::CurrentTheater).sections["General"].values[n]);
 			if(tset==(*tiledata)[iTile].wTileSet)
 			{
-				int bs=atoi(*g_data.sections["StdBrushSize"].GetValue(i));
+				int bs=atoi(*CIniFile::FAData.sections["StdBrushSize"].GetValue(i));
 				((CFinalSunDlg*)theApp.m_pMainWnd)->m_settingsbar.m_BrushSize=bs-1;
 				((CFinalSunDlg*)theApp.m_pMainWnd)->m_settingsbar.UpdateData(FALSE);
 				((CFinalSunDlg*)theApp.m_pMainWnd)->m_view.m_isoview->m_BrushSize_x=bs;

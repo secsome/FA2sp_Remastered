@@ -107,7 +107,7 @@ BOOL CImportINI::OnInitDialog()
 
 void CImportINI::OnOK() 
 {
-	CIniFile& ini=Map->GetIniFile();
+	CIniFile& ini=Map->UpdateAndGetIniFile();
 
 	CButton* all;
 	all=(CButton*)GetDlgItem(IDC_ALLSECTIONS);

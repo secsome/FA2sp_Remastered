@@ -126,7 +126,7 @@ void CTerrainDlg::Update()
 
 	while (TileSet->DeleteString(0) != CB_ERR);
 
-	if (tiles)
+	if (CIniFile::CurrentTheater)
 	{
 		int i;
 		int tilecount = 0;
@@ -142,15 +142,15 @@ void CTerrainDlg::Update()
 			CString sec = "TileSet";
 			sec += tset;
 
-			if (tiles->sections.find(sec) == tiles->sections.end())
+			if (CIniFile::CurrentTheater->sections.find(sec) == CIniFile::CurrentTheater->sections.end())
 				break;
-			if (atoi(tiles->sections[sec].values["TilesInSet"]) == 0)
+			if (atoi(CIniFile::CurrentTheater->sections[sec].values["TilesInSet"]) == 0)
 				continue;
 
 			CString string;
 			string = tset;
 			string += " (";
-			string += TranslateStringACP(tiles->sections[sec].values["SetName"]);
+			string += TranslateStringACP(CIniFile::CurrentTheater->sections[sec].values["SetName"]);
 			string += ")";
 
 			BOOL bForced = FALSE;
@@ -161,19 +161,19 @@ void CTerrainDlg::Update()
 			CString datsec = (CString)"UseSet" + Map->GetTheater();
 			auto tsetc = CString(std::to_string(atoi(tset)).c_str());
 
-			if (g_data.sections[datsec].FindValue(tsetc) >= 0)
+			if (CIniFile::FAData.sections[datsec].FindValue(tsetc) >= 0)
 				bForced = TRUE;
 
 			// force no
 			datsec = (CString)"IgnoreSet" + Map->GetTheater();
-			if (g_data.sections[datsec].FindValue(tsetc) >= 0)
+			if (CIniFile::FAData.sections[datsec].FindValue(tsetc) >= 0)
 				bForcedNot = TRUE;
 
 
 			if (bForced || (!bForcedNot && (*tiledata)[tilecount].bAllowToPlace && !(*tiledata)[tilecount].bMarbleMadness))
 				TileSet->SetItemData(TileSet->AddString(string), i);
 
-			tilecount += atoi(tiles->sections[sec].values["TilesInSet"]);
+			tilecount += atoi(CIniFile::CurrentTheater->sections[sec].values["TilesInSet"]);
 		}
 
 		TileSet->SetCurSel(0);
@@ -188,16 +188,16 @@ void CTerrainDlg::Update()
 	int i;
 
 	int e = 0;
-	for (i = 0;i < rules.sections["OverlayTypes"].values.size();i++)
+	for (i = 0;i < CIniFile::Rules.sections["OverlayTypes"].values.size();i++)
 	{
-		CString id = *rules.sections["OverlayTypes"].GetValue(i);
+		CString id = *CIniFile::Rules.sections["OverlayTypes"].GetValue(i);
 		id.TrimLeft();
 		id.TrimRight();
 
 		if (id.GetLength() > 0)
 		{
 
-			if (rules.sections.find(id) != rules.sections.end() && rules.sections[id].FindName("Name") >= 0)
+			if (CIniFile::Rules.sections.find(id) != CIniFile::Rules.sections.end() && CIniFile::Rules.sections[id].FindName("Name") >= 0)
 			{
 				int p;
 				BOOL bListIt = TRUE;
@@ -212,7 +212,7 @@ void CTerrainDlg::Update()
 				if (bListIt)
 				{
 					CString str;
-					str = TranslateStringACP(rules.sections[(*rules.sections["OverlayTypes"].GetValue(i))].values["Name"]);
+					str = TranslateStringACP(CIniFile::Rules.sections[(*CIniFile::Rules.sections["OverlayTypes"].GetValue(i))].values["Name"]);
 					Overlays->SetItemData(Overlays->AddString(str), e);
 				}
 			}
@@ -238,11 +238,11 @@ DWORD CTerrainDlg::GetTileID(DWORD dwTileSet, int iTile)
 		CString sec = "TileSet";
 		sec += tset;
 
-		if (tiles->sections.find(sec) == tiles->sections.end())
+		if (CIniFile::CurrentTheater->sections.find(sec) == CIniFile::CurrentTheater->sections.end())
 			return 0xFFFFFFFF;
 
 
-		for (e = 0;e < atoi(tiles->sections[sec].values["TilesInSet"]);e++)
+		for (e = 0;e < atoi(CIniFile::CurrentTheater->sections[sec].values["TilesInSet"]);e++)
 		{
 			if (i == dwTileSet && e == iTile)
 				return tilecount;

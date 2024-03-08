@@ -90,7 +90,7 @@ END_MESSAGE_MAP()
 
 void CSingleplayerSettings::UpdateDialog()
 {
-	CIniFile& ini=Map->GetIniFile();
+	CIniFile& ini=Map->UpdateAndGetIniFile();
 
 	CIniFileSection& sec=ini.sections["Basic"];
 
@@ -132,67 +132,67 @@ void CSingleplayerSettings::UpdateDialog()
 
 void CSingleplayerSettings::OnEditchangeIntro() 
 {
-	CIniFile& ini=Map->GetIniFile();
+	CIniFile& ini=Map->UpdateAndGetIniFile();
 	ini.sections["Basic"].values["Intro"]=GetText(&m_Intro);		
 }
 
 void CSingleplayerSettings::OnEditchangeBrief() 
 {
-	CIniFile& ini=Map->GetIniFile();
+	CIniFile& ini=Map->UpdateAndGetIniFile();
 	ini.sections["Basic"].values["Brief"]=GetText(&m_Brief);	
 }
 
 void CSingleplayerSettings::OnEditchangeWin() 
 {
-	CIniFile& ini=Map->GetIniFile();
+	CIniFile& ini=Map->UpdateAndGetIniFile();
 	ini.sections["Basic"].values["Win"]=GetText(&m_Win);	
 }
 
 void CSingleplayerSettings::OnEditchangeLose() 
 {
-	CIniFile& ini=Map->GetIniFile();
+	CIniFile& ini=Map->UpdateAndGetIniFile();
 	ini.sections["Basic"].values["Lose"]=GetText(&m_Lose);	
 }
 
 void CSingleplayerSettings::OnEditchangeAction() 
 {
-	CIniFile& ini=Map->GetIniFile();
+	CIniFile& ini=Map->UpdateAndGetIniFile();
 	ini.sections["Basic"].values["Action"]=GetText(&m_Action);	
 }
 
 void CSingleplayerSettings::OnEditchangePostscore() 
 {
-	CIniFile& ini=Map->GetIniFile();
+	CIniFile& ini=Map->UpdateAndGetIniFile();
 	ini.sections["Basic"].values["PostScore"]=GetText(&m_PostScore);	
 }
 
 void CSingleplayerSettings::OnEditchangePremapselect() 
 {
-	CIniFile& ini=Map->GetIniFile();
+	CIniFile& ini=Map->UpdateAndGetIniFile();
 	ini.sections["Basic"].values["PreMapSelect"]=GetText(&m_PreMapSelect);	
 }
 
 void CSingleplayerSettings::OnEditchangeStartingdropships() 
 {
-	CIniFile& ini=Map->GetIniFile();
+	CIniFile& ini=Map->UpdateAndGetIniFile();
 	ini.sections["Basic"].values["StartingDropships"]=GetText(&m_StartingDropships);
 }
 
 void CSingleplayerSettings::OnChangeCarryovermoney() 
 {
-	CIniFile& ini=Map->GetIniFile();
+	CIniFile& ini=Map->UpdateAndGetIniFile();
 	ini.sections["Basic"].values["CarryOverMoney"]=GetText(&m_CarryOverMoney);
 }
 
 void CSingleplayerSettings::OnEditchangeTimerinherit() 
 {
-	CIniFile& ini=Map->GetIniFile();
+	CIniFile& ini=Map->UpdateAndGetIniFile();
 	ini.sections["Basic"].values["TimerInherit"]=GetText(&m_TimerInherit);	
 }
 
 void CSingleplayerSettings::OnEditchangeFillsilos() 
 {
-	CIniFile& ini=Map->GetIniFile();
+	CIniFile& ini=Map->UpdateAndGetIniFile();
 	ini.sections["Basic"].values["FillSilos"]=GetText(&m_FillSilos);
 }
 

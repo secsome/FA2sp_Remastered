@@ -92,7 +92,7 @@ void CGlobalsDlg::UpdateDialog()
 
 	int i;
 	BOOL bFailFind=FALSE;
-	CIniFile& ini=Map->GetIniFile();
+	CIniFile& ini=Map->UpdateAndGetIniFile();
 	for(i=0;i<100;i++)
 	{
 		char c[50];
@@ -121,7 +121,7 @@ void CGlobalsDlg::UpdateDialog()
 
 void CGlobalsDlg::OnChangeDescription() 
 {
-	CIniFile& ini=Map->GetIniFile();
+	CIniFile& ini=Map->UpdateAndGetIniFile();
 
 	int cursel=m_Global.GetCurSel();
 	if(cursel<0) return;
@@ -149,7 +149,7 @@ void CGlobalsDlg::OnChangeDescription()
 
 void CGlobalsDlg::OnSelchangeGlobal() 
 {
-	CIniFile& ini=Map->GetIniFile();
+	CIniFile& ini=Map->UpdateAndGetIniFile();
 
 	int cursel=m_Global.GetCurSel();
 	if(cursel<0) return;
@@ -186,7 +186,7 @@ void CGlobalsDlg::OnSelchangeValue()
 
 void CGlobalsDlg::OnEditchangeValue() 
 {
-	CIniFile& ini=Map->GetIniFile();
+	CIniFile& ini=Map->UpdateAndGetIniFile();
 	CString str;
 	m_Value.GetWindowText(str);
 	if(str.GetLength()==0) return;

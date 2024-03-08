@@ -80,7 +80,7 @@ END_MESSAGE_MAP()
 
 void CMapD::UpdateDialog()
 {
-	CIniFile& ini=Map->GetIniFile();
+	CIniFile& ini=Map->UpdateAndGetIniFile();
 
 	m_LocalSize.SetWindowText( ini.sections["Map"].values["LocalSize"] );
 	//m_Size.SetWindowText( ini.sections["Map"].values["Size"] );
@@ -107,7 +107,7 @@ void CMapD::OnChangeUsesize()
 
 void CMapD::OnEditchangeTheater() 
 {
-	CIniFile& ini=Map->GetIniFile();
+	CIniFile& ini=Map->UpdateAndGetIniFile();
 	ini.sections["Map"].values["Theater"]=GetText(&m_Theater);	
 }
 
@@ -124,7 +124,7 @@ void CMapD::UpdateStrings()
 
 void CMapD::OnChangelocal() 
 {
-	CIniFile& ini=Map->GetIniFile();
+	CIniFile& ini=Map->UpdateAndGetIniFile();
 	ini.sections["Map"].values["LocalSize"]=GetText(&m_LocalSize);
 	
 	Map->CalcMapRect();

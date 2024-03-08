@@ -117,7 +117,7 @@ BOOL CTriggerEditorDlg::OnInitDialog()
 void CTriggerEditorDlg::UpdateDialog()
 {
 	int i;
-	CIniFile& ini=Map->GetIniFile();
+	CIniFile& ini=Map->UpdateAndGetIniFile();
 	
 	int curSel=m_Trigger.GetCurSel();
 	int curData=-1;
@@ -159,7 +159,7 @@ void CTriggerEditorDlg::UpdateDialog()
 
 void CTriggerEditorDlg::OnNewtrigger() 
 {
-	CIniFile& ini=Map->GetIniFile();
+	CIniFile& ini=Map->UpdateAndGetIniFile();
 
 	CString ID_T=GetFreeID();
 	ini.sections["Triggers"].values[ID_T]=Map->GetHouseID(0, TRUE)+",<none>,New trigger,0,1,1,1,0";
@@ -187,7 +187,7 @@ void CTriggerEditorDlg::OnNewtrigger()
 
 void CTriggerEditorDlg::OnDeletetrigger() 
 {
-	CIniFile& ini=Map->GetIniFile();
+	CIniFile& ini=Map->UpdateAndGetIniFile();
 
 	int sel=m_Trigger.GetCurSel();
 	if(sel<0) return;
@@ -232,7 +232,7 @@ void CTriggerEditorDlg::OnSelchangeTrigger()
 
 void CTriggerEditorDlg::OnEditchangeTrigger() 
 {
-	CIniFile& ini=Map->GetIniFile();
+	CIniFile& ini=Map->UpdateAndGetIniFile();
 
 	int curSel=m_Trigger.GetCurSel();
 	if(curSel<0) 
@@ -285,7 +285,7 @@ void CTriggerEditorDlg::OnSelchangeTriggertab(NMHDR* pNMHDR, LRESULT* pResult)
 
 void CTriggerEditorDlg::OnPlaceonmap() 
 {
-	CIniFile& ini=Map->GetIniFile();
+	CIniFile& ini=Map->UpdateAndGetIniFile();
 
 	int sel=m_Trigger.GetCurSel();
 	if(sel<0) return;
@@ -316,7 +316,7 @@ void CTriggerEditorDlg::OnPlaceonmap()
 
 void CTriggerEditorDlg::OnClone() 
 {
-	CIniFile& ini=Map->GetIniFile();
+	CIniFile& ini=Map->UpdateAndGetIniFile();
 
 	int sel=m_Trigger.GetCurSel();
 	if(sel<0) return;

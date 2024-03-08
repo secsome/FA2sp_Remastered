@@ -84,7 +84,7 @@ void CTSOptions::OnOK()
 	this->GetDlgItem(IDC_EDIT1)->GetWindowText(m_TSEXE);
 	int n=m_Language.GetItemData(m_Language.GetCurSel()); 
 	
-	m_LanguageName=*language.sections["Languages"].GetValue(n);
+	m_LanguageName=*CIniFile::FALanguage.sections["Languages"].GetValue(n);
 
 	CDialog::OnOK();
 }
@@ -98,10 +98,10 @@ BOOL CTSOptions::OnInitDialog()
 	UpdateData(FALSE);
 
 	int i;
-	for(i=0;i<language.sections["Languages"].values.size();i++)
+	for(i=0;i<CIniFile::FALanguage.sections["Languages"].values.size();i++)
 	{
-		CString lang=*language.sections["Languages"].GetValue(i);
-		lang=language.sections[lang+"Header"].values["Name"];
+		CString lang=*CIniFile::FALanguage.sections["Languages"].GetValue(i);
+		lang=CIniFile::FALanguage.sections[lang+"Header"].values["Name"];
 
 		
 

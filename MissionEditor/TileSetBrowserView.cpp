@@ -391,11 +391,11 @@ DWORD CTileSetBrowserView::GetTileID(DWORD dwTileSet, DWORD dwType)
 		CString sec = "TileSet";
 		sec += tset;
 
-		if (tiles->sections.find(sec) == tiles->sections.end())
+		if (CIniFile::CurrentTheater->sections.find(sec) == CIniFile::CurrentTheater->sections.end())
 			return 0xFFFFFFFF;
 
 
-		for (e = 0;e < atoi(tiles->sections[sec].values["TilesInSet"]);e++)
+		for (e = 0;e < atoi(CIniFile::CurrentTheater->sections[sec].values["TilesInSet"]);e++)
 		{
 			if (i == dwTileSet && e == dwType)
 				return tilecount;
@@ -428,7 +428,7 @@ void CTileSetBrowserView::SetTileSet(DWORD dwTileSet, BOOL bOnlyRedraw)
 	m_tile_height = 0;
 
 	int i;
-	int max = atoi(tiles->sections[(CString)"TileSet" + tset].values["TilesInSet"]);
+	int max = atoi(CIniFile::CurrentTheater->sections[(CString)"TileSet" + tset].values["TilesInSet"]);
 	DWORD dwStartID = GetTileID(dwTileSet, 0);
 	if ((*tiledata)[dwStartID].wTileCount && (*tiledata)[dwStartID].tiles[0].pic)
 	{
@@ -446,15 +446,15 @@ void CTileSetBrowserView::SetTileSet(DWORD dwTileSet, BOOL bOnlyRedraw)
 			((CFinalSunDlg*)theApp.m_pMainWnd)->m_view.m_isoview->m_BrushSize_y = 1;
 
 			int i;
-			for (i = 0;i < g_data.sections["StdBrushSize"].values.size();i++)
+			for (i = 0;i < CIniFile::FAData.sections["StdBrushSize"].values.size();i++)
 			{
-				CString n = *g_data.sections["StdBrushSize"].GetValueName(i);
-				if ((*tiles).sections["General"].FindName(n) >= 0)
+				CString n = *CIniFile::FAData.sections["StdBrushSize"].GetValueName(i);
+				if ((*CIniFile::CurrentTheater).sections["General"].FindName(n) >= 0)
 				{
-					int tset = atoi((*tiles).sections["General"].values[n]);
+					int tset = atoi((*CIniFile::CurrentTheater).sections["General"].values[n]);
 					if (tset == m_currentTileSet)
 					{
-						int bs = atoi(*g_data.sections["StdBrushSize"].GetValue(i));
+						int bs = atoi(*CIniFile::FAData.sections["StdBrushSize"].GetValue(i));
 						((CFinalSunDlg*)theApp.m_pMainWnd)->m_settingsbar.m_BrushSize = bs - 1;
 						((CFinalSunDlg*)theApp.m_pMainWnd)->m_settingsbar.UpdateData(FALSE);
 						((CFinalSunDlg*)theApp.m_pMainWnd)->m_view.m_isoview->m_BrushSize_x = bs;
@@ -807,15 +807,15 @@ void CTileSetBrowserView::OnLButtonDown(UINT nFlags, CPoint point)
 					((CFinalSunDlg*)theApp.m_pMainWnd)->m_view.m_isoview->m_BrushSize_y = 1;
 
 					int i;
-					for (i = 0;i < g_data.sections["StdBrushSize"].values.size();i++)
+					for (i = 0;i < CIniFile::FAData.sections["StdBrushSize"].values.size();i++)
 					{
-						CString n = *g_data.sections["StdBrushSize"].GetValueName(i);
-						if ((*tiles).sections["General"].FindName(n) >= 0)
+						CString n = *CIniFile::FAData.sections["StdBrushSize"].GetValueName(i);
+						if ((*CIniFile::CurrentTheater).sections["General"].FindName(n) >= 0)
 						{
-							int tset = atoi((*tiles).sections["General"].values[n]);
+							int tset = atoi((*CIniFile::CurrentTheater).sections["General"].values[n]);
 							if (tset == m_currentTileSet)
 							{
-								int bs = atoi(*g_data.sections["StdBrushSize"].GetValue(i));
+								int bs = atoi(*CIniFile::FAData.sections["StdBrushSize"].GetValue(i));
 								((CFinalSunDlg*)theApp.m_pMainWnd)->m_settingsbar.m_BrushSize = bs - 1;
 								((CFinalSunDlg*)theApp.m_pMainWnd)->m_settingsbar.UpdateData(FALSE);
 								((CFinalSunDlg*)theApp.m_pMainWnd)->m_view.m_isoview->m_BrushSize_x = bs;
@@ -934,7 +934,7 @@ void CTileSetBrowserView::SetOverlay(DWORD dwID)
 	}
 	if (!bFound)
 	{
-		theApp.m_loading->LoadOverlayGraphic(*rules.sections["OverlayTypes"].GetValue(dwID), dwID);
+		theApp.m_loading->LoadOverlayGraphic(*CIniFile::Rules.sections["OverlayTypes"].GetValue(dwID), dwID);
 		((CFinalSunDlg*)(theApp.m_pMainWnd))->m_view.m_isoview->UpdateOverlayPictures();
 		//p=ovrlpics[dwID][k];
 	}

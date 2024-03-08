@@ -635,7 +635,7 @@ void CFinalSunDlg::UpdateDialogs(BOOL bOnlyMissionControl, BOOL bNoRepos)
 	if(m_aitriggertypes.m_hWnd) m_aitriggertypes.UpdateDialog();
 	if(m_singleplayersettings.m_hWnd) m_singleplayersettings.UpdateDialog();
 
-	CIniFile& ini=Map->GetIniFile();
+	CIniFile& ini=Map->UpdateAndGetIniFile();
 	if(ini.sections.find(MAPHOUSES)!=ini.sections.end() && ini.sections[MAPHOUSES].values.size()>0)
 	{
 		if(ini.sections[MAPHOUSES].FindValue("Neutral")>=0)
@@ -644,7 +644,7 @@ void CFinalSunDlg::UpdateDialogs(BOOL bOnlyMissionControl, BOOL bNoRepos)
 			currentOwner=*ini.sections[MAPHOUSES].GetValue(0);
 	}
 	else
-		currentOwner="Neutral";//*rules.sections[HOUSES].GetValue(0);
+		currentOwner="Neutral";//*CIniFile::Rules.sections[HOUSES].GetValue(0);
 
 	if(!bOnlyMissionControl)
 	{
@@ -657,7 +657,7 @@ void CFinalSunDlg::UpdateDialogs(BOOL bOnlyMissionControl, BOOL bNoRepos)
 		m_view.m_objectview->UpdateDialog();
 		m_view.m_minimap.UpdateView();
 
-		if(tiles!=NULL && tiledata!=NULL && tiledata_count!=NULL)
+		if(CIniFile::CurrentTheater!=NULL && tiledata!=NULL && tiledata_count!=NULL)
 		m_view.m_browser->m_bar.Update();
 	}
 
@@ -717,9 +717,9 @@ void CFinalSunDlg::OnFileSaveas()
 
 void CFinalSunDlg::OnOptionsExportrulesini() 
 {
-	int res=MessageBox("This will export the Rules.Ini of Tiberian Sun V1.13 MMX. ou should not modify this rules.ini because you won´t be able to play online then and ecause this could cause compatibility problems.\nIf you want to modify the rules.ini, you need to rename it before you play online.", "Export Rules.INI", MB_OK);
+	int res=MessageBox("This will export the Rules.Ini of Tiberian Sun V1.13 MMX. ou should not modify this CIniFile::Rules.ini because you won´t be able to play online then and ecause this could cause compatibility problems.\nIf you want to modify the CIniFile::Rules.ini, you need to rename it before you play online.", "Export Rules.INI", MB_OK);
 
-	CFileDialog dlg(FALSE, ".ini", "rules.ini", OFN_HIDEREADONLY | OFN_OVERWRITEPROMPT, "Rules.INI|rules.ini|");
+	CFileDialog dlg(FALSE, ".ini", "CIniFile::Rules.ini", OFN_HIDEREADONLY | OFN_OVERWRITEPROMPT, "Rules.INI|CIniFile::Rules.ini|");
 
 	char cuPath[MAX_PATH];
 	BOOL hidePreview=FALSE;
@@ -868,7 +868,7 @@ void CFinalSunDlg::SaveMap(CString FileName_)
 			
 		}
 		char c[50];
-		CIniFile& ini=Map->GetIniFile();
+		CIniFile& ini=Map->UpdateAndGetIniFile();
 		CIniFileSection& sec=ini.sections["Header"];
 		itoa(wp_count, c, 10);
 		sec.values["NumberStartingPoints"]=c;
@@ -893,7 +893,7 @@ void CFinalSunDlg::SaveMap(CString FileName_)
 		itoa(width, c, 10); 
 		sec.values["Width"]=c;
 
-		//CIniFile& ini=Map->GetIniFile();
+		//CIniFile& ini=Map->UpdateAndGetIniFile();
 
 		CString left=GetParam(ini.sections["Map"].values["LocalSize"], 0);
 		CString top=GetParam(ini.sections["Map"].values["LocalSize"], 1);
@@ -953,7 +953,7 @@ void CFinalSunDlg::SaveMap(CString FileName_)
 		CSaveMapOptionsDlg opt;
 
 
-		CString gm=Map->GetIniFile().sections["Basic"].values["GameMode"];
+		CString gm=Map->UpdateAndGetIniFile().sections["Basic"].values["GameMode"];
 		gm.MakeLower();
 		if(gm.GetLength())
 		{
@@ -989,8 +989,8 @@ void CFinalSunDlg::SaveMap(CString FileName_)
 		if(gm.GetLength()==0) gm="standard";
 		
 
-		Map->GetIniFile().sections["Basic"].values["Name"]=opt.m_MapName;
-		Map->GetIniFile().sections["Basic"].values["GameMode"]=gm;
+		Map->UpdateAndGetIniFile().sections["Basic"].values["Name"]=opt.m_MapName;
+		Map->UpdateAndGetIniFile().sections["Basic"].values["GameMode"]=gm;
 
 		int i;
 		int count=0;
@@ -1007,10 +1007,10 @@ void CFinalSunDlg::SaveMap(CString FileName_)
 
 		if(count<2) count=2;
 
-		Map->GetIniFile().sections["Basic"].values["MinPlayer"]="2";
+		Map->UpdateAndGetIniFile().sections["Basic"].values["MinPlayer"]="2";
 		char c[50];
 		itoa(count, c, 10);
-		Map->GetIniFile().sections["Basic"].values["MaxPlayer"]=c;
+		Map->UpdateAndGetIniFile().sections["Basic"].values["MaxPlayer"]=c;
 		
 		if(opt.m_Compress==0) dwFlags|=MAPDATA_UPDATE_TO_INI_ALL_COMPRESSED;
 		if(opt.m_PreviewMode==0) dwFlags|=MAPDATA_UPDATE_TO_INI_ALL_PREVIEW;
@@ -1055,9 +1055,9 @@ void CFinalSunDlg::SaveMap(CString FileName_)
 
 		dwFlags|=MAPDATA_UPDATE_TO_INI_ALL_PREVIEW;
 
-		Map->GetIniFile().sections["Basic"].values["Official"]="Yes";
+		Map->UpdateAndGetIniFile().sections["Basic"].values["Official"]="Yes";
 
-		// Map->GetIniFile().sections["Basic"].values["Name"]=opt.m_Description;
+		// Map->UpdateAndGetIniFile().sections["Basic"].values["Name"]=opt.m_Description;
 	}	
 	
 	SetText("Packing data...");
@@ -1074,7 +1074,7 @@ void CFinalSunDlg::SaveMap(CString FileName_)
 
 		
 
-	CIniFile& ini=Map->GetIniFile();
+	CIniFile& ini=Map->UpdateAndGetIniFile();
 
 
 	int i;
@@ -1493,7 +1493,7 @@ void CFinalSunDlg::OnMenuSelect(UINT nItemID, UINT nFlags, HMENU hSysMenu)
 		SetText(GetLanguageStringACP("HelpTipOfTheDayHelp"));
 		break;
 	case ID_OPTIONS_EXPORTRULESINI:
-		SetText("Export the file rules.ini");
+		SetText("Export the file CIniFile::Rules.ini");
 		break;
 	default:
 		SetReady();
@@ -1537,7 +1537,7 @@ void CFinalSunDlg::OnFileImportmod()
 
 void CFinalSunDlg::OnDebugExportmappacknosections() 
 {
-	CIniFile& ini=Map->GetIniFile();
+	CIniFile& ini=Map->UpdateAndGetIniFile();
 
 	CString ovrl;
 	int i;
@@ -1579,7 +1579,7 @@ void CFinalSunDlg::OnDebugExportmappack()
 
 void DeleteTypeList(CString SectionType)
 {
-	CIniFile& ini=Map->GetIniFile();
+	CIniFile& ini=Map->UpdateAndGetIniFile();
 	
 	int i;
 	for(i=0;i<ini.sections[SectionType].values.size();i++)
@@ -1636,7 +1636,7 @@ void CFinalSunDlg::OnFileNew()
 		if(spdlg.DoModal()==IDCANCEL) return;
 		bPrepareHouses=spdlg.m_PrepareHouses;
 		bAutoProd=spdlg.m_AutoProd;
-		plhouse=*rules.sections[HOUSES].GetValue(spdlg.m_House);
+		plhouse=*CIniFile::Rules.sections[HOUSES].GetValue(spdlg.m_House);
 	}
 
 	bNoDraw=TRUE;
@@ -1680,7 +1680,7 @@ void CFinalSunDlg::OnFileNew()
 				Map->ClearOverlayData();
 			}
 			
-			CIniFile& ini=Map->GetIniFile();
+			CIniFile& ini=Map->UpdateAndGetIniFile();
 
 			int i;
 			int count=Map->GetTerrainCount();
@@ -1773,7 +1773,7 @@ void CFinalSunDlg::OnFileNew()
 	last_succeeded_operation=11004;
 
 
-	CIniFile& ini=Map->GetIniFile();
+	CIniFile& ini=Map->UpdateAndGetIniFile();
 
 	if(!bSingleplayer) ini.sections["Basic"].values["MultiplayerOnly"]="1";
 
@@ -1795,16 +1795,16 @@ void CFinalSunDlg::OnFileNew()
 			ini.sections["Basic"].values["Player"]=plhouse;
 			
 			int i;
-			for (i=0;i<rules.sections[HOUSES].values.size();i++)
+			for (i=0;i<CIniFile::Rules.sections[HOUSES].values.size();i++)
 			{
-				CString j=*rules.sections[HOUSES].GetValue(i);
+				CString j=*CIniFile::Rules.sections[HOUSES].GetValue(i);
 				j.MakeLower();
 				if(j=="nod" || j=="gdi") continue;
 
 				char c[50];
 				int k=i;
 				itoa(k,c,10);
-				CString country=*rules.sections[HOUSES].GetValue(i);
+				CString country=*CIniFile::Rules.sections[HOUSES].GetValue(i);
 				CString house=GetHouseSectionName(country);
 				ini.sections[MAPHOUSES].values[c]=house;
 				ini.sections[HOUSES].values[c]=country;
@@ -1817,14 +1817,14 @@ void CFinalSunDlg::OnFileNew()
 					ini.sections[house].values["PlayerControl"]="no";
 
 					// now, if the user wants to, check if this house is a passive or active house
-					if(stricmp(rules.sections[house].values["MultiplayPassive"],"true")!=NULL && bAutoProd)
+					if(stricmp(CIniFile::Rules.sections[house].values["MultiplayPassive"],"true")!=NULL && bAutoProd)
 					{
 						CString id=GetFreeID();
 
 						char c[50];
 						k=i;
 						itoa(i,c,10);
-						//k=i+rules.sections[HOUSES].values.size();
+						//k=i+CIniFile::Rules.sections[HOUSES].values.size();
 						//itoa(k,c,10);
 						
 						ini.sections["Triggers"].values[id]=country;
@@ -1859,10 +1859,10 @@ void CFinalSunDlg::OnFileNew()
 					ini.sections[house].values["PlayerControl"]="yes";
 				}
 
-				ini.sections[house].values["Country"]=*rules.sections[HOUSES].GetValue(i);
+				ini.sections[house].values["Country"]=*CIniFile::Rules.sections[HOUSES].GetValue(i);
 				ini.sections[house].values["Edge"]="North";
 				
-				ini.sections[house].values["Color"]=rules.sections[*rules.sections[HOUSES].GetValue(i)].values["Color"];
+				ini.sections[house].values["Color"]=CIniFile::Rules.sections[*CIniFile::Rules.sections[HOUSES].GetValue(i)].values["Color"];
 				ini.sections[house].values["Allies"]=house;
 				ini.sections[house].values["Credits"]="0";
 				ini.sections[house].values["NodeCount"]="0";
@@ -1871,11 +1871,11 @@ void CFinalSunDlg::OnFileNew()
 
 				ini.sections[country].values["ParentCountry"]=country;
 				ini.sections[country].values["Name"]=country;
-				ini.sections[country].values["Suffix"]=rules.sections[country].values["Suffix"];
-				ini.sections[country].values["Prefix"]=rules.sections[country].values["Prefix"];
-				ini.sections[country].values["Color"]=rules.sections[country].values["Color"];
-				ini.sections[country].values["Side"]=rules.sections[country].values["Side"];
-				ini.sections[country].values["SmartAI"]=rules.sections[country].values["SmartAI"];
+				ini.sections[country].values["Suffix"]=CIniFile::Rules.sections[country].values["Suffix"];
+				ini.sections[country].values["Prefix"]=CIniFile::Rules.sections[country].values["Prefix"];
+				ini.sections[country].values["Color"]=CIniFile::Rules.sections[country].values["Color"];
+				ini.sections[country].values["Side"]=CIniFile::Rules.sections[country].values["Side"];
+				ini.sections[country].values["SmartAI"]=CIniFile::Rules.sections[country].values["SmartAI"];
 				ini.sections[country].values["CostUnitsMult"]="1";
 
 			}
@@ -1886,12 +1886,12 @@ void CFinalSunDlg::OnFileNew()
 	{
 		// for RA2, we create standard houses
 		int i;
-		for (i=0;i<rules.sections[HOUSES].values.size();i++)
+		for (i=0;i<CIniFile::Rules.sections[HOUSES].values.size();i++)
 		{
 			char c[50];
 			int k=i;
 			itoa(k,c,10);
-			CString country=*rules.sections[HOUSES].GetValue(i);
+			CString country=*CIniFile::Rules.sections[HOUSES].GetValue(i);
 
 			if(country.GetLength()==0) continue; // make sure we don´t have an empty entry
 
@@ -1900,7 +1900,7 @@ void CFinalSunDlg::OnFileNew()
 			
 			ini.sections[country].values["IQ"]="0";
 			ini.sections[country].values["Edge"]="North";
-			ini.sections[country].values["Color"]=rules.sections[country].values["Color"];
+			ini.sections[country].values["Color"]=CIniFile::Rules.sections[country].values["Color"];
 			ini.sections[country].values["Allies"]=country;
 			ini.sections[country].values["Country"]=country;
 			ini.sections[country].values["Credits"]="0";
@@ -1918,9 +1918,9 @@ void CFinalSunDlg::OnFileNew()
 	if(createdlg.m_AITriggers)
 	{
 		int i;
-		for(i=0;i<ai.sections["AITriggerTypes"].values.size();i++)
+		for(i=0;i<CIniFile::Ai.sections["AITriggerTypes"].values.size();i++)
 		{
-			ini.sections["AITriggerTypesEnable"].values[*ai.sections["AITriggerTypes"].GetValueName(i)]="yes";		
+			ini.sections["AITriggerTypesEnable"].values[*CIniFile::Ai.sections["AITriggerTypes"].GetValueName(i)]="yes";		
 		}
 	}
 
@@ -2094,7 +2094,7 @@ void CFinalSunDlg::OnHelpTipoftheday()
 
 void CFinalSunDlg::UnloadAll()
 {
-	int iQuit=MessageBox(GetLanguageStringACP("MainDialogExitQuestion"), GetLanguageStringACP("MainDialogExitQuestionCap"), MB_ICONQUESTION | MB_YESNO | MB_DEFBUTTON2);
+	int iQuit=MessageBox(GetLanguageStringACP("MainDialogExitQuestion"), GetLanguageStringACP("MainDialogExitQuestionCap"), MB_ICONQUESTION | MB_YESNO);
 	if(iQuit==IDNO) return;
 	else{
 		try
@@ -2108,19 +2108,20 @@ void CFinalSunDlg::UnloadAll()
 
 		theApp.m_loading->FreeAll();
 		
-		rules.Clear();
-		ai.Clear();
-		art.Clear();
-		tiles_t.Clear();
-		tiles_s.Clear();
-		tiles_u.Clear();
-		Map->GetIniFile().Clear();
-		sound.Clear();
-		g_data.Clear();
-		language.Clear();
-		
-		
-				
+		CIniFile::Rules.Clear();
+		CIniFile::Ai.Clear();
+		CIniFile::Art.Clear();
+		CIniFile::Temperate.Clear();
+		CIniFile::Snow.Clear();
+		CIniFile::Urban.Clear();
+		CIniFile::NewUrban.Clear();
+		CIniFile::Lunar.Clear();
+		CIniFile::Desert.Clear();
+		Map->UpdateAndGetIniFile().Clear();
+		CIniFile::Sound.Clear();
+		CIniFile::FAData.Clear();
+		CIniFile::FALanguage.Clear();
+	
 		DestroyWindow();
 		}
 		catch(...)
@@ -3056,16 +3057,16 @@ LONG __stdcall ExceptionHandler(
 	
 	theApp.m_loading->FreeAll();
 
-	rules.Clear();
-	ai.Clear();
-	art.Clear();
-	tiles_t.Clear();
-	tiles_s.Clear();
-	tiles_u.Clear();
-	Map->GetIniFile().Clear();
-	sound.Clear();
-	g_data.Clear();
-	language.Clear();
+	CIniFile::Rules.Clear();
+	CIniFile::Ai.Clear();
+	CIniFile::Art.Clear();
+	CIniFile::Temperate.Clear();
+	CIniFile::Snow.Clear();
+	CIniFile::Urban.Clear();
+	Map->UpdateAndGetIniFile().Clear();
+	CIniFile::Sound.Clear();
+	CIniFile::FAData.Clear();
+	CIniFile::FALanguage.Clear();
 
 #ifdef _DEBUG
 	return EXCEPTION_CONTINUE_SEARCH;

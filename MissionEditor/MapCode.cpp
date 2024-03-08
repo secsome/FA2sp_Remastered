@@ -88,7 +88,7 @@ void MC_GetHeaderRect(int& startx, int& starty, int& width, int& height)
 	LocalRect.Width=r.right;
 	LocalRect.Height=r.bottom;
 
-	CIniFile& ini=Map->GetIniFile();
+	CIniFile& ini=Map->UpdateAndGetIniFile();
 	PlayRect.X=0;
 	PlayRect.Y=0;
 	PlayRect.Width=Map->GetWidth();

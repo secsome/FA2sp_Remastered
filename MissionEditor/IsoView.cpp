@@ -1011,7 +1011,7 @@ void CIsoView::OnMouseMove(UINT nFlags, CPoint point)
 
 	static BOOL isMoving = FALSE;
 
-	CIniFile& ini = Map->GetIniFile();
+	CIniFile& ini = Map->UpdateAndGetIniFile();
 
 	cur_x_mouse = point.x;
 	cur_y_mouse = point.y;
@@ -2049,7 +2049,7 @@ void CIsoView::OnRButtonUp(UINT nFlags, CPoint point)
 		m_drag = FALSE; return;
 	}
 
-	CIniFile& ini = Map->GetIniFile();
+	CIniFile& ini = Map->UpdateAndGetIniFile();
 
 	RedrawWindow(NULL, NULL, RDW_INVALIDATE | RDW_UPDATENOW);
 
@@ -2098,7 +2098,7 @@ BOOL CIsoView::OnCommand(WPARAM wParam, LPARAM lParam)
 	int wID = LOWORD(wParam);         // item, control, or accelerator identifier 
 	HWND hwndCtl = (HWND)lParam;      // handle of control 
 
-	CIniFile& ini = Map->GetIniFile();
+	CIniFile& ini = Map->UpdateAndGetIniFile();
 
 
 	if (wID < valadded)
@@ -2149,7 +2149,7 @@ BOOL CIsoView::OnCommand(WPARAM wParam, LPARAM lParam)
 
 void CIsoView::HandleProperties(int n, int type)
 {
-	CIniFile& ini = Map->GetIniFile();
+	CIniFile& ini = Map->UpdateAndGetIniFile();
 
 	if (n < 0) return;
 	switch (type)
@@ -2354,7 +2354,7 @@ void CIsoView::OnLButtonDown(UINT nFlags, CPoint point)
 	if (b_IsLoading == TRUE) return;
 
 
-	CIniFile& ini = Map->GetIniFile();
+	CIniFile& ini = Map->UpdateAndGetIniFile();
 
 	const auto projCoords = GetProjectedCoordinatesFromClientCoordinates(point);
 	const MapCoords mapCoords = GetMapCoordinatesFromClientCoordinates(point, (nFlags & MK_CONTROL) == MK_CONTROL);
@@ -2859,7 +2859,7 @@ void CIsoView::OnLButtonDown(UINT nFlags, CPoint point)
 
 			dlg.m_tag = tag;
 			dlg.m_tag += " (";
-			dlg.m_tag += GetParam(Map->GetIniFile().sections["Tags"].values[(LPCTSTR)tag], 1);
+			dlg.m_tag += GetParam(Map->UpdateAndGetIniFile().sections["Tags"].values[(LPCTSTR)tag], 1);
 			dlg.m_tag += ")";
 
 			if (dlg.DoModal() == IDCANCEL) return;
@@ -2951,7 +2951,7 @@ void CIsoView::PlaceTile(const int x, const int y, const UINT nMouseFlags)
 		}
 	}
 
-	// now make current tiles available for redo
+	// now make current CIniFile::CurrentTheater available for redo
 	Map->TakeSnapshot(TRUE, x - 6, y - 6, x + (*tiledata)[AD.type].cx * m_BrushSize_x + 6, y + (*tiledata)[AD.type].cy * m_BrushSize_y + 6);
 	Map->Undo();
 }
@@ -2964,7 +2964,7 @@ void CIsoView::OnLButtonUp(UINT nFlags, CPoint point)
 {
 	if (b_IsLoading == TRUE) return;
 
-	CIniFile& ini = Map->GetIniFile();
+	CIniFile& ini = Map->UpdateAndGetIniFile();
 
 	const auto projCoords = GetProjectedCoordinatesFromClientCoordinates(point);
 	const MapCoords mapCoords = GetMapCoordinatesFromClientCoordinates(point, (nFlags & MK_CONTROL) == MK_CONTROL);
@@ -3482,104 +3482,27 @@ void CIsoView::OnSize(UINT nType, int cx, int cy)
 
 COLORREF CIsoView::GetColor(const char* house, const char* vcolor)
 {
-
-	COLORREF neutral = RGB(120, 120, 120);
-	COLORREF GDI = RGB(170, 170, 0);
-	COLORREF Nod = RGB(255, 0, 0);
-	COLORREF other = RGB(255, 255, 0);
-
-	CString color;
-	CIniFile& ini = Map->GetIniFile();
+	CString color = "";
 	if (house && strlen(house))
 	{
-		if (ini.sections.find(house) != ini.sections.end())
-		{
-			color = ini.sections[house].values["Color"];
-		}
-		else
-			color = rules.sections[house].values["Color"];
+		if (auto pStr = MapRules.TryGetString(house, "Color"))
+			color = *pStr;
 	}
 
 	if (vcolor)
 		color = vcolor;
 
-	if (color)
+	unsigned char hsv[3];
+	if (!color.IsEmpty())
 	{
-		CString colorValues;
-		if (ini.sections.contains("Colors"))
-		{
-			colorValues = ini.sections["Colors"].GetValueByName(color);
-		}
-		if (colorValues.IsEmpty() && rules.sections.contains("Colors"))
-		{
-			colorValues = rules.sections["Colors"].GetValueByName(color);
-		}
-		auto colorArray = SplitParams(colorValues);
-		if (colorArray.size() == 3)
-		{
-			unsigned char hsv[3] = { static_cast<unsigned char>(std::atoi(colorArray[0])), static_cast<unsigned char>(std::atoi(colorArray[1])), static_cast<unsigned char>(std::atoi(colorArray[2])) };
-			unsigned char rgb[3];
-			HSVToRGB(hsv, rgb);
-			return RGB(rgb[0], rgb[1], rgb[2]);
-		}
+		if (auto const ppValue = CIniFile::Rules.TryGetValueByName("Colors", color))
+			sscanf_s(*ppValue, "%hhu,%hhu,%hhu", &hsv[0], &hsv[1], &hsv[2]);
 	}
 
-	if (isIncluded(color, "darkred") != NULL)
-	{
-		return RGB(130, 20, 20);
-	}
-	if (isIncluded(color, "grey") != NULL)
-	{
-		return RGB(120, 120, 120);
-	}
-	if (isIncluded(color, "red") != NULL)
-	{
-		return RGB(240, 20, 20);
-	}
-	if (isIncluded(color, "lightgold") != NULL)
-	{
-		return RGB(220, 220, 150);
-	}
-	if (isIncluded(color, "yellow") != NULL)
-	{
-		return RGB(240, 240, 0);
-	}
-	if (isIncluded(color, "gold") != NULL)
-	{
-		return RGB(230, 200, 0);
-	}
-	if (isIncluded(color, "darkgreen") != NULL)
-	{
-		return RGB(50, 160, 70);
-	}
-	if (isIncluded(color, "neongreen") != NULL)
-	{
-		return RGB(10, 255, 10);
-	}
-	if (isIncluded(color, "green") != NULL)
-	{
-		return RGB(50, 200, 70);
-	}
-	if (isIncluded(color, "darkblue") != NULL)
-	{
-		return RGB(30, 30, 150);
-	}
-	if (isIncluded(color, "lightblue") != NULL)
-	{
-		return RGB(100, 100, 200);
-	}
-	if (isIncluded(color, "neonblue") != NULL)
-	{
-		return RGB(35, 205, 255);
-	}
+	const auto rgb = HSVToRGB(hsv);
 
-	{
-		return other;
-	}
+	return RGB(rgb[0], rgb[1], rgb[2]);
 }
-
-
-
 
 /*
 GetOverlayPic(BYTE ovrl, BYTE ovrldata);
@@ -4011,7 +3934,7 @@ void CIsoView::DrawCell(void* dest, int dest_width, int dest_height, int dest_pi
 		}
 	}
 
-	//  pixels of neighboured MM tiles boundary
+	//  pixels of neighboured MM CIniFile::CurrentTheater boundary
 	if (touchNeighbours)
 	{
 		for (int x = 0; x < 1; ++x)  // you could use this loop for more thickness
@@ -4288,7 +4211,7 @@ void CIsoView::UpdateStatusBar(int x, int y)
 		CString name;
 		DWORD pos;
 		Map->GetCelltagData(n, &type, &pos);
-		CIniFile& ini = Map->GetIniFile();
+		CIniFile& ini = Map->UpdateAndGetIniFile();
 		if (ini.sections["Tags"].values.find(type) != ini.sections["Tags"].values.end())
 			name = GetParam(ini.sections["Tags"].values[type], 1);
 
@@ -5212,7 +5135,7 @@ void CIsoView::FillArea(DWORD dwX, DWORD dwY, DWORD dwID, BYTE bSubTile)
 {
 	if ((*tiledata)[dwID].cx != 1 || (*tiledata)[dwID].cy != 1)
 	{
-		MessageBox("You can only use 1x1 tiles to fill areas.");
+		MessageBox("You can only use 1x1 CIniFile::CurrentTheater to fill areas.");
 		return;
 	}
 
@@ -5292,7 +5215,7 @@ void CIsoView::AutoLevel()
 		}
 	}*/
 
-	/*int count=atoi(g_data.sections["SlopeSetPiecesDirections"].values["Count"]);
+	/*int count=atoi(CIniFile::FAData.sections["SlopeSetPiecesDirections"].values["Count"]);
 	BYTE* bXLeftSearch=new(BYTE[count]);
 	BYTE* bXRightSearch=new(BYTE[count]);
 	BYTE* bYTopSearch=new(BYTE[count]);
@@ -5302,7 +5225,7 @@ void CIsoView::AutoLevel()
 	{
 		char c[50];
 		itoa(i,c,10);
-		CString s=*g_data.sections["SlopeSetPiecesDirections"].GetValue(i);
+		CString s=*CIniFile::FAData.sections["SlopeSetPiecesDirections"].GetValue(i);
 		if(s=="Right_1") { bXLeftSearch=0; bXRightSearch=1; b
 		else if(s=="Left_1") bDirections[i]=1;
 		else if(s=="Bottom_1") bDirections[i]=2;
@@ -5632,7 +5555,7 @@ void CIsoView::DrawMap()
 
 	// Now left, right, top & bottom contain the needed values
 
-	DWORD MM_heightstart = tilesets_start[atoi((*tiles).sections["General"].values["HeightBase"])];
+	DWORD MM_heightstart = tilesets_start[atoi((*CIniFile::CurrentTheater).sections["General"].values["HeightBase"])];
 
 	// now draw everything
 	int u, v, z;
@@ -5863,7 +5786,7 @@ void CIsoView::DrawMap()
 					if (!pic.bTried)
 					{
 						SetError("Loading graphics");
-						theApp.m_loading->LoadOverlayGraphic(*rules.sections["OverlayTypes"].GetValue(m.overlay), m.overlay);
+						theApp.m_loading->LoadOverlayGraphic(*CIniFile::Rules.sections["OverlayTypes"].GetValue(m.overlay), m.overlay);
 						UpdateOverlayPictures(m.overlay);
 						if (ovrlpics[m.overlay][m.overlaydata] != NULL)
 							pic = *ovrlpics[m.overlay][m.overlaydata];
@@ -6019,10 +5942,10 @@ void CIsoView::DrawMap()
 							{
 								static const CString LocLookup[3][2] = { {"PowerUp1LocXX", "PowerUp1LocYY"}, {"PowerUp2LocXX", "PowerUp2LocYY"}, {"PowerUp3LocXX", "PowerUp3LocYY"} };
 								const auto drawCoordsPowerUp = drawCoordsBldShp + ProjectedVec(
-									atoi(art.sections[objp.type].values[LocLookup[upgrade][0]]),
-									atoi(art.sections[objp.type].values[LocLookup[upgrade][1]])
+									atoi(CIniFile::Art.sections[objp.type].values[LocLookup[upgrade][0]]),
+									atoi(CIniFile::Art.sections[objp.type].values[LocLookup[upgrade][1]])
 								);
-								// py-=atoi(art.sections[obj.type].values["PowerUp1LocZZ"]); 
+								// py-=atoi(CIniFile::Art.sections[obj.type].values["PowerUp1LocZZ"]); 
 #ifndef NOSURFACES
 								Blit(pic.pic, drawCoordsPowerUp.x, drawCoordsPowerUp.y);
 #else
@@ -6080,11 +6003,11 @@ void CIsoView::DrawMap()
 
 					if (pic.pic == NULL)
 					{
-						if (!missingimages[*rules.sections["BuildingTypes"].GetValue(m.node.type)])
+						if (!missingimages[*CIniFile::Rules.sections["BuildingTypes"].GetValue(m.node.type)])
 						{
 							SetError("Loading graphics");
-							theApp.m_loading->LoadUnitGraphic(*rules.sections["BuildingTypes"].GetValue(m.node.type));
-							::Map->UpdateBuildingInfo(*rules.sections["BuildingTypes"].GetValue(m.node.type));
+							theApp.m_loading->LoadUnitGraphic(*CIniFile::Rules.sections["BuildingTypes"].GetValue(m.node.type));
+							::Map->UpdateBuildingInfo(*CIniFile::Rules.sections["BuildingTypes"].GetValue(m.node.type));
 							pic = buildinginfo[id].pic[0];
 						}
 						if (pic.pic == NULL);
@@ -6092,7 +6015,7 @@ void CIsoView::DrawMap()
 #ifndef NOSURFACES
 							Blit(pics["HOUSE"].pic, drawCoordsBld.x, drawCoordsBld.y - 19);
 #endif
-							missingimages[*rules.sections["BuildingTypes"].GetValue(m.node.type)] = TRUE;
+							missingimages[*CIniFile::Rules.sections["BuildingTypes"].GetValue(m.node.type)] = TRUE;
 						}
 					}
 

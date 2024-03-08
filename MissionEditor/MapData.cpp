@@ -59,7 +59,7 @@ void GetNodeName(CString& name, int n);
 
 CString GetFree(const char* section)
 {
-	CIniFile& ini = Map->GetIniFile();
+	CIniFile& ini = Map->UpdateAndGetIniFile();
 
 	int i = 0;
 	char l[50];
@@ -82,9 +82,9 @@ buildingid map
 */
 inline int GetBuildingNumber(LPCTSTR name)
 {
-	CIniFile& ini = Map->GetIniFile();
+	CIniFile& ini = Map->UpdateAndGetIniFile();
 
-	int v = rules.sections["BuildingTypes"].FindValue(name);
+	int v = CIniFile::Rules.sections["BuildingTypes"].FindValue(name);
 
 	if (v > -1)
 	{
@@ -102,9 +102,9 @@ inline int GetBuildingNumber(LPCTSTR name)
 
 inline int GetTerrainNumber(LPCTSTR name)
 {
-	CIniFile& ini = Map->GetIniFile();
+	CIniFile& ini = Map->UpdateAndGetIniFile();
 
-	int v = rules.sections["TerrainTypes"].FindValue(name);
+	int v = CIniFile::Rules.sections["TerrainTypes"].FindValue(name);
 
 	if (v > -1)
 	{
@@ -123,9 +123,9 @@ inline int GetTerrainNumber(LPCTSTR name)
 #ifdef SMUDGE_SUPP
 inline int GetSmudgeNumber(LPCTSTR name)
 {
-	CIniFile& ini = Map->GetIniFile();
+	CIniFile& ini = Map->UpdateAndGetIniFile();
 
-	int v = rules.sections["SmudgeTypes"].FindValue(name);
+	int v = CIniFile::Rules.sections["SmudgeTypes"].FindValue(name);
 
 	if (v > -1)
 	{
@@ -195,7 +195,7 @@ FIELDDATA::FIELDDATA()
 		ASSERT(ground == 0);
 
 		// we assume ground 0 will never be a bridge set, so don't do this check here in contrast to UpdateMapFieldData
-		if ((*tiledata)[ground].bReplacementCount) //&& atoi((*tiles).sections["General"].values["BridgeSet"]) != (*tiledata)[ground].wTileSet)
+		if ((*tiledata)[ground].bReplacementCount) //&& atoi((*CIniFile::CurrentTheater).sections["General"].values["BridgeSet"]) != (*tiledata)[ground].wTileSet)
 		{
 			replacement = rand() * (1 + (*tiledata)[ground].bReplacementCount) / RAND_MAX;
 		}
@@ -368,7 +368,7 @@ WORD CMapData::GetHousesCount(BOOL bCountries)
 	if (m_mapfile.sections.find(sSection) != m_mapfile.sections.end())
 		if (m_mapfile.sections[sSection].values.size() > 0) return m_mapfile.sections[sSection].values.size();
 
-	return(rules.sections[HOUSES].values.size());
+	return(CIniFile::Rules.sections[HOUSES].values.size());
 }
 
 CString CMapData::GetHouseID(WORD wHouse, BOOL bCountry)
@@ -383,7 +383,7 @@ CString CMapData::GetHouseID(WORD wHouse, BOOL bCountry)
 	if (m_mapfile.sections.find(sSection) != m_mapfile.sections.end())
 		if (m_mapfile.sections[sSection].values.size() > 0) return *m_mapfile.sections[sSection].GetValue(wHouse);
 
-	return(*rules.sections[HOUSES].GetValue(wHouse));
+	return(*CIniFile::Rules.sections[HOUSES].GetValue(wHouse));
 }
 
 DWORD CMapData::GetAITriggerTypeCount()
@@ -433,7 +433,7 @@ WORD CMapData::GetHouseIndex(LPCTSTR lpHouse)
 			return m_mapfile.sections[HOUSES].FindValue(lpHouse);
 
 
-	return rules.sections[HOUSES].FindValue(lpHouse);
+	return CIniFile::Rules.sections[HOUSES].FindValue(lpHouse);
 }
 
 DWORD CMapData::GetAITriggerTypeIndex(LPCTSTR lpID)
@@ -450,9 +450,14 @@ CString CMapData::GetAITriggerTypeID(DWORD dwAITriggerType)
 	return *m_mapfile.sections["AITriggerTypes"].GetValueName(dwAITriggerType);
 }
 
-CIniFile& CMapData::GetIniFile()
+CIniFile& CMapData::UpdateAndGetIniFile()
 {
 	UpdateIniFile();
+	return m_mapfile;
+}
+
+CIniFile& CMapData::GetIniFile()
+{
 	return m_mapfile;
 }
 
@@ -482,21 +487,21 @@ void CMapData::UpdateIniFile(DWORD dwFlags)
 		CalcMapRect();
 		InitMinimap();
 
-		slopesetpiecesset = atoi((*tiles).sections["General"].values["SlopeSetPieces"]);
-		rampset = atoi((*tiles).sections["General"].values["RampBase"]);
-		rampsmoothset = atoi((*tiles).sections["General"].values["RampSmooth"]);
-		cliffset = atoi((*tiles).sections["General"].values["CliffSet"]);
+		slopesetpiecesset = atoi((*CIniFile::CurrentTheater).sections["General"].values["SlopeSetPieces"]);
+		rampset = atoi((*CIniFile::CurrentTheater).sections["General"].values["RampBase"]);
+		rampsmoothset = atoi((*CIniFile::CurrentTheater).sections["General"].values["RampSmooth"]);
+		cliffset = atoi((*CIniFile::CurrentTheater).sections["General"].values["CliffSet"]);
 		cliffset_start = GetTileID(cliffset, 0);
-		waterset = atoi((*tiles).sections["General"].values["WaterSet"]);
-		shoreset = atoi((*tiles).sections["General"].values["ShorePieces"]);
-		rampset_start = GetTileID(atoi((*tiles).sections["General"].values["RampBase"]), 0);
-		ramp2set = atoi(g_data.sections["NewUrbanInfo"].values["Ramps2"]);
+		waterset = atoi((*CIniFile::CurrentTheater).sections["General"].values["WaterSet"]);
+		shoreset = atoi((*CIniFile::CurrentTheater).sections["General"].values["ShorePieces"]);
+		rampset_start = GetTileID(atoi((*CIniFile::CurrentTheater).sections["General"].values["RampBase"]), 0);
+		ramp2set = atoi(CIniFile::FAData.sections["NewUrbanInfo"].values["Ramps2"]);
 		ramp2set_start = GetTileID(ramp2set, 0);
-		pave2set = atoi(g_data.sections["NewUrbanInfo"].values["Morphable2"]);
+		pave2set = atoi(CIniFile::FAData.sections["NewUrbanInfo"].values["Morphable2"]);
 		pave2set_start = GetTileID(pave2set, 0);
-		cliff2set = atoi(g_data.sections["NewUrbanInfo"].values["Cliffs2"]);
+		cliff2set = atoi(CIniFile::FAData.sections["NewUrbanInfo"].values["Cliffs2"]);
 		cliff2set_start = GetTileID(cliff2set, 0);
-		cliffwater2set = atoi(g_data.sections["NewUrbanInfo"].values["CliffsWater2"]);
+		cliffwater2set = atoi(CIniFile::FAData.sections["NewUrbanInfo"].values["CliffsWater2"]);
 
 		InitializeUnitTypes();
 		UpdateBuildingInfo();
@@ -699,30 +704,30 @@ void CMapData::LoadMap(const std::string& file)
 	{
 		tiledata = &s_tiledata;
 		tiledata_count = &s_tiledata_count;
-		tiles = &tiles_s;
+		CIniFile::CurrentTheater = &CIniFile::Snow;
 		theApp.m_loading->FreeTileSet();
 		tiledata = &u_tiledata;
 		tiledata_count = &u_tiledata_count;
-		tiles = &tiles_u;
+		CIniFile::CurrentTheater = &CIniFile::Urban;
 		theApp.m_loading->FreeTileSet();
 
 		// MW new tilesets
 		tiledata = &un_tiledata;
 		tiledata_count = &un_tiledata_count;
-		tiles = &tiles_un;
+		CIniFile::CurrentTheater = &CIniFile::NewUrban;
 		theApp.m_loading->FreeTileSet();
 		tiledata = &d_tiledata;
 		tiledata_count = &d_tiledata_count;
-		tiles = &tiles_d;
+		CIniFile::CurrentTheater = &CIniFile::Desert;
 		theApp.m_loading->FreeTileSet();
 		tiledata = &l_tiledata;
 		tiledata_count = &l_tiledata_count;
-		tiles = &tiles_l;
+		CIniFile::CurrentTheater = &CIniFile::Lunar;
 		theApp.m_loading->FreeTileSet();
 
 		tiledata = &t_tiledata;
 		tiledata_count = &t_tiledata_count;
-		tiles = &tiles_t;
+		CIniFile::CurrentTheater = &CIniFile::Temperate;
 		theApp.m_loading->FreeTileSet();
 		theApp.m_loading->InitTMPs(&dlg.m_Progress);
 		theApp.m_loading->current_theater = 'T';
@@ -732,30 +737,30 @@ void CMapData::LoadMap(const std::string& file)
 	{
 		tiledata = &t_tiledata;
 		tiledata_count = &t_tiledata_count;
-		tiles = &tiles_t;
+		CIniFile::CurrentTheater = &CIniFile::Temperate;
 		theApp.m_loading->FreeTileSet();
 		tiledata = &u_tiledata;
 		tiledata_count = &u_tiledata_count;
-		tiles = &tiles_u;
+		CIniFile::CurrentTheater = &CIniFile::Urban;
 		theApp.m_loading->FreeTileSet();
 
 		// MW new tilesets
 		tiledata = &un_tiledata;
 		tiledata_count = &un_tiledata_count;
-		tiles = &tiles_un;
+		CIniFile::CurrentTheater = &CIniFile::NewUrban;
 		theApp.m_loading->FreeTileSet();
 		tiledata = &d_tiledata;
 		tiledata_count = &d_tiledata_count;
-		tiles = &tiles_d;
+		CIniFile::CurrentTheater = &CIniFile::Desert;
 		theApp.m_loading->FreeTileSet();
 		tiledata = &l_tiledata;
 		tiledata_count = &l_tiledata_count;
-		tiles = &tiles_l;
+		CIniFile::CurrentTheater = &CIniFile::Lunar;
 		theApp.m_loading->FreeTileSet();
 
 		tiledata = &s_tiledata;
 		tiledata_count = &s_tiledata_count;
-		tiles = &tiles_s;
+		CIniFile::CurrentTheater = &CIniFile::Snow;
 		theApp.m_loading->FreeTileSet();
 		theApp.m_loading->InitTMPs(&dlg.m_Progress);
 		theApp.m_loading->current_theater = 'A';
@@ -764,30 +769,30 @@ void CMapData::LoadMap(const std::string& file)
 	{
 		tiledata = &t_tiledata;
 		tiledata_count = &t_tiledata_count;
-		tiles = &tiles_t;
+		CIniFile::CurrentTheater = &CIniFile::Temperate;
 		theApp.m_loading->FreeTileSet();
 		tiledata = &s_tiledata;
 		tiledata_count = &s_tiledata_count;
-		tiles = &tiles_s;
+		CIniFile::CurrentTheater = &CIniFile::Snow;
 		theApp.m_loading->FreeTileSet();
 
 		// MW new tilesets
 		tiledata = &un_tiledata;
 		tiledata_count = &un_tiledata_count;
-		tiles = &tiles_un;
+		CIniFile::CurrentTheater = &CIniFile::NewUrban;
 		theApp.m_loading->FreeTileSet();
 		tiledata = &d_tiledata;
 		tiledata_count = &d_tiledata_count;
-		tiles = &tiles_d;
+		CIniFile::CurrentTheater = &CIniFile::Desert;
 		theApp.m_loading->FreeTileSet();
 		tiledata = &l_tiledata;
 		tiledata_count = &l_tiledata_count;
-		tiles = &tiles_l;
+		CIniFile::CurrentTheater = &CIniFile::Lunar;
 		theApp.m_loading->FreeTileSet();
 
 		tiledata = &u_tiledata;
 		tiledata_count = &u_tiledata_count;
-		tiles = &tiles_u;
+		CIniFile::CurrentTheater = &CIniFile::Urban;
 		theApp.m_loading->FreeTileSet();
 		theApp.m_loading->InitTMPs(&dlg.m_Progress);
 		theApp.m_loading->current_theater = 'U';
@@ -796,32 +801,32 @@ void CMapData::LoadMap(const std::string& file)
 	{
 		tiledata = &t_tiledata;
 		tiledata_count = &t_tiledata_count;
-		tiles = &tiles_t;
+		CIniFile::CurrentTheater = &CIniFile::Temperate;
 		theApp.m_loading->FreeTileSet();
 		tiledata = &s_tiledata;
 		tiledata_count = &s_tiledata_count;
-		tiles = &tiles_s;
+		CIniFile::CurrentTheater = &CIniFile::Snow;
 		theApp.m_loading->FreeTileSet();
 
 		// MW new tilesets
 
 		tiledata = &d_tiledata;
 		tiledata_count = &d_tiledata_count;
-		tiles = &tiles_d;
+		CIniFile::CurrentTheater = &CIniFile::Desert;
 		theApp.m_loading->FreeTileSet();
 		tiledata = &l_tiledata;
 		tiledata_count = &l_tiledata_count;
-		tiles = &tiles_l;
+		CIniFile::CurrentTheater = &CIniFile::Lunar;
 		theApp.m_loading->FreeTileSet();
 
 		tiledata = &u_tiledata;
 		tiledata_count = &u_tiledata_count;
-		tiles = &tiles_u;
+		CIniFile::CurrentTheater = &CIniFile::Urban;
 		theApp.m_loading->FreeTileSet();
 
 		tiledata = &un_tiledata;
 		tiledata_count = &un_tiledata_count;
-		tiles = &tiles_un;
+		CIniFile::CurrentTheater = &CIniFile::NewUrban;
 		theApp.m_loading->FreeTileSet();
 
 		theApp.m_loading->InitTMPs(&dlg.m_Progress);
@@ -831,32 +836,32 @@ void CMapData::LoadMap(const std::string& file)
 	{
 		tiledata = &t_tiledata;
 		tiledata_count = &t_tiledata_count;
-		tiles = &tiles_t;
+		CIniFile::CurrentTheater = &CIniFile::Temperate;
 		theApp.m_loading->FreeTileSet();
 		tiledata = &s_tiledata;
 		tiledata_count = &s_tiledata_count;
-		tiles = &tiles_s;
+		CIniFile::CurrentTheater = &CIniFile::Snow;
 		theApp.m_loading->FreeTileSet();
 
 		// MW new tilesets
 		tiledata = &un_tiledata;
 		tiledata_count = &un_tiledata_count;
-		tiles = &tiles_un;
+		CIniFile::CurrentTheater = &CIniFile::NewUrban;
 		theApp.m_loading->FreeTileSet();
 		tiledata = &d_tiledata;
 		tiledata_count = &d_tiledata_count;
-		tiles = &tiles_d;
+		CIniFile::CurrentTheater = &CIniFile::Desert;
 		theApp.m_loading->FreeTileSet();
 
 
 		tiledata = &u_tiledata;
 		tiledata_count = &u_tiledata_count;
-		tiles = &tiles_u;
+		CIniFile::CurrentTheater = &CIniFile::Urban;
 		theApp.m_loading->FreeTileSet();
 
 		tiledata = &l_tiledata;
 		tiledata_count = &l_tiledata_count;
-		tiles = &tiles_l;
+		CIniFile::CurrentTheater = &CIniFile::Lunar;
 		theApp.m_loading->FreeTileSet();
 
 		theApp.m_loading->InitTMPs(&dlg.m_Progress);
@@ -866,33 +871,33 @@ void CMapData::LoadMap(const std::string& file)
 	{
 		tiledata = &t_tiledata;
 		tiledata_count = &t_tiledata_count;
-		tiles = &tiles_t;
+		CIniFile::CurrentTheater = &CIniFile::Temperate;
 		theApp.m_loading->FreeTileSet();
 		tiledata = &s_tiledata;
 		tiledata_count = &s_tiledata_count;
-		tiles = &tiles_s;
+		CIniFile::CurrentTheater = &CIniFile::Snow;
 		theApp.m_loading->FreeTileSet();
 
 		// MW new tilesets
 		tiledata = &un_tiledata;
 		tiledata_count = &un_tiledata_count;
-		tiles = &tiles_un;
+		CIniFile::CurrentTheater = &CIniFile::NewUrban;
 		theApp.m_loading->FreeTileSet();
 
 		tiledata = &l_tiledata;
 		tiledata_count = &l_tiledata_count;
-		tiles = &tiles_l;
+		CIniFile::CurrentTheater = &CIniFile::Lunar;
 		theApp.m_loading->FreeTileSet();
 
 
 		tiledata = &u_tiledata;
 		tiledata_count = &u_tiledata_count;
-		tiles = &tiles_u;
+		CIniFile::CurrentTheater = &CIniFile::Urban;
 		theApp.m_loading->FreeTileSet();
 
 		tiledata = &d_tiledata;
 		tiledata_count = &d_tiledata_count;
-		tiles = &tiles_d;
+		CIniFile::CurrentTheater = &CIniFile::Desert;
 		theApp.m_loading->FreeTileSet();
 
 		theApp.m_loading->InitTMPs(&dlg.m_Progress);
@@ -1425,25 +1430,25 @@ void CMapData::SetOverlayDataAt(DWORD dwPos, BYTE bValue)
 
 	if (ovrl >= RIPARIUS_BEGIN && ovrl <= RIPARIUS_END)
 	{
-		//m_money-=(ovrld+1)*(atoi(rules.sections["Riparius"].values["Value"]));
+		//m_money-=(ovrld+1)*(atoi(CIniFile::Rules.sections["Riparius"].values["Value"]));
 		return;
 	}
 
 	if (ovrl >= CRUENTUS_BEGIN && ovrl <= CRUENTUS_END)
 	{
-		//m_money-=(ovrld+1)*(atoi(rules.sections["Cruentus"].values["Value"]));
+		//m_money-=(ovrld+1)*(atoi(CIniFile::Rules.sections["Cruentus"].values["Value"]));
 		return;
 	}
 
 	if (ovrl >= VINIFERA_BEGIN && ovrl <= VINIFERA_END)
 	{
-		//m_money-=(ovrld+1)*(atoi(rules.sections["Vinifera"].values["Value"]));
+		//m_money-=(ovrld+1)*(atoi(CIniFile::Rules.sections["Vinifera"].values["Value"]));
 		return;
 	}
 
 	if (ovrl >= ABOREUS_BEGIN && ovrl <= ABOREUS_END)
 	{
-		//m_money-=(ovrld+1)*(atoi(rules.sections["Aboreus"].values["Value"]));	
+		//m_money-=(ovrld+1)*(atoi(CIniFile::Rules.sections["Aboreus"].values["Value"]));	
 		return;
 	}
 
@@ -1456,22 +1461,22 @@ void CMapData::SetOverlayDataAt(DWORD dwPos, BYTE bValue)
 
 	/*if(ovrl2>=RIPARIUS_BEGIN && ovrl2<=RIPARIUS_END)
 	{
-		m_money+=(ovrld2+1)*(atoi(rules.sections["Riparius"].values["Value"]));
+		m_money+=(ovrld2+1)*(atoi(CIniFile::Rules.sections["Riparius"].values["Value"]));
 	}
 
 	if(ovrl2>=CRUENTUS_BEGIN && ovrl2<=CRUENTUS_END)
 	{
-		m_money+=(ovrld2+1)*(atoi(rules.sections["Cruentus"].values["Value"]));
+		m_money+=(ovrld2+1)*(atoi(CIniFile::Rules.sections["Cruentus"].values["Value"]));
 	}
 
 	if(ovrl2>=VINIFERA_BEGIN && ovrl2<=VINIFERA_END)
 	{
-		m_money+=(ovrld2+1)*(atoi(rules.sections["Vinifera"].values["Value"]));
+		m_money+=(ovrld2+1)*(atoi(CIniFile::Rules.sections["Vinifera"].values["Value"]));
 	}
 
 	if(ovrl2>=ABOREUS_BEGIN && ovrl2<=ABOREUS_END)
 	{
-		m_money+=(ovrld2+1)*(atoi(rules.sections["Aboreus"].values["Value"]));
+		m_money+=(ovrld2+1)*(atoi(CIniFile::Rules.sections["Aboreus"].values["Value"]));
 	}*/
 
 
@@ -2247,7 +2252,7 @@ BOOL CMapData::AddNode(NODE* lpNode, WORD dwPos)
 		node.x.Format("%d", dwPos % Map->GetIsoSize());
 		node.y.Format("%d", dwPos / Map->GetIsoSize());
 		node.house = GetHouseID(0);
-		node.type = *rules.sections["BuildingTypes"].GetValue(0);
+		node.type = *CIniFile::Rules.sections["BuildingTypes"].GetValue(0);
 	}
 
 	if (m_mapfile.sections.find(HOUSES) == m_mapfile.sections.end() || m_mapfile.sections[HOUSES].values.size() == 0)
@@ -2502,13 +2507,13 @@ void CMapData::InitializeUnitTypes()
 	terrainid.clear();
 
 	int i;
-	m_overlayCredits[OverlayCredits_Riparius] = atoi(m_mapfile.GetValueByName("Riparius", "Value", rules.sections["Riparius"].AccessValueByName("Value")));
-	m_overlayCredits[OverlayCredits_Cruentus] = atoi(m_mapfile.GetValueByName("Cruentus", "Value", rules.sections["Cruentus"].AccessValueByName("Value"))); 
-	m_overlayCredits[OverlayCredits_Vinifera] = atoi(m_mapfile.GetValueByName("Vinifera", "Value", rules.sections["Vinifera"].AccessValueByName("Value")));
-	m_overlayCredits[OverlayCredits_Aboreus] = atoi(m_mapfile.GetValueByName("Aboreus", "Value", rules.sections["Aboreus"].AccessValueByName("Value")));
-	for (i = 0;i < rules.sections["BuildingTypes"].values.size();i++)
+	m_overlayCredits[OverlayCredits_Riparius] = atoi(m_mapfile.GetValueByName("Riparius", "Value", CIniFile::Rules.sections["Riparius"].AccessValueByName("Value")));
+	m_overlayCredits[OverlayCredits_Cruentus] = atoi(m_mapfile.GetValueByName("Cruentus", "Value", CIniFile::Rules.sections["Cruentus"].AccessValueByName("Value"))); 
+	m_overlayCredits[OverlayCredits_Vinifera] = atoi(m_mapfile.GetValueByName("Vinifera", "Value", CIniFile::Rules.sections["Vinifera"].AccessValueByName("Value")));
+	m_overlayCredits[OverlayCredits_Aboreus] = atoi(m_mapfile.GetValueByName("Aboreus", "Value", CIniFile::Rules.sections["Aboreus"].AccessValueByName("Value")));
+	for (i = 0;i < CIniFile::Rules.sections["BuildingTypes"].values.size();i++)
 	{
-		CString type = *rules.sections["BuildingTypes"].GetValue(i);
+		CString type = *CIniFile::Rules.sections["BuildingTypes"].GetValue(i);
 
 		int n = GetBuildingNumber(type);
 		buildingid[type] = n;
@@ -2522,9 +2527,9 @@ void CMapData::InitializeUnitTypes()
 		buildingid[type] = n;
 	}
 
-	for (i = 0;i < rules.sections["TerrainTypes"].values.size();i++)
+	for (i = 0;i < CIniFile::Rules.sections["TerrainTypes"].values.size();i++)
 	{
-		CString type = *rules.sections["TerrainTypes"].GetValue(i);
+		CString type = *CIniFile::Rules.sections["TerrainTypes"].GetValue(i);
 
 		int n = GetTerrainNumber(type);
 		terrainid[type] = n;
@@ -2540,9 +2545,9 @@ void CMapData::InitializeUnitTypes()
 
 #ifdef SMUDGE_SUPP
 
-	for (i = 0;i < rules.sections["SmudgeTypes"].values.size();i++)
+	for (i = 0;i < CIniFile::Rules.sections["SmudgeTypes"].values.size();i++)
 	{
-		CString type = *rules.sections["SmudgeTypes"].GetValue(i);
+		CString type = *CIniFile::Rules.sections["SmudgeTypes"].GetValue(i);
 
 		int n = GetSmudgeNumber(type);
 		smudgeid[type] = n;
@@ -3044,9 +3049,9 @@ WCHAR* CMapData::GetUnitName(LPCTSTR lpID) const
 {
 	WCHAR* res = NULL;
 
-	if (g_data.sections["Rename"].FindName(lpID) >= 0)
+	if (CIniFile::FAData.sections["Rename"].FindName(lpID) >= 0)
 	{
-		CCStrings[lpID].SetString((LPSTR)(LPCSTR)GetLanguageStringACP(g_data.sections["Rename"].values[(LPCSTR)lpID]));
+		CCStrings[lpID].SetString((LPSTR)(LPCSTR)GetLanguageStringACP(CIniFile::FAData.sections["Rename"].values[(LPCSTR)lpID]));
 		res = CCStrings[lpID].wString;
 		return res;
 	}
@@ -3064,9 +3069,9 @@ WCHAR* CMapData::GetUnitName(LPCTSTR lpID) const
 		}
 	}
 
-	if (!res && rules.sections.find(lpID) != rules.sections.end())
+	if (!res && CIniFile::Rules.sections.find(lpID) != CIniFile::Rules.sections.end())
 	{
-		const auto section = rules.GetSection(lpID);
+		const auto section = CIniFile::Rules.GetSection(lpID);
 		if (section && section->values.find("Name") != section->values.end())
 		{
 			CCStrings[lpID].SetString(section->values.at("Name"));
@@ -3134,7 +3139,7 @@ BOOL CMapData::IsRulesSection(LPCTSTR lpSection)
 	if (strcmp(lpSection, HOUSES) == NULL) return FALSE;
 	if (strcmp(lpSection, "VariableNames") == NULL) return FALSE;
 
-	if (rules.sections.find(lpSection) != rules.sections.end()) return TRUE;
+	if (CIniFile::Rules.sections.find(lpSection) != CIniFile::Rules.sections.end()) return TRUE;
 
 
 	if (m_mapfile.sections.find("InfantryTypes") != m_mapfile.sections.end())
@@ -3290,7 +3295,7 @@ void CMapData::UpdateMapFieldData(BOOL bSave)
 				int ground = mfd->wGround;
 				if (ground == 0xFFFF) ground = 0;
 
-				if ((*tiledata)[ground].bReplacementCount && atoi((*tiles).sections["General"].values["BridgeSet"]) != (*tiledata)[ground].wTileSet)
+				if ((*tiledata)[ground].bReplacementCount && atoi((*CIniFile::CurrentTheater).sections["General"].values["BridgeSet"]) != (*tiledata)[ground].wTileSet)
 				{
 					replacement = rand() * (1 + (*tiledata)[ground].bReplacementCount) / RAND_MAX;
 				}
@@ -3620,24 +3625,24 @@ void CMapData::UpdateMapFieldData(BOOL bSave)
 
 void CMapData::UpdateBuildingInfo(LPCSTR lpUnitType)
 {
-	CIniFile& ini = GetIniFile();
+	CIniFile& ini = UpdateAndGetIniFile();
 
 	if (!lpUnitType)
 	{
 		memset(buildinginfo, 0, 0x0F00 * sizeof(BUILDING_INFO));
 
 		int i;
-		for (i = 0;i < rules.sections["BuildingTypes"].values.size();i++)
+		for (i = 0;i < CIniFile::Rules.sections["BuildingTypes"].values.size();i++)
 		{
 
 
-			CString type = *rules.sections["BuildingTypes"].GetValue(i);
+			CString type = *CIniFile::Rules.sections["BuildingTypes"].GetValue(i);
 			CString artname = type;
 
 
-			if (rules.sections[type].values.find("Image") != rules.sections[type].values.end())
+			if (CIniFile::Rules.sections[type].values.find("Image") != CIniFile::Rules.sections[type].values.end())
 			{
-				artname = rules.sections[type].values["Image"];
+				artname = CIniFile::Rules.sections[type].values["Image"];
 			}
 			if (ini.sections.find(type) != ini.sections.end())
 			{
@@ -3649,11 +3654,11 @@ void CMapData::UpdateBuildingInfo(LPCSTR lpUnitType)
 
 			int w, h;
 			char d[6];
-			memcpy(d, art.sections[artname].values["Foundation"], 1);
+			memcpy(d, CIniFile::Art.sections[artname].values["Foundation"], 1);
 			d[1] = 0;
 			w = atoi(d);
 			if (w == 0) w = 1;
-			memcpy(d, (LPCTSTR)art.sections[artname].values["Foundation"] + 2, 1);
+			memcpy(d, (LPCTSTR)CIniFile::Art.sections[artname].values["Foundation"] + 2, 1);
 			d[1] = 0;
 			h = atoi(d);
 			if (h == 0) h = 1;
@@ -3736,11 +3741,11 @@ void CMapData::UpdateBuildingInfo(LPCSTR lpUnitType)
 
 			int w, h;
 			char d[6];
-			memcpy(d, art.sections[artname].values["Foundation"], 1);
+			memcpy(d, CIniFile::Art.sections[artname].values["Foundation"], 1);
 			d[1] = 0;
 			w = atoi(d);
 			if (w == 0) w = 1;
-			memcpy(d, (LPCTSTR)art.sections[artname].values["Foundation"] + 2, 1);
+			memcpy(d, (LPCTSTR)CIniFile::Art.sections[artname].values["Foundation"] + 2, 1);
 			d[1] = 0;
 			h = atoi(d);
 			if (h == 0) h = 1;
@@ -3783,9 +3788,9 @@ void CMapData::UpdateBuildingInfo(LPCSTR lpUnitType)
 		CString artname = type;
 
 
-		if (rules.sections[type].values.find("Image") != rules.sections[type].values.end())
+		if (CIniFile::Rules.sections[type].values.find("Image") != CIniFile::Rules.sections[type].values.end())
 		{
-			artname = rules.sections[type].values["Image"];
+			artname = CIniFile::Rules.sections[type].values["Image"];
 		}
 		if (ini.sections.find(type) != ini.sections.end())
 		{
@@ -3797,11 +3802,11 @@ void CMapData::UpdateBuildingInfo(LPCSTR lpUnitType)
 
 		int w, h;
 		char d[6];
-		memcpy(d, art.sections[artname].values["Foundation"], 1);
+		memcpy(d, CIniFile::Art.sections[artname].values["Foundation"], 1);
 		d[1] = 0;
 		w = atoi(d);
 		if (w == 0) w = 1;
-		memcpy(d, (LPCTSTR)art.sections[artname].values["Foundation"] + 2, 1);
+		memcpy(d, (LPCTSTR)CIniFile::Art.sections[artname].values["Foundation"] + 2, 1);
 		d[1] = 0;
 		h = atoi(d);
 		if (h == 0) h = 1;
@@ -3837,24 +3842,24 @@ void CMapData::UpdateBuildingInfo(LPCSTR lpUnitType)
 
 void CMapData::UpdateTreeInfo(LPCSTR lpTreeType)
 {
-	CIniFile& ini = GetIniFile();
+	CIniFile& ini = UpdateAndGetIniFile();
 
 	if (!lpTreeType)
 	{
 		memset(treeinfo, 0, 0x0F00 * sizeof(TREE_INFO));
 
 		int i;
-		for (i = 0;i < rules.sections["TerrainTypes"].values.size();i++)
+		for (i = 0;i < CIniFile::Rules.sections["TerrainTypes"].values.size();i++)
 		{
 
 
-			CString type = *rules.sections["TerrainTypes"].GetValue(i);
+			CString type = *CIniFile::Rules.sections["TerrainTypes"].GetValue(i);
 			CString artname = type;
 
 
-			if (rules.sections[type].values.find("Image") != rules.sections[type].values.end())
+			if (CIniFile::Rules.sections[type].values.find("Image") != CIniFile::Rules.sections[type].values.end())
 			{
-				artname = rules.sections[type].values["Image"];
+				artname = CIniFile::Rules.sections[type].values["Image"];
 			}
 			if (ini.sections.find(type) != ini.sections.end())
 			{
@@ -3866,11 +3871,11 @@ void CMapData::UpdateTreeInfo(LPCSTR lpTreeType)
 
 			int w, h;
 			char d[6];
-			memcpy(d, art.sections[artname].values["Foundation"], 1);
+			memcpy(d, CIniFile::Art.sections[artname].values["Foundation"], 1);
 			d[1] = 0;
 			w = atoi(d);
 			if (w == 0) w = 1;
-			memcpy(d, (LPCTSTR)art.sections[artname].values["Foundation"] + 2, 1);
+			memcpy(d, (LPCTSTR)CIniFile::Art.sections[artname].values["Foundation"] + 2, 1);
 			d[1] = 0;
 			h = atoi(d);
 			if (h == 0) h = 1;
@@ -3913,11 +3918,11 @@ void CMapData::UpdateTreeInfo(LPCSTR lpTreeType)
 
 			int w, h;
 			char d[6];
-			memcpy(d, art.sections[artname].values["Foundation"], 1);
+			memcpy(d, CIniFile::Art.sections[artname].values["Foundation"], 1);
 			d[1] = 0;
 			w = atoi(d);
 			if (w == 0) w = 1;
-			memcpy(d, (LPCTSTR)art.sections[artname].values["Foundation"] + 2, 1);
+			memcpy(d, (LPCTSTR)CIniFile::Art.sections[artname].values["Foundation"] + 2, 1);
 			d[1] = 0;
 			h = atoi(d);
 			if (h == 0) h = 1;
@@ -3947,9 +3952,9 @@ void CMapData::UpdateTreeInfo(LPCSTR lpTreeType)
 		CString artname = type;
 
 
-		if (rules.sections[type].values.find("Image") != rules.sections[type].values.end())
+		if (CIniFile::Rules.sections[type].values.find("Image") != CIniFile::Rules.sections[type].values.end())
 		{
-			artname = rules.sections[type].values["Image"];
+			artname = CIniFile::Rules.sections[type].values["Image"];
 		}
 		if (ini.sections.find(type) != ini.sections.end())
 		{
@@ -3961,11 +3966,11 @@ void CMapData::UpdateTreeInfo(LPCSTR lpTreeType)
 
 		int w, h;
 		char d[6];
-		memcpy(d, art.sections[artname].values["Foundation"], 1);
+		memcpy(d, CIniFile::Art.sections[artname].values["Foundation"], 1);
 		d[1] = 0;
 		w = atoi(d);
 		if (w == 0) w = 1;
-		memcpy(d, (LPCTSTR)art.sections[artname].values["Foundation"] + 2, 1);
+		memcpy(d, (LPCTSTR)CIniFile::Art.sections[artname].values["Foundation"] + 2, 1);
 		d[1] = 0;
 		h = atoi(d);
 		if (h == 0) h = 1;
@@ -4156,30 +4161,30 @@ void CMapData::CreateMap(DWORD dwWidth, DWORD dwHeight, LPCTSTR lpTerrainType, D
 		{
 			tiledata = &s_tiledata;
 			tiledata_count = &s_tiledata_count;
-			tiles = &tiles_s;
+			CIniFile::CurrentTheater = &CIniFile::Snow;
 			theApp.m_loading->FreeTileSet();
 			tiledata = &u_tiledata;
 			tiledata_count = &u_tiledata_count;
-			tiles = &tiles_u;
+			CIniFile::CurrentTheater = &CIniFile::Urban;
 			theApp.m_loading->FreeTileSet();
 
 			// MW new tilesets
 			tiledata = &un_tiledata;
 			tiledata_count = &un_tiledata_count;
-			tiles = &tiles_un;
+			CIniFile::CurrentTheater = &CIniFile::NewUrban;
 			theApp.m_loading->FreeTileSet();
 			tiledata = &d_tiledata;
 			tiledata_count = &d_tiledata_count;
-			tiles = &tiles_d;
+			CIniFile::CurrentTheater = &CIniFile::Desert;
 			theApp.m_loading->FreeTileSet();
 			tiledata = &l_tiledata;
 			tiledata_count = &l_tiledata_count;
-			tiles = &tiles_l;
+			CIniFile::CurrentTheater = &CIniFile::Lunar;
 			theApp.m_loading->FreeTileSet();
 
 			tiledata = &t_tiledata;
 			tiledata_count = &t_tiledata_count;
-			tiles = &tiles_t;
+			CIniFile::CurrentTheater = &CIniFile::Temperate;
 			theApp.m_loading->FreeTileSet();
 			if (dlg)
 				theApp.m_loading->InitTMPs(&dlg->m_Progress);
@@ -4190,30 +4195,30 @@ void CMapData::CreateMap(DWORD dwWidth, DWORD dwHeight, LPCTSTR lpTerrainType, D
 		{
 			tiledata = &t_tiledata;
 			tiledata_count = &t_tiledata_count;
-			tiles = &tiles_t;
+			CIniFile::CurrentTheater = &CIniFile::Temperate;
 			theApp.m_loading->FreeTileSet();
 			tiledata = &u_tiledata;
 			tiledata_count = &u_tiledata_count;
-			tiles = &tiles_u;
+			CIniFile::CurrentTheater = &CIniFile::Urban;
 			theApp.m_loading->FreeTileSet();
 
 			// MW new tilesets
 			tiledata = &un_tiledata;
 			tiledata_count = &un_tiledata_count;
-			tiles = &tiles_un;
+			CIniFile::CurrentTheater = &CIniFile::NewUrban;
 			theApp.m_loading->FreeTileSet();
 			tiledata = &d_tiledata;
 			tiledata_count = &d_tiledata_count;
-			tiles = &tiles_d;
+			CIniFile::CurrentTheater = &CIniFile::Desert;
 			theApp.m_loading->FreeTileSet();
 			tiledata = &l_tiledata;
 			tiledata_count = &l_tiledata_count;
-			tiles = &tiles_l;
+			CIniFile::CurrentTheater = &CIniFile::Lunar;
 			theApp.m_loading->FreeTileSet();
 
 			tiledata = &s_tiledata;
 			tiledata_count = &s_tiledata_count;
-			tiles = &tiles_s;
+			CIniFile::CurrentTheater = &CIniFile::Snow;
 			theApp.m_loading->FreeTileSet();
 			if (dlg)
 				theApp.m_loading->InitTMPs(&dlg->m_Progress);
@@ -4223,30 +4228,30 @@ void CMapData::CreateMap(DWORD dwWidth, DWORD dwHeight, LPCTSTR lpTerrainType, D
 		{
 			tiledata = &t_tiledata;
 			tiledata_count = &t_tiledata_count;
-			tiles = &tiles_t;
+			CIniFile::CurrentTheater = &CIniFile::Temperate;
 			theApp.m_loading->FreeTileSet();
 			tiledata = &s_tiledata;
 			tiledata_count = &s_tiledata_count;
-			tiles = &tiles_s;
+			CIniFile::CurrentTheater = &CIniFile::Snow;
 			theApp.m_loading->FreeTileSet();
 
 			// MW new tilesets
 			tiledata = &un_tiledata;
 			tiledata_count = &un_tiledata_count;
-			tiles = &tiles_un;
+			CIniFile::CurrentTheater = &CIniFile::NewUrban;
 			theApp.m_loading->FreeTileSet();
 			tiledata = &d_tiledata;
 			tiledata_count = &d_tiledata_count;
-			tiles = &tiles_d;
+			CIniFile::CurrentTheater = &CIniFile::Desert;
 			theApp.m_loading->FreeTileSet();
 			tiledata = &l_tiledata;
 			tiledata_count = &l_tiledata_count;
-			tiles = &tiles_l;
+			CIniFile::CurrentTheater = &CIniFile::Lunar;
 			theApp.m_loading->FreeTileSet();
 
 			tiledata = &u_tiledata;
 			tiledata_count = &u_tiledata_count;
-			tiles = &tiles_u;
+			CIniFile::CurrentTheater = &CIniFile::Urban;
 			theApp.m_loading->FreeTileSet();
 			if (dlg)
 				theApp.m_loading->InitTMPs(&dlg->m_Progress);
@@ -4256,32 +4261,32 @@ void CMapData::CreateMap(DWORD dwWidth, DWORD dwHeight, LPCTSTR lpTerrainType, D
 		{
 			tiledata = &t_tiledata;
 			tiledata_count = &t_tiledata_count;
-			tiles = &tiles_t;
+			CIniFile::CurrentTheater = &CIniFile::Temperate;
 			theApp.m_loading->FreeTileSet();
 			tiledata = &s_tiledata;
 			tiledata_count = &s_tiledata_count;
-			tiles = &tiles_s;
+			CIniFile::CurrentTheater = &CIniFile::Snow;
 			theApp.m_loading->FreeTileSet();
 
 			// MW new tilesets
 
 			tiledata = &d_tiledata;
 			tiledata_count = &d_tiledata_count;
-			tiles = &tiles_d;
+			CIniFile::CurrentTheater = &CIniFile::Desert;
 			theApp.m_loading->FreeTileSet();
 			tiledata = &l_tiledata;
 			tiledata_count = &l_tiledata_count;
-			tiles = &tiles_l;
+			CIniFile::CurrentTheater = &CIniFile::Lunar;
 			theApp.m_loading->FreeTileSet();
 
 			tiledata = &u_tiledata;
 			tiledata_count = &u_tiledata_count;
-			tiles = &tiles_u;
+			CIniFile::CurrentTheater = &CIniFile::Urban;
 			theApp.m_loading->FreeTileSet();
 
 			tiledata = &un_tiledata;
 			tiledata_count = &un_tiledata_count;
-			tiles = &tiles_un;
+			CIniFile::CurrentTheater = &CIniFile::NewUrban;
 			theApp.m_loading->FreeTileSet();
 
 			if (dlg)
@@ -4292,32 +4297,32 @@ void CMapData::CreateMap(DWORD dwWidth, DWORD dwHeight, LPCTSTR lpTerrainType, D
 		{
 			tiledata = &t_tiledata;
 			tiledata_count = &t_tiledata_count;
-			tiles = &tiles_t;
+			CIniFile::CurrentTheater = &CIniFile::Temperate;
 			theApp.m_loading->FreeTileSet();
 			tiledata = &s_tiledata;
 			tiledata_count = &s_tiledata_count;
-			tiles = &tiles_s;
+			CIniFile::CurrentTheater = &CIniFile::Snow;
 			theApp.m_loading->FreeTileSet();
 
 			// MW new tilesets
 			tiledata = &un_tiledata;
 			tiledata_count = &un_tiledata_count;
-			tiles = &tiles_un;
+			CIniFile::CurrentTheater = &CIniFile::NewUrban;
 			theApp.m_loading->FreeTileSet();
 			tiledata = &d_tiledata;
 			tiledata_count = &d_tiledata_count;
-			tiles = &tiles_d;
+			CIniFile::CurrentTheater = &CIniFile::Desert;
 			theApp.m_loading->FreeTileSet();
 
 
 			tiledata = &u_tiledata;
 			tiledata_count = &u_tiledata_count;
-			tiles = &tiles_u;
+			CIniFile::CurrentTheater = &CIniFile::Urban;
 			theApp.m_loading->FreeTileSet();
 
 			tiledata = &l_tiledata;
 			tiledata_count = &l_tiledata_count;
-			tiles = &tiles_l;
+			CIniFile::CurrentTheater = &CIniFile::Lunar;
 			theApp.m_loading->FreeTileSet();
 
 			if (dlg)
@@ -4330,33 +4335,33 @@ void CMapData::CreateMap(DWORD dwWidth, DWORD dwHeight, LPCTSTR lpTerrainType, D
 		{
 			tiledata = &t_tiledata;
 			tiledata_count = &t_tiledata_count;
-			tiles = &tiles_t;
+			CIniFile::CurrentTheater = &CIniFile::Temperate;
 			theApp.m_loading->FreeTileSet();
 			tiledata = &s_tiledata;
 			tiledata_count = &s_tiledata_count;
-			tiles = &tiles_s;
+			CIniFile::CurrentTheater = &CIniFile::Snow;
 			theApp.m_loading->FreeTileSet();
 
 			// MW new tilesets
 			tiledata = &un_tiledata;
 			tiledata_count = &un_tiledata_count;
-			tiles = &tiles_un;
+			CIniFile::CurrentTheater = &CIniFile::NewUrban;
 			theApp.m_loading->FreeTileSet();
 
 			tiledata = &l_tiledata;
 			tiledata_count = &l_tiledata_count;
-			tiles = &tiles_l;
+			CIniFile::CurrentTheater = &CIniFile::Lunar;
 			theApp.m_loading->FreeTileSet();
 
 
 			tiledata = &u_tiledata;
 			tiledata_count = &u_tiledata_count;
-			tiles = &tiles_u;
+			CIniFile::CurrentTheater = &CIniFile::Urban;
 			theApp.m_loading->FreeTileSet();
 
 			tiledata = &d_tiledata;
 			tiledata_count = &d_tiledata_count;
-			tiles = &tiles_d;
+			CIniFile::CurrentTheater = &CIniFile::Desert;
 			theApp.m_loading->FreeTileSet();
 
 			if (dlg)
@@ -4375,7 +4380,7 @@ void CMapData::CreateMap(DWORD dwWidth, DWORD dwHeight, LPCTSTR lpTerrainType, D
 	else
 	{
 		// e.g. unittests
-		tiles = &tiles_t;
+		CIniFile::CurrentTheater = &CIniFile::Temperate;
 	}
 
 
@@ -4566,8 +4571,8 @@ void CMapData::CreateMap(DWORD dwWidth, DWORD dwHeight, LPCTSTR lpTerrainType, D
 
 
 
-	int rampbase=atoi((*tiles).sections["General"].values["RampBase"]);
-	int rampsmooth=atoi((*tiles).sections["General"].values["RampSmooth"]);
+	int rampbase=atoi((*CIniFile::CurrentTheater).sections["General"].values["RampBase"]);
+	int rampsmooth=atoi((*CIniFile::CurrentTheater).sections["General"].values["RampSmooth"]);
 
 	//if((rampbase==d.wTileSet || rampsmooth==d.wTileSet) && m.bSubTile==ns)
 	//	return;
@@ -4624,10 +4629,10 @@ DWORD CMapData::GetTileID(DWORD dwTileSet, int iTile)
 		CString sec = "TileSet";
 		sec += tset;
 
-		if (tiles->sections.find(sec) == tiles->sections.end()) return 0xFFFFFFFF;
+		if (CIniFile::CurrentTheater->sections.find(sec) == CIniFile::CurrentTheater->sections.end()) return 0xFFFFFFFF;
 
 
-		for (e = 0;e < atoi(tiles->sections[sec].values["TilesInSet"]);e++)
+		for (e = 0;e < atoi(CIniFile::CurrentTheater->sections[sec].values["TilesInSet"]);e++)
 		{
 			if (i == dwTileSet && e == iTile) return tilecount;
 			tilecount++;
@@ -4792,7 +4797,7 @@ BOOL CMapData::CheckMapPackData()
 Takes a snapshot of the map at a certain location.
 Be aware that this won´t make a copy of any units etc.
 
-This is used for undo and similar things (like displaying and immediatly removing tiles when moving
+This is used for undo and similar things (like displaying and immediatly removing CIniFile::CurrentTheater when moving
 the mouse on the map before placing a tile).
 This method is very fast, as long as you don´t copy the whole map all the time.
 */
@@ -5057,7 +5062,7 @@ bool CMapData::hasLat(WORD wGround) const
 		return false;
 	const auto set = (*tiledata)[wGround].wTileSet;
 
-	const auto& sec = tiles->sections["General"];
+	const auto& sec = CIniFile::CurrentTheater->sections["General"];
 	const CString empty;
 
 	for (int i = 0; i < tile_to_lat_count; ++i)
@@ -5086,7 +5091,7 @@ void CMapData::SmoothAllAt(DWORD dwPos)
 	if (ground == 0xFFFF) ground = 0;
 	set = (*tiledata)[ground].wTileSet;
 
-	const auto& sec = tiles->sections["General"];
+	const auto& sec = CIniFile::CurrentTheater->sections["General"];
 	const CString empty;
 
 	for (int i = 0; i < tile_to_lat_count; ++i)
@@ -5111,7 +5116,7 @@ void CMapData::CreateShore(int left, int top, int right, int bottom, BOOL bRemov
 	int mapsize = isosize * isosize;
 	int mapwidth = Map->GetWidth();
 	int mapheight = Map->GetHeight();
-	// int shoreset=atoi((*tiles).sections["General"].values["ShorePieces"]);
+	// int shoreset=atoi((*CIniFile::CurrentTheater).sections["General"].values["ShorePieces"]);
 
 	short* tsets = new(short[mapsize]);
 	BYTE* terrain = new(BYTE[mapsize]);
@@ -5124,7 +5129,7 @@ void CMapData::CreateShore(int left, int top, int right, int bottom, BOOL bRemov
 	memset(noChange, 0, sizeof(BOOL) * isosize * isosize);
 	//memset(replaced, 0, sizeof(BOOL)*isosize*isosize);
 
-	int watercliffset = atoi((*tiles).sections["General"].values["WaterCliffs"]);
+	int watercliffset = atoi((*CIniFile::CurrentTheater).sections["General"].values["WaterCliffs"]);
 	int xx, yy;
 
 	for (i = 0;i < *tiledata_count;i++)
@@ -5143,15 +5148,15 @@ void CMapData::CreateShore(int left, int top, int right, int bottom, BOOL bRemov
 	map<int, int> softsets;
 	CString sec = "SoftTileSets";
 
-	for (i = 0;i < g_data.sections[sec].values.size();i++)
+	for (i = 0;i < CIniFile::FAData.sections[sec].values.size();i++)
 	{
-		CString tset = *g_data.sections[sec].GetValueName(i);
+		CString tset = *CIniFile::FAData.sections[sec].GetValueName(i);
 		TruncSpace(tset);
-		int p = (*tiles).sections["General"].FindName(tset);
+		int p = (*CIniFile::CurrentTheater).sections["General"].FindName(tset);
 		if (p < 0) continue;
 
-		int set = atoi(*(*tiles).sections["General"].GetValue(p));
-		if (atoi(*g_data.sections[sec].GetValue(i))) softsets[set] = 1;
+		int set = atoi(*(*CIniFile::CurrentTheater).sections["General"].GetValue(p));
+		if (atoi(*CIniFile::FAData.sections[sec].GetValue(i))) softsets[set] = 1;
 
 
 	}
@@ -5621,7 +5626,7 @@ void CMapData::CreateShore(int left, int top, int right, int bottom, BOOL bRemov
 
 					last_succeeded_operation = 7012;
 
-					if (bFits) // ok, place shore (later we need to do random choose of the different tiles here
+					if (bFits) // ok, place shore (later we need to do random choose of the different CIniFile::CurrentTheater here
 					{
 						// find similar shore piece (randomness)
 						int count = 0;
@@ -5999,8 +6004,8 @@ void CMapData::CreateShore(int left, int top, int right, int bottom, BOOL bRemov
 
 				if (bShoreFound)
 				{
-					int sandtile = atoi(tiles->sections["General"].values["GreenTile"]);
-					int sandlat = atoi(tiles->sections["General"].values["ClearToGreenLat"]);
+					int sandtile = atoi(CIniFile::CurrentTheater->sections["General"].values["GreenTile"]);
+					int sandlat = atoi(CIniFile::CurrentTheater->sections["General"].values["ClearToGreenLat"]);
 
 					int i;
 					for (i = 0;i < *tiledata_count;i++)
@@ -6044,11 +6049,11 @@ void CMapData::CreateShore(int left, int top, int right, int bottom, BOOL bRemov
 
 				if (bShoreFound && hasChanged)
 				{
-					int sandtile = atoi(tiles->sections["General"].values["GreenTile"]);
-					int sandlat = atoi(tiles->sections["General"].values["ClearToGreenLat"]);
+					int sandtile = atoi(CIniFile::CurrentTheater->sections["General"].values["GreenTile"]);
+					int sandlat = atoi(CIniFile::CurrentTheater->sections["General"].values["ClearToGreenLat"]);
 
 
-					SmoothAt(pos, sandtile, sandlat, atoi(tiles->sections["General"].values["ClearTile"]));
+					SmoothAt(pos, sandtile, sandlat, atoi(CIniFile::CurrentTheater->sections["General"].values["ClearTile"]));
 				}
 
 			}
@@ -6396,22 +6401,22 @@ int CMapData::CalcMoneyOnMap()
 
 		if (ovrl >= RIPARIUS_BEGIN && ovrl <= RIPARIUS_END)
 		{
-			money += (ovrld + 1) * (atoi(rules.sections["Riparius"].values["Value"]));
+			money += (ovrld + 1) * (atoi(CIniFile::Rules.sections["Riparius"].values["Value"]));
 		}
 
 		if (ovrl >= CRUENTUS_BEGIN && ovrl <= CRUENTUS_END)
 		{
-			money += (ovrld + 1) * (atoi(rules.sections["Cruentus"].values["Value"]));
+			money += (ovrld + 1) * (atoi(CIniFile::Rules.sections["Cruentus"].values["Value"]));
 		}
 
 		if (ovrl >= VINIFERA_BEGIN && ovrl <= VINIFERA_END)
 		{
-			money += (ovrld + 1) * (atoi(rules.sections["Vinifera"].values["Value"]));
+			money += (ovrld + 1) * (atoi(CIniFile::Rules.sections["Vinifera"].values["Value"]));
 		}
 
 		if (ovrl >= ABOREUS_BEGIN && ovrl <= ABOREUS_END)
 		{
-			money += (ovrld + 1) * (atoi(rules.sections["Aboreus"].values["Value"]));
+			money += (ovrld + 1) * (atoi(CIniFile::Rules.sections["Aboreus"].values["Value"]));
 		}
 	}
 
@@ -6675,7 +6680,7 @@ void CMapData::ResizeMap(int iLeft, int iTop, DWORD dwNewWidth, DWORD dwNewHeigh
 
 
 	// x_move and y_move now take care of the map sizing. This means,
-	// all new or removed tiles will now be added/deleted to/from the bottom right
+	// all new or removed CIniFile::CurrentTheater will now be added/deleted to/from the bottom right
 	// but we want to consider left and right, as the user selected it.
 	// so, do some coordinate conversion:
 
@@ -6692,7 +6697,7 @@ void CMapData::ResizeMap(int iLeft, int iTop, DWORD dwNewWidth, DWORD dwNewHeigh
 	MessageBox(0, c, d,0);*/
 
 
-	// copy tiles now
+	// copy CIniFile::CurrentTheater now
 	int e;
 	for (i = 0;i < os;i++)
 	{
@@ -7007,12 +7012,12 @@ BOOL CMapData::IsYRMap()
 		int max = 0;
 		if (tiledata == &u_tiledata)
 		{
-			max = atoi(g_data.sections["RA2TileMax"].values["Urban"]);
+			max = atoi(CIniFile::FAData.sections["RA2TileMax"].values["Urban"]);
 		}
-		else if (tiledata == &s_tiledata) max = atoi(g_data.sections["RA2TileMax"].values["Snow"]);
-		else if (tiledata == &t_tiledata) max = atoi(g_data.sections["RA2TileMax"].values["Temperat"]);
+		else if (tiledata == &s_tiledata) max = atoi(CIniFile::FAData.sections["RA2TileMax"].values["Snow"]);
+		else if (tiledata == &t_tiledata) max = atoi(CIniFile::FAData.sections["RA2TileMax"].values["Temperat"]);
 
-		int yroverlay = atoi(g_data.sections["YROverlay"].values["Begin"]);
+		int yroverlay = atoi(CIniFile::FAData.sections["YROverlay"].values["Begin"]);
 
 		for (i = 0;i < fielddata_size;i++)
 		{
@@ -7034,7 +7039,7 @@ BOOL CMapData::IsYRMap()
 
 			if (inf.deleted) continue;
 
-			CIniFileSection& sec = g_data.sections["YRInfantry"];
+			CIniFileSection& sec = CIniFile::FAData.sections["YRInfantry"];
 
 			if (sec.values.find(inf.type) != sec.values.end())
 			{
@@ -7050,7 +7055,7 @@ BOOL CMapData::IsYRMap()
 
 			if (str.deleted) continue;
 
-			CIniFileSection& sec = g_data.sections["YRBuildings"];
+			CIniFileSection& sec = CIniFile::FAData.sections["YRBuildings"];
 
 			if (sec.values.find(str.type) != sec.values.end())
 			{
@@ -7066,7 +7071,7 @@ BOOL CMapData::IsYRMap()
 
 			if (unit.deleted) continue;
 
-			CIniFileSection& sec = g_data.sections["YRUnits"];
+			CIniFileSection& sec = CIniFile::FAData.sections["YRUnits"];
 
 			if (sec.values.find(unit.type) != sec.values.end())
 			{
@@ -7082,7 +7087,7 @@ BOOL CMapData::IsYRMap()
 
 			if (air.deleted) continue;
 
-			CIniFileSection& sec = g_data.sections["YRAircraft"];
+			CIniFileSection& sec = CIniFile::FAData.sections["YRAircraft"];
 
 			if (sec.values.find(air.type) != sec.values.end())
 			{
@@ -7098,7 +7103,7 @@ BOOL CMapData::IsYRMap()
 
 			if (tr.deleted) continue;
 
-			CIniFileSection& sec = g_data.sections["YRTerrain"];
+			CIniFileSection& sec = CIniFile::FAData.sections["YRTerrain"];
 
 			if (sec.values.find(tr.type) != sec.values.end())
 			{
@@ -7127,9 +7132,9 @@ BOOL CMapData::IsYRMap()
 			for (e = 0;e < eventcount;e++)
 			{
 				CString type = GetParam(event, GetEventParamStart(event, e));
-				if (g_data.sections["EventsRA2"].values.find(type) != g_data.sections["EventsRA2"].values.end())
+				if (CIniFile::FAData.sections["EventsRA2"].values.find(type) != CIniFile::FAData.sections["EventsRA2"].values.end())
 				{
-					if (isTrue(GetParam(g_data.sections["EventsRA2"].values[type], 9)))
+					if (isTrue(GetParam(CIniFile::FAData.sections["EventsRA2"].values[type], 9)))
 						return TRUE;
 				}
 			}
@@ -7137,9 +7142,9 @@ BOOL CMapData::IsYRMap()
 			for (e = 0;e < actioncount;e++)
 			{
 				CString type = GetParam(action, 1 + e * 8);
-				if (g_data.sections["ActionsRA2"].values.find(type) != g_data.sections["ActionsRA2"].values.end())
+				if (CIniFile::FAData.sections["ActionsRA2"].values.find(type) != CIniFile::FAData.sections["ActionsRA2"].values.end())
 				{
-					if (isTrue(GetParam(g_data.sections["ActionsRA2"].values[type], 14)))
+					if (isTrue(GetParam(CIniFile::FAData.sections["ActionsRA2"].values[type], 14)))
 						return TRUE;
 				}
 			}
@@ -7307,18 +7312,18 @@ void CMapData::UpdateSmudges(BOOL bSave, int num)
 
 void CMapData::UpdateSmudgeInfo(LPCSTR lpSmudgeType)
 {
-	CIniFile& ini = GetIniFile();
+	CIniFile& ini = UpdateAndGetIniFile();
 
 	if (!lpSmudgeType)
 	{
 		memset(smudgeinfo, 0, 0x0F00 * sizeof(SMUDGE_INFO));
 
 		int i;
-		for (i = 0;i < rules.sections["SmudgeTypes"].values.size();i++)
+		for (i = 0;i < CIniFile::Rules.sections["SmudgeTypes"].values.size();i++)
 		{
 
 
-			CString type = *rules.sections["SmudgeTypes"].GetValue(i);
+			CString type = *CIniFile::Rules.sections["SmudgeTypes"].GetValue(i);
 			CString artname = type;
 
 

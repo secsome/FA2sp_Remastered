@@ -80,7 +80,7 @@ void CAiTriggerTypesEnable::UpdateDialog()
 
 	while(m_AITriggerType.DeleteString(0)!=CB_ERR);
 
-	CIniFile& ini=Map->GetIniFile();
+	CIniFile& ini=Map->UpdateAndGetIniFile();
 
 	int i;
 	for(i=0;i<ini.sections["AITriggerTypesEnable"].values.size();i++)
@@ -89,10 +89,10 @@ void CAiTriggerTypesEnable::UpdateDialog()
 		CString str=aitrigger;
 		str+=" (";
 
-		if(ai.sections["AITriggerTypes"].values.find(aitrigger)!=ai.sections["AITriggerTypes"].values.end())
+		if(CIniFile::Ai.sections["AITriggerTypes"].values.find(aitrigger)!=CIniFile::Ai.sections["AITriggerTypes"].values.end())
 		{
 			// standard ai trigger
-			str+=GetParam(ai.sections["AITriggerTypes"].values[aitrigger],0);
+			str+=GetParam(CIniFile::Ai.sections["AITriggerTypes"].values[aitrigger],0);
 			str+=" -> ";
 			str+=*ini.sections["AITriggerTypesEnable"].GetValue(i);
 
@@ -120,11 +120,11 @@ void CAiTriggerTypesEnable::UpdateDialog()
 void CAiTriggerTypesEnable::OnEnableall() 
 {
 	// enable all standard ai triggers
-	CIniFile& ini=Map->GetIniFile();
+	CIniFile& ini=Map->UpdateAndGetIniFile();
 	int i;
-	for(i=0;i<ai.sections["AITriggerTypes"].values.size();i++)
+	for(i=0;i<CIniFile::Ai.sections["AITriggerTypes"].values.size();i++)
 	{
-		ini.sections["AITriggerTypesEnable"].values[*ai.sections["AITriggerTypes"].GetValueName(i)]="yes";		
+		ini.sections["AITriggerTypesEnable"].values[*CIniFile::Ai.sections["AITriggerTypes"].GetValueName(i)]="yes";		
 	}
 
 	UpdateDialog();
@@ -145,7 +145,7 @@ void CAiTriggerTypesEnable::OnDelete()
 	m_AITriggerType.GetLBText(sel,aitrigger);
 	if(aitrigger.Find(" ")>=0) aitrigger.SetAt(aitrigger.Find(" "), 0);
 	
-	CIniFile& ini=Map->GetIniFile();
+	CIniFile& ini=Map->UpdateAndGetIniFile();
 
 	ini.sections["AITriggerTypesEnable"].values.erase((LPCTSTR)aitrigger);
 	UpdateDialog();
@@ -163,7 +163,7 @@ void CAiTriggerTypesEnable::OnAdd()
 	TruncSpace(p);
 	if(p.GetLength()==0) return;
 
-	CIniFile& ini=Map->GetIniFile();
+	CIniFile& ini=Map->UpdateAndGetIniFile();
 
 	ini.sections["AITriggerTypesEnable"].values[p]="yes";
 	UpdateDialog();

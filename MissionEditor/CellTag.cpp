@@ -70,7 +70,7 @@ BOOL CCellTag::OnInitDialog()
 {
 	CDialog::OnInitDialog();
 
-	CIniFile& ini=Map->GetIniFile();
+	CIniFile& ini=Map->UpdateAndGetIniFile();
 	
 	CComboBox& m_Tag=*((CComboBox*)GetDlgItem(IDC_TAG));
 

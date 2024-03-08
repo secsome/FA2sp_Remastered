@@ -101,8 +101,8 @@ BOOL CBitmap2MapConverter::Convert(HBITMAP hBitmap, CMapData & mapdata)
 
 	int water_start=i+8; // to 12
 
-	int sandset=atoi((*tiles).sections["General"].values["GreenTile"]);
-	int greenset=atoi((*tiles).sections["General"].values["RoughTile"]);
+	int sandset=atoi((*CIniFile::CurrentTheater).sections["General"].values["GreenTile"]);
+	int greenset=atoi((*CIniFile::CurrentTheater).sections["General"].values["RoughTile"]);
 
 	for(i=0;i<(*tiledata_count);i++)
 		if((*tiledata)[i].wTileSet==sandset) break;

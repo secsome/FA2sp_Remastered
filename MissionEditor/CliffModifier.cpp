@@ -311,11 +311,11 @@ DWORD CCliffModifier::GetTileToPlace(DWORD dwPos, BOOL* bSmall)
 
 		
 	CString sec=GetDataSection();
-	CIniFile& ini=Map->GetIniFile();
-	if(g_data.sections.find(sec+ini.sections["Map"].values["Theater"])!=g_data.sections.end())
+	CIniFile& ini=Map->UpdateAndGetIniFile();
+	if(CIniFile::FAData.sections.find(sec+ini.sections["Map"].values["Theater"])!=CIniFile::FAData.sections.end())
 		sec=sec+ini.sections["Map"].values["Theater"];
 
-	count=atoi(g_data.sections[sec].values[type+"c"]);
+	count=atoi(CIniFile::FAData.sections[sec].values[type+"c"]);
 
 	
 	
@@ -339,7 +339,7 @@ DWORD CCliffModifier::GetTileToPlace(DWORD dwPos, BOOL* bSmall)
 		itoa(i, c, 10);
 		CString cur=type;
 		cur+=c;
-		notusedascliff[dwStartSet+atoi(g_data.sections[sec].values[cur])]=TRUE;
+		notusedascliff[dwStartSet+atoi(CIniFile::FAData.sections[sec].values[cur])]=TRUE;
 	}
 
 	CString corner_searched="";
@@ -374,9 +374,9 @@ DWORD CCliffModifier::GetTileToPlace(DWORD dwPos, BOOL* bSmall)
 	}
 
 	BOOL bCornerFound=FALSE;
-	if(g_data.sections[sec].FindName(type+corner_searched+"c")>=0)
+	if(CIniFile::FAData.sections[sec].FindName(type+corner_searched+"c")>=0)
 	{
-		int icount=atoi(g_data.sections[sec].values[type+corner_searched+"c"]);
+		int icount=atoi(CIniFile::FAData.sections[sec].values[type+corner_searched+"c"]);
 		if(icount)
 		{
 			bCornerFound=TRUE;
@@ -399,7 +399,7 @@ DWORD CCliffModifier::GetTileToPlace(DWORD dwPos, BOOL* bSmall)
 	{
 		char c[50];
 		itoa(i,c,10);
-		careables.push_back(dwStartSet+atoi(g_data.sections[sec].values[type+corner_searched+c]));				
+		careables.push_back(dwStartSet+atoi(CIniFile::FAData.sections[sec].values[type+corner_searched+c]));				
 	}
 
 	for(i=0;i<careables.size();i++)
@@ -453,7 +453,7 @@ DWORD CCliffModifier::GetTileToPlace(DWORD dwPos, BOOL* bSmall)
 	{
 		CString tset;
 		char c[50];
-		int watercliffs=atoi(tiles->sections["General"].values["WaterCliffs"]);
+		int watercliffs=atoi(CIniFile::CurrentTheater->sections["General"].values["WaterCliffs"]);
 		if(m_bAlternative) watercliffs=cliffwater2set;
 		itoa(watercliffs, c, 10);
 		int e;
@@ -463,10 +463,10 @@ DWORD CCliffModifier::GetTileToPlace(DWORD dwPos, BOOL* bSmall)
 		CString sec="TileSet";
 		sec+=tset;
 
-		if(tiles->sections.find(sec)==tiles->sections.end()) return useables[k];
+		if(CIniFile::CurrentTheater->sections.find(sec)==CIniFile::CurrentTheater->sections.end()) return useables[k];
 
 
-		if(atoi(tiles->sections[sec].values["TilesInSet"])>useables[k]-dwStartSet)
+		if(atoi(CIniFile::CurrentTheater->sections[sec].values["TilesInSet"])>useables[k]-dwStartSet)
 		{
 			DWORD dwStartWaterSet=0;
 			for(i=0;i<(*tiledata_count);i++)

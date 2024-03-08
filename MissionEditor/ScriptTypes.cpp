@@ -299,7 +299,7 @@ END_MESSAGE_MAP()
 
 void CScriptTypes::UpdateDialog()
 {
-	CIniFile& ini=Map->GetIniFile();
+	CIniFile& ini=Map->UpdateAndGetIniFile();
 
 	int sel=m_ScriptType.GetCurSel();
 
@@ -343,7 +343,7 @@ void CScriptTypes::OnEditchangeScripttype()
 
 void CScriptTypes::OnSelchangeScripttype() 
 {
-	CIniFile& ini=Map->GetIniFile();
+	CIniFile& ini=Map->UpdateAndGetIniFile();
 
 	int sel=m_Action.GetCurSel();
 	while(m_Action.DeleteString(0)!=CB_ERR);
@@ -374,7 +374,7 @@ void CScriptTypes::OnSelchangeScripttype()
 
 void CScriptTypes::OnSelchangeAction() 
 {
-	CIniFile& ini=Map->GetIniFile();
+	CIniFile& ini=Map->UpdateAndGetIniFile();
 
 	CString Scripttype;
 	char action[50];
@@ -396,7 +396,7 @@ void CScriptTypes::OnSelchangeAction()
 
 void CScriptTypes::OnChangeName() 
 {
-	CIniFile& ini=Map->GetIniFile();
+	CIniFile& ini=Map->UpdateAndGetIniFile();
 
 	UpdateData();
 
@@ -418,7 +418,7 @@ void CScriptTypes::OnChangeName()
 
 void CScriptTypes::OnEditchangeType() 
 {
-	CIniFile& ini=Map->GetIniFile();
+	CIniFile& ini=Map->UpdateAndGetIniFile();
 
 	while(m_Param.DeleteString(0)!=CB_ERR);
 	CString Scripttype;
@@ -502,15 +502,15 @@ void CScriptTypes::OnEditchangeType()
 		{
 			m_Desc.SetWindowText("Type to move/attack:");
 
-			for(i=0;i<rules.sections["BuildingTypes"].values.size();i++)
+			for(i=0;i<CIniFile::Rules.sections["BuildingTypes"].values.size();i++)
 			{
 				char c[50];
 				itoa(i,c,10);
 				CString s=c;
 				
 				s+=" ";
-				//s+=rules.sections[*rules.sections["BuildingTypes"].GetValue(i)].values["Name"];
-				s+=Map->GetUnitName(*rules.sections["BuildingTypes"].GetValue(i));
+				//s+=CIniFile::Rules.sections[*CIniFile::Rules.sections["BuildingTypes"].GetValue(i)].values["Name"];
+				s+=Map->GetUnitName(*CIniFile::Rules.sections["BuildingTypes"].GetValue(i));
 				m_Param.AddString(s);
 			}
 					
@@ -549,7 +549,7 @@ void CScriptTypes::OnSelchangeType()
 
 void CScriptTypes::OnEditchangeParam() 
 {
-	CIniFile& ini=Map->GetIniFile();
+	CIniFile& ini=Map->UpdateAndGetIniFile();
 
 	CString Scripttype;
 	char action[50];
@@ -578,7 +578,7 @@ void CScriptTypes::OnSelchangeParam()
 
 void CScriptTypes::OnAddaction() 
 {
-	CIniFile& ini=Map->GetIniFile();
+	CIniFile& ini=Map->UpdateAndGetIniFile();
 
 	CString Scripttype;
 	if(m_ScriptType.GetCurSel()<0) return;
@@ -596,7 +596,7 @@ void CScriptTypes::OnAddaction()
 
 void CScriptTypes::OnDeleteaction() 
 {
-	CIniFile& ini=Map->GetIniFile();
+	CIniFile& ini=Map->UpdateAndGetIniFile();
 
 	CString Scripttype;
 	if(m_Action.GetCurSel()<0) return;
@@ -629,7 +629,7 @@ CString GetFree(const char* section);
 
 void CScriptTypes::OnAdd() 
 {
-	CIniFile& ini=Map->GetIniFile();
+	CIniFile& ini=Map->UpdateAndGetIniFile();
 
 	CString ID=GetFreeID();
 	
@@ -660,7 +660,7 @@ void CScriptTypes::OnAdd()
 
 void CScriptTypes::OnDelete() 
 {
-	CIniFile& ini=Map->GetIniFile();
+	CIniFile& ini=Map->UpdateAndGetIniFile();
 	
 	CString Scripttype;
 	if(m_ScriptType.GetCurSel()<0) return;

@@ -89,7 +89,7 @@ void CAll::UpdateDialog()
 
 	while(m_Sections.DeleteString(0)!=-1);
 	while(m_Keys.DeleteString(0)!=-1);
-	CIniFile& ini=Map->GetIniFile();
+	CIniFile& ini=Map->UpdateAndGetIniFile();
 	
 
 	m_Value.SetWindowText("");
@@ -109,7 +109,7 @@ void CAll::UpdateDialog()
 void CAll::OnSelchangeSections() 
 {
 	while(m_Keys.DeleteString(0)!=CB_ERR);	
-	CIniFile& ini=Map->GetIniFile();
+	CIniFile& ini=Map->UpdateAndGetIniFile();
 
 	CString cuSection;
 	m_Sections.GetWindowText(cuSection);
@@ -134,7 +134,7 @@ void CAll::OnSelchangeSections()
 
 void CAll::OnChangeValue() 
 {
-	CIniFile& ini=Map->GetIniFile();	
+	CIniFile& ini=Map->UpdateAndGetIniFile();	
 	
 	CString t;
 	m_Value.GetWindowText(t);
@@ -154,7 +154,7 @@ void CAll::OnChangeValue()
 
 void CAll::OnSelchangeKeys() 
 {
-	CIniFile& ini=Map->GetIniFile();
+	CIniFile& ini=Map->UpdateAndGetIniFile();
 
 	CString cuSection;
 	m_Sections.GetWindowText(cuSection);
@@ -174,7 +174,7 @@ void CAll::OnAddsection()
 {
 	CString name=InputBox("Please set the name of the new section (the section may already exist)", "Insert Section");
 	
-	CIniFile& ini=Map->GetIniFile();
+	CIniFile& ini=Map->UpdateAndGetIniFile();
 
 	CIniFileSection stub=ini.sections[(LPCTSTR)name];
 	
@@ -183,7 +183,7 @@ void CAll::OnAddsection()
 
 void CAll::OnDeletesection() 
 {
-	CIniFile& ini=Map->GetIniFile();
+	CIniFile& ini=Map->UpdateAndGetIniFile();
 
 	int cusection;
 	cusection=m_Sections.GetCurSel();
@@ -204,7 +204,7 @@ void CAll::OnDeletesection()
 
 void CAll::OnDeletekey() 
 {
-	CIniFile& ini=Map->GetIniFile();
+	CIniFile& ini=Map->UpdateAndGetIniFile();
 
 	int cukey;
 	if(m_Sections.GetCurSel()<0) return;
@@ -232,7 +232,7 @@ void CAll::OnDeletekey()
 
 void CAll::OnAddkey() 
 {
-	CIniFile& ini=Map->GetIniFile();
+	CIniFile& ini=Map->UpdateAndGetIniFile();
 	int cusection;
 	cusection=m_Sections.GetCurSel();
 	if(cusection==-1) {

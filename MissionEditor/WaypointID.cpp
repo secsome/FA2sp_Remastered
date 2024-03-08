@@ -66,7 +66,7 @@ END_MESSAGE_MAP()
 
 void CWaypointID::OnFree() 
 {
-	CIniFile& ini=Map->GetIniFile();
+	CIniFile& ini=Map->UpdateAndGetIniFile();
 
 	int i;
 	CString freen;

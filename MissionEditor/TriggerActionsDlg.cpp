@@ -92,7 +92,7 @@ END_MESSAGE_MAP()
 
 void CTriggerActionsDlg::OnSelchangeAction() 
 {
-	CIniFile& ini=Map->GetIniFile();
+	CIniFile& ini=Map->UpdateAndGetIniFile();
 
 	if(m_currentTrigger.GetLength()==0) return;
 	int selev=m_Action.GetCurSel();
@@ -123,7 +123,7 @@ void CTriggerActionsDlg::OnSelchangeAction()
 
 void CTriggerActionsDlg::OnEditchangeActiontype() 
 {
-	CIniFile& ini=Map->GetIniFile();
+	CIniFile& ini=Map->UpdateAndGetIniFile();
 
 	if(m_currentTrigger.GetLength()==0) return;
 	int selev=m_Action.GetCurSel();
@@ -152,12 +152,12 @@ void CTriggerActionsDlg::OnEditchangeActiontype()
 	
 	ini.sections["Actions"].values[(LPCTSTR)m_currentTrigger]=SetParam(ini.sections["Actions"].values[(LPCTSTR)m_currentTrigger], pos, (LPCTSTR)eventtype);
 
-	if(g_data.sections[acsec].FindName(eventtype)<0) return;
+	if(CIniFile::FAData.sections[acsec].FindName(eventtype)<0) return;
 
-	eventdata=g_data.sections[acsec].values[eventtype];
+	eventdata=CIniFile::FAData.sections[acsec].values[eventtype];
 
-	if(g_data.sections["ActionsRA2"].FindName(eventtype)>=0)
-		eventdata=g_data.sections["ActionsRA2"].values[eventtype];
+	if(CIniFile::FAData.sections["ActionsRA2"].FindName(eventtype)>=0)
+		eventdata=CIniFile::FAData.sections["ActionsRA2"].values[eventtype];
 
 	CString desc=GetParam(eventdata,10);
 	desc.Replace("%1",",");
@@ -174,12 +174,12 @@ void CTriggerActionsDlg::OnEditchangeActiontype()
 	int pListType[6];
 	memset(pListType, 0, 6*sizeof(int));
 
-	if(atoi(ptype[0])>=0) pListType[0]=atoi(GetParam(g_data.sections["ParamTypes"].values[ptype[0]], 1));
-	if(atoi(ptype[1])>=0) pListType[1]=atoi(GetParam(g_data.sections["ParamTypes"].values[ptype[1]], 1));
-	if(atoi(ptype[2])>=0) pListType[2]=atoi(GetParam(g_data.sections["ParamTypes"].values[ptype[2]], 1));
-	if(atoi(ptype[3])>=0) pListType[3]=atoi(GetParam(g_data.sections["ParamTypes"].values[ptype[3]], 1));
-	if(atoi(ptype[4])>=0) pListType[4]=atoi(GetParam(g_data.sections["ParamTypes"].values[ptype[4]], 1));
-	if(atoi(ptype[5])>=0) pListType[5]=atoi(GetParam(g_data.sections["ParamTypes"].values[ptype[5]], 1));
+	if(atoi(ptype[0])>=0) pListType[0]=atoi(GetParam(CIniFile::FAData.sections["ParamTypes"].values[ptype[0]], 1));
+	if(atoi(ptype[1])>=0) pListType[1]=atoi(GetParam(CIniFile::FAData.sections["ParamTypes"].values[ptype[1]], 1));
+	if(atoi(ptype[2])>=0) pListType[2]=atoi(GetParam(CIniFile::FAData.sections["ParamTypes"].values[ptype[2]], 1));
+	if(atoi(ptype[3])>=0) pListType[3]=atoi(GetParam(CIniFile::FAData.sections["ParamTypes"].values[ptype[3]], 1));
+	if(atoi(ptype[4])>=0) pListType[4]=atoi(GetParam(CIniFile::FAData.sections["ParamTypes"].values[ptype[4]], 1));
+	if(atoi(ptype[5])>=0) pListType[5]=atoi(GetParam(CIniFile::FAData.sections["ParamTypes"].values[ptype[5]], 1));
 
 	int i;
 	for(i=0;i<6;i++)
@@ -187,7 +187,7 @@ void CTriggerActionsDlg::OnEditchangeActiontype()
 
 		if(atoi(ptype[i])>0)
 		{
-			CString paramname=GetParam(g_data.sections["ParamTypes"].values[ptype[i]], 0);
+			CString paramname=GetParam(CIniFile::FAData.sections["ParamTypes"].values[ptype[i]], 0);
 			
 			m_Parameter.SetItemData(m_Parameter.AddString(paramname), i);
 		}
@@ -208,7 +208,7 @@ void CTriggerActionsDlg::OnEditchangeActiontype()
 	CString code;
 	BOOL bNoWP=FALSE;
 	code=GetParam(ini.sections["Actions"].values[(LPCTSTR)m_currentTrigger], pos+1);
-	if(g_data.sections["DontSaveAsWP"].FindValue(code)>=0) bNoWP=TRUE;
+	if(CIniFile::FAData.sections["DontSaveAsWP"].FindValue(code)>=0) bNoWP=TRUE;
 
 	// conversion below:
 	if(IsWaypointFormat(GetParam(ini.sections["Actions"].values[(LPCTSTR)m_currentTrigger], pos+1+6)) && bNoWP)
@@ -244,7 +244,7 @@ void CTriggerActionsDlg::OnEditchangeActiontype()
 
 void CTriggerActionsDlg::OnSelchangeParameter() 
 {
-	CIniFile& ini=Map->GetIniFile();
+	CIniFile& ini=Map->UpdateAndGetIniFile();
 
 	if(m_currentTrigger.GetLength()==0) return;
 	int selev=m_Action.GetCurSel();
@@ -273,21 +273,21 @@ void CTriggerActionsDlg::OnSelchangeParameter()
 	CString code;
 	BOOL bNoWP=FALSE;
 	code=GetParam(ActionData, startpos+1);
-	if(g_data.sections["DontSaveAsWP"].FindValue(code)>=0) bNoWP=TRUE;
+	if(CIniFile::FAData.sections["DontSaveAsWP"].FindValue(code)>=0) bNoWP=TRUE;
 
 	if(curparam>=0 && curparam<6)
 	{
-		CString ParamType=GetParam(g_data.sections["Actions"].values[GetParam(ActionData,startpos)],1+curparam);
-		if(g_data.sections["ActionsRA2"].FindName(GetParam(ActionData, startpos))>=0)
+		CString ParamType=GetParam(CIniFile::FAData.sections["Actions"].values[GetParam(ActionData,startpos)],1+curparam);
+		if(CIniFile::FAData.sections["ActionsRA2"].FindName(GetParam(ActionData, startpos))>=0)
 		{
-			ParamType=GetParam(g_data.sections["ActionsRA2"].values[GetParam(ActionData,startpos)],1+curparam);
+			ParamType=GetParam(CIniFile::FAData.sections["ActionsRA2"].values[GetParam(ActionData,startpos)],1+curparam);
 		}
 		if(atoi(ParamType)<0)
 		{
 		}
 		else
 		{
-			CString ListType=GetParam(g_data.sections["ParamTypes"].values[ParamType],1);
+			CString ListType=GetParam(CIniFile::FAData.sections["ParamTypes"].values[ParamType],1);
 			HandleParamList(m_ParamValue, atoi(ListType));
 			m_ParamValue.SetWindowText(GetParam(ActionData,startpos+1+curparam));
 			
@@ -352,7 +352,7 @@ void CTriggerActionsDlg::OnSelchangeParameter()
 
 void CTriggerActionsDlg::OnEditchangeParamvalue() 
 {
-	CIniFile& ini=Map->GetIniFile();
+	CIniFile& ini=Map->UpdateAndGetIniFile();
 
 	if(m_currentTrigger.GetLength()==0) return;
 	int selev=m_Action.GetCurSel();
@@ -377,7 +377,7 @@ void CTriggerActionsDlg::OnEditchangeParamvalue()
 	CString code;
 	BOOL bNoWP=FALSE;
 	code=GetParam(ActionData, startpos+1);
-	if(g_data.sections["DontSaveAsWP"].FindValue(code)>=0) bNoWP=TRUE;
+	if(CIniFile::FAData.sections["DontSaveAsWP"].FindValue(code)>=0) bNoWP=TRUE;
 
 	CString newVal;
 	m_ParamValue.GetWindowText(newVal);
@@ -406,7 +406,7 @@ void CTriggerActionsDlg::OnEditchangeParamvalue()
 
 void CTriggerActionsDlg::OnNewaction() 
 {
-	CIniFile& ini=Map->GetIniFile();
+	CIniFile& ini=Map->UpdateAndGetIniFile();
 
 	if(m_currentTrigger.GetLength()==0) return;
 
@@ -430,7 +430,7 @@ void CTriggerActionsDlg::OnNewaction()
 
 void CTriggerActionsDlg::OnDeleteaction() 
 {
-	CIniFile& ini=Map->GetIniFile();
+	CIniFile& ini=Map->UpdateAndGetIniFile();
 	if(m_currentTrigger.GetLength()==0) return;
 
 	int sel2=m_Action.GetCurSel();
@@ -490,17 +490,17 @@ void CTriggerActionsDlg::UpdateDialog()
 		return;
 	}
 
-	CIniFile& ini=Map->GetIniFile();
+	CIniFile& ini=Map->UpdateAndGetIniFile();
 
 	// 9.3.2001: Only support specified section
 	CString sec="ActionsRA2";
 
 	while(m_ActionType.DeleteString(0)!=CB_ERR);
 	int i;
-	for(i=0;i<g_data.sections[sec].values.size();i++)
+	for(i=0;i<CIniFile::FAData.sections[sec].values.size();i++)
 	{
-		CString eventid=*g_data.sections[sec].GetValueName(i); //GetParam(*g_data.sections["Actions"].GetValue(i),13);
-		CString eventdata=*g_data.sections[sec].GetValue(i);
+		CString eventid=*CIniFile::FAData.sections[sec].GetValueName(i); //GetParam(*CIniFile::FAData.sections["Actions"].GetValue(i),13);
+		CString eventdata=*CIniFile::FAData.sections[sec].GetValue(i);
 		CString text=eventid+" "+GetParam(eventdata,0);
 		text.Replace("%1",",");
 

@@ -29,7 +29,6 @@
 #endif 
 
 #define VC_EXTRALEAN	
-#define NOMINMAX
 
 #pragma warning(disable: 4503)
 #pragma warning(disable: 4786)
@@ -43,16 +42,10 @@
 #endif
 
 #include "defines.h"
-#include "IniFile.h"
 #include "InputBox.h"
 #include "floatedit.h"
 #include "MyComboBox.h"
 #include <ddraw.h>
-// #include "structs.h"
-// #include "variables.h"
-// #include "functions.h"
-// #include "inlines.h"
-// #include "MapData.h"
 #include "resource.h"
 #include "TipDlg.h"
 

@@ -130,7 +130,7 @@ BOOL CMapValidator::CheckMap()
 	// now check the map
 
 	Map->UpdateIniFile(MAPDATA_UPDATE_TO_INI);
-	CIniFile& ini=Map->GetIniFile();
+	CIniFile& ini=Map->UpdateAndGetIniFile();
 
 	if(ini.sections.find("Map")==ini.sections.end() )
 	{

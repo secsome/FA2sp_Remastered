@@ -120,7 +120,7 @@ END_MESSAGE_MAP()
 
 void CBasic::UpdateDialog()
 {
-	CIniFile& ini=Map->GetIniFile();
+	CIniFile& ini=Map->UpdateAndGetIniFile();
 
 	m_AltNextScenario.SetWindowText(ini.sections["Basic"].values["AltNextScenario"]);
 	m_Name.SetWindowText(ini.sections["Basic"].values["Name"]);
@@ -155,7 +155,7 @@ void CBasic::UpdateDialog()
 
 void CBasic::OnChangeName() 
 {
-	CIniFile& ini=Map->GetIniFile();
+	CIniFile& ini=Map->UpdateAndGetIniFile();
  	ini.sections["Basic"].values["Name"]=GetText(&m_Name);
 }
 
@@ -169,121 +169,121 @@ void CBasic::UpdateData()
 
 void CBasic::OnEditchangeNextscenario() 
 {
-	CIniFile& ini=Map->GetIniFile();
+	CIniFile& ini=Map->UpdateAndGetIniFile();
 	ini.sections["Basic"].values["NextScenario"]=GetText(&m_NextScenario);	
 }
 
 void CBasic::OnEditchangeAltnextscenario() 
 {
-	CIniFile& ini=Map->GetIniFile();
+	CIniFile& ini=Map->UpdateAndGetIniFile();
 	ini.sections["Basic"].values["AltNextScenario"]=GetText(&m_AltNextScenario);	
 }
 
 void CBasic::OnChangeNewiniformat() 
 {
-	CIniFile& ini=Map->GetIniFile();
+	CIniFile& ini=Map->UpdateAndGetIniFile();
 	ini.sections["Basic"].values["NewINIFormat"]=GetText(&m_NewINIFormat);
 }
 
 void CBasic::OnChangeCarryovercap() 
 {
-	CIniFile& ini=Map->GetIniFile();
+	CIniFile& ini=Map->UpdateAndGetIniFile();
 	ini.sections["Basic"].values["CarryOverCap"]=GetText(&m_CarryOverCap);
 }
 
 void CBasic::OnEditchangeEndofgame() 
 {
-	CIniFile& ini=Map->GetIniFile();
+	CIniFile& ini=Map->UpdateAndGetIniFile();
 	ini.sections["Basic"].values["EndOfGame"]=GetText(&m_EndOfGame);	
 }
 
 void CBasic::OnEditchangeSkipscore() 
 {
-	CIniFile& ini=Map->GetIniFile();
+	CIniFile& ini=Map->UpdateAndGetIniFile();
 	ini.sections["Basic"].values["SkipScore"]=GetText(&m_SkipScore);	
 }
 
 void CBasic::OnEditchangeOnetimeonly() 
 {
-	CIniFile& ini=Map->GetIniFile();
+	CIniFile& ini=Map->UpdateAndGetIniFile();
 	ini.sections["Basic"].values["OneTimeOnly"]=GetText(&m_OneTimeOnly);	
 }
 
 void CBasic::OnEditchangeSkipmapselect() 
 {
-	CIniFile& ini=Map->GetIniFile();
+	CIniFile& ini=Map->UpdateAndGetIniFile();
 	ini.sections["Basic"].values["SkipMapSelect"]=GetText(&m_SkipMapSelect);	
 }
 
 void CBasic::OnEditchangeOfficial() 
 {
-	CIniFile& ini=Map->GetIniFile();
+	CIniFile& ini=Map->UpdateAndGetIniFile();
 	ini.sections["Basic"].values["Official"]=GetText(&m_Official);	
 }
 
 void CBasic::OnEditchangeIgnoreglobalaitriggers() 
 {
-	CIniFile& ini=Map->GetIniFile();
+	CIniFile& ini=Map->UpdateAndGetIniFile();
 	ini.sections["Basic"].values["IgnoreGlobalAITriggers"]=GetText(&m_IgnoreGlobalAITriggers);	
 }
 
 void CBasic::OnEditchangeTruckcrate() 
 {
-	CIniFile& ini=Map->GetIniFile();
+	CIniFile& ini=Map->UpdateAndGetIniFile();
 	ini.sections["Basic"].values["TruckCrate"]=GetText(&m_TruckCrate);	
 }
 
 void CBasic::OnEditchangeTraincrate() 
 {
-	CIniFile& ini=Map->GetIniFile();
+	CIniFile& ini=Map->UpdateAndGetIniFile();
 	ini.sections["Basic"].values["TrainCrate"]=GetText(&m_TrainCrate);
 }
 
 void CBasic::OnChangePercent() 
 {
-	CIniFile& ini=Map->GetIniFile();
+	CIniFile& ini=Map->UpdateAndGetIniFile();
 	ini.sections["Basic"].values["Percent"]=GetText(&m_Percent);
 }
 
 void CBasic::OnChangeMultiplayeronly() 
 {
-	CIniFile& ini=Map->GetIniFile();
+	CIniFile& ini=Map->UpdateAndGetIniFile();
 	ini.sections["Basic"].values["MultiplayerOnly"]=GetText(&m_MultiplayerOnly);	
 }
 
 void CBasic::OnEditchangeTiberiumgrowthenabled() 
 {
-	CIniFile& ini=Map->GetIniFile();
+	CIniFile& ini=Map->UpdateAndGetIniFile();
 	ini.sections["Basic"].values["TiberiumGrowthEnabled"]=GetText(&m_TiberiumGrowthEnabled);
 }
 
 void CBasic::OnEditchangeVeingrowthenabled() 
 {
-	CIniFile& ini=Map->GetIniFile();
+	CIniFile& ini=Map->UpdateAndGetIniFile();
 	ini.sections["Basic"].values["VeinGrowthEnabled"]=GetText(&m_VeinGrowthEnabled);	
 }
 
 void CBasic::OnEditchangeIcegrowthenabled() 
 {
-	CIniFile& ini=Map->GetIniFile();
+	CIniFile& ini=Map->UpdateAndGetIniFile();
 	ini.sections["Basic"].values["IceGrowthEnabled"]=GetText(&m_IceGrowthEnabled);	
 }
 
 void CBasic::OnEditchangeTiberiumdeathtovisceroid() 
 {
-	CIniFile& ini=Map->GetIniFile();
+	CIniFile& ini=Map->UpdateAndGetIniFile();
 	ini.sections["Basic"].values["TiberiumDeathToVisceroid"]=GetText(&m_TiberiumDeathToVisceroid);	
 }
 
 void CBasic::OnEditchangeFreeradar() 
 {
-	CIniFile& ini=Map->GetIniFile();
+	CIniFile& ini=Map->UpdateAndGetIniFile();
 	ini.sections["Basic"].values["FreeRadar"]=GetText(&m_FreeRadar);
 }
 
 void CBasic::OnChangeInittime() 
 {
-	CIniFile& ini=Map->GetIniFile();
+	CIniFile& ini=Map->UpdateAndGetIniFile();
 	ini.sections["Basic"].values["InitTime"]=GetText(&m_InitTime);
 }
 
@@ -328,7 +328,7 @@ void CBasic::UpdateStrings()
 
 void CBasic::OnEditchangeRequiredaddon() 
 {
-	CIniFile& ini=Map->GetIniFile();
+	CIniFile& ini=Map->UpdateAndGetIniFile();
 	ini.sections["Basic"].values["RequiredAddOn"]=GetText(&m_RequiredAddOn);	
 	if(ini.sections["Basic"].values["RequiredAddOn"]=="0") ini.sections["Basic"].values.erase("RequiredAddOn");
 

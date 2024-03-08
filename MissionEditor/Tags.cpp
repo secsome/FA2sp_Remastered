@@ -81,7 +81,7 @@ END_MESSAGE_MAP()
 
 void CTags::UpdateDialog()
 {
-	CIniFile& ini=Map->GetIniFile();
+	CIniFile& ini=Map->UpdateAndGetIniFile();
 
 	int sel=m_Tag.GetCurSel();
 	
@@ -126,7 +126,7 @@ void CTags::UpdateDialog()
 
 void CTags::OnSelchangeTag() 
 {
-	CIniFile& ini=Map->GetIniFile();
+	CIniFile& ini=Map->UpdateAndGetIniFile();
 
 	int index=m_Tag.GetCurSel();
 	if(index<0) return;
@@ -156,7 +156,7 @@ void CTags::OnSelchangeTag()
 
 void CTags::OnChangeName() 
 {
-	CIniFile& ini=Map->GetIniFile();
+	CIniFile& ini=Map->UpdateAndGetIniFile();
 
 	UpdateData();
 
@@ -183,7 +183,7 @@ void CTags::OnChangeName()
 
 void CTags::OnEditchangeRepeat() 
 {
-	CIniFile& ini=Map->GetIniFile();
+	CIniFile& ini=Map->UpdateAndGetIniFile();
 
 	int index=m_Tag.GetCurSel();
 	if(index<0) return;
@@ -210,7 +210,7 @@ void CTags::OnEditchangeRepeat()
 
 void CTags::OnSelchangeRepeat() 
 {
-	CIniFile& ini=Map->GetIniFile();
+	CIniFile& ini=Map->UpdateAndGetIniFile();
 
 	int index=m_Tag.GetCurSel();
 	if(index<0) return;
@@ -242,7 +242,7 @@ void CTags::OnSelchangeRepeat()
 
 void CTags::OnEditchangeTrigger() 
 {
-	CIniFile& ini=Map->GetIniFile();
+	CIniFile& ini=Map->UpdateAndGetIniFile();
 
 	int index=m_Tag.GetCurSel();
 	if(index<0) return;
@@ -270,7 +270,7 @@ void CTags::OnEditchangeTrigger()
 
 void CTags::OnSelchangeTrigger() 
 {
-	CIniFile& ini=Map->GetIniFile();
+	CIniFile& ini=Map->UpdateAndGetIniFile();
 
 	int index=m_Tag.GetCurSel();
 	if(index<0) return;
@@ -301,7 +301,7 @@ void CTags::OnSelchangeTrigger()
 
 void CTags::OnDelete() 
 {
-	CIniFile& ini=Map->GetIniFile();
+	CIniFile& ini=Map->UpdateAndGetIniFile();
 
 	int index=m_Tag.GetCurSel();
 	if(index<0) return;
@@ -319,7 +319,7 @@ void CTags::OnDelete()
 
 void CTags::OnAdd() 
 {
-	CIniFile& ini=Map->GetIniFile();
+	CIniFile& ini=Map->UpdateAndGetIniFile();
 
 	CString ID=GetFreeID();	
 

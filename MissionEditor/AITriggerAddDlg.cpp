@@ -71,9 +71,9 @@ BOOL CAITriggerAddDlg::OnInitDialog()
 	CListBox* lb=(CListBox*)GetDlgItem(IDC_AITRIGGERS);
 
 	int i;
-	for(i=0;i<ai.sections["AITriggerTypes"].values.size();i++)
+	for(i=0;i<CIniFile::Ai.sections["AITriggerTypes"].values.size();i++)
 	{
-		lb->AddString(*ai.sections["AITriggerTypes"].GetValueName(i)+ (CString)" " +GetParam(*ai.sections["AITriggerTypes"].GetValue(i), 0));
+		lb->AddString(*CIniFile::Ai.sections["AITriggerTypes"].GetValueName(i)+ (CString)" " +GetParam(*CIniFile::Ai.sections["AITriggerTypes"].GetValue(i), 0));
 	}
 	
 	return TRUE;  // return TRUE unless you set the focus to a control

@@ -22,19 +22,35 @@
 //
 //////////////////////////////////////////////////////////////////////
 
-#include "stdafx.h"
+#include "StdAfx.h"
+
 #include "IniFile.h"
+
 #include <string>
 #include <algorithm>
 #include <stdexcept>
-
-
 
 #ifdef _DEBUG
 #undef THIS_FILE
 static char THIS_FILE[] = __FILE__;
 #define new DEBUG_NEW
 #endif
+
+CIniFile CIniFile::Rules;
+CIniFile CIniFile::Art;
+CIniFile CIniFile::Sound;
+CIniFile CIniFile::Eva;
+CIniFile CIniFile::Theme;
+CIniFile CIniFile::Ai;
+CIniFile CIniFile::Temperate;
+CIniFile CIniFile::Snow;
+CIniFile CIniFile::Urban;
+CIniFile CIniFile::NewUrban;
+CIniFile CIniFile::Lunar;
+CIniFile CIniFile::Desert;
+CIniFile CIniFile::FAData;
+CIniFile CIniFile::FALanguage;
+CIniFile* CIniFile::CurrentTheater;
 
 using namespace std;
 
@@ -91,6 +107,27 @@ WORD CIniFile::LoadFile(std::istream& file, BOOL bNoSpaces)
 	Clear();
 	m_filename.clear();
 	return(InsertFile(file, NULL, bNoSpaces));
+}
+
+std::map<unsigned int, CString> CIniFile::ParseIndiciesData(CString pSection)
+{
+	std::map<unsigned int, CString> ret;
+	auto&& section = sections.find(pSection);
+	if (section == sections.end())
+		return ret;
+	std::map<unsigned int, CString> tmp;
+	for (auto& ent : section->second)
+	{
+		auto& indexDict = section->second.GetOriginalPosition();
+		auto&& idxitr = indexDict.find(ent.first);
+		if (idxitr != indexDict.end())
+			tmp[idxitr->second] = idxitr->first;
+	}
+	size_t idx = 0;
+	for (auto& x : tmp)
+		ret[idx++] = x.second;
+
+	return ret;
 }
 
 
@@ -261,6 +298,12 @@ CString CIniFileSection::GetValueByName(const CString& valueName, const CString&
 	return (it == values.end()) ? defaultValue : it->second;
 }
 
+const CString* CIniFileSection::TryGetValueByName(const CString& name) const
+{
+	auto it = values.find(name);
+	return (it == values.end()) ? nullptr : &it->second;
+}
+
 const CString* CIniFile::GetSectionName(std::size_t index) const noexcept
 {
 	if (index > sections.size() - 1)
@@ -400,6 +443,14 @@ CString CIniFile::GetValueByName(const CString& sectionName, const CString& valu
 	if (!section)
 		return defaultValue;
 	return section->GetValueByName(valueName, defaultValue);
+}
+
+const CString* CIniFile::TryGetValueByName(const CString& sectionName, const CString& valueName) const
+{
+	auto section = GetSection(sectionName);
+	if (!section)
+		return nullptr;
+	return section->TryGetValueByName(valueName);
 }
 
 int CIniFileSection::GetValueOrigPos(int index) const noexcept
