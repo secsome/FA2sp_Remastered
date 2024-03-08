@@ -124,24 +124,26 @@ static const std::string GetAppDataPath()
     setlocale(LC_ALL, "C");
     if (!setlocale(LC_CTYPE, ".65001"))
         setlocale(LC_CTYPE, "");
-    CoInitializeEx(NULL, COINIT_MULTITHREADED);
-    CComPtr<IKnownFolderManager> manager;
-    CComPtr<IKnownFolder> local_app_data;
-    CComHeapPtr<WCHAR> local_app_data_folder;
-    HRESULT hr = CoCreateInstance(CLSID_KnownFolderManager, NULL, CLSCTX_INPROC_SERVER, IID_PPV_ARGS(&manager));
-    if (SUCCEEDED(hr)) {
-        //std::shared_ptr<LPWSTR> x()
-        
-        if (SUCCEEDED(manager->GetFolder(FOLDERID_LocalAppData, &local_app_data))) {
-            LPWSTR b;
-            local_app_data->GetPath(KF_FLAG_CREATE, &b);
-            local_app_data_folder.Attach(b);
-            int a = 0;
-            std::string AppFolder = utf16ToUtf8(std::wstring(local_app_data_folder));
-            //return CString(CW2A(CStringW(local_app_data_folder), CP_ACP)) + "\\" + editor_name + "\\";
-            return AppFolder + "\\" + editor_name + "\\";
-        }
-    }
+    
+    // We don't want to use AppData - secsome
+    // CoInitializeEx(NULL, COINIT_MULTITHREADED);
+    // CComPtr<IKnownFolderManager> manager;
+    // CComPtr<IKnownFolder> local_app_data;
+    // CComHeapPtr<WCHAR> local_app_data_folder;
+    // HRESULT hr = CoCreateInstance(CLSID_KnownFolderManager, NULL, CLSCTX_INPROC_SERVER, IID_PPV_ARGS(&manager));
+    // if (SUCCEEDED(hr)) {
+    //     //std::shared_ptr<LPWSTR> x()
+    //     
+    //     if (SUCCEEDED(manager->GetFolder(FOLDERID_LocalAppData, &local_app_data))) {
+    //         LPWSTR b;
+    //         local_app_data->GetPath(KF_FLAG_CREATE, &b);
+    //         local_app_data_folder.Attach(b);
+    //         int a = 0;
+    //         std::string AppFolder = utf16ToUtf8(std::wstring(local_app_data_folder));
+    //         //return CString(CW2A(CStringW(local_app_data_folder), CP_ACP)) + "\\" + editor_name + "\\";
+    //         return AppFolder + "\\" + editor_name + "\\";
+    //     }
+    // }
 
     // fallback: use app directory
     wchar_t app_path[MAX_PATH] = { 0 };

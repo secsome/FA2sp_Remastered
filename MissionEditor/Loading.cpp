@@ -127,11 +127,7 @@ void CLoading::Load()
 {
 	auto startTime = std::chrono::steady_clock::now();
 
-		
 	CString artFile;
-
-	
-	
 
 	// show a wait cursor
 	SetCursor(LoadCursor(NULL, IDC_WAIT));
@@ -203,8 +199,6 @@ void CLoading::Load()
 		art.Clear();
 		art = artmd;
 	}
-
-	
 
 	m_progress.SetPos(2);
 	//art.DeleteLeadingSpaces(TRUE, TRUE);
@@ -3413,6 +3407,7 @@ BOOL CLoading::LoadUnitGraphic(LPCTSTR lpUnittype)
 
 BOOL CLoading::InitMixFiles()
 {
+	
 	last_succeeded_operation=8;
 
 	MEMORYSTATUS ms;
