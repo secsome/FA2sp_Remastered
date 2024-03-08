@@ -107,7 +107,7 @@ public:
 	void Unload();
 	bool InitMixFiles();
 	void InitSHPs(CProgressCtrl* prog=NULL);
-	void LoadTSIni(LPCTSTR lpFilename, CIniFile& ini, BOOL bIsExpansion);
+	void LoadTSIni(LPCTSTR lpFilename, CIniFile& ini);
 	void CreateINI();
 	CLoading(CWnd* pParent = NULL);   // Standardconstructor
 	void InitPics(CProgressCtrl* prog=NULL);

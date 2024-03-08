@@ -65,7 +65,7 @@ struct OPTIONS{
 	bool bVSync = false;
 	std::vector<float> viewScaleSteps = { 0.75f, 0.5f, 0.25f };
 	bool viewScaleUseSteps = true;
-	float viewScaleSpeed = 15.0f;
+	float viewScaleSpeed = 1.0f;
 	bool useDefaultMouseCursor = false;
 
 public:

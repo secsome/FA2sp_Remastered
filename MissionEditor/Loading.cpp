@@ -136,7 +136,7 @@ void CLoading::Load()
 	m_cap.SetWindowText(GetLanguageStringACP("LoadLoadRules"));
 	m_progress.SetPos(1);
 	UpdateWindow();
-	LoadTSIni(CIniFile::FAData.GetValueByName("Filenames", "Rules", "rulesmd.ini"), CIniFile::Rules, false);
+	LoadTSIni(CIniFile::FAData.GetValueByName("Filenames", "Rules", "rulesmd.ini"), CIniFile::Rules);
 	m_progress.SetPos(2);
 	PrepareHouses();
 	//HackRules();
@@ -147,7 +147,7 @@ void CLoading::Load()
 	m_cap.SetWindowText(GetLanguageStringACP("LoadLoadArt"));
 	m_progress.SetPos(1);
 	UpdateWindow();
-	LoadTSIni(CIniFile::FAData.GetValueByName("Filenames", "Art", "artmd.ini"), CIniFile::Art, false);
+	LoadTSIni(CIniFile::FAData.GetValueByName("Filenames", "Art", "artmd.ini"), CIniFile::Art);
 	m_progress.SetPos(2);
 	UpdateWindow();
 
@@ -155,7 +155,7 @@ void CLoading::Load()
 	m_cap.SetWindowText(GetLanguageStringACP("LoadLoadSound"));
 	m_progress.SetPos(1);
 	UpdateWindow();	
-	LoadTSIni(CIniFile::FAData.GetValueByName("Filenames", "Sound", "soundmd.ini"), CIniFile::Sound, false);
+	LoadTSIni(CIniFile::FAData.GetValueByName("Filenames", "Sound", "soundmd.ini"), CIniFile::Sound);
 	m_progress.SetPos(2);
 	UpdateWindow();
 
@@ -163,7 +163,7 @@ void CLoading::Load()
 	m_cap.SetWindowText(GetLanguageStringACP("LoadLoadEva"));
 	m_progress.SetPos(1);
 	UpdateWindow();
-	LoadTSIni(CIniFile::FAData.GetValueByName("Filenames", "Eva", "evamd.ini"), CIniFile::Eva, false);
+	LoadTSIni(CIniFile::FAData.GetValueByName("Filenames", "Eva", "evamd.ini"), CIniFile::Eva);
 	m_progress.SetPos(2);
 	UpdateWindow();
 
@@ -171,7 +171,7 @@ void CLoading::Load()
 	m_cap.SetWindowText(GetLanguageStringACP("LoadLoadTheme"));
 	m_progress.SetPos(1);
 	UpdateWindow();
-	LoadTSIni(CIniFile::FAData.GetValueByName("Filenames", "Theme", "thememd.ini"), CIniFile::Theme, false);
+	LoadTSIni(CIniFile::FAData.GetValueByName("Filenames", "Theme", "thememd.ini"), CIniFile::Theme);
 	m_progress.SetPos(2);
 	UpdateWindow();
 
@@ -180,7 +180,7 @@ void CLoading::Load()
 	m_cap.SetWindowText(GetLanguageStringACP("LoadLoadAI"));
 	m_progress.SetPos(1);
 	UpdateWindow();
-	LoadTSIni(CIniFile::FAData.GetValueByName("Filenames", "AI", "aimd.ini"), CIniFile::Ai, false);
+	LoadTSIni(CIniFile::FAData.GetValueByName("Filenames", "AI", "aimd.ini"), CIniFile::Ai);
 	m_progress.SetPos(2);
 	UpdateWindow();
 
@@ -188,7 +188,7 @@ void CLoading::Load()
 	m_cap.SetWindowText(GetLanguageStringACP("LoadLoadTemperat"));
 	m_progress.SetPos(1);
 	UpdateWindow();
-	LoadTSIni(CIniFile::FAData.GetValueByName("Filenames", "Temperate", "temperatmd.ini"), CIniFile::Temperate, false);
+	LoadTSIni(CIniFile::FAData.GetValueByName("Filenames", "Temperate", "temperatmd.ini"), CIniFile::Temperate);
 	m_progress.SetPos(2);
 	UpdateWindow();
 
@@ -196,7 +196,7 @@ void CLoading::Load()
 	m_cap.SetWindowText(GetLanguageStringACP("LoadLoadSnow"));
 	m_progress.SetPos(1);
 	UpdateWindow();
-	LoadTSIni(CIniFile::FAData.GetValueByName("Filenames", "Snow", "snowmd.ini"), CIniFile::Snow, false);
+	LoadTSIni(CIniFile::FAData.GetValueByName("Filenames", "Snow", "snowmd.ini"), CIniFile::Snow);
 	m_progress.SetPos(2);
 	UpdateWindow();
 
@@ -204,28 +204,28 @@ void CLoading::Load()
 	m_cap.SetWindowText(GetLanguageStringACP("LoadLoadUrban"));
 	m_progress.SetPos(1);
 	UpdateWindow();
-	LoadTSIni(CIniFile::FAData.GetValueByName("Filenames", "Urban", "urbanmd.ini"), CIniFile::Urban, false);
+	LoadTSIni(CIniFile::FAData.GetValueByName("Filenames", "Urban", "urbanmd.ini"), CIniFile::Urban);
 	m_progress.SetPos(2);
 	UpdateWindow();
 
 	m_cap.SetWindowText(GetLanguageStringACP("LoadLoadUrbanN"));
 	m_progress.SetPos(1);
 	UpdateWindow();
-	LoadTSIni(CIniFile::FAData.GetValueByName("Filenames", "NewUrban", "urbannmd.ini"), CIniFile::NewUrban, false);
+	LoadTSIni(CIniFile::FAData.GetValueByName("Filenames", "NewUrban", "urbannmd.ini"), CIniFile::NewUrban);
 	m_progress.SetPos(2);
 	UpdateWindow();
 
 	m_cap.SetWindowText(GetLanguageStringACP("LoadLoadLunar"));
 	m_progress.SetPos(1);
 	UpdateWindow();
-	LoadTSIni(CIniFile::FAData.GetValueByName("Filenames", "Lunar", "lunarmd.ini"), CIniFile::Lunar, false);
+	LoadTSIni(CIniFile::FAData.GetValueByName("Filenames", "Lunar", "lunarmd.ini"), CIniFile::Lunar);
 	m_progress.SetPos(2);
 	UpdateWindow();
 
 	m_cap.SetWindowText(GetLanguageStringACP("LoadLoadDesert"));
 	m_progress.SetPos(1);
 	UpdateWindow();
-	LoadTSIni(CIniFile::FAData.GetValueByName("Filenames", "Desert", "desertmd.ini"), CIniFile::Desert, false);
+	LoadTSIni(CIniFile::FAData.GetValueByName("Filenames", "Desert", "desertmd.ini"), CIniFile::Desert);
 	m_progress.SetPos(2);
 	UpdateWindow();
 
@@ -498,7 +498,7 @@ void CLoading::CreateINI()
 	path.SaveFile(iniFile);
 }
 
-void CLoading::LoadTSIni(LPCTSTR lpFilename, CIniFile& ini, BOOL bIsExpansion)
+void CLoading::LoadTSIni(LPCTSTR lpFilename, CIniFile& ini)
 {
 	DWORD dwSize = 0;
 	const auto buffer = ReadWholeFile(lpFilename, &dwSize);
@@ -518,14 +518,10 @@ void CLoading::LoadTSIni(LPCTSTR lpFilename, CIniFile& ini, BOOL bIsExpansion)
 	std::string_view sv(reinterpret_cast<const char*>(buffer), dwSize);
 	std::istringstream is(sv.data());
 
-	if (ini.LoadFile(is) != 0)
+	if (ini.LoadFile(is, true) != 0)
 		std::println(errstream, "Failed to load ini {0}", lpFilename);
 	else
-	{
-		CIniFile::Rules.DeleteLeadingSpaces(true, true);
-		CIniFile::Rules.DeleteEndingSpaces(true, true);
 		std::println(errstream, "Loaded ini {0}", lpFilename);
-	}
 
 	delete[] buffer;
 }

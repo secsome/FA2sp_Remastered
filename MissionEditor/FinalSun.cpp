@@ -67,6 +67,8 @@ void __cdecl term_func()
 
 CFinalSunApp::CFinalSunApp()
 {
+	SetProcessDpiAwarenessContext(DPI_AWARENESS_CONTEXT_PER_MONITOR_AWARE_V2);
+
 	m_cf = RegisterClipboardFormat("FINAL*FORMAT");
 
 	if (!m_cf) MessageBox(0, "Failed to register clipboard format, clipboard functions not available", "", 0);
