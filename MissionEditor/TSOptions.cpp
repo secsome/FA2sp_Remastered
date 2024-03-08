@@ -43,10 +43,8 @@ static char THIS_FILE[] = __FILE__;
 
 CTSOptions::CTSOptions(CWnd* pParent /*=NULL*/)
 	: CDialog(CTSOptions::IDD, pParent)
-	, m_PreferLocalTheaterFiles(FALSE)
 {
 	//{{AFX_DATA_INIT(CTSOptions)
-	m_LikeTS = -1;
 	//}}AFX_DATA_INIT
 }
 
@@ -57,8 +55,6 @@ void CTSOptions::DoDataExchange(CDataExchange* pDX)
 	//{{AFX_DATA_MAP(CTSOptions)
 	DDX_Control(pDX, IDC_LANGUAGE, m_Language);
 	DDX_Control(pDX, IDC_EDIT1, m_TSExe);
-	DDX_Radio(pDX, IDC_RULESLIKETS, m_LikeTS);
-	DDX_Check(pDX, IDC_PREFER_LOCAL_THEATER_FILES, m_PreferLocalTheaterFiles);
 	//}}AFX_DATA_MAP	
 }
 
@@ -74,11 +70,11 @@ END_MESSAGE_MAP()
 
 void CTSOptions::OnChoose() 
 {
-	CFileDialog fd(TRUE, NULL, "ra2.exe", OFN_FILEMUSTEXIST, "Red Alert 2 EXE|ra2.exe|");
+	CFolderPickerDialog fd{ nullptr, OFN_READONLY | OFN_EXPLORER };
 
 	fd.DoModal();
 
-	this->GetDlgItem(IDC_EDIT1)->SetWindowText((LPCTSTR)fd.GetPathName());
+	this->GetDlgItem(IDC_EDIT1)->SetWindowText((LPCTSTR)fd.GetFolderPath());
 
 	delete fd;
 }
@@ -99,11 +95,6 @@ BOOL CTSOptions::OnInitDialog()
 	
 	m_TSExe.SetWindowText((LPCTSTR)theApp.m_Options.TSExe);
 	
-	if(theApp.m_Options.bSearchLikeTS) m_LikeTS=0;
-	else m_LikeTS=1;
-
-	m_PreferLocalTheaterFiles = theApp.m_Options.bPreferLocalTheaterFiles ? TRUE : FALSE;
-
 	UpdateData(FALSE);
 
 	int i;

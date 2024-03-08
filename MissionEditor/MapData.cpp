@@ -725,7 +725,7 @@ void CMapData::LoadMap(const std::string& file)
 		tiles = &tiles_t;
 		theApp.m_loading->FreeTileSet();
 		theApp.m_loading->InitTMPs(&dlg.m_Progress);
-		theApp.m_loading->cur_theat = 'T';
+		theApp.m_loading->current_theater = 'T';
 
 	}
 	else if (m_mapfile.sections["Map"].values["Theater"] == THEATER1)
@@ -758,7 +758,7 @@ void CMapData::LoadMap(const std::string& file)
 		tiles = &tiles_s;
 		theApp.m_loading->FreeTileSet();
 		theApp.m_loading->InitTMPs(&dlg.m_Progress);
-		theApp.m_loading->cur_theat = 'A';
+		theApp.m_loading->current_theater = 'A';
 	}
 	else if (m_mapfile.sections["Map"].values["Theater"] == THEATER2)
 	{
@@ -790,7 +790,7 @@ void CMapData::LoadMap(const std::string& file)
 		tiles = &tiles_u;
 		theApp.m_loading->FreeTileSet();
 		theApp.m_loading->InitTMPs(&dlg.m_Progress);
-		theApp.m_loading->cur_theat = 'U';
+		theApp.m_loading->current_theater = 'U';
 	}
 	else if (m_mapfile.sections["Map"].values["Theater"] == THEATER3)
 	{
@@ -825,7 +825,7 @@ void CMapData::LoadMap(const std::string& file)
 		theApp.m_loading->FreeTileSet();
 
 		theApp.m_loading->InitTMPs(&dlg.m_Progress);
-		theApp.m_loading->cur_theat = 'N';
+		theApp.m_loading->current_theater = 'N';
 	}
 	else if (m_mapfile.sections["Map"].values["Theater"] == THEATER4)
 	{
@@ -860,7 +860,7 @@ void CMapData::LoadMap(const std::string& file)
 		theApp.m_loading->FreeTileSet();
 
 		theApp.m_loading->InitTMPs(&dlg.m_Progress);
-		theApp.m_loading->cur_theat = 'L';
+		theApp.m_loading->current_theater = 'L';
 	}
 	else if (m_mapfile.sections["Map"].values["Theater"] == THEATER5)
 	{
@@ -896,7 +896,7 @@ void CMapData::LoadMap(const std::string& file)
 		theApp.m_loading->FreeTileSet();
 
 		theApp.m_loading->InitTMPs(&dlg.m_Progress);
-		theApp.m_loading->cur_theat = 'D';
+		theApp.m_loading->current_theater = 'D';
 	}
 	else
 	{
@@ -4059,7 +4059,7 @@ void CMapData::CreateMap(DWORD dwWidth, DWORD dwHeight, LPCTSTR lpTerrainType, D
 	m_mapfile.Clear();
 
 	CString stdMap;
-	stdMap = AppPath;
+	stdMap = ExePath;
 	stdMap += "\\StdMapRA2.ini";
 
 	m_mapfile.InsertFile(stdMap, NULL);
@@ -4183,7 +4183,7 @@ void CMapData::CreateMap(DWORD dwWidth, DWORD dwHeight, LPCTSTR lpTerrainType, D
 			theApp.m_loading->FreeTileSet();
 			if (dlg)
 				theApp.m_loading->InitTMPs(&dlg->m_Progress);
-			theApp.m_loading->cur_theat = 'T';
+			theApp.m_loading->current_theater = 'T';
 
 		}
 		else if (m_mapfile.sections["Map"].values["Theater"] == THEATER1)
@@ -4217,7 +4217,7 @@ void CMapData::CreateMap(DWORD dwWidth, DWORD dwHeight, LPCTSTR lpTerrainType, D
 			theApp.m_loading->FreeTileSet();
 			if (dlg)
 				theApp.m_loading->InitTMPs(&dlg->m_Progress);
-			theApp.m_loading->cur_theat = 'A';
+			theApp.m_loading->current_theater = 'A';
 		}
 		else if (m_mapfile.sections["Map"].values["Theater"] == THEATER2)
 		{
@@ -4250,7 +4250,7 @@ void CMapData::CreateMap(DWORD dwWidth, DWORD dwHeight, LPCTSTR lpTerrainType, D
 			theApp.m_loading->FreeTileSet();
 			if (dlg)
 				theApp.m_loading->InitTMPs(&dlg->m_Progress);
-			theApp.m_loading->cur_theat = 'U';
+			theApp.m_loading->current_theater = 'U';
 		}
 		else if (m_mapfile.sections["Map"].values["Theater"] == THEATER3)
 		{
@@ -4286,7 +4286,7 @@ void CMapData::CreateMap(DWORD dwWidth, DWORD dwHeight, LPCTSTR lpTerrainType, D
 
 			if (dlg)
 				theApp.m_loading->InitTMPs(&dlg->m_Progress);
-			theApp.m_loading->cur_theat = 'N';
+			theApp.m_loading->current_theater = 'N';
 		}
 		else if (m_mapfile.sections["Map"].values["Theater"] == THEATER4)
 		{
@@ -4324,7 +4324,7 @@ void CMapData::CreateMap(DWORD dwWidth, DWORD dwHeight, LPCTSTR lpTerrainType, D
 			{
 				theApp.m_loading->InitTMPs(&dlg->m_Progress);
 			}
-			theApp.m_loading->cur_theat = 'L';
+			theApp.m_loading->current_theater = 'L';
 		}
 		else if (m_mapfile.sections["Map"].values["Theater"] == THEATER5)
 		{
@@ -4361,7 +4361,7 @@ void CMapData::CreateMap(DWORD dwWidth, DWORD dwHeight, LPCTSTR lpTerrainType, D
 
 			if (dlg)
 				theApp.m_loading->InitTMPs(&dlg->m_Progress);
-			theApp.m_loading->cur_theat = 'D';
+			theApp.m_loading->current_theater = 'D';
 		}
 		else
 		{

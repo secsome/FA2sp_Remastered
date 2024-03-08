@@ -578,19 +578,13 @@ void CViewObjects::UpdateDialog()
 
 	// we want the change owner at the top
 	
-	if(!Map->IsMultiplayer() || !theApp.m_Options.bEasy)
-		rootitems[11]=tree.InsertItem(TVIF_PARAM | TVIF_TEXT,
-			TranslateStringACP(sTreeRoots[11]), i, i, 0, 0, i, TVI_ROOT, TVI_LAST);
+	rootitems[11] = tree.InsertItem(TVIF_PARAM | TVIF_TEXT,
+		TranslateStringACP(sTreeRoots[11]), i, i, 0, 0, i, TVI_ROOT, TVI_LAST);
 	
 
 	for(i=0;i<10;i++)
 	{
 		BOOL bAllow=TRUE;
-		if(theApp.m_Options.bEasy)
-		{
-			if(i>=6 && i<=9)
-				bAllow=FALSE;
-		}
 
 		// no tunnels in ra2 mode
 		if(i==9 && !isTrue(g_data.sections["Debug"].values["AllowTunnels"])) bAllow=FALSE;
@@ -637,12 +631,10 @@ void CViewObjects::UpdateDialog()
 
 
 
-	if(!theApp.m_Options.bEasy)
-	{
-		tree.InsertItem(TVIF_PARAM | TVIF_TEXT, GetLanguageStringACP("CreateWaypObList"), 0,0,0,0, 20, rootitems[6], TVI_LAST );
-		tree.InsertItem(TVIF_PARAM | TVIF_TEXT, GetLanguageStringACP("CreateSpecWaypObList"), 0,0,0,0, 22, rootitems[6], TVI_LAST );
-		tree.InsertItem(TVIF_PARAM | TVIF_TEXT, GetLanguageStringACP("DelWaypObList"), 0,0,0,0, 21, rootitems[6], TVI_LAST );
-	}
+	
+	tree.InsertItem(TVIF_PARAM | TVIF_TEXT, GetLanguageStringACP("CreateWaypObList"), 0,0,0,0, 20, rootitems[6], TVI_LAST );
+	tree.InsertItem(TVIF_PARAM | TVIF_TEXT, GetLanguageStringACP("CreateSpecWaypObList"), 0,0,0,0, 22, rootitems[6], TVI_LAST );
+	tree.InsertItem(TVIF_PARAM | TVIF_TEXT, GetLanguageStringACP("DelWaypObList"), 0,0,0,0, 21, rootitems[6], TVI_LAST );
 
 		
 	int e;
@@ -676,19 +668,15 @@ void CViewObjects::UpdateDialog()
 	if(Map->GetTheater()==THEATER3)
 		tree.InsertItem(TVIF_PARAM | TVIF_TEXT, GetTheaterLanguageString("GroundPave2ObList"),0,0,0,0,67,rootitems[13], TVI_LAST);
 
-	if(!theApp.m_Options.bEasy)
-	{
-		tree.InsertItem(TVIF_PARAM | TVIF_TEXT, GetLanguageStringACP("CreateCelltagObList"), 0,0,0,0, 36, rootitems[7], TVI_LAST );
-		tree.InsertItem(TVIF_PARAM | TVIF_TEXT, GetLanguageStringACP("DelCelltagObList"), 0,0,0,0, 37, rootitems[7], TVI_LAST );
-		tree.InsertItem(TVIF_PARAM | TVIF_TEXT, GetLanguageStringACP("CelltagPropObList"), 0,0,0,0, 38, rootitems[7], TVI_LAST );
-	}
+	
+	tree.InsertItem(TVIF_PARAM | TVIF_TEXT, GetLanguageStringACP("CreateCelltagObList"), 0,0,0,0, 36, rootitems[7], TVI_LAST );
+	tree.InsertItem(TVIF_PARAM | TVIF_TEXT, GetLanguageStringACP("DelCelltagObList"), 0,0,0,0, 37, rootitems[7], TVI_LAST );
+	tree.InsertItem(TVIF_PARAM | TVIF_TEXT, GetLanguageStringACP("CelltagPropObList"), 0,0,0,0, 38, rootitems[7], TVI_LAST );
 
-	if(!theApp.m_Options.bEasy)
-	{
-		tree.InsertItem(TVIF_PARAM | TVIF_TEXT, GetLanguageStringACP("CreateNodeNoDelObList"), 0,0,0,0, 40, rootitems[8], TVI_LAST );
-		tree.InsertItem(TVIF_PARAM | TVIF_TEXT, GetLanguageStringACP("CreateNodeDelObList"), 0,0,0,0, 41, rootitems[8], TVI_LAST );
-		tree.InsertItem(TVIF_PARAM | TVIF_TEXT, GetLanguageStringACP("DelNodeObList"), 0,0,0,0, 42, rootitems[8], TVI_LAST );
-	}
+
+	tree.InsertItem(TVIF_PARAM | TVIF_TEXT, GetLanguageStringACP("CreateNodeNoDelObList"), 0,0,0,0, 40, rootitems[8], TVI_LAST );
+	tree.InsertItem(TVIF_PARAM | TVIF_TEXT, GetLanguageStringACP("CreateNodeDelObList"), 0,0,0,0, 41, rootitems[8], TVI_LAST );
+	tree.InsertItem(TVIF_PARAM | TVIF_TEXT, GetLanguageStringACP("DelNodeObList"), 0,0,0,0, 42, rootitems[8], TVI_LAST );
 
 
 	HTREEITEM deleteoverlay=tree.InsertItem(TVIF_PARAM | TVIF_TEXT, GetLanguageStringACP("DelOvrlObList"), 0,0,0,0, -1, rootitems[5], TVI_LAST );
@@ -698,17 +686,12 @@ void CViewObjects::UpdateDialog()
 	HTREEITEM alloverlay=tree.InsertItem(TVIF_PARAM | TVIF_TEXT, GetLanguageStringACP("OthObList"), 0,0,0,0, -1, rootitems[5], TVI_LAST );
 	HTREEITEM everyoverlay=NULL;
 		
-	if(!theApp.m_Options.bEasy)
-	{
-		everyoverlay=tree.InsertItem(TVIF_PARAM | TVIF_TEXT, GetLanguageStringACP("AllObList"), 0,0,0,0, -1, rootitems[5], TVI_LAST );
-	}
+	everyoverlay=tree.InsertItem(TVIF_PARAM | TVIF_TEXT, GetLanguageStringACP("AllObList"), 0,0,0,0, -1, rootitems[5], TVI_LAST );
 
 
-	if(!theApp.m_Options.bEasy)
-	{
-		tree.InsertItem(TVIF_PARAM | TVIF_TEXT, GetLanguageStringACP("OvrlManuallyObList"), 0,0,0,0, valadded*6+1, rootitems[5], TVI_LAST );
-		tree.InsertItem(TVIF_PARAM | TVIF_TEXT, GetLanguageStringACP("OvrlDataManuallyObList"), 0,0,0,0, valadded*6+2, rootitems[5], TVI_LAST );
-	}
+
+	tree.InsertItem(TVIF_PARAM | TVIF_TEXT, GetLanguageStringACP("OvrlManuallyObList"), 0,0,0,0, valadded*6+1, rootitems[5], TVI_LAST );
+	tree.InsertItem(TVIF_PARAM | TVIF_TEXT, GetLanguageStringACP("OvrlDataManuallyObList"), 0,0,0,0, valadded*6+2, rootitems[5], TVI_LAST );
 
 	tree.InsertItem(TVIF_PARAM | TVIF_TEXT, GetLanguageStringACP("DelOvrl0ObList"), 0,0,0,0, valadded*6+100+0, deleteoverlay, TVI_LAST );
 	tree.InsertItem(TVIF_PARAM | TVIF_TEXT, GetLanguageStringACP("DelOvrl1ObList"), 0,0,0,0, valadded*6+100+1, deleteoverlay, TVI_LAST );
@@ -742,7 +725,7 @@ void CViewObjects::UpdateDialog()
 
 	}
 
-	if (!theApp.m_Options.bEasy && isTrue(g_data.sections["Debug"].values["AllowTunnels"]))
+	if (isTrue(g_data.sections["Debug"].values["AllowTunnels"]))
 	{
 		tree.InsertItem(TVIF_PARAM | TVIF_TEXT, GetLanguageStringACP("NewTunnelObList"), 0, 0, 0, 0, 50, rootitems[9], TVI_LAST);
 		tree.InsertItem(TVIF_PARAM | TVIF_TEXT, GetLanguageStringACP("ModifyTunnelObList"), 0, 0, 0, 0, 51, rootitems[9], TVI_LAST);
@@ -757,7 +740,6 @@ void CViewObjects::UpdateDialog()
 
 	int lv=1;
 
-	if(!theApp.m_Options.bEasy || !Map->IsMultiplayer())
 	{
 		if(ini.sections.find(MAPHOUSES)!=ini.sections.end() && ini.sections[MAPHOUSES].values.size()>0)
 		{
@@ -785,21 +767,6 @@ void CViewObjects::UpdateDialog()
 			}
 		}
 	}
-	else
-	{
-		// change owner to neutral
-		if(ini.sections.find(MAPHOUSES)!=ini.sections.end() && ini.sections[MAPHOUSES].values.size()>0)
-		{
-			if(ini.sections[MAPHOUSES].FindValue("Neutral")>=0)
-				currentOwner="Neutral";
-			else
-				currentOwner=*ini.sections[MAPHOUSES].GetValue(0);
-		}
-		else
-			currentOwner="Neutral";
-		
-	}
-
 	
 	for(i=0;i<overlay_count;i++)
 	{
@@ -811,7 +778,6 @@ void CViewObjects::UpdateDialog()
 	}
 
 	e=0;
-	if(!theApp.m_Options.bEasy)
 	{
 		for(i=0;i<rules.sections["OverlayTypes"].values.size();i++)
 		{

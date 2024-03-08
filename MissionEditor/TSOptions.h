@@ -34,7 +34,6 @@ class CTSOptions : public CDialog
 {
 // Konstruktion
 public:
-	BOOL m_PreferLocalTheaterFiles;
 	CString m_LanguageName;
 	CString m_TSEXE;
 	CTSOptions(CWnd* pParent = NULL);   // Standardkonstruktor
@@ -44,7 +43,6 @@ public:
 	enum { IDD = IDD_TSOPTIONS };
 	CComboBox	m_Language;
 	CEdit	m_TSExe;
-	int		m_LikeTS;
 	//}}AFX_DATA
 
 

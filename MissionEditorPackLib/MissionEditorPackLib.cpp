@@ -364,12 +364,26 @@ namespace FSunPackLib
 		return pDDS->SetColorKey(DDCKEY_SRCBLT, &color_key);
 	}
 
-	BOOL XCC_Initialize(BOOL bLoadFromRegistry)
+	bool XCC_Initialize(bool bLoadFromRegistry)
 	{
 		if (bLoadFromRegistry)
 			xcc_dirs::load_from_registry();
 
-		return TRUE;
+		return true;
+	}
+
+	HMIXFILE XCC_FindFileInMix(LPCSTR lpFilename)
+	{
+		for (DWORD i = 0; i < dwMixFileCount; ++i)
+		{
+			const auto& mix = mixfiles[i];
+			if (!mix.is_open())
+				break;
+			if (XCC_DoesFileExist(lpFilename, i + 1))
+				return i + 1;
+		}
+
+		return NULL;
 	}
 
 	HMIXFILE XCC_OpenMix(LPCTSTR szMixFile, HMIXFILE hOwner)
@@ -522,7 +536,55 @@ namespace FSunPackLib
 		return XCC_ExtractFile(std::string(szFilename), std::string(szSaveTo), hOwner);
 	}
 
+	void* XCC_ReadWholeFile(LPCSTR lpFilename, HMIXFILE hOwner, DWORD* pSize)
+	{
+		if (hOwner == NULL)
+			return nullptr; // not supported yet
 
+		hOwner--; // -1 to make it to an array index
+
+		if (hOwner >= dwMixFileCount)
+			return nullptr;
+
+		if (!mixfiles[hOwner].is_open())
+			return nullptr;
+
+		Ccc_file file{ true };
+		if (file.open(lpFilename, mixfiles[hOwner]) != 0)
+			return nullptr;
+
+		const auto sz = file.get_size();
+		auto ret = new char[sz];
+		if (nullptr == ret)
+			return nullptr;
+
+		std::memcpy(ret, file.get_data(), sz);
+		if (pSize)
+			*pSize = sz;
+
+		return ret;
+	}
+
+	bool XCC_LoadPalette(const void* data, HTSPALETTE& hPal)
+	{
+		if (dwPalCount > 0xFF)
+			return false;
+
+		auto& dst = ts_palettes[dwPalCount];
+		if (auto pBuffer = static_cast<const t_palet*>(data))
+		{
+			for (int i = 0; i < 256; ++i)
+			{
+				dst[i].r = (*pBuffer)[i].r << 2;
+				dst[i].g = (*pBuffer)[i].g << 2;
+				dst[i].b = (*pBuffer)[i].b << 2;
+			}
+			bFirstConv[dwPalCount] = true;
+			hPal = ++dwPalCount;
+			return true;
+		}
+		return false;
+	}
 
 	BOOL XCC_GetSHPHeader(SHPHEADER* pHeader)
 	{

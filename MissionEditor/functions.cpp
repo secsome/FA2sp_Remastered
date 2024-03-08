@@ -145,25 +145,27 @@ char *strcpy_safe( char *strDestination, const char *strSource )
 
 CString TranslateHouse(CString original, BOOL bToUI)
 {
-	if(bToUI)
-	{
-		// CCStrings[*rules.sections[HOUSES].GetValue(i)].wString
-		int i;
-		for(i=0;i<rules.sections[HOUSES].values.size();i++)
-		{
-			original.Replace(*rules.sections[HOUSES].GetValue(i), CCStrings[*rules.sections[HOUSES].GetValue(i)].cString);
-		}
-	}
-	else
-	{
-
-		int i;
-		for(i=0;i<rules.sections[HOUSES].values.size();i++)
-		{
-			original.Replace(CCStrings[*rules.sections[HOUSES].GetValue(i)].cString, *rules.sections[HOUSES].GetValue(i));
-		}
-	}
 	return original;
+
+	//if(bToUI)
+	//{
+	//	// CCStrings[*rules.sections[HOUSES].GetValue(i)].wString
+	//	int i;
+	//	for(i=0;i<rules.sections[HOUSES].values.size();i++)
+	//	{
+	//		original.Replace(*rules.sections[HOUSES].GetValue(i), CCStrings[*rules.sections[HOUSES].GetValue(i)].cString);
+	//	}
+	//}
+	//else
+	//{
+	//
+	//	int i;
+	//	for(i=0;i<rules.sections[HOUSES].values.size();i++)
+	//	{
+	//		original.Replace(CCStrings[*rules.sections[HOUSES].GetValue(i)].cString, *rules.sections[HOUSES].GetValue(i));
+	//	}
+	//}
+	//return original;
 }
 
 
@@ -318,7 +320,7 @@ void ShowOptionsDialog()
 	CString app = "FinalAlert";
 	std::string iniFile="";	
 	CIniFile optini;
-	iniFile=u8AppDataPath;
+	iniFile=u8ExePath;
 	iniFile+="\\FinalAlert.ini";
 	optini.LoadFile(iniFile);
 	CTSOptions opt;
@@ -328,26 +330,8 @@ void ShowOptionsDialog()
 	optini.sections[game].values["Exe"]=theApp.m_Options.TSExe;
 	optini.sections[app].values["Language"]=opt.m_LanguageName;
 
-	BOOL bOldSearch=theApp.m_Options.bSearchLikeTS;
-	if(!(opt.m_LikeTS==1)) {
-		optini.sections[app].values["FileSearchLikeGame"]="yes";
-		theApp.m_Options.bSearchLikeTS=TRUE;
-	}
-	else {
-		theApp.m_Options.bSearchLikeTS=FALSE;
-		optini.sections[app].values["FileSearchLikeGame"]="no";
-	}
 
-	auto bOldPreferLocalTheaterFiles = theApp.m_Options.bPreferLocalTheaterFiles;
-	theApp.m_Options.bPreferLocalTheaterFiles = opt.m_PreferLocalTheaterFiles ? true : false;
-	optini.sections[app].values["PreferLocalTheaterFiles"] = theApp.m_Options.bPreferLocalTheaterFiles ? "1" : "0";
-
-
-	if (
-		(
-			(bOldPreferLocalTheaterFiles != theApp.m_Options.bPreferLocalTheaterFiles) ||
-			(bOldSearch != theApp.m_Options.bSearchLikeTS)
-		) && bOptionsStartup == FALSE)
+	if (bOptionsStartup == FALSE)
 		MessageBox(0, GetLanguageStringACP("RestartNeeded"), "Restart", 0);
 	
 

@@ -271,8 +271,6 @@ void CAll::OnInisection()
 	GetCurrentDirectory(MAX_PATH, cuPath);
 	dlg.m_ofn.lpstrInitialDir=cuPath;
 
-	if(theApp.m_Options.TSExe.GetLength()) dlg.m_ofn.lpstrInitialDir=(char*)(LPCTSTR)theApp.m_Options.TSExe;
-
 	if(dlg.DoModal()!=IDCANCEL)
 	{
 		CImportINI impini;

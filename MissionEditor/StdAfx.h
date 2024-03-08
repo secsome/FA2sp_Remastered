@@ -56,6 +56,8 @@
 #include "resource.h"
 #include "TipDlg.h"
 
+#include "FormatExtensions.h"
+
 
 //{{AFX_INSERT_LOCATION}}
 // Microsoft Visual C++ inserts additional declarations exactly above this line.

@@ -101,11 +101,13 @@ public:
 	void InitTMPs(CProgressCtrl* prog=NULL);
 	void InitPalettes();
 	
+	void* ReadWholeFile(LPCSTR lpFilename, DWORD* pSize = NULL);
+
 	~CLoading();
 	void Unload();
-	BOOL InitMixFiles();
+	bool InitMixFiles();
 	void InitSHPs(CProgressCtrl* prog=NULL);
-	void LoadTSIni(LPCTSTR lpFilename, CIniFile* lpIniFile, BOOL bIsExpansion, BOOL bCheckEditorDir = FALSE);
+	void LoadTSIni(LPCTSTR lpFilename, CIniFile& ini, BOOL bIsExpansion);
 	void CreateINI();
 	CLoading(CWnd* pParent = NULL);   // Standardconstructor
 	void InitPics(CProgressCtrl* prog=NULL);
@@ -117,7 +119,7 @@ public:
 	HTSPALETTE GetIsoPalette(char theat);
 	HTSPALETTE GetUnitPalette(char theat);
 	std::optional<FindShpResult> FindUnitShp(const CString& image, char preferred_theat, const CIniFileSection& artSection);
-	char cur_theat;
+	char current_theater;
 	
 
 // Dialog data
@@ -156,59 +158,29 @@ private:
 	int m_pic_count;
 	int m_bmp_count;
 	BOOL LoadTile(LPCSTR lpFilename, HMIXFILE hOwner, HTSPALETTE hPalette, DWORD dwID, BOOL bReplacement);
-	HTSPALETTE m_hPalIsoTemp;
-	HTSPALETTE m_hPalIsoSnow;
-	HTSPALETTE m_hPalIsoUrb;
 	
-	HTSPALETTE m_hPalUnitTemp;
-	HTSPALETTE m_hPalUnitSnow;
-	HTSPALETTE m_hPalUnitUrb;
-	HTSPALETTE m_hPalTemp;
-	HTSPALETTE m_hPalSnow;
-	HTSPALETTE m_hPalUrb;
-	HTSPALETTE m_hPalLib;
-	// YR pals:
-	HTSPALETTE m_hPalLun;
-	HTSPALETTE m_hPalDes;
-	HTSPALETTE m_hPalUbn;
-	HTSPALETTE m_hPalIsoLun;
-	HTSPALETTE m_hPalIsoDes;
-	HTSPALETTE m_hPalIsoUbn;
-	HTSPALETTE m_hPalUnitLun;
-	HTSPALETTE m_hPalUnitDes;
-	HTSPALETTE m_hPalUnitUbn;
+	HTSPALETTE PAL_ISOTEM;
+	HTSPALETTE PAL_ISOSNO;
+	HTSPALETTE PAL_ISOURB;
+	HTSPALETTE PAL_ISOLUN;
+	HTSPALETTE PAL_ISODES;
+	HTSPALETTE PAL_ISOUBN;
+	HTSPALETTE PAL_UNITTEM;
+	HTSPALETTE PAL_UNITSNO;
+	HTSPALETTE PAL_UNITURB;
+	HTSPALETTE PAL_UNITLUN;
+	HTSPALETTE PAL_UNITDES;
+	HTSPALETTE PAL_UNITUBN;
+	HTSPALETTE PAL_TEMPERAT;
+	HTSPALETTE PAL_SNOW;
+	HTSPALETTE PAL_URBAN;
+	HTSPALETTE PAL_LUNAR;
+	HTSPALETTE PAL_DESERT;
+	HTSPALETTE PAL_URBANN;
+	HTSPALETTE PAL_LIBTEM;
 
 	HMIXFILE FindFileInMix(LPCTSTR lpFilename, TheaterChar* pTheaterChar=NULL);
-	HMIXFILE m_hLocal;
-	HMIXFILE m_hSno;
-	HMIXFILE m_hTem;
-	HMIXFILE m_hUrb;
-	HMIXFILE m_hLun;
-	HMIXFILE m_hDes;
-	HMIXFILE m_hUbn;
-	HMIXFILE m_hTibSun;
-	HMIXFILE m_hBuildings;
-	EXPANDMIX m_hExpand[101]; // 1 added for ra2md.mix
-	HMIXFILE m_hECache[100];
-	HMIXFILE m_hIsoSnow;
-	HMIXFILE m_hIsoTemp;
-	HMIXFILE m_hIsoUrb;
-	HMIXFILE m_hIsoGen;
-	HMIXFILE m_hIsoLun;
-	HMIXFILE m_hIsoDes;
-	HMIXFILE m_hIsoUbn;
-	HMIXFILE m_hTemperat;
-	HMIXFILE m_hSnow;
-	HMIXFILE m_hUrban;
-	HMIXFILE m_hUrbanN;
-	HMIXFILE m_hLunar;
-	HMIXFILE m_hDesert;
-	HMIXFILE m_hCache;
-	HMIXFILE m_hConquer;
-	HMIXFILE m_hLanguage;
-	HMIXFILE m_hLangMD;
-	HMIXFILE m_hMarble;
-	BOOL loaded;
+	bool loaded;
 
 	std::unique_ptr<VoxelNormalTables> m_voxelNormalTables;
 	

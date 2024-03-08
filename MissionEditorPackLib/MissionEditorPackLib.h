@@ -152,8 +152,9 @@ dp - destination buffer
 */
 	UINT DecodeIsoMapPack5(BYTE* sp, UINT SourceLength, BYTE* dp, HWND hProgressBar, BOOL bDebugMode);
 
-	BOOL XCC_Initialize(BOOL bUseCache);
+	bool XCC_Initialize(bool bLoadFromRegistry);
 
+	HMIXFILE XCC_FindFileInMix(LPCSTR lpFilename);
 
 	HMIXFILE XCC_OpenMix(LPCTSTR szMixFile, HMIXFILE hOwner);
 
@@ -167,6 +168,10 @@ dp - destination buffer
 
 	BOOL XCC_ExtractFile(const std::string& szFilename, const std::string& szSaveTo, HMIXFILE hOwner);
 	BOOL XCC_ExtractFile(LPCSTR szFilename, LPCSTR szSaveTo, HMIXFILE hOwner);
+	
+	void* XCC_ReadWholeFile(LPCSTR lpFilename, HMIXFILE hOwner, DWORD* pSize = nullptr);
+
+	bool XCC_LoadPalette(const void* data, HTSPALETTE& hPal);
 
 	BOOL XCC_GetSHPHeader(SHPHEADER* pHeader);
 

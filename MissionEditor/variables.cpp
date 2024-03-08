@@ -40,7 +40,6 @@ CIniFile rules;
 CIniFile art;
 CIniFile ai;
 CIniFile sound;
-CIniFile tutorial;
 CIniFile eva; 
 CIniFile theme;
 CIniFile g_data;
@@ -156,11 +155,11 @@ static const std::string GetAppDataPath()
 }
 
 /* Application specific global variables */
-char AppPath[MAX_PATH + 1] = { 0 };
-const std::string u8AppDataPath = GetAppDataPath();
-const std::wstring u16AppDataPath = utf8ToUtf16(u8AppDataPath);
-char TSPath[MAX_PATH + 1] = { 0 };
-char currentMapFile[MAX_PATH + 1] = { 0 };
+char ExePath[MAX_PATH + 1] = { 0 };
+const std::string u8ExePath = GetAppDataPath();
+const std::wstring u16ExePath = utf8ToUtf16(u8ExePath);
+char GamePath[MAX_PATH + 1] = { 0 };
+char MapPath[MAX_PATH + 1] = { 0 };
 BOOL bOptionsStartup=FALSE;
 bool bAllowAccessBehindCliffs=false;
 

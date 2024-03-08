@@ -648,7 +648,7 @@ void CUserScriptsDlg::OnOK()
 	if(m_Script.GetLength()==0) return;
 
 	CUserScript s;
-	s.LoadFile((CString)AppPath+(CString)"\\Scripts\\"+m_Script);
+	s.LoadFile((CString)ExePath+(CString)"\\Scripts\\"+m_Script);
 
 	CIniFile& ini=Map->GetIniFile();
 
@@ -3261,7 +3261,7 @@ BOOL CUserScriptsDlg::OnInitDialog()
 	CFileFind ff;
 
 
-	CString scripts=(CString)AppPath+"\\Scripts\\*.fscript";
+	CString scripts=(CString)ExePath+"\\Scripts\\*.fscript";
 	{
 		
 		CFileFind ff;

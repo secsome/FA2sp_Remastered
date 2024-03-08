@@ -3632,7 +3632,7 @@ void CIsoView::ReInitializeDDraw()
 	{
 		if (MessageBox("You currently only have 8 bit color mode enabled. FinalAlert 2 does not work in 8 bit color mode. Please change the color mode and then click on OK. Click Cancel to quit (and save the map as backup.map).", "Error", MB_OKCANCEL) == IDCANCEL)
 		{
-			((CFinalSunDlg*)theApp.m_pMainWnd)->SaveMap((u8AppDataPath + "\\backup.map").c_str());
+			((CFinalSunDlg*)theApp.m_pMainWnd)->SaveMap((u8ExePath + "\\backup.map").c_str());
 			PostQuitMessage(0);
 			return;
 		}
@@ -3726,7 +3726,7 @@ void CIsoView::ReInitializeDDraw()
 			FALSE,
 			NORMAL_PRIORITY_CLASS,
 			NULL,
-			AppPath,
+			ExePath,
 			&si,
 			&pi);
 	}

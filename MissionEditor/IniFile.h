@@ -113,10 +113,12 @@ public:
 	void Clear();
 	WORD InsertFile(const CString& filename, const char* Section, BOOL bNoSpaces = FALSE);
 	WORD InsertFile(const std::string& filename, const char* Section, BOOL bNoSpaces = FALSE);
+	WORD InsertFile(std::istream& file, const char* Section, BOOL bNoSpaces = FALSE);
 	BOOL SaveFile(const CString& Filename) const;
 	BOOL SaveFile(const std::string& Filename) const;
 	WORD LoadFile(const CString& filename, BOOL bNoSpaces = FALSE);
 	WORD LoadFile(const std::string& filename, BOOL bNoSpaces = FALSE);
+	WORD LoadFile(std::istream& file, BOOL bNoSpaces = FALSE);
 
 
 	auto begin() noexcept

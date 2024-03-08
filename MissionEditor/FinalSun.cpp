@@ -41,7 +41,7 @@ static char THIS_FILE[] = __FILE__;
 
 #define APPID "FinalSun App"
 
-extern char AppPath[];
+extern char ExePath[];
 
 extern ACTIONDATA AD;
 
@@ -74,40 +74,39 @@ CFinalSunApp::CFinalSunApp()
 	tiledata_count = &t_tiledata_count;
 	tiledata = &t_tiledata;
 
-	// first: set up global variable AppPath
+	// first: set up global variable ExePath
 	// [02/16/2000] using GetModuleFileName() instead of GetCurrentDirectory(): always the correct path
 	wchar_t AppPathUtf16[MAX_PATH] = { 0 };
 	GetModuleFileNameW(NULL, AppPathUtf16, MAX_PATH);
-	strcpy_s(AppPath, utf16ToUtf8(AppPathUtf16).c_str());
-	*(strrchr(AppPath, '\\') + 1) = 0;
+	strcpy_s(ExePath, utf16ToUtf8(AppPathUtf16).c_str());
+	*(strrchr(ExePath, '\\') + 1) = 0;
 
 	// Initialize AppData
-	const std::wstring AppDataPathFolder = utf8ToUtf16(u8AppDataPath.substr(0, u8AppDataPath.size() - 1));
-	auto create_dir_res = SHCreateDirectoryExW(NULL, AppDataPathFolder.c_str(), nullptr);
-	if (ERROR_SUCCESS != create_dir_res && ERROR_ALREADY_EXISTS != create_dir_res)
-	{
-		wchar_t err_msg[1025] = { 0 };
-		FormatMessageW(FORMAT_MESSAGE_FROM_SYSTEM, 0, create_dir_res, 0, err_msg, 1024, NULL);
-		MessageBoxW(NULL, err_msg, (std::wstring(L"Failed to open ") + AppDataPathFolder).c_str(), 0);
-		exit(1);
-	}
-
-	if ((GetFileAttributesW(AppDataPathFolder.c_str()) & FILE_ATTRIBUTE_DIRECTORY) != FILE_ATTRIBUTE_DIRECTORY)
-	{
-		MessageBoxW(NULL, (AppDataPathFolder + L" must be a directory, not a file").c_str(), (std::wstring(L"Failed to open ") + AppDataPathFolder).c_str(), 0);
-		exit(1);
-	}
+	//const std::wstring AppDataPathFolder = utf8ToUtf16(u8ExePath.substr(0, u8ExePath.size() - 1));
+	//auto create_dir_res = SHCreateDirectoryExW(NULL, AppDataPathFolder.c_str(), nullptr);
+	//if (ERROR_SUCCESS != create_dir_res && ERROR_ALREADY_EXISTS != create_dir_res)
+	//{
+	//	wchar_t err_msg[1025] = { 0 };
+	//	FormatMessageW(FORMAT_MESSAGE_FROM_SYSTEM, 0, create_dir_res, 0, err_msg, 1024, NULL);
+	//	MessageBoxW(NULL, err_msg, (std::wstring(L"Failed to open ") + AppDataPathFolder).c_str(), 0);
+	//	exit(1);
+	//}
+	//
+	//if ((GetFileAttributesW(AppDataPathFolder.c_str()) & FILE_ATTRIBUTE_DIRECTORY) != FILE_ATTRIBUTE_DIRECTORY)
+	//{
+	//	MessageBoxW(NULL, (AppDataPathFolder + L" must be a directory, not a file").c_str(), (std::wstring(L"Failed to open ") + AppDataPathFolder).c_str(), 0);
+	//	exit(1);
+	//}
 
 	/*memset(t_tilepics, 0, sizeof(TILEPICDATA)*10000);
 	memset(s_tilepics, 0, sizeof(TILEPICDATA)*10000);*/
 
 	m_Options.LanguageName = "English";
 	m_Options.bFlat = FALSE;
-	m_Options.bEasy = FALSE;
 	m_Options.bSupportMarbleMadness = FALSE;
 	m_Options.bMarbleMadness = FALSE;
 
-	auto log = u8AppDataPath;
+	auto log = u8ExePath;
 	log += "finalalert2log.txt";
 	m_u8LogFileName = log;
 	errstream.open(m_u8LogFileName, ios_base::trunc);
@@ -116,8 +115,8 @@ CFinalSunApp::CFinalSunApp()
 	errstream << "FinalAlert 2 log file" << std::endl << "----------------------" << std::endl << std::endl;
 	errstream << "CFinalSunApp::CFinalSunApp() called" << std::endl;
 
-	errstream << "App Path: " << AppPath << std::endl;
-	errstream << "AppData Path: " << u8AppDataPath << std::endl;
+	errstream << "App Path: " << ExePath << std::endl;
+	errstream << "AppData Path: " << u8ExePath << std::endl;
 	errstream << "Locale: " << setlocale(LC_ALL, nullptr) << std::endl;
 	errstream << "Windows ACP: " << GetACP() << std::endl;
 
@@ -162,13 +161,13 @@ BOOL CFinalSunApp::InitInstance()
 	ParseCommandLine();
 
 	// Load application data
-	std::string datafile = AppPath;
+	std::string datafile = ExePath;
 	datafile += "\\FAData.ini";
 
 	g_data.LoadFile(datafile);
 
 	// Load language data
-	std::string languagefile = AppPath;
+	std::string languagefile = ExePath;
 	languagefile += "\\FALanguage.ini";
 	language.LoadFile(languagefile);
 
@@ -183,8 +182,8 @@ BOOL CFinalSunApp::InitInstance()
 
 	// ok lets get some options
 	CIniFile optini;
-	std::string iniFile = u8AppDataPath + iniName;
-	std::string templateIniFile = std::string(AppPath) + defaultIniName;
+	std::string iniFile = u8ExePath + iniName;
+	std::string templateIniFile = std::string(ExePath) + defaultIniName;
 
 	bool copiedDefaultFile = false;
 	if (!DoesFileExist(iniFile.c_str()))
@@ -198,64 +197,23 @@ BOOL CFinalSunApp::InitInstance()
 	CString game = "RA2";
 	CString app = "FinalAlert";
 
-	std::wstring key;
-	key = L"Software\\Westwood\\Red Alert 2";
-
 	auto& opts = m_Options;
-
-	HKEY hKey = 0;
-	int res;
-	res = RegOpenKeyExW(HKEY_LOCAL_MACHINE, key.c_str(), 0, KEY_EXECUTE/*KEY_ALL_ACCESS*/, &hKey);
-	if (res != ERROR_SUCCESS)
-	{
-		std::wstring s = L"Failed to access registry. Using manual setting. Error was:\n";
-		wchar_t c[1024] = { 0 };
-		FormatMessageW(FORMAT_MESSAGE_FROM_SYSTEM, 0, res, 0, c, 1023, NULL);
-		MessageBoxW(0, (s + c).c_str(), L"Error", 0);
-		opts.TSExe = optini.sections[game].values["Exe"];
-	}
-	else
-	{
-		// key opened
-		wchar_t path[MAX_PATH + 1] = { 0 };
-		DWORD pathsize = MAX_PATH;
-		DWORD type = REG_SZ;
-		if ((res = RegQueryValueExW(hKey, L"InstallPath", 0, &type, (unsigned char*)path, &pathsize)) != ERROR_SUCCESS)
-		{
-			std::wstring s = L"Failed to access registry. Using manual setting. Error was:\n";
-			wchar_t c[1024] = { 0 };
-			FormatMessageW(FORMAT_MESSAGE_FROM_SYSTEM, 0, res, 0, c, 1023, NULL);
-			MessageBoxW(0, (s + c).c_str(), L"Error", 0);
-			opts.TSExe = optini.sections[game].values["Exe"];
-		}
-		else
-			opts.TSExe = path;
-	}
-
+	opts.TSExe = optini.sections[game].values["Exe"];
 
 	if (copiedDefaultFile ||
 		optini.sections.size() == 0 ||
 		opts.TSExe.GetLength() == 0 ||
-		optini.sections[app].values["Language"].GetLength() == 0 ||
-		optini.sections[app].values.find("FileSearchLikeGame") == optini.sections[app].values.end() ||
-		optini.sections[app].values.find("PreferLocalTheaterFiles") == optini.sections[app].values.end())
+		optini.sections[app].values["Language"].GetLength() == 0
+		)
 	{
-		opts.bSearchLikeTS = TRUE;
-
 		bOptionsStartup = TRUE;
 		ShowOptionsDialog();
 		bOptionsStartup = FALSE;
-
 	}
 	else
 	{
 		opts.LanguageName = optini.sections[app].values["Language"];
-		if (optini.sections[app].values["FileSearchLikeGame"] != "no")
-			opts.bSearchLikeTS = TRUE;
-		else opts.bSearchLikeTS = FALSE;
 	}
-	opts.bPreferLocalTheaterFiles = optini.sections[app].values.emplace("PreferLocalTheaterFiles", opts.bPreferLocalTheaterFiles ? "1" : "0").first->second == "1";
-
 	opts.bDoNotLoadAircraftGraphics = optini.sections["Graphics"].values["NoAircraftGraphics"] == "1";
 	opts.bDoNotLoadVehicleGraphics = optini.sections["Graphics"].values["NoVehicleGraphics"] == "1";
 	opts.bDoNotLoadBuildingGraphics = optini.sections["Graphics"].values["NoBuildingGraphics"] == "1";
@@ -304,30 +262,7 @@ BOOL CFinalSunApp::InitInstance()
 		exit(-982);
 	}
 
-	int EasyView;
-	if (optini.sections["UserInterface"].FindName("EasyView") < 0)
-	{
-		MessageBox(0, GetLanguageStringACP("ExplainEasyView"), GetLanguageStringACP("ExplainEasyViewCap"), 0);
-		EasyView = 1;
-
-		optini.LoadFile(iniFile);
-		optini.sections["UserInterface"].values["EasyView"] = "1";
-		optini.SaveFile(iniFile);
-	}
-	else
-	{
-		EasyView = atoi(optini.sections["UserInterface"].values["EasyView"]);
-	}
-	if (EasyView != 0) theApp.m_Options.bEasy = TRUE;
-
-
-
-
-	CString cTSPath = theApp.m_Options.TSExe;
-	auto lastSlash = cTSPath.ReverseFind('\\');
-	if (lastSlash >= 0)
-		cTSPath.SetAt(lastSlash + 1, 0);
-	strcpy(TSPath, cTSPath);
+	strcpy(GamePath, theApp.m_Options.TSExe);
 
 	// MW 01/23/2013: changed the global CMapData Map to a global CMapData* to get rid of static initialization/shutdown problems
 	{
@@ -380,9 +315,9 @@ BOOL CFinalSunApp::ProcessMessageFilter(int code, LPMSG lpMsg)
 	{
 		/*if(lpMsg->wParam==VK_F1)
 		{
-			if(ShellExecute(0, NULL, (CString)AppPath+"/help/index.htm", NULL, NULL, SW_NORMAL)==0)
+			if(ShellExecute(0, NULL, (CString)ExePath+"/help/index.htm", NULL, NULL, SW_NORMAL)==0)
 			{
-				MessageBox(0,(CString)"Could not open manual! Try opening "+(CString)AppPath+(CString)"/help/index.htm manually","Error",0);
+				MessageBox(0,(CString)"Could not open manual! Try opening "+(CString)ExePath+(CString)"/help/index.htm manually","Error",0);
 			}
 			return TRUE;
 		}*/

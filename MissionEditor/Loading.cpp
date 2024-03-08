@@ -18,9 +18,6 @@
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-// Loading.cpp: Implementierungsdatei
-//
-
 #include "stdafx.h"
 #include "FinalSun.h"
 #include "Loading.h"
@@ -35,10 +32,9 @@
 #include "functions.h"
 #include "inlines.h"
 #include "MissionEditorPackLib.h"
-#include <chrono>
-#include <thread>
 #include "VoxelNormals.h"
-#include <format>
+
+import std;
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
@@ -53,24 +49,11 @@ static char THIS_FILE[] = __FILE__;
 CLoading::CLoading(CWnd* pParent /*=NULL*/)
 	: CDialog(CLoading::IDD, pParent)
 {
-	//{{AFX_DATA_INIT(CLoading)
-	//}}AFX_DATA_INIT
-
 	Create(CLoading::IDD, pParent);
 
-	loaded=FALSE;
-	cur_theat='T';
+	loaded = false;
+	current_theater='T';
 
-	
-
-	m_hCache=NULL;
-	m_hConquer=NULL;
-	m_hIsoSnow=NULL;
-	m_hIsoTemp=NULL;
-	m_hLocal=NULL;
-	m_hTemperat=NULL;
-	m_hTibSun=NULL;
-	m_hLangMD=NULL;
 	m_pic_count=0;
 
 	s_tiledata=NULL;
@@ -81,18 +64,6 @@ CLoading::CLoading(CWnd* pParent /*=NULL*/)
 	u_tiledata_count=0;
 	tiledata=NULL;
 	tiledata_count=0;
-
-	int i=0;
-	for(i=0;i<101; i++)
-	{
-		
-		m_hExpand[i].hExpand=NULL;
-	}
-	for(i=0;i<100; i++)
-	{
-		
-		m_hECache[i]=NULL;
-	}
 
 	errstream << "CLoading::CLoading() called" << endl;
 	errstream.flush();
@@ -121,8 +92,6 @@ END_MESSAGE_MAP()
 /////////////////////////////////////////////////////////////////////////////
 // message handlers CLoading 
 
-BOOL bUseFirestorm=TRUE;
-
 void CLoading::Load()
 {
 	auto startTime = std::chrono::steady_clock::now();
@@ -135,7 +104,6 @@ void CLoading::Load()
 	// write a log
 	errstream << "CLoading::Load() called" << std::endl << std::endl;
 	errstream.flush();
-
 
 	// initialize the FSunPackLib::XCC
 	errstream << "Initializing FSunPackLib::XCC" << std::endl;
@@ -168,22 +136,10 @@ void CLoading::Load()
 	m_cap.SetWindowText(GetLanguageStringACP("LoadLoadRules"));
 	m_progress.SetPos(1);
 	UpdateWindow();
-	LoadTSIni("Rules.ini", &rules, FALSE);
-
-	CIniFile rulesmd;
-	LoadTSIni("rulesmd.ini", &rulesmd, TRUE);
-	if (rulesmd.sections.size() > 0)
-	{
-		rules = rulesmd;
-	}
-
+	LoadTSIni(g_data.GetValueByName("Filenames", "Rules", "rulesmd.ini"), rules, false);
 	m_progress.SetPos(2);
-	//rules.DeleteLeadingSpaces(TRUE, TRUE);
-	//rules.DeleteEndingSpaces(TRUE, TRUE);
-
 	PrepareHouses();
-	HackRules();
-	
+	//HackRules();
 	UpdateWindow();
 
 
@@ -191,51 +147,15 @@ void CLoading::Load()
 	m_cap.SetWindowText(GetLanguageStringACP("LoadLoadArt"));
 	m_progress.SetPos(1);
 	UpdateWindow();
-	LoadTSIni("Art.ini", &art, FALSE);
-	CIniFile artmd;
-	LoadTSIni("artmd.ini", &artmd, TRUE);
-	if (artmd.sections.size() > 0)
-	{
-		art.Clear();
-		art = artmd;
-	}
-
+	LoadTSIni(g_data.GetValueByName("Filenames", "Art", "artmd.ini"), art, false);
 	m_progress.SetPos(2);
-	//art.DeleteLeadingSpaces(TRUE, TRUE);
-	//art.DeleteEndingSpaces(TRUE, TRUE);
 	UpdateWindow();
-
-	// tutorial.ini
-	m_cap.SetWindowText(GetLanguageStringACP("LoadLoadTutorial"));
-	m_progress.SetPos(1);
-	UpdateWindow();
-	LoadTSIni("Tutorial.ini", &tutorial, FALSE);
 
 	// sound.ini
 	m_cap.SetWindowText(GetLanguageStringACP("LoadLoadSound"));
 	m_progress.SetPos(1);
 	UpdateWindow();	
-	
-	
-	if(bUseFirestorm)
-	{
-		int b;
-		for(b=99;b>0;b--)
-		{
-			char p[50];
-			itoa(b, p, 10);
-			CString name="Sound";
-			if(strlen(p)<2) name+="0";
-			name+=p;
-			name+=".ini";
-
-			LoadTSIni(name, &sound, FALSE);
-			if(sound.sections.size()>0) break;
-		}
-
-	} else LoadTSIni("Sound01.ini", &sound, FALSE);
-	if(sound.sections.size()==0) LoadTSIni("Sound.ini", &sound, FALSE);
-
+	LoadTSIni(g_data.GetValueByName("Filenames", "Sound", "soundmd.ini"), sound, false);
 	m_progress.SetPos(2);
 	UpdateWindow();
 
@@ -243,7 +163,7 @@ void CLoading::Load()
 	m_cap.SetWindowText(GetLanguageStringACP("LoadLoadEva"));
 	m_progress.SetPos(1);
 	UpdateWindow();
-	LoadTSIni("eva.ini", &eva, FALSE);
+	LoadTSIni(g_data.GetValueByName("Filenames", "Eva", "evamd.ini"), eva, false);
 	m_progress.SetPos(2);
 	UpdateWindow();
 
@@ -251,7 +171,7 @@ void CLoading::Load()
 	m_cap.SetWindowText(GetLanguageStringACP("LoadLoadTheme"));
 	m_progress.SetPos(1);
 	UpdateWindow();
-	LoadTSIni("theme.ini", &theme, FALSE);
+	LoadTSIni(g_data.GetValueByName("Filenames", "Theme", "thememd.ini"), theme, false);
 	m_progress.SetPos(2);
 	UpdateWindow();
 
@@ -260,21 +180,15 @@ void CLoading::Load()
 	m_cap.SetWindowText(GetLanguageStringACP("LoadLoadAI"));
 	m_progress.SetPos(1);
 	UpdateWindow();
-	LoadTSIni("Ai.ini", &ai, FALSE);
-
-	LoadTSIni("aimd.ini", &ai, TRUE); // YR
+	LoadTSIni(g_data.GetValueByName("Filenames", "AI", "aimd.ini"), ai, false);
 	m_progress.SetPos(2);
 	UpdateWindow();
-
-
-	const BOOL preferLocalTheater = theApp.m_Options.bPreferLocalTheaterFiles ? TRUE : FALSE;
 
 	// Temperat.INI
 	m_cap.SetWindowText(GetLanguageStringACP("LoadLoadTemperat"));
 	m_progress.SetPos(1);
 	UpdateWindow();
-	LoadTSIni("Temperat.ini", &tiles_t, FALSE, preferLocalTheater);
-	LoadTSIni("TemperatMD.ini", &tiles_t, TRUE, preferLocalTheater);
+	LoadTSIni(g_data.GetValueByName("Filenames", "Temperate", "temperatmd.ini"), tiles_t, false);
 	m_progress.SetPos(2);
 	UpdateWindow();
 
@@ -282,8 +196,7 @@ void CLoading::Load()
 	m_cap.SetWindowText(GetLanguageStringACP("LoadLoadSnow"));
 	m_progress.SetPos(1);
 	UpdateWindow();
-	LoadTSIni("Snow.ini", &tiles_s, FALSE, preferLocalTheater);
-	LoadTSIni("SnowMD.ini", &tiles_s, TRUE, preferLocalTheater);
+	LoadTSIni(g_data.GetValueByName("Filenames", "Snow", "snowmd.ini"), tiles_s, false);
 	m_progress.SetPos(2);
 	UpdateWindow();
 
@@ -291,33 +204,28 @@ void CLoading::Load()
 	m_cap.SetWindowText(GetLanguageStringACP("LoadLoadUrban"));
 	m_progress.SetPos(1);
 	UpdateWindow();
-	LoadTSIni("Urban.ini", &tiles_u, FALSE, preferLocalTheater);
-	LoadTSIni("UrbanMD.ini", &tiles_u, TRUE, preferLocalTheater);
+	LoadTSIni(g_data.GetValueByName("Filenames", "Urban", "urbanmd.ini"), tiles_u, false);
 	m_progress.SetPos(2);
 	UpdateWindow();
 
 	m_cap.SetWindowText(GetLanguageStringACP("LoadLoadUrbanN"));
 	m_progress.SetPos(1);
 	UpdateWindow();
-	LoadTSIni("UrbanNMD.ini", &tiles_un, FALSE, preferLocalTheater);
+	LoadTSIni(g_data.GetValueByName("Filenames", "NewUrban", "urbannmd.ini"), tiles_un, false);
 	m_progress.SetPos(2);
 	UpdateWindow();
-
-	// MW FIX: MAKE URBAN RAMPS MORPHABLE:
-	if (tiles_un.sections["TileSet0117"].FindName("Morphable") < 0)
-		tiles_un.sections["TileSet0117"].values["Morphable"] = "true";
 
 	m_cap.SetWindowText(GetLanguageStringACP("LoadLoadLunar"));
 	m_progress.SetPos(1);
 	UpdateWindow();
-	LoadTSIni("LunarMD.ini", &tiles_l, FALSE, preferLocalTheater);
+	LoadTSIni(g_data.GetValueByName("Filenames", "Lunar", "lunarmd.ini"), tiles_l, false);
 	m_progress.SetPos(2);
 	UpdateWindow();
 
 	m_cap.SetWindowText(GetLanguageStringACP("LoadLoadDesert"));
 	m_progress.SetPos(1);
 	UpdateWindow();
-	LoadTSIni("DesertMD.ini", &tiles_d, FALSE, preferLocalTheater);
+	LoadTSIni(g_data.GetValueByName("Filenames", "Desert", "desertmd.ini"), tiles_d, false);
 	m_progress.SetPos(2);
 	UpdateWindow();
 
@@ -378,7 +286,7 @@ void CLoading::InitPics(CProgressCtrl* prog)
 	{
 		int k;
 		CFileFind ff;
-		CString bmps=(CString)AppPath+"\\pics2\\*.bmp";
+		CString bmps=(CString)ExePath+"\\pics2\\*.bmp";
 		if(ff.FindFile(bmps))
 		{
 
@@ -584,137 +492,42 @@ void CLoading::CreateINI()
 	CString app = "FinalAlert";
 
 	version.LoadString(IDS_VERSION);
-	path.sections[app].values["Path"]=AppPath;
+	path.sections[app].values["Path"]=ExePath;
 	path.sections[app].values["Version"]=version;
 
 	path.SaveFile(iniFile);
 }
 
-
-
-
-
-
-
-
-
-
-void CLoading::LoadTSIni(LPCTSTR lpFilename, CIniFile *lpIniFile, BOOL bIsExpansion, BOOL bCheckEditorDir)
+void CLoading::LoadTSIni(LPCTSTR lpFilename, CIniFile& ini, BOOL bIsExpansion)
 {
-	errstream << "LoadTSIni(" << lpFilename << "," << lpIniFile << "," << bIsExpansion << ") called" << endl;
-	errstream.flush();
-
-	if (bCheckEditorDir) {
-		// check if file is available in the editors application data folder
-		if (DoesFileExist((u8AppDataPath + lpFilename).c_str()))
-		{
-			errstream << "File found in mission editor AppData directory (" << u8AppDataPath << ")" << endl;
-			errstream.flush();
-			if (!bIsExpansion)
-				lpIniFile->LoadFile(u8AppDataPath + lpFilename, TRUE);
-			else
-				lpIniFile->InsertFile(u8AppDataPath + lpFilename, NULL, TRUE);
-			return;
-		}
-
-		// check if file is available in the editors root folder
-		if(DoesFileExist(CString(AppPath) + lpFilename))
-		{
-			errstream << "File found in Mission Editor directory (" << AppPath << ")" << endl;
-			errstream.flush();
-			if(!bIsExpansion)
-				lpIniFile->LoadFile((CString)AppPath+lpFilename, TRUE);
-			else
-				lpIniFile->InsertFile((CString)AppPath+lpFilename, NULL, TRUE);
-			return;
-		}
-	}
-
-	if(theApp.m_Options.bSearchLikeTS)
+	DWORD dwSize = 0;
+	const auto buffer = ReadWholeFile(lpFilename, &dwSize);
+	if (nullptr == buffer)
 	{
-		
-		
-		// check if Rules.ini is available
-		if(DoesFileExist((CString)TSPath+lpFilename))
-		{
-			errstream << "File found in TS directory (" << TSPath << ")" << endl;
-			errstream.flush();
-			if(!bIsExpansion)
-				lpIniFile->LoadFile((CString)TSPath+lpFilename, TRUE);
-			else
-				lpIniFile->InsertFile((CString)TSPath+lpFilename, NULL, TRUE);
-			return;
-		}
-		
-
-		BOOL bExpandFound=FALSE;
-
-		
-
-		/*int i;
-		for(i=1;i<101;i++)
-		{
-			if(m_hExpand[i].hExpand!=NULL)
-			{
-				if(FSunPackLib::XCC_ExtractFile(lpFilename, (CString)TSPath+(CString)"FinalSun"+lpFilename, m_hExpand[i].hExpand))
-				{
-
-					errstream << lpFilename << " found in expansion #" << i << endl;
-					errstream.flush();
-						
-					//if(!bIsExpansion)
-					//	lpIniFile->InsertFile((CString)TSPath+(CString)"FinalSun"+lpFilename, NULL);
-					//else
-					lpIniFile->InsertFile((CString)TSPath+(CString)"FinalSun"+lpFilename, NULL, TRUE);
-
-					DeleteFile((CString)TSPath+(CString)"FinalSun"+lpFilename);
-					
-					bExpandFound=TRUE;
-				}
-				 
-			}
-		}*/
-
-		HMIXFILE hMix=FindFileInMix(lpFilename);
-		if(hMix)
-		{
-			if(FSunPackLib::XCC_ExtractFile(lpFilename, (CString)TSPath+(CString)"FinalSun"+lpFilename, hMix))
-				{
-
-					errstream << lpFilename << " found " << endl;
-					errstream.flush();
-						
-					//if(!bIsExpansion)
-					//	lpIniFile->InsertFile((CString)TSPath+(CString)"FinalSun"+lpFilename, NULL);
-					//else
-					lpIniFile->InsertFile((CString)TSPath+(CString)"FinalSun"+lpFilename, NULL, TRUE);
-
-					DeleteFile((CString)TSPath+(CString)"FinalSun"+lpFilename);
-					
-					bExpandFound=TRUE;
-				}
-		}
-
-		if(!bIsExpansion && !bExpandFound)
-		{
-			// not found, go ahead if this is not a expansion only file... 
-			FSunPackLib::XCC_ExtractFile(lpFilename,(CString)TSPath+(CString)"FinalSun"+lpFilename, m_hLocal);			
-			
-			lpIniFile->LoadFile((CString)TSPath+(CString)"FinalSun"+lpFilename, TRUE);
-			
-			DeleteFile((CString)TSPath+(CString)"FinalSun"+lpFilename);
-		}
-		
-		
-	}
-	else if(bIsExpansion==FALSE)
-	{
-		FSunPackLib::XCC_ExtractFile(lpFilename,(CString)TSPath+(CString)"FinalSun"+lpFilename, m_hLocal);
-		
-		lpIniFile->LoadFile((CString)TSPath+(CString)"FinalSun"+lpFilename, TRUE);
-		DeleteFile((CString)TSPath+(CString)"FinalSun"+lpFilename);
+		std::println(errstream, "Failed to read file {0}", lpFilename);
 		return;
 	}
+	
+	if (dwSize == 0)
+	{
+		std::println(errstream, "File {0} is empty", lpFilename);
+		delete[] buffer;
+		return;
+	}
+
+	std::string_view sv(reinterpret_cast<const char*>(buffer), dwSize);
+	std::istringstream is(sv.data());
+
+	if (ini.LoadFile(is) != 0)
+		std::println(errstream, "Failed to load ini {0}", lpFilename);
+	else
+	{
+		rules.DeleteLeadingSpaces(true, true);
+		rules.DeleteEndingSpaces(true, true);
+		std::println(errstream, "Loaded ini {0}", lpFilename);
+	}
+
+	delete[] buffer;
 }
 
 
@@ -920,27 +733,27 @@ const Vec3f lightDirection = Vec3f(1.0f, 0.0f, -1.0f).normalize();
 
 HTSPALETTE CLoading::GetIsoPalette(char theat)
 {
-	HTSPALETTE isoPalette = m_hPalIsoTemp;
+	HTSPALETTE isoPalette = PAL_ISOTEM;
 	switch (theat)
 	{
 	case 'T':
 	case 'G':
-		isoPalette = m_hPalIsoTemp;
+		isoPalette = PAL_ISOTEM;
 		break;
 	case 'A':
-		isoPalette = m_hPalIsoSnow;
+		isoPalette = PAL_ISOSNO;
 		break;
 	case 'U':
-		isoPalette = m_hPalIsoUrb;
+		isoPalette = PAL_ISOURB;
 		break;
 	case 'N':
-		isoPalette = m_hPalIsoUbn;
+		isoPalette = PAL_ISOUBN;
 		break;
 	case 'D':
-		isoPalette = m_hPalIsoDes;
+		isoPalette = PAL_ISODES;
 		break;
 	case 'L':
-		isoPalette = m_hPalIsoLun;
+		isoPalette = PAL_ISOLUN;
 		break;
 	}
 	return isoPalette;
@@ -948,27 +761,27 @@ HTSPALETTE CLoading::GetIsoPalette(char theat)
 
 HTSPALETTE CLoading::GetUnitPalette(char theat)
 {
-	HTSPALETTE isoPalette = m_hPalUnitTemp;
+	HTSPALETTE isoPalette = PAL_UNITTEM;
 	switch (theat)
 	{
 	case 'T':
 	case 'G':
-		isoPalette = m_hPalUnitTemp;
+		isoPalette = PAL_UNITTEM;
 		break;
 	case 'A':
-		isoPalette = m_hPalUnitSnow;
+		isoPalette = PAL_UNITSNO;
 		break;
 	case 'U':
-		isoPalette = m_hPalUnitUrb;
+		isoPalette = PAL_UNITURB;
 		break;
 	case 'N':
-		isoPalette = m_hPalUnitUbn;
+		isoPalette = PAL_UNITUBN;
 		break;
 	case 'D':
-		isoPalette = m_hPalUnitDes;
+		isoPalette = PAL_UNITDES;
 		break;
 	case 'L':
-		isoPalette = m_hPalUnitLun;
+		isoPalette = PAL_UNITLUN;
 		break;
 	}
 	return isoPalette;
@@ -1131,7 +944,7 @@ BOOL CLoading::LoadUnitGraphic(LPCTSTR lpUnittype)
 
 	CString _rules_image; // the image used
 	CString filename; // filename of the image
-	char theat=cur_theat; // standard theater char is t (Temperat). a is snow.
+	char theat=current_theater; // standard theater char is t (Temperat). a is snow.
 
 	BOOL bAlwaysSetChar=FALSE; // second char is always theater, even if NewTheater not specified!
 	WORD wStep=1; // step is 1 for infantry, buildings, etc, and for shp vehicles it specifies the step rate between every direction
@@ -1165,10 +978,10 @@ BOOL CLoading::LoadUnitGraphic(LPCTSTR lpUnittype)
 		try
 		{
 
-		auto shp = FindUnitShp(image, cur_theat, artSection);
+		auto shp = FindUnitShp(image, current_theater, artSection);
 		if (!shp)
 		{
-			errstream << "Building SHP in theater " << cur_theat << " not found: " << image << endl;
+			errstream << "Building SHP in theater " << current_theater << " not found: " << image << endl;
 			errstream.flush();
 			missingimages[lpUnittype] = TRUE;
 			return FALSE;
@@ -1438,7 +1251,7 @@ BOOL CLoading::LoadUnitGraphic(LPCTSTR lpUnittype)
 				wStartWalkFrame=atoi(art.sections[image].values["StartWalkFrame"]);
 			
 			if(art.sections[image].values["Palette"]=="lib")
-				hPalette=m_hPalLib;
+				hPalette=PAL_LIBTEM;
 
 			BOOL bSuccess=FSunPackLib::SetCurrentSHP(filename, hShpMix);
 			if(
@@ -1446,7 +1259,7 @@ BOOL CLoading::LoadUnitGraphic(LPCTSTR lpUnittype)
 			)
 			{
 				filename=image+".sno";
-				if(cur_theat=='T' || cur_theat=='U' /* || cur_theat=='N' ? */) hPalette=m_hPalIsoTemp;
+				if(current_theater=='T' || current_theater=='U' /* || cur_theat=='N' ? */) hPalette=PAL_ISOTEM;
 				HMIXFILE hShpMix=FindFileInMix(filename);
 				bSuccess=FSunPackLib::SetCurrentSHP(filename, hShpMix);
 				
@@ -1882,10 +1695,10 @@ BOOL CLoading::LoadUnitGraphic(LPCTSTR lpUnittype)
 						p.vborder[k].right=r;
 					}
 
-					if(hPalette==m_hPalIsoTemp || hPalette==m_hPalIsoUrb || hPalette==m_hPalIsoSnow || hPalette==m_hPalIsoUbn || hPalette==m_hPalIsoDes || hPalette==m_hPalIsoLun) p.pal=iPalIso;
-					if(hPalette==m_hPalTemp || hPalette==m_hPalUrb || hPalette==m_hPalSnow || hPalette==m_hPalUbn || hPalette==m_hPalLun || hPalette==m_hPalDes) p.pal=iPalTheater;
-					if(hPalette==m_hPalUnitTemp || hPalette==m_hPalUnitUrb || hPalette==m_hPalUnitSnow || hPalette==m_hPalUnitDes || hPalette==m_hPalUnitLun || hPalette==m_hPalUnitUbn) p.pal=iPalUnit;
-					if(hPalette==m_hPalLib) p.pal=iPalLib;
+					if(hPalette==PAL_ISOTEM || hPalette==PAL_ISOURB || hPalette==PAL_ISOSNO || hPalette==PAL_ISOUBN || hPalette==PAL_ISODES || hPalette==PAL_ISOLUN) p.pal=iPalIso;
+					if(hPalette==PAL_TEMPERAT || hPalette==PAL_URBAN || hPalette==PAL_SNOW || hPalette==PAL_URBANN || hPalette==PAL_LUNAR || hPalette==PAL_DESERT) p.pal=iPalTheater;
+					if(hPalette==PAL_UNITTEM || hPalette==PAL_UNITURB || hPalette==PAL_UNITSNO || hPalette==PAL_UNITDES || hPalette==PAL_UNITLUN || hPalette==PAL_UNITUBN) p.pal=iPalUnit;
+					if(hPalette==PAL_LIBTEM) p.pal=iPalLib;
 					
 					p.x=imghead.x;
 					p.y=imghead.y;
@@ -1933,7 +1746,7 @@ BOOL CLoading::LoadUnitGraphic(LPCTSTR lpUnittype)
 		
 		else
 		{
-			errstream << "File in theater " << cur_theat << " not found: " << (LPCTSTR)filename << endl;
+			errstream << "File in theater " << current_theater << " not found: " << (LPCTSTR)filename << endl;
 			errstream.flush();
 
 			missingimages[lpUnittype]=TRUE;			
@@ -2144,10 +1957,10 @@ BOOL CLoading::LoadUnitGraphic(LPCTSTR lpUnittype)
 				p.vborder[k].right=r;
 			}
 
-			//if(hPalette==m_hPalIsoTemp || hPalette==m_hPalIsoUrb || hPalette==m_hPalIsoSnow) p.pal=iPalIso;
-			//if(hPalette==m_hPalTemp || hPalette==m_hPalUrb || hPalette==m_hPalSnow) p.pal=iPalTheater;
-			//if(hPalette==m_hPalUnitTemp || hPalette==m_hPalUnitUrb || hPalette==m_hPalUnitSnow) p.pal=iPalUnit;
-			//if(hPalette==m_hPalLib) p.pal=iPalLib;
+			//if(hPalette==PAL_ISOTEM || hPalette==PAL_ISOURB || hPalette==PAL_ISOSNO) p.pal=iPalIso;
+			//if(hPalette==PAL_TEMPERAT || hPalette==PAL_URBAN || hPalette==PAL_SNOW) p.pal=iPalTheater;
+			//if(hPalette==PAL_UNITTEM || hPalette==PAL_UNITURB || hPalette==PAL_UNITSNO) p.pal=iPalUnit;
+			//if(hPalette==PAL_LIBTEM) p.pal=iPalLib;
 			p.pal=iPalUnit;
 			
 			p.x=-xcenter;
@@ -2219,9 +2032,9 @@ BOOL CLoading::LoadUnitGraphic(LPCTSTR lpUnittype)
 	BOOL bPowerUp=rules.sections[lpUnittype].values["PowersUpBuilding"]!="";
 		
 	HTSPALETTE hPalette;
-	if(theat=='T') hPalette=m_hPalIsoTemp;
-	if(theat=='A') hPalette=m_hPalIsoSnow;
-	if(theat=='U') hPalette=m_hPalIsoUrb;
+	if(theat=='T') hPalette=PAL_ISOTEM;
+	if(theat=='A') hPalette=PAL_ISOSNO;
+	if(theat=='U') hPalette=PAL_ISOURB;
 	
 	CIsoView& v=*((CFinalSunDlg*)theApp.m_pMainWnd)->m_view.m_isoview;
 
@@ -2255,9 +2068,9 @@ BOOL CLoading::LoadUnitGraphic(LPCTSTR lpUnittype)
 		BOOL isNewTerrain=FALSE;
 		if(isTrue(art.sections[image].values["NewTheater"]))//&& isTrue(artSection.GetValueByName("TerrainPalette")))//(filename.GetAt(0)=='G' || filename.GetAt(0)=='N' || filename.GetAt(0)=='C') && filename.GetAt(1)=='A')
 		{
-			hPalette=m_hPalUnitTemp;
-			if(theat=='A') hPalette=m_hPalUnitSnow;
-			if(theat=='U') hPalette=m_hPalUnitUrb;
+			hPalette=PAL_UNITTEM;
+			if(theat=='A') hPalette=PAL_UNITSNO;
+			if(theat=='U') hPalette=PAL_UNITURB;
 			filename.SetAt(1, theat);
 			isNewTerrain=TRUE;
 		}
@@ -2300,11 +2113,11 @@ BOOL CLoading::LoadUnitGraphic(LPCTSTR lpUnittype)
 			bIgnoreTerrain=FALSE;
 			
 			if(cur_theat=='T')
-			hPalette=m_hPalIsoTemp;
+			hPalette=PAL_ISOTEM;
 			else if(cur_theat=='A')
-				hPalette=m_hPalIsoSnow;
+				hPalette=PAL_ISOSNO;
 			else if (cur_theat=='U')
-				hPalette=m_hPalIsoUrb;
+				hPalette=PAL_ISOURB;
 				
 			
 			
@@ -2336,7 +2149,7 @@ BOOL CLoading::LoadUnitGraphic(LPCTSTR lpUnittype)
 					hShpMix=FindFileInMix(filename, &bTerrain);
 					if(hShpMix)
 					{
-						hPalette=m_hPalIsoTemp;
+						hPalette=PAL_ISOTEM;
 					}
 				}
 				
@@ -2400,9 +2213,9 @@ BOOL CLoading::LoadUnitGraphic(LPCTSTR lpUnittype)
 				}
 				else // it´s a file in temperat.mix/snow.mix
 				{
-					if(cur_theat=='T') hPalette=m_hPalUnitTemp;
-					if(cur_theat=='A') hPalette=m_hPalUnitSnow;
-					if(cur_theat=='U') hPalette=m_hPalUnitUrb;
+					if(cur_theat=='T') hPalette=PAL_UNITTEM;
+					if(cur_theat=='A') hPalette=PAL_UNITSNO;
+					if(cur_theat=='U') hPalette=PAL_UNITURB;
 				}
 			
 		}
@@ -2411,7 +2224,7 @@ BOOL CLoading::LoadUnitGraphic(LPCTSTR lpUnittype)
 
 		if(filename=="tibtre01.tem" || filename=="tibtre02.tem" || filename=="tibtre03.tem" || filename=="veinhole.tem")
 		{
-			hPalette=m_hPalUnitTemp;
+			hPalette=PAL_UNITTEM;
 		}
 
 		
@@ -2797,7 +2610,7 @@ BOOL CLoading::LoadUnitGraphic(LPCTSTR lpUnittype)
 
 			
 			if(art.sections[image].values["Palette"]=="lib")
-				hPalette=m_hPalLib;
+				hPalette=PAL_LIBTEM;
 
 			BOOL bSuccess=FSunPackLib::SetCurrentSHP(filename, hShpMix);
 			if(
@@ -2805,7 +2618,7 @@ BOOL CLoading::LoadUnitGraphic(LPCTSTR lpUnittype)
 			)
 			{
 				filename=image+=".sno";
-				if(cur_theat=='T' || cur_theat=='U') hPalette=m_hPalIsoTemp;
+				if(cur_theat=='T' || cur_theat=='U') hPalette=PAL_ISOTEM;
 				hShpMix=FindFileInMix(filename, &bTerrain);
 				bSuccess=FSunPackLib::SetCurrentSHP(filename, hShpMix);
 				
@@ -3271,11 +3084,11 @@ BOOL CLoading::LoadUnitGraphic(LPCTSTR lpUnittype)
 			{
 				if(FSunPackLib::SetCurrentVXL(image+"tur.vxl", hMix))
 				{
-					FSunPackLib::LoadVXLImageInSurface(*m_voxelNormalTables, lightDirection, v.dd, 0, 1, r_x, r_y, r_z, &lpTurret, m_hPalUnitTemp,&turret_x,&turret_y,0,&turret_x_zmax, &turret_y_zmax,-1,-1);
+					FSunPackLib::LoadVXLImageInSurface(*m_voxelNormalTables, lightDirection, v.dd, 0, 1, r_x, r_y, r_z, &lpTurret, PAL_UNITTEM,&turret_x,&turret_y,0,&turret_x_zmax, &turret_y_zmax,-1,-1);
 				}
 				if(FSunPackLib::SetCurrentVXL(image+"barl.vxl", hMix))
 				{
-					FSunPackLib::LoadVXLImageInSurface(*m_voxelNormalTables, lightDirection, v.dd, 0, 1, r_x, r_y, r_z, &lpBarrel, m_hPalUnitTemp,&barrel_x,&barrel_y,0,NULL,NULL,0,0);
+					FSunPackLib::LoadVXLImageInSurface(*m_voxelNormalTables, lightDirection, v.dd, 0, 1, r_x, r_y, r_z, &lpBarrel, PAL_UNITTEM,&barrel_x,&barrel_y,0,NULL,NULL,0,0);
 				}	
 			}
 
@@ -3290,7 +3103,7 @@ BOOL CLoading::LoadUnitGraphic(LPCTSTR lpUnittype)
 			int xcenter,ycenter,xcenter_zmax,ycenter_zmax;
 
 			if(!
-			FSunPackLib::LoadVXLImageInSurface(*m_voxelNormalTables, lightDirection, v.dd, 0, 1, r_x, r_y, r_z, &lpT, m_hPalUnitTemp,&xcenter, &ycenter,0,&xcenter_zmax,&ycenter_zmax)
+			FSunPackLib::LoadVXLImageInSurface(*m_voxelNormalTables, lightDirection, v.dd, 0, 1, r_x, r_y, r_z, &lpT, PAL_UNITTEM,&xcenter, &ycenter,0,&xcenter_zmax,&ycenter_zmax)
 			)
 			{
 				return FALSE;
@@ -3404,398 +3217,156 @@ BOOL CLoading::LoadUnitGraphic(LPCTSTR lpUnittype)
 }
 #endif
 
-
-BOOL CLoading::InitMixFiles()
+bool CLoading::InitMixFiles()
 {
-	
-	last_succeeded_operation=8;
+	// Load Extra Mixes
 
-	MEMORYSTATUS ms;
-	ms.dwLength=sizeof(MEMORYSTATUS);
-	GlobalMemoryStatus(&ms);
-	int cs=ms.dwAvailPhys+ms.dwAvailPageFile;
-
-	errstream << "InitMixFiles() called. Available memory: " << cs << endl;
-	errstream.flush();
-
-
-	// load tibsun.mix and local.mix
-	if(DoesFileExist((CString)TSPath+(CString)"\\"+MAINMIX))
+	CString Dir = GamePath;
+	Dir += "\\";
+	auto LoadMixFile = [this, Dir](const char* Mix, HMIXFILE hOwner = NULL)
 	{
-		errstream << "Loading " MAINMIX ".mix" ;
-		errstream.flush();
-		m_hTibSun=FSunPackLib::XCC_OpenMix((CString)TSPath+(CString)"\\"+MAINMIX, NULL);
-		if(m_hTibSun!=NULL)
+		if (hOwner)
 		{
-			errstream << " success" << endl;
-			errstream.flush();
+			HMIXFILE result = FSunPackLib::XCC_OpenMix(Mix, hOwner);
+			if (result)
+				std::println(errstream, "[MixLoader] {0:04d} - {1} loaded.", result, Mix);
+			else
+				std::println(errstream, "[MixLoader] {0} failed!", Mix);
+			return result;
 		}
 		else
 		{
-			ShowWindow(SW_HIDE);
-			MessageBox(GetLanguageStringACP("Err_TSNotInstalled"));
-			exit(200);
+			CString FullPath = Dir + Mix;
+			HMIXFILE result = FSunPackLib::XCC_OpenMix(FullPath, NULL);
+			if (result)
+			{
+				std::println(errstream, "[MixLoader] {0:04d} - {1} loaded.", result, FullPath);
+				return result;
+			}
+			if (HMIXFILE hMix = FindFileInMix(Mix))
+			{
+				result = FSunPackLib::XCC_OpenMix(Mix, hMix);
+				if (result)
+					std::println(errstream, "[MixLoader] {0:04d} - {1} loaded.", result, Mix);
+				else
+					std::println(errstream, "[MixLoader] {0} failed!", Mix);
+				return result;
+			}
+			std::println(errstream, "[MixLoader] {0} failed!", Mix);
+			return result;
 		}
-
-		m_hLanguage=FSunPackLib::XCC_OpenMix((CString)TSPath+(CString)"\\Language.mix", NULL);
-		m_hLangMD=FSunPackLib::XCC_OpenMix((CString)TSPath+(CString)"\\Langmd.mix", NULL);
-		m_hMarble=FSunPackLib::XCC_OpenMix((CString)TSPath+(CString)"\\marble.mix", NULL);
-
-		//if(!m_hLanguage) MessageBox("No language file found");
-
-		if(!m_hMarble)
-		{
-			m_hMarble=FSunPackLib::XCC_OpenMix((CString)AppPath+(CString)"\\marble.mix", NULL);
-		}
-	}
-	else
-	{
-		ShowWindow(SW_HIDE);
-		MessageBox(GetLanguageStringACP("Err_TSNotInstalled"));
-		exit(199);
-	}
-
-	errstream << "Loading local.mix";
-	errstream.flush();
-	if(DoesFileExist((CString)TSPath+"\\Local.mix")==FALSE || theApp.m_Options.bSearchLikeTS==FALSE)
-	{
-		m_hLocal=FSunPackLib::XCC_OpenMix("Local.mix", m_hTibSun);
-	}
-	else
-		m_hLocal=FSunPackLib::XCC_OpenMix((CString)TSPath+"\\Local.mix", NULL);
-	errstream << " successful" << endl;
-	errstream.flush();
-
-
-    
-	errstream << "Loading conquer.mix, temperat.mix, isotemp.mix, isosnow.mix, isourb.mix and cache.mix";
-	errstream.flush();
-	m_hConquer=FSunPackLib::XCC_OpenMix("conquer.mix", m_hTibSun);
-	m_hTemperat=FSunPackLib::XCC_OpenMix("temperat.mix", m_hTibSun);
-	m_hUrban=FSunPackLib::XCC_OpenMix("urban.mix", m_hTibSun);
-    m_hSnow=FSunPackLib::XCC_OpenMix("snow.mix", m_hTibSun);
-	m_hUrbanN=FSunPackLib::XCC_OpenMix("urbann.mix", m_hTibSun);
-	m_hLunar=FSunPackLib::XCC_OpenMix("lunar.mix", m_hTibSun);
-    m_hDesert=FSunPackLib::XCC_OpenMix("desert.mix", m_hTibSun);
-	m_hIsoTemp=FSunPackLib::XCC_OpenMix("isotemp.mix", m_hTibSun);
-	m_hIsoSnow=FSunPackLib::XCC_OpenMix("isosnow.mix", m_hTibSun);
-	m_hIsoUrb=FSunPackLib::XCC_OpenMix("isourb.mix", m_hTibSun);
-	m_hIsoUbn=FSunPackLib::XCC_OpenMix("isoubn.mix", m_hTibSun);
-	m_hIsoLun=FSunPackLib::XCC_OpenMix("isolun.mix", m_hTibSun);
-	m_hIsoDes=FSunPackLib::XCC_OpenMix("isodes.mix", m_hTibSun);
-	m_hIsoGen=FSunPackLib::XCC_OpenMix("isogen.mix", m_hTibSun);
-	//m_hBuildings=FSunPackLib::XCC_OpenMix("_ID1085587737", m_hTibSun);	
-	m_hBuildings=FSunPackLib::XCC_OpenMix("Generic.mix", m_hTibSun);
-	m_hCache=FSunPackLib::XCC_OpenMix("cache.mix", m_hTibSun);
-	m_hTem=FSunPackLib::XCC_OpenMix("tem.mix", m_hTibSun);
-	m_hSno=FSunPackLib::XCC_OpenMix("sno.mix", m_hTibSun);
-	m_hUrb=FSunPackLib::XCC_OpenMix("urb.mix", m_hTibSun);
-	m_hUbn=FSunPackLib::XCC_OpenMix("ubn.mix", m_hTibSun);
-	m_hLun=FSunPackLib::XCC_OpenMix("lun.mix", m_hTibSun);
-	m_hDes=FSunPackLib::XCC_OpenMix("des.mix", m_hTibSun);
-	if(!m_hMarble) FSunPackLib::XCC_OpenMix("marble.mix", m_hTibSun);
-
-	if(m_hMarble) theApp.m_Options.bSupportMarbleMadness=TRUE;
-
-	errstream << " successful" << endl;
-	errstream.flush();
-
-	int i;
-
-	if(!theApp.m_Options.bSearchLikeTS) return TRUE;
-
-	// load expansion mix files
-	for(i=0;i<101;i++)
-	{
-		CString expand;		
-		char n[50];	
-		
-		// MW April 17th, 2002:
-		// read expandxxmd.mix files in yurimode		
-			
-		itoa(i, n, 10);
-		expand=TSPath;
-		expand+="\\Expand";		
-		expand+="md";
-		if(i<10) expand+="0";
-		expand+=n;
-		expand+=".mix";
-
-		CString nappend=".mix";
-
-		CString append=".mix";
-		if(i==100) append="md.mix";
-
-		
-		append="md.mix";
-
-
-		if(i==100) expand=(CString)TSPath+"\\ra2md.mix"; // support the mission disk!!!
-
-		errstream << "Searching " << (LPCTSTR)expand << endl;
-		errstream.flush();
-
-		if(DoesFileExist(expand))
-		{
-
-			OutputDebugString(expand);
-			OutputDebugString(": ");
-			
-
-			m_hExpand[i].hExpand=FSunPackLib::XCC_OpenMix(expand, NULL);
-
-			errstream << (LPCTSTR)expand << " found: loading ";
-			errstream.flush();
-
-			CString conquer="conquer";
-			if(i==100) conquer="conq";
-			if(FSunPackLib::XCC_DoesFileExist(conquer+append, m_hExpand[i].hExpand))
-			{
-				OutputDebugString(conquer+append);
-				OutputDebugString(": ");
-				m_hExpand[i].hConquer=FSunPackLib::XCC_OpenMix((CString)conquer+append, m_hExpand[i].hExpand);
-				errstream << "conquer.mix, ";
-			}
-			if(FSunPackLib::XCC_DoesFileExist((CString)"local"+append, m_hExpand[i].hExpand))
-			{
-				OutputDebugString((CString)"local"+append);
-				OutputDebugString(": ");
-				m_hExpand[i].hLocal=FSunPackLib::XCC_OpenMix((CString)"local"+append, m_hExpand[i].hExpand);
-				errstream << "local.mix, ";
-			}
-			//if(FSunPackLib::XCC_DoesFileExist("_ID1085587737", m_hExpand[i].hExpand))
-			{
-				//m_hExpand[i].hConquer=FSunPackLib::XCC_OpenMix("_ID1085587737", m_hExpand[i].hExpand);
-				//errstream << "1085587737, ";
-			}
-			if(FSunPackLib::XCC_DoesFileExist((CString)"temperat"+append, m_hExpand[i].hExpand))
-			{
-				OutputDebugString((CString)"temperat"+append);
-				OutputDebugString(": ");
-				m_hExpand[i].hTemperat=FSunPackLib::XCC_OpenMix((CString)"temperat"+append, m_hExpand[i].hExpand);
-				errstream << "temperat.mix, ";
-				errstream.flush();
-			}
-			if(FSunPackLib::XCC_DoesFileExist((CString)"urban"+append, m_hExpand[i].hExpand))
-			{
-				OutputDebugString((CString)"urban"+append);
-				OutputDebugString(": ");
-				m_hExpand[i].hUrban=FSunPackLib::XCC_OpenMix((CString)"urban"+append, m_hExpand[i].hExpand);
-				errstream << "urban.mix, ";
-				errstream.flush();
-			}
-			if(FSunPackLib::XCC_DoesFileExist((CString)"snow"+append, m_hExpand[i].hExpand))
-			{
-				OutputDebugString((CString)"snow"+append);
-				OutputDebugString(": ");
-				
-				FSunPackLib::_DEBUG_EnableLogs=true;
-
-				HMIXFILE hM=FSunPackLib::XCC_OpenMix((CString)"snow"+append, m_hExpand[i].hExpand);
-				m_hExpand[i].hSnow=hM;
-				errstream << "snow.mix, ";
-				errstream.flush();
-
-				FSunPackLib::_DEBUG_EnableLogs=false;
-			}
-
-			CString generic="generic";
-			if(i==100) generic="gener";
-			if(FSunPackLib::XCC_DoesFileExist((CString)generic+append, m_hExpand[i].hExpand))
-			{
-				m_hExpand[i].hGeneric=FSunPackLib::XCC_OpenMix((CString)generic+append, m_hExpand[i].hExpand);
-				errstream << "generic.mix, ";
-				errstream.flush();
-			}
-			if(FSunPackLib::XCC_DoesFileExist((CString)"urbann"+nappend, m_hExpand[i].hExpand))
-			{
-				m_hExpand[i].hUrbanN=FSunPackLib::XCC_OpenMix((CString)"urbann"+nappend, m_hExpand[i].hExpand);
-				errstream << "urbann.mix, ";
-				errstream.flush();
-			}
-			if(FSunPackLib::XCC_DoesFileExist((CString)"lunar"+nappend, m_hExpand[i].hExpand))
-			{
-				m_hExpand[i].hLunar=FSunPackLib::XCC_OpenMix((CString)"lunar"+nappend, m_hExpand[i].hExpand);
-				errstream << "lunar.mix, ";
-				errstream.flush();
-			}
-			if(FSunPackLib::XCC_DoesFileExist((CString)"desert"+nappend, m_hExpand[i].hExpand))
-			{
-				m_hExpand[i].hDesert=FSunPackLib::XCC_OpenMix((CString)"desert"+nappend, m_hExpand[i].hExpand);
-				errstream << "desert.mix, ";
-				errstream.flush();
-			}
-			CString isotemp="isotemp";
-			if(i==100) isotemp="isotem";
-			if(FSunPackLib::XCC_DoesFileExist(isotemp+append, m_hExpand[i].hExpand))
-			{
-				m_hExpand[i].hIsoTemp=FSunPackLib::XCC_OpenMix((CString)isotemp+append, m_hExpand[i].hExpand);
-				errstream << "isotemp.mix, ";
-				errstream.flush();
-			}
-			CString isosnow="isosnow";
-			if(i==100) isosnow="isosno";
-			if(FSunPackLib::XCC_DoesFileExist((CString)isosnow+append, m_hExpand[i].hExpand))
-			{
-				m_hExpand[i].hIsoSnow=FSunPackLib::XCC_OpenMix((CString)isosnow+append, m_hExpand[i].hExpand);
-				errstream << "isosnow.mix, ";
-				errstream.flush();
-			}
-			if(FSunPackLib::XCC_DoesFileExist((CString)"isourb"+append, m_hExpand[i].hExpand))
-			{
-				m_hExpand[i].hIsoUrb=FSunPackLib::XCC_OpenMix((CString)"isourb"+append, m_hExpand[i].hExpand);
-				errstream << "isourb.mix, ";
-				errstream.flush();
-			}
-			if(FSunPackLib::XCC_DoesFileExist((CString)"isoubn"+append, m_hExpand[i].hExpand))
-			{
-				m_hExpand[i].hIsoUbnMd=FSunPackLib::XCC_OpenMix((CString)"isoubn"+append, m_hExpand[i].hExpand);
-				errstream << "isoubn.mix, ";
-				errstream.flush();
-			}
-			if(FSunPackLib::XCC_DoesFileExist((CString)"isolun"+append, m_hExpand[i].hExpand))
-			{
-				m_hExpand[i].hIsoLunMd=FSunPackLib::XCC_OpenMix((CString)"isolun"+append, m_hExpand[i].hExpand);
-				errstream << "isolun.mix, ";
-				errstream.flush();
-			}
-			if(FSunPackLib::XCC_DoesFileExist((CString)"isodes"+append, m_hExpand[i].hExpand))
-			{
-				m_hExpand[i].hIsoDesMd=FSunPackLib::XCC_OpenMix((CString)"isodes"+append, m_hExpand[i].hExpand);
-				errstream << "isodes.mix, ";
-				errstream.flush();
-			}
-			
-			if(FSunPackLib::XCC_DoesFileExist((CString)"isoubn"+nappend, m_hExpand[i].hExpand))
-			{
-				m_hExpand[i].hIsoUbn=FSunPackLib::XCC_OpenMix((CString)"isoubn"+nappend, m_hExpand[i].hExpand);
-				errstream << "isoubn.mix, ";
-				errstream.flush();
-			}
-			if(FSunPackLib::XCC_DoesFileExist((CString)"isolun"+nappend, m_hExpand[i].hExpand))
-			{
-				m_hExpand[i].hIsoLun=FSunPackLib::XCC_OpenMix((CString)"isolun"+nappend, m_hExpand[i].hExpand);
-				errstream << "isolun.mix, ";
-				errstream.flush();
-			}
-			if(FSunPackLib::XCC_DoesFileExist((CString)"isodes"+nappend, m_hExpand[i].hExpand))
-			{
-				m_hExpand[i].hIsoDes=FSunPackLib::XCC_OpenMix((CString)"isodes"+nappend, m_hExpand[i].hExpand);
-				errstream << "isodes.mix, ";
-				errstream.flush();
-			}
-
-			if(FSunPackLib::XCC_DoesFileExist((CString)"isogen"+append, m_hExpand[i].hExpand))
-			{
-				m_hExpand[i].hIsoGenMd=FSunPackLib::XCC_OpenMix((CString)"isogen"+append, m_hExpand[i].hExpand);
-				errstream << "isogen.mix, ";
-				errstream.flush();
-			}
-
-			if(FSunPackLib::XCC_DoesFileExist((CString)"isogen"+nappend, m_hExpand[i].hExpand))
-			{
-				m_hExpand[i].hIsoGen=FSunPackLib::XCC_OpenMix((CString)"isogen"+nappend, m_hExpand[i].hExpand);
-				errstream << "isogen.mix, ";
-				errstream.flush();
-			}
-
-			CString cache="ecache01";
-			if(i==100) cache="cache";
-			if(FSunPackLib::XCC_DoesFileExist((CString)cache+append, m_hExpand[i].hExpand))
-			{
-				m_hExpand[i].hECache=FSunPackLib::XCC_OpenMix((CString)cache+append, m_hExpand[i].hExpand);
-				errstream << LPCSTR("ecache01"+append+", ");
-				errstream.flush();
-			}
-			if(FSunPackLib::XCC_DoesFileExist((CString)"tem"+append, m_hExpand[i].hExpand))
-			{
-				m_hExpand[i].hTem=FSunPackLib::XCC_OpenMix((CString)"tem"+append, m_hExpand[i].hExpand);
-				errstream << LPCSTR("tem"+append+", ");
-				errstream.flush();
-			}
-			if(FSunPackLib::XCC_DoesFileExist((CString)"sno"+append, m_hExpand[i].hExpand))
-			{
-				m_hExpand[i].hSno=FSunPackLib::XCC_OpenMix((CString)"sno"+append, m_hExpand[i].hExpand);
-				errstream << LPCSTR("sno"+append+", ");
-				errstream.flush();
-			}
-			if(FSunPackLib::XCC_DoesFileExist((CString)"urb"+append, m_hExpand[i].hExpand))
-			{
-				m_hExpand[i].hUrb=FSunPackLib::XCC_OpenMix((CString)"urb"+append, m_hExpand[i].hExpand);
-				errstream << LPCSTR("urb"+append+", ");
-				errstream.flush();
-			}
-			if(FSunPackLib::XCC_DoesFileExist((CString)"ubn"+nappend, m_hExpand[i].hExpand))
-			{
-				m_hExpand[i].hUbn=FSunPackLib::XCC_OpenMix((CString)"ubn"+nappend, m_hExpand[i].hExpand);
-				errstream << LPCSTR("ubn"+nappend+", ");
-				errstream.flush();
-			}
-			if(FSunPackLib::XCC_DoesFileExist((CString)"lun"+nappend, m_hExpand[i].hExpand))
-			{
-				m_hExpand[i].hLun=FSunPackLib::XCC_OpenMix((CString)"lun"+nappend, m_hExpand[i].hExpand);
-				errstream << LPCSTR("lun"+nappend+", ");
-				errstream.flush();
-			}
-			if(FSunPackLib::XCC_DoesFileExist((CString)"des"+nappend, m_hExpand[i].hExpand))
-			{
-				m_hExpand[i].hDes=FSunPackLib::XCC_OpenMix((CString)"des"+nappend, m_hExpand[i].hExpand);
-				errstream << LPCSTR("des"+nappend+", ");
-				errstream.flush();
-			}
-			if(FSunPackLib::XCC_DoesFileExist((CString)"marble"+append, m_hExpand[i].hExpand))
-			{
-				theApp.m_Options.bSupportMarbleMadness=TRUE;
-
-				m_hExpand[i].hMarble=FSunPackLib::XCC_OpenMix((CString)"marble"+append, m_hExpand[i].hExpand);
-				errstream << LPCSTR("marble"+append+", ");
-				errstream.flush();
-			}
-			
-			errstream << endl;
-			errstream.flush();
-		}
-		else
-		{
-			m_hExpand[i].hExpand=NULL;
-		}
-	}
-
-	// load expansion ecache mix files
-	for(i=0;i<100;i++)
-	{
-		CString expand;		
-		char n[50];			
-			
-		itoa(i, n, 10);
-		expand=TSPath;
-		expand+="\\ecachemd";
-
-		if(i<10) expand+="0";
-		expand+=n;
-		expand+=".mix";
+	};
 
 	
-		if(DoesFileExist(expand))
+	CString format = "EXPAND" + g_data.GetValueByName("Filenames", "MixExtension", "MD") + "%02d.MIX";
+	for (int i = 99; i >= 0; --i)
+	{
+		CString filename;
+		filename.Format(format, i);
+		LoadMixFile(filename);
+	}
+
+	if (!LoadMixFile("RA2MD.MIX"))		return false;
+	if (!LoadMixFile("RA2.MIX"))		return false;
+	if (!LoadMixFile("CACHEMD.MIX"))	return false;
+	if (!LoadMixFile("CACHE.MIX"))		return false;
+	if (!LoadMixFile("LOCALMD.MIX"))	return false;
+	if (!LoadMixFile("LOCAL.MIX"))		return false;
+
+	// Init_Expansion_Mixfiles
+	// ECACHE and ELOCAL
+	WIN32_FIND_DATA fd;
+	HANDLE hf = FindFirstFile(Dir + "ECACHE*.MIX", &fd);
+	if (hf != INVALID_HANDLE_VALUE)
+	{
+		do
 		{
-			m_hECache[i]=FSunPackLib::XCC_OpenMix(expand, NULL);
-			errstream << (LPCTSTR)expand << " found and loaded" << endl;
-			errstream.flush();
+			if (fd.dwFileAttributes & (FILE_ATTRIBUTE_TEMPORARY | FILE_ATTRIBUTE_DIRECTORY | FILE_ATTRIBUTE_SYSTEM | FILE_ATTRIBUTE_HIDDEN))
+				continue;
+			LoadMixFile(fd.cFileName);
+		} while (FindNextFile(hf, &fd));
+		FindClose(hf);
+	}
+	hf = FindFirstFile(Dir + "ELOCAL*.MIX", &fd);
+	if (hf != INVALID_HANDLE_VALUE)
+	{
+		do
+		{
+			if (fd.dwFileAttributes & (FILE_ATTRIBUTE_TEMPORARY | FILE_ATTRIBUTE_DIRECTORY | FILE_ATTRIBUTE_SYSTEM | FILE_ATTRIBUTE_HIDDEN))
+				continue;
+			LoadMixFile(fd.cFileName);
+		} while (FindNextFile(hf, &fd));
+		FindClose(hf);
+	}
+
+	// Init_Secondary_Mixfiles
+	if (!LoadMixFile("CONQMD.MIX"))		return false;
+	if (!LoadMixFile("GENERMD.MIX"))	return false;
+	if (!LoadMixFile("GENERIC.MIX"))	return false;
+	if (!LoadMixFile("ISOGENMD.MIX"))	return false;
+	if (!LoadMixFile("ISOGEN.MIX"))		return false;
+	if (!LoadMixFile("CONQUER.MIX"))	return false;
+
+	// Init_Theaters
+	LoadMixFile("TEMPERATMD.MIX");
+	LoadMixFile("ISOTEMMD.MIX");
+	LoadMixFile("TEMPERAT.MIX");
+	LoadMixFile("ISOTEMP.MIX");
+	LoadMixFile("TEM.MIX");
+
+	LoadMixFile("SNOWMD.MIX");
+	LoadMixFile("ISOSNOMD.MIX");
+	LoadMixFile("SNOW.MIX");
+	LoadMixFile("ISOSNOW.MIX");
+	LoadMixFile("ISOSNO.MIX");
+	LoadMixFile("SNO.MIX");
+
+	LoadMixFile("URBANMD.MIX");
+	LoadMixFile("ISOURBMD.MIX");
+	LoadMixFile("URBAN.MIX");
+	LoadMixFile("ISOURB.MIX");
+	LoadMixFile("URB.MIX");
+
+	LoadMixFile("DESERT.MIX");
+	LoadMixFile("ISODES.MIX");
+	LoadMixFile("ISODESMD.MIX");
+	LoadMixFile("DES.MIX");
+	LoadMixFile("DESERTMD.MIX");
+
+	LoadMixFile("URBANNMD.MIX");
+	LoadMixFile("ISOUBNMD.MIX");
+	LoadMixFile("URBANN.MIX");
+	LoadMixFile("ISOUBN.MIX");
+	LoadMixFile("UBN.MIX");
+
+	LoadMixFile("LUNARMD.MIX");
+	LoadMixFile("ISOLUNMD.MIX");
+	LoadMixFile("LUNAR.MIX");
+	LoadMixFile("ISOLUN.MIX");
+	LoadMixFile("LUN.MIX");
+
+	if (LoadMixFile("MARBLE.MIX"))
+		theApp.m_Options.bSupportMarbleMadness = true;
+	else
+	{
+		CString FullPath = ExePath;
+		FullPath += "\\MARBLE.MIX";
+		HMIXFILE result = FSunPackLib::XCC_OpenMix(FullPath, NULL);
+		if (result)
+		{
+			std::println(errstream, "[MixLoader] {0:04d} - {1} loaded.", result, FullPath);
+			theApp.m_Options.bSupportMarbleMadness = true;
 		}
 		else
 		{
-			m_hECache[i]=NULL;
+			theApp.m_Options.bSupportMarbleMadness = false;
+			std::println(errstream, "Failed to load marble.mix!");
+			MessageBox("Failed to load marble.mix! Framework mode won't be able to use!");
 		}
 	}
 
-	ms.dwLength=sizeof(MEMORYSTATUS);
-	GlobalMemoryStatus(&ms);
-	cs=ms.dwAvailPhys+ms.dwAvailPageFile;
+	return true;
 
-	errstream << "InitMixFiles() finished. Available memory: " << cs << endl;
-	errstream.flush();
-
-	return TRUE;
 }
 
 CLoading::~CLoading()
@@ -3805,381 +3376,83 @@ CLoading::~CLoading()
 
 void CLoading::Unload()
 {
-	FSunPackLib::XCC_CloseMix(m_hCache);
-	FSunPackLib::XCC_CloseMix(m_hConquer);
-	FSunPackLib::XCC_CloseMix(m_hIsoSnow);
-	FSunPackLib::XCC_CloseMix(m_hIsoTemp);
-	FSunPackLib::XCC_CloseMix(m_hIsoUrb);
-	FSunPackLib::XCC_CloseMix(m_hIsoGen);
-	FSunPackLib::XCC_CloseMix(m_hLocal);
-	FSunPackLib::XCC_CloseMix(m_hTemperat);
-	FSunPackLib::XCC_CloseMix(m_hSnow);
-	FSunPackLib::XCC_CloseMix(m_hUrban);
-	FSunPackLib::XCC_CloseMix(m_hTibSun);
-	FSunPackLib::XCC_CloseMix(m_hSno);
-	FSunPackLib::XCC_CloseMix(m_hTem);
-	FSunPackLib::XCC_CloseMix(m_hUrb);
-	FSunPackLib::XCC_CloseMix(m_hBuildings);
-
-
-	m_hCache = NULL;
-	m_hConquer = NULL;
-	m_hIsoSnow = NULL;
-	m_hIsoTemp = NULL;
-	m_hIsoUrb = NULL;
-	m_hLocal = NULL;
-	m_hTemperat = NULL;
-	m_hSnow = NULL;
-	m_hUrban = NULL;
-	m_hTibSun = NULL;
-	m_hBuildings = NULL;
-	m_hIsoGen = NULL;
-
-
-	int i = 0;
-	for (i = 0;i < 100; i++)
-	{
-		FSunPackLib::XCC_CloseMix(m_hExpand[i].hExpand);
-		FSunPackLib::XCC_CloseMix(m_hExpand[i].hConquer);
-		FSunPackLib::XCC_CloseMix(m_hExpand[i].hECache);
-		FSunPackLib::XCC_CloseMix(m_hExpand[i].hIsoSnow);
-		FSunPackLib::XCC_CloseMix(m_hExpand[i].hIsoTemp);
-		FSunPackLib::XCC_CloseMix(m_hExpand[i].hIsoUrb);
-		FSunPackLib::XCC_CloseMix(m_hExpand[i].hIsoGen);
-		FSunPackLib::XCC_CloseMix(m_hExpand[i].hTemperat);
-		FSunPackLib::XCC_CloseMix(m_hExpand[i].hSnow);
-		FSunPackLib::XCC_CloseMix(m_hExpand[i].hUrban);
-		FSunPackLib::XCC_CloseMix(m_hExpand[i].hSno);
-		FSunPackLib::XCC_CloseMix(m_hExpand[i].hTem);
-		FSunPackLib::XCC_CloseMix(m_hExpand[i].hUrb);
-		FSunPackLib::XCC_CloseMix(m_hExpand[i].hBuildings);
-		m_hExpand[i].hExpand = NULL;
-	}
-
-	for (i = 0;i < 100; i++)
-	{
-		FSunPackLib::XCC_CloseMix(m_hECache[i]);
-	}
-
-	MEMORYSTATUS ms;
-	ms.dwLength = sizeof(MEMORYSTATUS);
-	GlobalMemoryStatus(&ms);
-	int cs = ms.dwAvailPhys + ms.dwAvailPageFile;
-
-	errstream << "CLoading::Unload finished. Available memory: " << cs << endl;
-	errstream.flush();
 }
-
 
 HMIXFILE CLoading::FindFileInMix(LPCTSTR lpFilename, TheaterChar* pTheaterChar)
 {
-	if(pTheaterChar) 
-		*pTheaterChar = TheaterChar::None;
+	UNREFERENCED_PARAMETER(pTheaterChar);
 
-	int i;
-	// MW: added ecache support
-	for(i=100;i>=0; i--)
-	{
-		HMIXFILE cuExp=m_hECache[i];
-
-		if(cuExp!=NULL)
-		{			
-			if(FSunPackLib::XCC_DoesFileExist(lpFilename, cuExp))
-				return cuExp;
-		}
-	}
-
-	for(i=100;i>=0; i--)
-	{
-		EXPANDMIX cuExp=m_hExpand[i];
-
-		if(cuExp.hExpand!=NULL)
-		{			
-			if(FSunPackLib::XCC_DoesFileExist(lpFilename, cuExp.hExpand))
-				return cuExp.hExpand;
-			if(cuExp.hECache!=NULL && FSunPackLib::XCC_DoesFileExist(lpFilename, cuExp.hECache))
-				return cuExp.hECache;
-			if(cuExp.hConquer!=NULL && FSunPackLib::XCC_DoesFileExist(lpFilename, cuExp.hConquer))
-				return cuExp.hConquer;
-			if(cuExp.hLocal!=NULL && FSunPackLib::XCC_DoesFileExist(lpFilename, cuExp.hLocal))
-				return cuExp.hLocal;
-			if(cuExp.hTemperat!=NULL && FSunPackLib::XCC_DoesFileExist(lpFilename, cuExp.hTemperat))
-				return cuExp.hTemperat;
-			if(strcmp(lpFilename,"yayard.shp")==NULL)
-				FSunPackLib::_DEBUG_EnableLogs=true;
-			if(cuExp.hSnow!=NULL && FSunPackLib::XCC_DoesFileExist(lpFilename, cuExp.hSnow))
-					return cuExp.hSnow;
-			FSunPackLib::_DEBUG_EnableLogs=false;
-			if(cuExp.hGeneric!=NULL && FSunPackLib::XCC_DoesFileExist(lpFilename, cuExp.hGeneric))
-				return cuExp.hGeneric;
-			if(cuExp.hUrban!=NULL && FSunPackLib::XCC_DoesFileExist(lpFilename, cuExp.hUrban))
-				return cuExp.hUrban;
-			if(cuExp.hUrbanN!=NULL && FSunPackLib::XCC_DoesFileExist(lpFilename, cuExp.hUrbanN))
-				return cuExp.hUrbanN;
-			if(cuExp.hLunar!=NULL && FSunPackLib::XCC_DoesFileExist(lpFilename, cuExp.hLunar))
-				return cuExp.hLunar;
-			if(cuExp.hDesert!=NULL && FSunPackLib::XCC_DoesFileExist(lpFilename, cuExp.hDesert))
-				return cuExp.hDesert;
-			if(cuExp.hBuildings!=NULL && FSunPackLib::XCC_DoesFileExist(lpFilename, cuExp.hBuildings))
-				return cuExp.hBuildings;
-			if(cuExp.hIsoGen!=NULL && FSunPackLib::XCC_DoesFileExist(lpFilename, cuExp.hIsoGen))
-				return cuExp.hIsoGen;
-			if(cuExp.hIsoGenMd!=NULL && FSunPackLib::XCC_DoesFileExist(lpFilename, cuExp.hIsoGenMd))
-				return cuExp.hIsoGenMd;
-			if(cuExp.hIsoTemp!=NULL && FSunPackLib::XCC_DoesFileExist(lpFilename, cuExp.hIsoTemp))
-			{
-				if(pTheaterChar) *pTheaterChar=TheaterChar::T;
-				return cuExp.hIsoTemp;
-			}
-			if(cuExp.hIsoSnow!=NULL && FSunPackLib::XCC_DoesFileExist(lpFilename, cuExp.hIsoSnow))
-			{
-				if(pTheaterChar) *pTheaterChar = TheaterChar::A;
-				return cuExp.hIsoSnow;	
-			}
-			if(cuExp.hIsoUrb!=NULL && FSunPackLib::XCC_DoesFileExist(lpFilename, cuExp.hIsoUrb))
-			{
-				if(pTheaterChar) *pTheaterChar = TheaterChar::U;
-				return cuExp.hIsoUrb;	
-			}
-			if(cuExp.hIsoUbn!=NULL && FSunPackLib::XCC_DoesFileExist(lpFilename, cuExp.hIsoUbn))
-			{
-				if(pTheaterChar) *pTheaterChar = TheaterChar::N;
-				return cuExp.hIsoUbn;
-			}
-			if(cuExp.hIsoDes!=NULL && FSunPackLib::XCC_DoesFileExist(lpFilename, cuExp.hIsoDes))
-			{
-				if(pTheaterChar) *pTheaterChar = TheaterChar::D;
-				return cuExp.hIsoDes;	
-			}
-			if(cuExp.hIsoLun!=NULL && FSunPackLib::XCC_DoesFileExist(lpFilename, cuExp.hIsoLun))
-			{
-				if(pTheaterChar) *pTheaterChar = TheaterChar::L;
-				return cuExp.hIsoLun;	
-			}
-			if(cuExp.hIsoUbnMd!=NULL && FSunPackLib::XCC_DoesFileExist(lpFilename, cuExp.hIsoUbnMd))
-			{
-				if(pTheaterChar) *pTheaterChar = TheaterChar::N;
-				return cuExp.hIsoUbnMd;
-			}
-			if(cuExp.hIsoDesMd!=NULL && FSunPackLib::XCC_DoesFileExist(lpFilename, cuExp.hIsoDesMd))
-			{
-				if(pTheaterChar) *pTheaterChar = TheaterChar::D;
-				return cuExp.hIsoDesMd;	
-			}
-			if(cuExp.hIsoLunMd!=NULL && FSunPackLib::XCC_DoesFileExist(lpFilename, cuExp.hIsoLunMd))
-			{
-				if(pTheaterChar) *pTheaterChar = TheaterChar::L;
-				return cuExp.hIsoLunMd;	
-			}
-			if(cuExp.hSno!=NULL && FSunPackLib::XCC_DoesFileExist(lpFilename, cuExp.hSno))
-				return cuExp.hSno;	
-			if(cuExp.hTem!=NULL && FSunPackLib::XCC_DoesFileExist(lpFilename, cuExp.hTem))
-				return cuExp.hTem;	
-			if(cuExp.hUrb!=NULL && FSunPackLib::XCC_DoesFileExist(lpFilename, cuExp.hUrb))
-				return cuExp.hUrb;
-			if(cuExp.hUbn!=NULL && FSunPackLib::XCC_DoesFileExist(lpFilename, cuExp.hUbn))
-				return cuExp.hUbn;	
-			if(cuExp.hLun!=NULL && FSunPackLib::XCC_DoesFileExist(lpFilename, cuExp.hLun))
-				return cuExp.hLun;	
-			if(cuExp.hDes!=NULL && FSunPackLib::XCC_DoesFileExist(lpFilename, cuExp.hDes))
-				return cuExp.hDes;
-			if(cuExp.hMarble!=NULL && FSunPackLib::XCC_DoesFileExist(lpFilename, cuExp.hMarble))
-				return cuExp.hMarble;	
-		}
-	}
-
-	if(m_hTibSun!=NULL && FSunPackLib::XCC_DoesFileExist(lpFilename, m_hTibSun))
-		return m_hTibSun;
-	if(m_hLanguage!=NULL && FSunPackLib::XCC_DoesFileExist(lpFilename, m_hLanguage))
-		return m_hLanguage;	
-	if(m_hLangMD!=NULL && FSunPackLib::XCC_DoesFileExist(lpFilename, m_hLangMD))
-		return m_hLangMD;	
-	if(m_hLocal!=NULL && FSunPackLib::XCC_DoesFileExist(lpFilename, m_hLocal))
-		return m_hLocal;
-	if(m_hBuildings!=NULL && FSunPackLib::XCC_DoesFileExist(lpFilename, m_hBuildings))
-		return m_hBuildings;
-	if(m_hCache!=NULL && FSunPackLib::XCC_DoesFileExist(lpFilename, m_hCache))
-		return m_hCache;
-	if(m_hConquer!=NULL && FSunPackLib::XCC_DoesFileExist(lpFilename, m_hConquer))
-		return m_hConquer;
-	if(m_hTemperat!=NULL && FSunPackLib::XCC_DoesFileExist(lpFilename, m_hTemperat))
-		return m_hTemperat;
-	if(m_hSnow!=NULL && FSunPackLib::XCC_DoesFileExist(lpFilename, m_hSnow))
-		return m_hSnow;
-	if(m_hUrban!=NULL && FSunPackLib::XCC_DoesFileExist(lpFilename, m_hUrban))
-		return m_hUrban;
-	if(m_hUrbanN!=NULL && FSunPackLib::XCC_DoesFileExist(lpFilename, m_hUrbanN))
-		return m_hUrbanN;
-	if(m_hLunar!=NULL && FSunPackLib::XCC_DoesFileExist(lpFilename, m_hLunar))
-		return m_hLunar;
-	if(m_hDesert!=NULL && FSunPackLib::XCC_DoesFileExist(lpFilename, m_hDesert))
-		return m_hDesert;
-	if(m_hIsoGen!=NULL && FSunPackLib::XCC_DoesFileExist(lpFilename, m_hIsoGen))
-	{
-		return m_hIsoGen;
-	}
-	if(m_hIsoTemp!=NULL && FSunPackLib::XCC_DoesFileExist(lpFilename, m_hIsoTemp))
-	{
-		if(pTheaterChar) *pTheaterChar = TheaterChar::T;
-		return m_hIsoTemp;
-	}
-	if(m_hIsoSnow!=NULL && FSunPackLib::XCC_DoesFileExist(lpFilename, m_hIsoSnow))
-	{
-		if(pTheaterChar) *pTheaterChar = TheaterChar::A;
-		return m_hIsoSnow;	
-	}
-	if(m_hIsoUrb!=NULL && FSunPackLib::XCC_DoesFileExist(lpFilename, m_hIsoUrb))
-	{
-		if(pTheaterChar) *pTheaterChar = TheaterChar::U;
-		return m_hIsoUrb;	
-	}
-	if(m_hIsoUbn!=NULL && FSunPackLib::XCC_DoesFileExist(lpFilename, m_hIsoUbn))
-	{
-		if(pTheaterChar) *pTheaterChar = TheaterChar::N;
-		return m_hIsoUbn;
-	}
-	if(m_hIsoLun!=NULL && FSunPackLib::XCC_DoesFileExist(lpFilename, m_hIsoLun))
-	{
-		if(pTheaterChar) *pTheaterChar = TheaterChar::L;
-		return m_hIsoLun;	
-	}
-	if(m_hIsoDes!=NULL && FSunPackLib::XCC_DoesFileExist(lpFilename, m_hIsoDes))
-	{
-		if(pTheaterChar) *pTheaterChar = TheaterChar::D;
-		return m_hIsoDes;	
-	}
-	if(m_hTem!=NULL && FSunPackLib::XCC_DoesFileExist(lpFilename, m_hTem))
-		return m_hTem;
-	if(m_hSno!=NULL && FSunPackLib::XCC_DoesFileExist(lpFilename, m_hSno))
-		return m_hSno;	
-	if(m_hUrb!=NULL && FSunPackLib::XCC_DoesFileExist(lpFilename, m_hUrb))
-		return m_hUrb;	
-	if(m_hUbn!=NULL && FSunPackLib::XCC_DoesFileExist(lpFilename, m_hUbn))
-		return m_hUbn;
-	if(m_hLun!=NULL && FSunPackLib::XCC_DoesFileExist(lpFilename, m_hLun))
-		return m_hLun;	
-	if(m_hDes!=NULL && FSunPackLib::XCC_DoesFileExist(lpFilename, m_hDes))
-		return m_hDes;	
-
-	if(m_hMarble!=NULL && FSunPackLib::XCC_DoesFileExist(lpFilename, m_hMarble))
-		return m_hMarble;		
-
-	
-
-	return NULL;
+	return FSunPackLib::XCC_FindFileInMix(lpFilename);
 }
-
-
 
 void CLoading::InitPalettes()
 {
-	errstream << "InitPalettes() called\n";
-	if(!FSunPackLib::XCC_ExtractFile("isotem.pal", u8AppDataPath+"\\TmpPalette.pal", m_hCache))
-		errstream << "IsoTem.pal failed\n";
-	m_hPalIsoTemp=FSunPackLib::LoadTSPalette(u8AppDataPath+"\\TmpPalette.pal", NULL);
-	deleteFile(u8AppDataPath +"\\TmpPalette.pal");
+	auto loadPalette = [this](const char* lpFilename, HTSPALETTE& pal)
+    {
+        DWORD size;
+        auto buffer = ReadWholeFile(lpFilename, &size);
+		if (nullptr == buffer)
+			return false;
 
-	if(!FSunPackLib::XCC_ExtractFile("isosno.pal", u8AppDataPath+"\\TmpPalette.pal", m_hCache))
-		errstream << "IsoSno.pal failed\n";
-	m_hPalIsoSnow=FSunPackLib::LoadTSPalette(u8AppDataPath+"\\TmpPalette.pal", NULL);
-	deleteFile(u8AppDataPath +"\\TmpPalette.pal");
+		bool result = false;
+		if (size == 768)
+			result = FSunPackLib::XCC_LoadPalette(buffer, pal);
 
-	if(!FSunPackLib::XCC_ExtractFile("isourb.pal", u8AppDataPath+"\\TmpPalette.pal", m_hCache))
-		errstream << "IsoUrb.pal failed\n";
-	m_hPalIsoUrb=FSunPackLib::LoadTSPalette(u8AppDataPath+"\\TmpPalette.pal", NULL);
-	deleteFile(u8AppDataPath +"\\TmpPalette.pal");
+		delete[] buffer;
+		return result;
+    };
 
-	HMIXFILE m_hCache2=m_hExpand[100].hECache;
-	if(!FSunPackLib::XCC_ExtractFile("isolun.pal", u8AppDataPath+"\\TmpPalette.pal", m_hCache2))
-		errstream << "IsoLun.pal failed\n";
-	m_hPalIsoLun=FSunPackLib::LoadTSPalette(u8AppDataPath+"\\TmpPalette.pal", NULL);
-	deleteFile(u8AppDataPath +"\\TmpPalette.pal");
-	
-	if(!FSunPackLib::XCC_ExtractFile("isodes.pal", u8AppDataPath+"\\TmpPalette.pal", m_hCache2))
-		errstream << "IsoDes.pal failed\n";
-	m_hPalIsoDes=FSunPackLib::LoadTSPalette(u8AppDataPath+"\\TmpPalette.pal", NULL);
-	deleteFile(u8AppDataPath +"\\TmpPalette.pal");
+	loadPalette("isotem.pal", PAL_ISOTEM);
+	loadPalette("isosno.pal", PAL_ISOSNO);
+	loadPalette("isourb.pal", PAL_ISOURB);
+	loadPalette("isoubn.pal", PAL_ISOUBN);
+	loadPalette("isolun.pal", PAL_ISOLUN);
+	loadPalette("isodes.pal", PAL_ISODES);
 
-	if(!FSunPackLib::XCC_ExtractFile("isoubn.pal", u8AppDataPath+"\\TmpPalette.pal", m_hCache2))
-		errstream << "IsoUbn.pal failed\n";
-	m_hPalIsoUbn=FSunPackLib::LoadTSPalette(u8AppDataPath+"\\TmpPalette.pal", NULL);
-	deleteFile(u8AppDataPath +"\\TmpPalette.pal");
+	loadPalette("unittem.pal", PAL_UNITTEM);
+	loadPalette("unitsno.pal", PAL_UNITSNO);
+	loadPalette("uniturb.pal", PAL_UNITURB);
+	loadPalette("unitubn.pal", PAL_UNITUBN);
+	loadPalette("unitlun.pal", PAL_UNITLUN);
+	loadPalette("unitdes.pal", PAL_UNITDES);
 
+	loadPalette("temperat.pal", PAL_TEMPERAT);
+	loadPalette("snow.pal", PAL_SNOW);
+	loadPalette("urban.pal", PAL_URBAN);
+	loadPalette("urbann.pal", PAL_URBANN);
+	loadPalette("lunar.pal", PAL_LUNAR);
+	loadPalette("desert.pal", PAL_DESERT);
 
-	if(!FSunPackLib::XCC_ExtractFile("unittem.pal", u8AppDataPath+"\\TmpPalette.pal", m_hCache))
-		errstream << "UnitTem.pal failed";
-	m_hPalUnitTemp=FSunPackLib::LoadTSPalette(u8AppDataPath+"\\TmpPalette.pal", NULL);
-	deleteFile(u8AppDataPath +"\\TmpPalette.pal");
+	loadPalette("libtem.pal", PAL_LIBTEM);
+}
 
-	if(!FSunPackLib::XCC_ExtractFile("unitsno.pal", u8AppDataPath+"\\TmpPalette.pal", m_hCache))
-		errstream << "UnitSno.pal failed\n";
-	m_hPalUnitSnow=FSunPackLib::LoadTSPalette(u8AppDataPath+"\\TmpPalette.pal", NULL);
-	deleteFile(u8AppDataPath +"\\TmpPalette.pal");
+void* CLoading::ReadWholeFile(LPCSTR lpFilename, DWORD* pSize)
+{
+	CString filepath = GamePath;
+	filepath += lpFilename;
+	std::ifstream fin;
+	fin.open(filepath, std::ios::in | std::ios::binary);
+	if (fin.is_open())
+	{
+		fin.seekg(0, std::ios::end);
+		const int size = static_cast<int>(fin.tellg());
+		if (size == 0)
+			return nullptr;
 
-	if(!FSunPackLib::XCC_ExtractFile("uniturb.pal", u8AppDataPath+"\\TmpPalette.pal", m_hCache))
-		errstream << "UnitUrb.pal failed\n";
-	m_hPalUnitUrb=FSunPackLib::LoadTSPalette(u8AppDataPath+"\\TmpPalette.pal", NULL);
-	deleteFile(u8AppDataPath +"\\TmpPalette.pal");
+		fin.seekg(0, std::ios::beg);
+		auto pBuffer = new char[size];
+		if (pSize)
+			*pSize = size;
+		fin.read(pBuffer, size);
+		fin.close();
+		return pBuffer;
+	}
 
+	HMIXFILE hMix = FSunPackLib::XCC_FindFileInMix(lpFilename);
+	if (hMix)
+		return FSunPackLib::XCC_ReadWholeFile(lpFilename, hMix, pSize);
 
-	if(!FSunPackLib::XCC_ExtractFile("unitlun.pal", u8AppDataPath+"\\TmpPalette.pal", m_hCache2))
-		errstream << "UnitLun.pal failed\n";
-	m_hPalUnitLun=FSunPackLib::LoadTSPalette(u8AppDataPath+"\\TmpPalette.pal", NULL);
-	deleteFile(u8AppDataPath +"\\TmpPalette.pal");
-
-	if(!FSunPackLib::XCC_ExtractFile("unitdes.pal", u8AppDataPath+"\\TmpPalette.pal", m_hCache2))
-		errstream << "UnitDes.pal failed\n";
-	m_hPalUnitDes=FSunPackLib::LoadTSPalette(u8AppDataPath+"\\TmpPalette.pal", NULL);
-	deleteFile(u8AppDataPath +"\\TmpPalette.pal");
-
-	if(!FSunPackLib::XCC_ExtractFile("unitubn.pal", u8AppDataPath+"\\TmpPalette.pal", m_hCache2))
-		errstream << "UnitUbn.pal failed\n";
-	m_hPalUnitUbn=FSunPackLib::LoadTSPalette(u8AppDataPath+"\\TmpPalette.pal", NULL);
-	deleteFile(u8AppDataPath +"\\TmpPalette.pal");
-
-
-	if(!FSunPackLib::XCC_ExtractFile("snow.pal", u8AppDataPath+"\\TmpPalette.pal", m_hCache))
-		errstream << "Snow.pal failed\n";
-	m_hPalSnow=FSunPackLib::LoadTSPalette(u8AppDataPath+"\\TmpPalette.pal", NULL);
-	deleteFile(u8AppDataPath +"\\TmpPalette.pal");
-
-	if(!FSunPackLib::XCC_ExtractFile("temperat.pal", u8AppDataPath+"\\TmpPalette.pal", m_hCache))
-		errstream << "Temperat.pal failed\n";
-	m_hPalTemp=FSunPackLib::LoadTSPalette(u8AppDataPath+"\\TmpPalette.pal", NULL);
-	deleteFile(u8AppDataPath +"\\TmpPalette.pal");
-
-	if(!FSunPackLib::XCC_ExtractFile("urban.pal", u8AppDataPath+"\\TmpPalette.pal", m_hCache))
-		errstream << "Urban.pal failed\n";
-	m_hPalUrb=FSunPackLib::LoadTSPalette(u8AppDataPath+"\\TmpPalette.pal", NULL);
-	deleteFile(u8AppDataPath +"\\TmpPalette.pal");
-
-
-	if(!FSunPackLib::XCC_ExtractFile("lunar.pal", u8AppDataPath+"\\TmpPalette.pal", m_hCache2))
-		errstream << "lunar.pal failed\n";
-	m_hPalLun=FSunPackLib::LoadTSPalette(u8AppDataPath+"\\TmpPalette.pal", NULL);
-	deleteFile(u8AppDataPath +"\\TmpPalette.pal");
-
-	if(!FSunPackLib::XCC_ExtractFile("desert.pal", u8AppDataPath+"\\TmpPalette.pal", m_hCache2))
-		errstream << "desert.pal failed\n";
-	m_hPalDes=FSunPackLib::LoadTSPalette(u8AppDataPath+"\\TmpPalette.pal", NULL);
-	deleteFile(u8AppDataPath +"\\TmpPalette.pal");
-
-	if(!FSunPackLib::XCC_ExtractFile("urbann.pal", u8AppDataPath+"\\TmpPalette.pal", m_hCache2))
-		errstream << "urbann.pal failed\n";
-	m_hPalUbn=FSunPackLib::LoadTSPalette(u8AppDataPath+"\\TmpPalette.pal", NULL);
-	deleteFile(u8AppDataPath +"\\TmpPalette.pal");
-
-
-	if(!FSunPackLib::XCC_ExtractFile("_ID2124019542", u8AppDataPath+"\\TmpPalette.pal", m_hCache))
-		errstream << "lib.pal failed\n";
-	m_hPalLib=FSunPackLib::LoadTSPalette(u8AppDataPath+"\\TmpPalette.pal", NULL);
-	deleteFile(u8AppDataPath +"\\TmpPalette.pal");
-
-
-	errstream << "\n";
-	errstream.flush();
-
-
+	return nullptr;
 }
 
 void CLoading::InitTMPs(CProgressCtrl* prog)
@@ -4290,17 +3563,17 @@ void CLoading::InitTMPs(CProgressCtrl* prog)
 			if(tiles==&tiles_d) suffix =".des";
 
 			filename += suffix;
-			HTSPALETTE hPalette=m_hPalIsoTemp;
-			if(tiles==&tiles_s) hPalette=m_hPalIsoSnow;
-			if(tiles==&tiles_u) hPalette=m_hPalIsoUrb;
-			if(tiles==&tiles_t) hPalette=m_hPalIsoTemp;
-			if(tiles==&tiles_un) hPalette=m_hPalIsoUbn;
-			if(tiles==&tiles_d) hPalette=m_hPalIsoDes;
-			if(tiles==&tiles_l) hPalette=m_hPalIsoLun;
+			HTSPALETTE hPalette=PAL_ISOTEM;
+			if(tiles==&tiles_s) hPalette=PAL_ISOSNO;
+			if(tiles==&tiles_u) hPalette=PAL_ISOURB;
+			if(tiles==&tiles_t) hPalette=PAL_ISOTEM;
+			if(tiles==&tiles_un) hPalette=PAL_ISOUBN;
+			if(tiles==&tiles_d) hPalette=PAL_ISODES;
+			if(tiles==&tiles_l) hPalette=PAL_ISOLUN;
 
 			// MW add: use other...
-			if(FindFileInMix(filename)==NULL && tiles==&tiles_un) { filename=bas_f+".urb"; hPalette=m_hPalIsoUrb; }
-			if(FindFileInMix(filename)==NULL) { filename=bas_f+".tem"; hPalette=m_hPalIsoTemp; }
+			if(FindFileInMix(filename)==NULL && tiles==&tiles_un) { filename=bas_f+".urb"; hPalette=PAL_ISOURB; }
+			if(FindFileInMix(filename)==NULL) { filename=bas_f+".tem"; hPalette=PAL_ISOTEM; }
 
 			(*tiledata)[tilecount].bAllowTiberium=bTib;
 			(*tiledata)[tilecount].bAllowToPlace=bPlace;
@@ -4440,7 +3713,7 @@ BOOL CLoading::LoadTile(LPCSTR lpFilename, HMIXFILE hOwner, HTSPALETTE hPalette,
 		FSunPackLib::SetCurrentTMP(lpFilename, hOwner);
 		{
 
-			//FSunPackLib::SetCurrentTMP((CString)AppPath+"\\TmpTmp.tmp"/* lpFilename*/, NULL/*hOwner*/);
+			//FSunPackLib::SetCurrentTMP((CString)ExePath+"\\TmpTmp.tmp"/* lpFilename*/, NULL/*hOwner*/);
 			int tileWidth, tileHeight;
 			RECT rect;
 			FSunPackLib::XCC_GetTMPInfo(&rect, &tileCount, &tileWidth, &tileHeight);
@@ -4633,20 +3906,20 @@ BOOL CLoading::LoadTile(LPCSTR lpFilename, HMIXFILE hOwner, HTSPALETTE hPalette,
 	CIsoView& v=*((CFinalSunDlg*)theApp.m_pMainWnd)->m_view.m_isoview;
 
 
-	//DeleteFile((CString)AppPath+(CString)"\\TmpTmp.tmp");
-	//FSunPackLib::XCC_ExtractFile(lpFilename, (CString)AppPath+(CString)"\\TmpTmp.tmp" /*lpFilename*//*, hOwner);
+	//DeleteFile((CString)ExePath+(CString)"\\TmpTmp.tmp");
+	//FSunPackLib::XCC_ExtractFile(lpFilename, (CString)ExePath+(CString)"\\TmpTmp.tmp" /*lpFilename*//*, hOwner);
 
 	int tileCount;
 	try{
 	if(FSunPackLib::XCC_DoesFileExist(lpFilename, hOwner))
-	//if(DoesFileExist((CString)AppPath+(CString)"\\TmpTmp.tmp"))
+	//if(DoesFileExist((CString)ExePath+(CString)"\\TmpTmp.tmp"))
 	{
 		//if(
 		FSunPackLib::SetCurrentTMP(lpFilename, hOwner);
 		//)
 		{
 
-			//FSunPackLib::SetCurrentTMP((CString)AppPath+"\\TmpTmp.tmp"/* lpFilename*//*, NULL/*hOwner*//*);
+			//FSunPackLib::SetCurrentTMP((CString)ExePath+"\\TmpTmp.tmp"/* lpFilename*//*, NULL/*hOwner*//*);
 			int tileWidth, tileHeight;
 			RECT rect;
 			FSunPackLib::XCC_GetTMPInfo(&rect, &tileCount, &tileWidth, &tileHeight);
@@ -4802,36 +4075,36 @@ void CLoading::LoadOverlayGraphic(LPCTSTR lpOvrlName_, int iOvrlNum)
 	CString image; // the image used
 	CString filename; // filename of the image
 	SHPHEADER head;
-	char theat=cur_theat;
+	char theat=current_theater;
 	BYTE** lpT=NULL;
 
 	char OvrlID[50];
 	itoa(iOvrlNum, OvrlID, 10);
 
-	HTSPALETTE hPalette = m_hPalIsoTemp;
-	if(cur_theat=='T')
+	HTSPALETTE hPalette = PAL_ISOTEM;
+	if(current_theater=='T')
 	{
-		hPalette=m_hPalIsoTemp;
+		hPalette=PAL_ISOTEM;
 	}
-	if(cur_theat=='A')
+	if(current_theater=='A')
 	{
-		hPalette=m_hPalIsoSnow;
+		hPalette=PAL_ISOSNO;
 	}
-	if(cur_theat=='U' && m_hPalIsoUrb)
+	if(current_theater=='U' && PAL_ISOURB)
 	{
-		hPalette=m_hPalIsoUrb;
+		hPalette=PAL_ISOURB;
 	}
-	if(cur_theat=='N' && m_hPalIsoUbn)
+	if(current_theater=='N' && PAL_ISOUBN)
 	{
-		hPalette=m_hPalIsoUbn;
+		hPalette=PAL_ISOUBN;
 	}
-	if(cur_theat=='L' && m_hPalIsoLun)
+	if(current_theater=='L' && PAL_ISOLUN)
 	{
-		hPalette=m_hPalIsoLun;		
+		hPalette=PAL_ISOLUN;		
 	}
-	if(cur_theat=='D' && m_hPalIsoDes)
+	if(current_theater=='D' && PAL_ISODES)
 	{
-		hPalette=m_hPalIsoDes;	
+		hPalette=PAL_ISODES;	
 	}
 
 	HTSPALETTE forcedPalette = 0;
@@ -4840,11 +4113,11 @@ void CLoading::LoadOverlayGraphic(LPCTSTR lpOvrlName_, int iOvrlNum)
 	const CString sOvrlName(lpOvrlName_);
 	if (unitPalettePrefixes.end() != std::find_if(unitPalettePrefixes.begin(), unitPalettePrefixes.end(), [&sOvrlName](const auto& pair) {return sOvrlName.Find(pair.second) == 0;}))
 	{
-		forcedPalette = GetUnitPalette(cur_theat);
+		forcedPalette = GetUnitPalette(current_theater);
 	}	
 	if (isoPalettePrefixes.end() != std::find_if(isoPalettePrefixes.begin(), isoPalettePrefixes.end(), [&sOvrlName](const auto& pair) {return sOvrlName.Find(pair.second) == 0;}))
 	{
-		forcedPalette = GetIsoPalette(cur_theat);
+		forcedPalette = GetIsoPalette(current_theater);
 	}
 	
 	HMIXFILE hMix;
@@ -4881,12 +4154,12 @@ void CLoading::LoadOverlayGraphic(LPCTSTR lpOvrlName_, int iOvrlNum)
 
 	TruncSpace(image);
 
-	if(cur_theat=='T') filename=image+".tem";
-	if(cur_theat=='A') filename=image+".sno";
-	if(cur_theat=='U') filename=image+".urb";
-	if(cur_theat=='N') filename=image+".ubn";
-	if(cur_theat=='L') filename=image+".lun";
-	if(cur_theat=='D') filename=image+".des";
+	if(current_theater=='T') filename=image+".tem";
+	if(current_theater=='A') filename=image+".sno";
+	if(current_theater=='U') filename=image+".urb";
+	if(current_theater=='N') filename=image+".ubn";
+	if(current_theater=='L') filename=image+".lun";
+	if(current_theater=='D') filename=image+".des";
 
 
 	hMix=FindFileInMix(filename);
@@ -4899,12 +4172,12 @@ void CLoading::LoadOverlayGraphic(LPCTSTR lpOvrlName_, int iOvrlNum)
 		if(isTrue(artSection.GetValueByName("NewTheater")))
 			filename.SetAt(1, theat);
 
-		if(cur_theat=='U' && m_hPalUnitUrb) hPalette=m_hPalUnitUrb;
-		if(cur_theat=='T') hPalette=m_hPalUnitTemp;
-		if(cur_theat=='A') hPalette=m_hPalUnitSnow;
-		if(cur_theat=='N') hPalette=m_hPalUnitUbn;
-		if(cur_theat=='L') hPalette=m_hPalUnitLun;
-		if(cur_theat=='D') hPalette=m_hPalUnitDes;
+		if(current_theater=='U' && PAL_UNITURB) hPalette=PAL_UNITURB;
+		if(current_theater=='T') hPalette=PAL_UNITTEM;
+		if(current_theater=='A') hPalette=PAL_UNITSNO;
+		if(current_theater=='N') hPalette=PAL_UNITUBN;
+		if(current_theater=='L') hPalette=PAL_UNITLUN;
+		if(current_theater=='D') hPalette=PAL_UNITDES;
 
 		hMix=FindFileInMix(filename);
 
@@ -4942,12 +4215,12 @@ void CLoading::LoadOverlayGraphic(LPCTSTR lpOvrlName_, int iOvrlNum)
 			hMix=FindFileInMix(filename);
 		}
 
-		if(cur_theat=='T' || cur_theat=='U')
+		if(current_theater=='T' || current_theater=='U')
 		{
-			hPalette=m_hPalUnitTemp;
+			hPalette=PAL_UNITTEM;
 		}
 		else
-			hPalette=m_hPalUnitSnow;
+			hPalette=PAL_UNITSNO;
 
 	}
 	
@@ -4955,42 +4228,42 @@ void CLoading::LoadOverlayGraphic(LPCTSTR lpOvrlName_, int iOvrlNum)
 	{
 		filename=image+".tem";
 		hMix=FindFileInMix(filename);
-		if(hMix) hPalette=m_hPalIsoTemp;
+		if(hMix) hPalette=PAL_ISOTEM;
 	}
 	if(hMix==NULL)
 	{
 		filename=image+".sno";
 		hMix=FindFileInMix(filename);
-		if(hMix) hPalette=m_hPalIsoSnow;
+		if(hMix) hPalette=PAL_ISOSNO;
 	}
 	if(hMix==NULL)
 	{
 		filename=image+".urb";
 		hMix=FindFileInMix(filename);
-		if(hMix && m_hPalIsoUrb) hPalette=m_hPalIsoUrb;
+		if(hMix && PAL_ISOURB) hPalette=PAL_ISOURB;
 	}
 	if(hMix==NULL)
 	{
 		filename=image+".ubn";
 		hMix=FindFileInMix(filename);
-		if(hMix && m_hPalIsoUbn) hPalette=m_hPalIsoUbn;
+		if(hMix && PAL_ISOUBN) hPalette=PAL_ISOUBN;
 	}
 	if(hMix==NULL)
 	{
 		filename=image+".lun";
 		hMix=FindFileInMix(filename);
-		if(hMix && m_hPalIsoLun) hPalette=m_hPalIsoLun;
+		if(hMix && PAL_ISOLUN) hPalette=PAL_ISOLUN;
 	}
 	if(hMix==NULL)
 	{
 		filename=image+".des";
 		hMix=FindFileInMix(filename);
-		if(hMix && m_hPalIsoDes) hPalette=m_hPalIsoDes;
+		if(hMix && PAL_ISODES) hPalette=PAL_ISODES;
 	}
 
 	if(isveinhole==TRUE || isveins==TRUE || istiberium==TRUE)
 	{
-		hPalette=m_hPalTemp;
+		hPalette=PAL_TEMPERAT;
 	}
 
 	hPalette = forcedPalette ? forcedPalette : hPalette;
@@ -5045,9 +4318,9 @@ void CLoading::LoadOverlayGraphic(LPCTSTR lpOvrlName_, int iOvrlNum)
 					PICDATA p;
 					p.pic=lpT[i];
 
-					if(hPalette==m_hPalIsoTemp || hPalette==m_hPalIsoUrb || hPalette==m_hPalIsoSnow || hPalette==m_hPalIsoDes || hPalette==m_hPalIsoLun || hPalette==m_hPalIsoUbn) p.pal=iPalIso;
-					if(hPalette==m_hPalTemp || hPalette==m_hPalUrb || hPalette==m_hPalSnow || hPalette==m_hPalDes || hPalette==m_hPalLun || hPalette==m_hPalUbn) p.pal=iPalTheater;
-					if(hPalette==m_hPalUnitTemp || hPalette==m_hPalUnitUrb || hPalette==m_hPalUnitSnow || hPalette==m_hPalUnitDes || hPalette==m_hPalUnitLun || hPalette==m_hPalUnitUbn) p.pal=iPalUnit;
+					if(hPalette==PAL_ISOTEM || hPalette==PAL_ISOURB || hPalette==PAL_ISOSNO || hPalette==PAL_ISODES || hPalette==PAL_ISOLUN || hPalette==PAL_ISOUBN) p.pal=iPalIso;
+					if(hPalette==PAL_TEMPERAT || hPalette==PAL_URBAN || hPalette==PAL_SNOW || hPalette==PAL_DESERT || hPalette==PAL_LUNAR || hPalette==PAL_URBANN) p.pal=iPalTheater;
+					if(hPalette==PAL_UNITTEM || hPalette==PAL_UNITURB || hPalette==PAL_UNITSNO || hPalette==PAL_UNITDES || hPalette==PAL_UNITLUN || hPalette==PAL_UNITUBN) p.pal=iPalUnit;
 
 					p.vborder=new(VBORDER[head.cy]);
 					int k;
@@ -5108,15 +4381,15 @@ void CLoading::LoadOverlayGraphic(LPCTSTR lpOvrlName_, int iOvrlNum)
 	HTSPALETTE hPalette;
 	if(cur_theat=='T')
 	{
-		hPalette=m_hPalIsoTemp;
+		hPalette=PAL_ISOTEM;
 	}
 	if(cur_theat=='A')
 	{
-		hPalette=m_hPalIsoSnow;
+		hPalette=PAL_ISOSNO;
 	}
-	if(cur_theat=='U' && m_hPalIsoUrb)
+	if(cur_theat=='U' && PAL_ISOURB)
 	{
-		hPalette=m_hPalIsoUrb;
+		hPalette=PAL_ISOURB;
 	}
 	
 	HMIXFILE hMix;
@@ -5167,9 +4440,9 @@ void CLoading::LoadOverlayGraphic(LPCTSTR lpOvrlName_, int iOvrlNum)
 		if(isTrue(art.sections[image].values["NewTheater"])) 
 			filename.SetAt(1, theat);
 
-		if(cur_theat=='U' && m_hPalUnitUrb) hPalette=m_hPalUnitUrb;
-		if(cur_theat=='T') hPalette=m_hPalUnitTemp;
-		if(cur_theat=='A') hPalette=m_hPalUnitSnow;
+		if(cur_theat=='U' && PAL_UNITURB) hPalette=PAL_UNITURB;
+		if(cur_theat=='T') hPalette=PAL_UNITTEM;
+		if(cur_theat=='A') hPalette=PAL_UNITSNO;
 
 		hMix=FindFileInMix(filename);
 
@@ -5193,10 +4466,10 @@ void CLoading::LoadOverlayGraphic(LPCTSTR lpOvrlName_, int iOvrlNum)
 
 		if(cur_theat=='T' || cur_theat=='U')
 		{
-			hPalette=m_hPalUnitTemp;
+			hPalette=PAL_UNITTEM;
 		}
 		else
-			hPalette=m_hPalUnitSnow;
+			hPalette=PAL_UNITSNO;
 
 	}
 	
@@ -5204,24 +4477,24 @@ void CLoading::LoadOverlayGraphic(LPCTSTR lpOvrlName_, int iOvrlNum)
 	{
 		filename=image+".tem";
 		hMix=FindFileInMix(filename);
-		if(hMix) hPalette=m_hPalIsoTemp;
+		if(hMix) hPalette=PAL_ISOTEM;
 	}
 	if(hMix==NULL)
 	{
 		filename=image+".sno";
 		hMix=FindFileInMix(filename);
-		if(hMix) hPalette=m_hPalIsoSnow;
+		if(hMix) hPalette=PAL_ISOSNO;
 	}
 	if(hMix==NULL)
 	{
 		filename=image+".urb";
 		hMix=FindFileInMix(filename);
-		if(hMix && m_hPalIsoUrb) hPalette=m_hPalIsoUrb;
+		if(hMix && PAL_ISOURB) hPalette=PAL_ISOURB;
 	}
 
 	if(isveinhole==TRUE || isveins==TRUE || istiberium==TRUE)
 	{
-		hPalette=m_hPalTemp;
+		hPalette=PAL_TEMPERAT;
 	}
 
 	if(hMix!=NULL)
@@ -5321,7 +4594,7 @@ void CLoading::InitVoxelNormalTables()
 {
 	try
 	{
-		std::ifstream f(std::string(AppPath) + "\\voxel_normal_tables.bin", std::ios::binary);
+		std::ifstream f(std::string(ExePath) + "\\voxel_normal_tables.bin", std::ios::binary);
 		m_voxelNormalTables.reset(new VoxelNormalTables(f));
 	}
 	catch (const std::runtime_error& e)
@@ -5335,7 +4608,7 @@ void CLoading::CalcPicCount()
 {
 	m_pic_count=0;
 
-	CString bmps=(CString)AppPath+"\\pics\\*.bmp";
+	CString bmps=(CString)ExePath+"\\pics\\*.bmp";
 	if(!theApp.m_Options.bDoNotLoadBMPs)
 	{
 		CFileFind ff;
@@ -5919,211 +5192,140 @@ public:
 extern map<CString, XCString> AllStrings;
 void CLoading::LoadStrings()
 {
-	last_succeeded_operation=9;
+	map<CString, XCString, SortDummy2> strings;
 
-	// MW April 17th, 2002:
-	// ra2md.csf supported!
-	std::string file="RA2MD.CSF";
-
-	errstream << "LoadStrings() executing" << endl;
-	errstream.flush();
-
-	BYTE *lpData=NULL;
-	DWORD dwSize;
-	if(DoesFileExist((std::string(TSPath) + "\\" + file).c_str()))
+	auto parse_csf = [&](char* buffer)
 	{
-		std::ifstream f(std::string(TSPath) + "\\" + file, ios::binary);
-		if (f.good())
-		{
-			f.seekg(0, std::ios::end);
-			auto size = f.tellg();
-			if (size > 0)
-			{
-				lpData = new(BYTE[size]);
-				dwSize = size;
-				f.seekg(0, std::ios::beg);
-				f.read(reinterpret_cast<char*>(lpData), dwSize);
-			}
-		}
-	}
-	errstream << "LoadStrings() loading from mix" << endl;
-	errstream.flush();
+		char* pos = buffer;
 
-	if(!lpData)
-	{
-		HMIXFILE hMix=FindFileInMix(file.c_str());
-		//HMIXFILE hMix=m_hLanguage;
-		if(hMix)
+		auto read_int = [&pos](const void* dest)
 		{
-			if (FSunPackLib::XCC_ExtractFile(file, u8AppDataPath + "\\RA2Tmp.csf", hMix))
+			memcpy((void*)dest, pos, 4);
+			pos += 4;
+		};
+
+		// Parse CSF header
+		if (std::memcmp(pos, " FSC", 0x4) != 0)
+			return false;
+
+		pos += 4; // FSC
+		pos += 4; // version
+		int _numLabels;
+		read_int(&_numLabels);
+		pos += 4; // numstrings
+		pos += 4; // useless
+		pos += 4; // lang
+		// Read CSF labels
+		for (int i = 0; i < _numLabels; ++i)
+		{
+			// Read CSF label header
+			int identifier;
+			read_int(&identifier);
+			if (identifier == 'LBL ')
 			{
-				std::ifstream f(u8AppDataPath + "\\RA2Tmp.csf", ios::binary);
-				if (f.good())
+				int numPairs;
+				read_int(&numPairs);
+				int strLength;
+				read_int(&strLength);
+
+				char* labelstr = new char[strLength + 1];
+				labelstr[strLength] = '\0';
+				memcpy_s(labelstr, strLength, pos, strLength);
+
+				pos += strLength;
+				// CSF labels are not case sensitive.
+				for (int k = 0; k < strLength; ++k)
+					labelstr[k] = tolower(labelstr[k]);
+
+				read_int(&identifier);
+				read_int(&strLength);
+
+				char* tmpWideBuffer = new char[(strLength << 1) + 2];
+				for (int i = 0; i < strLength << 1; ++i)
+					tmpWideBuffer[i] = ~pos[i];
+				wchar_t* ptrWideBuffer = reinterpret_cast<wchar_t*>(tmpWideBuffer);
+				ptrWideBuffer[strLength] = '\0';
+
+				char* value = nullptr;
+				int valueBufferSize = WideCharToMultiByte(CP_ACP, NULL, ptrWideBuffer, strLength, value, 0, NULL, NULL) + 1;
+				value = new char[valueBufferSize];
+				WideCharToMultiByte(CP_ACP, NULL, ptrWideBuffer, strLength, value, valueBufferSize, NULL, NULL);
+				delete[] tmpWideBuffer;
+				value[valueBufferSize - 1] = '\0';
+
+				pos += (strLength << 1);
+				if (identifier == 'RTSW') // "WSTR"
 				{
-					f.seekg(0, std::ios::end);
-					auto size = f.tellg();
-					if (size > 0)
+					read_int(&strLength);
+					pos += strLength;
+				}
+
+				strings[labelstr].SetString(value);
+				AllStrings[labelstr].SetString(value);
+
+				delete[] labelstr;
+				delete[] value;
+
+				for (int j = 1; j < numPairs; ++j) // Extra labels will be ignored here
+				{
+					read_int(&identifier);
+					read_int(&strLength);
+					pos += (strLength << 1);
+					if (identifier == 0x53545257) // "WSTR"
 					{
-						lpData = new(BYTE[size]);
-						dwSize = size;
-						f.seekg(0, std::ios::beg);
-						f.read(reinterpret_cast<char*>(lpData), dwSize);
+						read_int(&strLength);
+						pos += strLength;
 					}
 				}
 			}
-			
-			if (!lpData)
-			{
-				MessageBox("String file not found, using rules.ini names","Error");
-				return;
+			else {
+				break;
 			}
 		}
-		else
-		{
-			MessageBox("String file not found, using rules.ini names","Error");
+		return true;
+	};
+
+	auto load_csf = [&](LPCSTR filename)
+	{
+		auto lpData = static_cast<BYTE*>(ReadWholeFile(filename));
+		if (nullptr == lpData)
 			return;
-		}
-		
+
+		std::println(errstream, "Loading CSF file: {0}... ", filename);
+		parse_csf(reinterpret_cast<char*>(lpData));
+
+		delete[] lpData;
+	};
+	
+	load_csf(g_data.GetValueByName("Filenames", "CSF", "ra2md.csf"));
+	for (int i = 1; i <= 99; ++i)
+	{
+		CString filename;
+		filename.Format("stringtable%02d.csf", i);
+		load_csf(filename);
 	}
 
-	BYTE* orig=static_cast<BYTE*>(lpData);
-
-	if(!(lpData=Search(&lpData, (BYTE*)" FSC"))) return;
-
-	RA2STRFILEHEAD head;
-	memcpy(&head, lpData, RA2STRFILEHEADSIZE);
-	
-
-	lpData+=RA2STRFILEHEADSIZE;
-	
-	map<CString, XCString, SortDummy2> strings;
-
-	int i;
-	//try{
-	for(i=0;i<head.dwCount1;i++)
+	for (int i = 0; i < rules.sections.size(); i++)
 	{
-		ASSERT(orig+dwSize>lpData);
-
-		if(!(lpData=lpData+4))//Search(&lpData, (BYTE*)" LBL"))) 
+		if (rules.GetSection(i)->FindName("UIName") >= 0)
 		{
-			
-			return;
-		}
-
-		RA2STRINGENTRY entry;		
-		memcpy(&entry.dwFlag, lpData, 4);
-		lpData+=4;
-		
-		DWORD dwCharCount;
-		memcpy(&dwCharCount, lpData, 4);
-		lpData+=4;
-
-		BYTE* lpID=new(BYTE[dwCharCount+1]);
-		memcpy(lpID, lpData, dwCharCount);
-		lpData+=dwCharCount;
-		lpID[dwCharCount]=0;
-		entry.id=(CHAR*)new(BYTE[dwCharCount+1]);
-		strcpy(entry.id, (LPCSTR)lpID);
-		entry.id[dwCharCount]=0;
-		entry.id_size=dwCharCount;
-		// enable this to show the string ID
-		delete[](lpID);
-
-		
-		BOOL b2Strings=FALSE;
-
-		if(lpData[0]=='W')
-			 b2Strings=TRUE;
-		
-		if(!(lpData=lpData+4))//Search(&lpData, (BYTE*)" RTS")))
-		{			
-			return;
-		}
-
-		memcpy(&dwCharCount, lpData, 4);
-		lpData+=4;
-
-		WCHAR* lpwID=new(WCHAR[dwCharCount+1]);
-		int e;
-		for(e=0;e<dwCharCount;e++)
-		{
-			WCHAR w;
-			memcpy(&w, lpData, 2);
-			lpData+=2;
-			lpwID[e]=~w;
-		}
-		lpwID[dwCharCount]=0;
-		entry.value=lpwID;
-		entry.value_size=dwCharCount;
-
-		if(b2Strings)
-		{
-			
-			memcpy(&dwCharCount, lpData, 4);
-			lpData+=4;
-			
-			
-
-			CHAR* lpwID2=new(CHAR[dwCharCount+1]);
-			int e;
-			for(e=0;e<dwCharCount;e++)
+			if (strings.find(rules.GetSection(i)->values["UIName"]) != strings.end())
 			{
-				WCHAR w;
-				memcpy(&w, lpData, 1);
-				lpData+=1;
-				lpwID2[e]=w;
-			}
-			lpwID2[dwCharCount]=0;
-			entry.value_asc=lpwID2;
-			entry.value_asc_size=dwCharCount;
-		}
-
-		/*BYTE* bByte=new(BYTE[entry.value_size+1]);
-		wcstombs((LPSTR)bByte, entry.value, entry.value_size+1);
-		bByte[entry.value_size]=0;*/
-		strings[entry.id].SetString(entry.value, entry.value_size);
-		AllStrings[entry.id].SetString(entry.value, entry.value_size);
-
-
-		//delete[] bByte;
-	}
-
-	
-
-	for(i=0;i<rules.sections.size();i++)
-	{
-		if(rules.GetSection(i)->FindName("UIName")>=0)
-		{
-			int e;
-		
-			if(strings.find(rules.GetSection(i)->values["UIName"])!=strings.end())
-			{
-				//MessageBox(strings[rules.GetSection(i)->values["UIName"]].cString);
-				if(!strings[rules.GetSection(i)->values["UIName"]].bUsedDefault)
-				{
-					//CCStrings[*rules.GetSectionName(i)].cString=strings[rules.GetSection(i)->values["UIName"]].cString; //.SetString(strings[rules.GetSection(i)->values["UIName"]].wString, strings[rules.GetSection(i)->values["UIName"]].len);
+				if (!strings[rules.GetSection(i)->values["UIName"]].bUsedDefault)
 					CCStrings[*rules.GetSectionName(i)].SetString(strings[rules.GetSection(i)->values["UIName"]].wString, strings[rules.GetSection(i)->values["UIName"]].len);
-				}
 				else
 				{
 					CCStrings[*rules.GetSectionName(i)].SetString(strings[rules.GetSection(i)->values["UIName"]].wString, strings[rules.GetSection(i)->values["UIName"]].len);
-					CCStrings[*rules.GetSectionName(i)].cString=rules.GetSection(i)->GetValueByName("Name");
+					CCStrings[*rules.GetSectionName(i)].cString = rules.GetSection(i)->GetValueByName("Name");
 				}
 			}
-			else 
-			{
-				//MessageBox((LPSTR)(LPCSTR)rules.GetSection(i)->values["Name"], *rules.GetSectionName(i));
+			else
 				CCStrings[*rules.GetSectionName(i)].SetString((LPSTR)(LPCSTR)rules.GetSection(i)->GetValueByName("Name"));
-			}
 		}
 		else CCStrings[*rules.GetSectionName(i)].SetString((LPSTR)(LPCSTR)rules.GetSection(i)->GetValueByName("Name"));
-
 	}
 	
-	
-
-
-
+	std::println(errstream, "Loaded {0} {1} strings.", AllStrings.size(), CCStrings.size());
 }
 
 void CLoading::HackRules()
@@ -6181,7 +5383,7 @@ void CLoading::PrepareUnitGraphic(LPCSTR lpUnittype)
 {
 	CString _rules_image; // the image used
 	CString filename; // filename of the image
-	char theat=cur_theat; // standard theater char is t (Temperat). a is snow.
+	char theat=current_theater; // standard theater char is t (Temperat). a is snow.
 
 	BOOL bAlwaysSetChar; // second char is always theater, even if NewTheater not specified!
 	WORD wStep=1; // step is 1 for infantry, buildings, etc, and for shp vehicles it specifies the step rate between every direction
@@ -6194,12 +5396,12 @@ void CLoading::PrepareUnitGraphic(LPCSTR lpUnittype)
 	BOOL bPowerUp=rules.sections[lpUnittype].values["PowersUpBuilding"]!="";
 		
 	HTSPALETTE hPalette;
-	if(theat=='T') hPalette=m_hPalIsoTemp;
-	if(theat=='A') hPalette=m_hPalIsoSnow;
-	if(theat=='U') hPalette=m_hPalIsoUrb;
-	if(theat=='L') hPalette=m_hPalIsoLun;
-	if(theat=='D') hPalette=m_hPalIsoDes;
-	if(theat=='N') hPalette=m_hPalIsoUbn;
+	if(theat=='T') hPalette=PAL_ISOTEM;
+	if(theat=='A') hPalette=PAL_ISOSNO;
+	if(theat=='U') hPalette=PAL_ISOURB;
+	if(theat=='L') hPalette=PAL_ISOLUN;
+	if(theat=='D') hPalette=PAL_ISODES;
+	if(theat=='N') hPalette=PAL_ISOUBN;
 	
 	CIsoView& v=*((CFinalSunDlg*)theApp.m_pMainWnd)->m_view.m_isoview;
 
@@ -6233,12 +5435,12 @@ void CLoading::PrepareUnitGraphic(LPCSTR lpUnittype)
 		BOOL isNewTerrain=FALSE;
 		if(isTrue(artSection.GetValueByName("NewTheater")))//&& isTrue(artSection.GetValueByName("TerrainPalette")))//(filename.GetAt(0)=='G' || filename.GetAt(0)=='N' || filename.GetAt(0)=='C') && filename.GetAt(1)=='A')
 		{
-			hPalette=m_hPalUnitTemp;
-			if(theat=='A') hPalette=m_hPalUnitSnow;
-			if(theat=='U') hPalette=m_hPalUnitUrb;
-			if(theat=='L') hPalette=m_hPalUnitLun;
-			if(theat=='D') hPalette=m_hPalUnitDes;
-			if(theat=='N') hPalette=m_hPalUnitUbn;
+			hPalette=PAL_UNITTEM;
+			if(theat=='A') hPalette=PAL_UNITSNO;
+			if(theat=='U') hPalette=PAL_UNITURB;
+			if(theat=='L') hPalette=PAL_UNITLUN;
+			if(theat=='D') hPalette=PAL_UNITDES;
+			if(theat=='N') hPalette=PAL_UNITUBN;
 			filename.SetAt(1, theat);
 			isNewTerrain=TRUE;
 		}
@@ -6301,17 +5503,17 @@ void CLoading::PrepareUnitGraphic(LPCSTR lpUnittype)
 			bIgnoreTerrain=FALSE;
 			
 			if(cur_theat=='T')
-			hPalette=m_hPalIsoTemp;
+			hPalette=PAL_ISOTEM;
 			else if(cur_theat=='A')
-				hPalette=m_hPalIsoSnow;
+				hPalette=PAL_ISOSNO;
 			else if (cur_theat=='U')
-				hPalette=m_hPalIsoUrb;
+				hPalette=PAL_ISOURB;
 			else if(cur_theat=='L')
-				hPalette=m_hPalIsoLun;
+				hPalette=PAL_ISOLUN;
 			else if(cur_theat=='D')
-				hPalette=m_hPalIsoDes;
+				hPalette=PAL_ISODES;
 			else if(cur_theat=='N')
-				hPalette=m_hPalIsoUbn;
+				hPalette=PAL_ISOUBN;
 				
 			
 			
@@ -6346,7 +5548,7 @@ void CLoading::PrepareUnitGraphic(LPCSTR lpUnittype)
 					hShpMix=FindFileInMix(filename, &bTerrain);
 					if(hShpMix)
 					{
-						hPalette=m_hPalIsoTemp;
+						hPalette=PAL_ISOTEM;
 					}
 				}
 				
@@ -6428,17 +5630,17 @@ void CLoading::PrepareUnitGraphic(LPCSTR lpUnittype)
 				}
 				else // it´s a file in temperat.mix/snow.mix
 				{
-					if(cur_theat=='T') hPalette=m_hPalUnitTemp;
-					if(cur_theat=='A') hPalette=m_hPalUnitSnow;
-					if(cur_theat=='U') hPalette=m_hPalUnitUrb;
-					if(cur_theat=='L') hPalette=m_hPalUnitLun;
-					if(cur_theat=='D') hPalette=m_hPalUnitDes;
-					if(cur_theat=='N') hPalette=m_hPalUnitUbn;
+					if(cur_theat=='T') hPalette=PAL_UNITTEM;
+					if(cur_theat=='A') hPalette=PAL_UNITSNO;
+					if(cur_theat=='U') hPalette=PAL_UNITURB;
+					if(cur_theat=='L') hPalette=PAL_UNITLUN;
+					if(cur_theat=='D') hPalette=PAL_UNITDES;
+					if(cur_theat=='N') hPalette=PAL_UNITUBN;
 				}
 			
 		}*/
 
-		auto shp = FindUnitShp(image, cur_theat, artSection);
+		auto shp = FindUnitShp(image, current_theater, artSection);
 		if (!shp)
 			return;
 
@@ -6449,7 +5651,7 @@ void CLoading::PrepareUnitGraphic(LPCSTR lpUnittype)
 
 		if(filename=="tibtre01.tem" || filename=="tibtre02.tem" || filename=="tibtre03.tem" || filename=="veinhole.tem")
 		{
-			hPalette=m_hPalUnitTemp;
+			hPalette=PAL_UNITTEM;
 		}
 				
 			
@@ -6462,7 +5664,7 @@ void CLoading::PrepareUnitGraphic(LPCSTR lpUnittype)
 			)
 			{
 				filename=image+".sno";
-				if(cur_theat=='T' || cur_theat=='U') hPalette=m_hPalIsoTemp;
+				if(current_theater=='T' || current_theater=='U') hPalette=PAL_ISOTEM;
 				HMIXFILE hShpMix=FindFileInMix(filename);
 				bSuccess=FSunPackLib::SetCurrentSHP(filename, hShpMix);
 				
@@ -6526,12 +5728,12 @@ void CLoading::FetchPalettes()
 
 	// iso palette
 	HTSPALETTE hCur=0;
-	if(Map->GetTheater()==THEATER0) hCur=m_hPalIsoTemp;
-	if(Map->GetTheater()==THEATER1) hCur=m_hPalIsoSnow;
-	if(Map->GetTheater()==THEATER2) hCur=m_hPalIsoUrb;
-	if(Map->GetTheater()==THEATER3) hCur=m_hPalIsoUbn;
-	if(Map->GetTheater()==THEATER4) hCur=m_hPalIsoLun;
-	if(Map->GetTheater()==THEATER5) hCur=m_hPalIsoDes;
+	if(Map->GetTheater()==THEATER0) hCur=PAL_ISOTEM;
+	if(Map->GetTheater()==THEATER1) hCur=PAL_ISOSNO;
+	if(Map->GetTheater()==THEATER2) hCur=PAL_ISOURB;
+	if(Map->GetTheater()==THEATER3) hCur=PAL_ISOUBN;
+	if(Map->GetTheater()==THEATER4) hCur=PAL_ISOLUN;
+	if(Map->GetTheater()==THEATER5) hCur=PAL_ISODES;
 
 	int i;
 
@@ -6542,12 +5744,12 @@ void CLoading::FetchPalettes()
 
 
 	// unit palette
-	if(Map->GetTheater()==THEATER0) hCur=m_hPalUnitTemp;
-	if(Map->GetTheater()==THEATER1) hCur=m_hPalUnitSnow;
-	if(Map->GetTheater()==THEATER2) hCur=m_hPalUnitUrb;
-	if(Map->GetTheater()==THEATER3) hCur=m_hPalUnitUbn;
-	if(Map->GetTheater()==THEATER4) hCur=m_hPalUnitLun;
-	if(Map->GetTheater()==THEATER5) hCur=m_hPalUnitDes;
+	if(Map->GetTheater()==THEATER0) hCur=PAL_UNITTEM;
+	if(Map->GetTheater()==THEATER1) hCur=PAL_UNITSNO;
+	if(Map->GetTheater()==THEATER2) hCur=PAL_UNITURB;
+	if(Map->GetTheater()==THEATER3) hCur=PAL_UNITUBN;
+	if(Map->GetTheater()==THEATER4) hCur=PAL_UNITLUN;
+	if(Map->GetTheater()==THEATER5) hCur=PAL_UNITDES;
 
 
 	for(i=0;i<256;i++)
@@ -6557,12 +5759,12 @@ void CLoading::FetchPalettes()
 
 
 	// theater palette
-	if(Map->GetTheater()==THEATER0) hCur=m_hPalTemp;
-	if(Map->GetTheater()==THEATER1) hCur=m_hPalSnow;
-	if(Map->GetTheater()==THEATER2) hCur=m_hPalUrb;
-	if(Map->GetTheater()==THEATER3) hCur=m_hPalUbn;
-	if(Map->GetTheater()==THEATER4) hCur=m_hPalLun;
-	if(Map->GetTheater()==THEATER5) hCur=m_hPalDes;
+	if(Map->GetTheater()==THEATER0) hCur=PAL_TEMPERAT;
+	if(Map->GetTheater()==THEATER1) hCur=PAL_SNOW;
+	if(Map->GetTheater()==THEATER2) hCur=PAL_URBAN;
+	if(Map->GetTheater()==THEATER3) hCur=PAL_URBANN;
+	if(Map->GetTheater()==THEATER4) hCur=PAL_LUNAR;
+	if(Map->GetTheater()==THEATER5) hCur=PAL_DESERT;
 
 
 
@@ -6573,7 +5775,7 @@ void CLoading::FetchPalettes()
 
 
 	// lib palette
-	hCur=m_hPalLib;
+	hCur=PAL_LIBTEM;
 
 
 	for(i=0;i<256;i++)

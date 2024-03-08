@@ -37,7 +37,6 @@ extern CIniFile rules;
 extern CIniFile art;
 extern CIniFile ai;
 extern CIniFile sound;
-extern CIniFile tutorial;
 extern CIniFile eva;
 extern CIniFile theme;
 extern CIniFile g_data;
@@ -54,7 +53,7 @@ extern CIniFile* tiles;
 extern BOOL bOptionsStartup;
 
 // the current file beeing edited.
-extern char currentMapFile[MAX_PATH + 1];
+extern char MapPath[MAX_PATH + 1];
 
 // all the pictures shown in the mapview
 extern map<CString, PICDATA> pics;
@@ -115,10 +114,10 @@ extern CFinalSunApp theApp;
 extern ofstream errstream;
 
 // application path
-extern char AppPath[MAX_PATH + 1];
-extern const std::string u8AppDataPath;
-extern const std::wstring u16AppDataPath;
-extern char TSPath[MAX_PATH + 1];
+extern char ExePath[MAX_PATH + 1];
+extern const std::string u8ExePath;
+extern const std::wstring u16ExePath;
+extern char GamePath[MAX_PATH + 1];
 
 extern bool bAllowAccessBehindCliffs;
 

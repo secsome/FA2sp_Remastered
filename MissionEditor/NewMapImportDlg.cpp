@@ -81,9 +81,6 @@ void CNewMapImportDlg::OnBrowse()
 	GetCurrentDirectory(MAX_PATH, cuPath);
 	dlg.m_ofn.lpstrInitialDir=cuPath;
 
-	if(theApp.m_Options.TSExe.GetLength()) dlg.m_ofn.lpstrInitialDir=(char*)(LPCTSTR)theApp.m_Options.TSExe;
-
-
 	if(dlg.DoModal()==IDCANCEL) return;	
 	
 	m_ImportFile=dlg.GetPathName();
@@ -97,7 +94,7 @@ BOOL CNewMapImportDlg::OnInitDialog()
 	
 	CComboBox* m_ImportFile=(CComboBox*)GetDlgItem(IDC_IMPORTFILE);
 
-	CString maps = CString(u8AppDataPath.c_str()) + "\\stdmaps\\*.mpr";
+	CString maps = CString(u8ExePath.c_str()) + "\\stdmaps\\*.mpr";
 	CFileFind ff;
 	
 	if(ff.FindFile(maps))

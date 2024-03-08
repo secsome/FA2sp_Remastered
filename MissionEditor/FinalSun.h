@@ -41,9 +41,7 @@ struct OPTIONS{
 	CString TSExe;
 	CString LanguageName;
 	CString prev_maps[4];
-	bool bPreferLocalTheaterFiles = true;
 	BOOL bFlat;
-	BOOL bEasy;
 	BOOL bMarbleMadness;
 	BOOL bSupportMarbleMadness;
 	BOOL bShowCells;
@@ -71,7 +69,6 @@ struct OPTIONS{
 	bool useDefaultMouseCursor = false;
 
 public:
-	BOOL bSearchLikeTS;
 };
 
 

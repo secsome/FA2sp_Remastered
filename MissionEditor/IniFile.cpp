@@ -86,6 +86,13 @@ WORD CIniFile::LoadFile(const std::string& filename, BOOL bNoSpaces)
 
 }
 
+WORD CIniFile::LoadFile(std::istream& file, BOOL bNoSpaces)
+{
+	Clear();
+	m_filename.clear();
+	return(InsertFile(file, NULL, bNoSpaces));
+}
+
 
 void CIniFile::Clear()
 {
@@ -121,7 +128,15 @@ WORD CIniFile::InsertFile(const std::string& filename, const char* Section, BOOL
 	if (!file.good())
 		return 2;
 
+	WORD result = InsertFile(file, Section, bNoSpaces);
 
+	file.close();
+
+	return result;
+}
+
+WORD CIniFile::InsertFile(std::istream& file, const char* Section, BOOL bNoSpaces)
+{
 	//char cSec[256];
 	//char cLine[4096];
 
@@ -172,10 +187,6 @@ WORD CIniFile::InsertFile(const std::string& filename, const char* Section, BOOL
 		}
 
 	}
-
-
-
-	file.close();
 
 	return 0;
 }

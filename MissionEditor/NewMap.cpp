@@ -144,7 +144,7 @@ BOOL CNewMap::OnInitDialog()
 	// set cursor to wait
 	SetCursor(LoadCursor(NULL,IDC_WAIT));
 
-	CString maps=CString(u8AppDataPath.c_str())+"\\stdmaps\\*.mpr";
+	CString maps=CString(u8ExePath.c_str())+"\\stdmaps\\*.mpr";
 	CFileFind ff;
 	
 	if(ff.FindFile(maps))
@@ -178,9 +178,6 @@ void CNewMap::OnBrowse()
 	char cuPath[MAX_PATH];
 	GetCurrentDirectory(MAX_PATH, cuPath);
 	dlg.m_ofn.lpstrInitialDir=cuPath;
-
-	if(theApp.m_Options.TSExe.GetLength()) dlg.m_ofn.lpstrInitialDir=(char*)(LPCTSTR)theApp.m_Options.TSExe;
-
 
 	if(dlg.DoModal()==IDCANCEL) return;	
 	
@@ -257,7 +254,7 @@ void CNewMap::OnEditchangeImportfile()
 
 	if(file.Find(":")<0)
 	{
-		m_MapToImport=CString(u8AppDataPath.c_str())+"\\stdmaps\\";
+		m_MapToImport=CString(u8ExePath.c_str())+"\\stdmaps\\";
 		m_MapToImport+=file;
 	}	
 

@@ -72,8 +72,8 @@ static char THIS_FILE[] = __FILE__;
 extern ACTIONDATA AD;
 extern BOOL bNoDraw;
 
-extern char AppPath[MAX_PATH + 1];
-extern const std::string u8AppDataPath;
+extern char ExePath[MAX_PATH + 1];
+extern const std::string u8ExePath;
 extern BOOL bMiniMapClosedByUser;
 
 HCURSOR m_hArrowCursor = NULL;
@@ -341,9 +341,7 @@ BOOL CFinalSunDlg::OnInitDialog()
 	
 	errstream << "Updating menu" << endl;
 	errstream.flush();
-	
-	if(theApp.m_Options.bEasy && GetMenu()) GetMenu()->CheckMenuItem(ID_OPTIONS_SIMPLEVIEW, MF_BYCOMMAND | MF_CHECKED);	
-	
+
 	UpdateStrings();
 
 
@@ -374,7 +372,7 @@ BOOL CFinalSunDlg::OnInitDialog()
 	ShowWindow(SW_SHOWMAXIMIZED);
 	CDialog::BringWindowToTop();
 	
-	if(strlen(currentMapFile)==0) // no map file specified
+	if(strlen(MapPath)==0) // no map file specified
 	{
 		// ok, let the user choose a map!
 		// hmm... no, don´t let him. we already have our tips dialog.
@@ -386,13 +384,13 @@ BOOL CFinalSunDlg::OnInitDialog()
 	{
 		CString str = GetLanguageStringACP("MainDialogCaption");
  		str+=" (";
-		str+=currentMapFile;
+		str+=MapPath;
  		str+=")";
  
 		this->SetWindowText(str);
 		SetCursor(LoadCursor(NULL, IDC_WAIT));
  
-		Map->LoadMap(currentMapFile);
+		Map->LoadMap(MapPath);
  
 		SetCursor(m_hArrowCursor);
 
@@ -486,9 +484,6 @@ void CFinalSunDlg::OnFileOpenmap()
 	GetCurrentDirectory(MAX_PATH, cuPath);
 	dlg.m_ofn.lpstrInitialDir=cuPath;
 
-	if(theApp.m_Options.TSExe.GetLength()) dlg.m_ofn.lpstrInitialDir=(char*)(LPCTSTR)theApp.m_Options.TSExe;
-
-
 	if(dlg.DoModal()==IDCANCEL) return;	
 
 	m_PKTHeader.Clear();
@@ -505,7 +500,7 @@ void CFinalSunDlg::OnFileOpenmap()
 
 		if(fileToOpen.ReverseFind('\\')>=0) fileToOpen=fileToOpen.Right(fileToOpen.GetLength()-fileToOpen.ReverseFind('\\')-1);
 
-		CString extractFile=u8AppDataPath.c_str();
+		CString extractFile=u8ExePath.c_str();
 		CString pktFile=fileToOpen;
 		pktFile.Replace(".map", ".pkt");
 		extractFile+="\\mmx_tmp.pkt";
@@ -516,7 +511,7 @@ void CFinalSunDlg::OnFileOpenmap()
 
 		
 
-		extractFile=u8AppDataPath.c_str();
+		extractFile=u8ExePath.c_str();
 		extractFile+="\\mmx_tmp.map";
 		FSunPackLib::XCC_ExtractFile(fileToOpen, extractFile, hMix);
 		fileToOpen=extractFile;
@@ -600,11 +595,11 @@ void CFinalSunDlg::OnFileOpenmap()
 	{
 		if(bLoadedFromMMX)
 		{
-			//currentMapFile[0]=0;
-			strcpy(currentMapFile, dlg.GetPathName());
+			//MapPath[0]=0;
+			strcpy(MapPath, dlg.GetPathName());
 		}
 		else
-		strcpy(currentMapFile, fileToOpen);
+		strcpy(MapPath, fileToOpen);
 	}
 
 	Sleep(200);
@@ -700,13 +695,9 @@ void CFinalSunDlg::OnFileSaveas()
 	GetCurrentDirectory(MAX_PATH, cuPath);
 	dlg.m_ofn.lpstrInitialDir=cuPath;
 
-	
-
-	if(theApp.m_Options.TSExe.GetLength()) dlg.m_ofn.lpstrInitialDir=(char*)(LPCTSTR)theApp.m_Options.TSExe;
-	
 	if(dlg.DoModal()!=IDCANCEL)
 	{
-		strcpy(currentMapFile, dlg.GetPathName());
+		strcpy(MapPath, dlg.GetPathName());
 
 		CString str=GetLanguageStringACP("MainDialogCaption");
 		str+=" (";
@@ -735,8 +726,6 @@ void CFinalSunDlg::OnOptionsExportrulesini()
 	BOOL previewPrinted=FALSE;
 	GetCurrentDirectory(MAX_PATH, cuPath);
 	dlg.m_ofn.lpstrInitialDir=cuPath;
-
-	if(theApp.m_Options.TSExe.GetLength()) dlg.m_ofn.lpstrInitialDir=(char*)(LPCTSTR)theApp.m_Options.TSExe;
 
 	if(dlg.DoModal()!=IDCANCEL)
 	{
@@ -797,13 +786,13 @@ void CFinalSunDlg::OnFileSave()
 		return;
 	}
 
-	if(strlen(currentMapFile)==0) { OnFileSaveas(); return; }
+	if(strlen(MapPath)==0) { OnFileSaveas(); return; }
 	
 	CMapValidator validator;
 	int iCancel=validator.DoModal();
 	if(iCancel==IDCANCEL) return;
 
-	SaveMap(currentMapFile);		
+	SaveMap(MapPath);		
 }
 
 
@@ -1148,7 +1137,7 @@ void CFinalSunDlg::SaveMap(CString FileName_)
 
 	map<CString, BOOL> rulessections;
 		
-	std::string tempfile=u8AppDataPath;
+	std::string tempfile=u8ExePath;
 	tempfile+="\\TmpMap.map";
 	std::wstring u16tempfile = utf8ToUtf16(tempfile);
 
@@ -1520,28 +1509,10 @@ void se_translator(unsigned int e, _EXCEPTION_POINTERS* p)
 
 
 
-void CFinalSunDlg::OnFileRuntiberiansun()  // or RA2
+void CFinalSunDlg::OnFileRuntiberiansun()
 {
-	PROCESS_INFORMATION pi;
-	STARTUPINFO si;
-	memset(&si, 0, sizeof(STARTUPINFO));
-	si.cb=sizeof(STARTUPINFO);
-
-	CString exe=theApp.m_Options.TSExe;
-	exe.MakeLower();
-	exe.Replace("ra2.exe","ra2md.exe");
-
-	BOOL success=CreateProcess(exe,
-		NULL,
-		NULL,
-		NULL,
-		FALSE,
-		NORMAL_PRIORITY_CLASS,
-		NULL,
-		NULL,
-		&si,
-		&pi);
-	
+	std::println(errstream, __FUNCTION__" NOT SUPPORTED YET");
+	return;
 }
 
 
@@ -1675,8 +1646,8 @@ void CFinalSunDlg::OnFileNew()
 	// first hide the terrain browser window
 	m_TerrainDlg.DestroyWindow();
 
-	// set currentMapFile to nothing and update window caption
-	strcpy(currentMapFile,"");
+	// set MapPath to nothing and update window caption
+	strcpy(MapPath,"");
 	CString cap;
 	cap=GetLanguageStringACP("MainDialogCaption");
 	cap+=" (";
@@ -2024,7 +1995,6 @@ void CFinalSunDlg::UpdateStrings()
 	}
 
 	
-	if(theApp.m_Options.bEasy) my_menu->CheckMenuItem(ID_OPTIONS_SIMPLEVIEW, MF_BYCOMMAND | MF_CHECKED);
 	if(theApp.m_Options.bDisableAutoShore) my_menu->CheckMenuItem(ID_OPTIONS_DISABLEAUTOSHORE, MF_BYCOMMAND | MF_CHECKED);
 	if(theApp.m_Options.bDisableAutoLat) my_menu->CheckMenuItem(ID_OPTIONS_DISABLEAUTOLAT, MF_BYCOMMAND | MF_CHECKED);
 	if(theApp.m_Options.bDisableSlopeCorrection) my_menu->CheckMenuItem(ID_OPTIONS_DISABLESLOPECORRECTION, MF_BYCOMMAND | MF_CHECKED);
@@ -2056,22 +2026,6 @@ void CFinalSunDlg::UpdateStrings()
 
 
 	// my_menu->DeleteMenu(4, MF_BYPOSITION);
-
-	if(theApp.m_Options.bEasy) my_menu->GetSubMenu(3)->DeleteMenu(0, MF_BYPOSITION);
-
-	if(theApp.m_Options.bEasy)
-	{
-		CMenu* edit_my_menu=my_menu->GetSubMenu(1);
-		for(i=edit_my_menu->GetMenuItemCount()-1;i>=11;i--) // MW 07/17/2001: i>=9 changed to i>=10 so Basic dialog is always available
-		{
-			edit_my_menu->DeleteMenu(i, MF_BYPOSITION);
-		}
-		CMenu* terrain_my_menu=my_menu->GetSubMenu(2);
-		for(i=terrain_my_menu->GetMenuItemCount()-1;i>=8;i--)
-		{
-			terrain_my_menu->DeleteMenu(i, MF_BYPOSITION);
-		}
-	}
 
 #ifndef SCRIPT_SUPPORT
 	my_menu->GetSubMenu(3)->DeleteMenu(ID_MAPTOOLS_TOOLSCRIPTS, MF_BYCOMMAND);
@@ -2124,7 +2078,6 @@ void CFinalSunDlg::UpdateStrings()
 	if(m_singleplayersettings.m_hWnd) m_singleplayersettings.UpdateStrings();
 
 	// we need to check SimpleView if using easy view
-	if(theApp.m_Options.bEasy) GetMenu()->CheckMenuItem(ID_OPTIONS_SIMPLEVIEW, MF_BYCOMMAND | MF_CHECKED);
 	if(!theApp.m_Options.bNoSounds) GetMenu()->CheckMenuItem(ID_OPTIONS_SOUNDS, MF_BYCOMMAND | MF_CHECKED);
 
 	
@@ -2163,7 +2116,6 @@ void CFinalSunDlg::UnloadAll()
 		tiles_u.Clear();
 		Map->GetIniFile().Clear();
 		sound.Clear();
-		tutorial.Clear();
 		g_data.Clear();
 		language.Clear();
 		
@@ -2182,29 +2134,6 @@ void CFinalSunDlg::UnloadAll()
 
 void CFinalSunDlg::OnOptionsSimpleview() 
 {
-	CIniFile Options;
-	Options.LoadFile(u8AppDataPath+"\\FinalAlert.ini");
-
-	if(GetMenu()->GetMenuState(ID_OPTIONS_SIMPLEVIEW, MF_BYCOMMAND) & MF_CHECKED)
-	{
-		GetMenu()->CheckMenuItem(ID_OPTIONS_SIMPLEVIEW, MF_BYCOMMAND | MF_UNCHECKED);
-		theApp.m_Options.bEasy=FALSE;		
-		Options.sections["UserInterface"].values["EasyView"]="0";
-
-		// hide all dialogs:
-		HideAllDialogs();		
-	}
-	else
-	{
-		GetMenu()->CheckMenuItem(ID_OPTIONS_SIMPLEVIEW, MF_BYCOMMAND | MF_CHECKED);
-		theApp.m_Options.bEasy=TRUE;
-		Options.sections["UserInterface"].values["EasyView"]="1";
-	}
-
-	UpdateStrings();
-	Options.SaveFile(u8AppDataPath+"\\FinalAlert.ini");
-
-	UpdateDialogs();
 }
 
 
@@ -2971,9 +2900,9 @@ void CFinalSunDlg::OnEditUndo()
 void CFinalSunDlg::OnHelpManual() 
 {
 	Sound(SOUND_POSITIVE);
-	if(ShellExecuteW(0, NULL, (utf8ToUtf16(AppPath)+L"\\HelpManual.pdf").c_str(), NULL, NULL, SW_NORMAL) == 0)
+	if(ShellExecuteW(0, NULL, (utf8ToUtf16(ExePath)+L"\\HelpManual.pdf").c_str(), NULL, NULL, SW_NORMAL) == 0)
 	{
-		MessageBox((CString)"Could not open HelpManual.pdf! Try opening "+(CString)AppPath+(CString)"\\HelpManual manually.");
+		MessageBox((CString)"Could not open HelpManual.pdf! Try opening "+(CString)ExePath+(CString)"\\HelpManual manually.");
 	}
 }
 
@@ -3121,7 +3050,7 @@ LONG __stdcall ExceptionHandler(
 		return EXCEPTION_CONTINUE_EXECUTION;
 	}
 
-	std::string file=u8AppDataPath;
+	std::string file=u8ExePath;
 	file+="\\fcrash_backup.map";
 	((CFinalSunDlg*)theApp.m_pMainWnd)->SaveMap(file.c_str());
 	
@@ -3135,7 +3064,6 @@ LONG __stdcall ExceptionHandler(
 	tiles_u.Clear();
 	Map->GetIniFile().Clear();
 	sound.Clear();
-	tutorial.Clear();
 	g_data.Clear();
 	language.Clear();
 
@@ -3436,7 +3364,7 @@ void CFinalSunDlg::OnMaptoolsAutocreateshores()
 void CFinalSunDlg::OnOptionsDisableautoshore() 
 {
 	CIniFile Options;
-	Options.LoadFile(u8AppDataPath+"\\FinalAlert.ini");
+	Options.LoadFile(u8ExePath+"\\FinalAlert.ini");
 
 	if(GetMenu()->GetMenuState(ID_OPTIONS_DISABLEAUTOSHORE, MF_BYCOMMAND) & MF_CHECKED)
 	{
@@ -3451,7 +3379,7 @@ void CFinalSunDlg::OnOptionsDisableautoshore()
 		Options.sections["UserInterface"].values["DisableAutoShore"]="1";
 	}
 
-	Options.SaveFile(u8AppDataPath+"\\FinalAlert.ini");
+	Options.SaveFile(u8ExePath+"\\FinalAlert.ini");
 }
 
 
@@ -3516,7 +3444,7 @@ void CFinalSunDlg::OnOptionsDisableautoshore()
 void CFinalSunDlg::OnOptionsDisableautolat() 
 {
 	CIniFile Options;
-	Options.LoadFile(u8AppDataPath+"\\FinalAlert.ini");
+	Options.LoadFile(u8ExePath+"\\FinalAlert.ini");
 
 	if(GetMenu()->GetMenuState(ID_OPTIONS_DISABLEAUTOLAT, MF_BYCOMMAND) & MF_CHECKED)
 	{
@@ -3531,7 +3459,7 @@ void CFinalSunDlg::OnOptionsDisableautolat()
 		Options.sections["UserInterface"].values["DisableAutoLat"]="1";
 	}
 
-	Options.SaveFile(u8AppDataPath+"\\FinalAlert.ini");
+	Options.SaveFile(u8ExePath+"\\FinalAlert.ini");
 }
 
 void CFinalSunDlg::OnEditPaste() 
@@ -3602,7 +3530,7 @@ void CFinalSunDlg::CheckAvail(CCmdUI *pCmdUI)
 void CFinalSunDlg::OnOptionsSounds() 
 {
 	CIniFile Options;
-	Options.LoadFile(u8AppDataPath+"\\FinalAlert.ini");
+	Options.LoadFile(u8ExePath+"\\FinalAlert.ini");
 
 	if(GetMenu()->GetMenuState(ID_OPTIONS_SOUNDS, MF_BYCOMMAND) & MF_CHECKED)
 	{
@@ -3617,7 +3545,7 @@ void CFinalSunDlg::OnOptionsSounds()
 		Options.sections["UserInterface"].values["Sounds"]="1";
 	}
 
-	Options.SaveFile(u8AppDataPath+"\\FinalAlert.ini");
+	Options.SaveFile(u8ExePath+"\\FinalAlert.ini");
 }
 
 void CFinalSunDlg::OnUpdateOptionsSounds(CCmdUI* pCmdUI) 
@@ -3628,7 +3556,7 @@ void CFinalSunDlg::OnUpdateOptionsSounds(CCmdUI* pCmdUI)
 void CFinalSunDlg::OnOptionsDisableslopecorrection() 
 {
 	CIniFile Options;
-	Options.LoadFile(u8AppDataPath +"\\FinalAlert.ini");
+	Options.LoadFile(u8ExePath +"\\FinalAlert.ini");
 
 	if(GetMenu()->GetMenuState(ID_OPTIONS_DISABLESLOPECORRECTION, MF_BYCOMMAND) & MF_CHECKED)
 	{
@@ -3643,13 +3571,13 @@ void CFinalSunDlg::OnOptionsDisableslopecorrection()
 		Options.sections["UserInterface"].values["DisableSlopeCorrection"]="1";
 	}
 
-	Options.SaveFile(u8AppDataPath+"\\FinalAlert.ini");
+	Options.SaveFile(u8ExePath+"\\FinalAlert.ini");
 }
 
 void CFinalSunDlg::OnOptionsShowbuildingoutline() 
 {
 	CIniFile Options;
-	Options.LoadFile(u8AppDataPath+"\\FinalAlert.ini");
+	Options.LoadFile(u8ExePath+"\\FinalAlert.ini");
 
 	if(GetMenu()->GetMenuState(ID_OPTIONS_SHOWBUILDINGOUTLINE, MF_BYCOMMAND) & MF_CHECKED)
 	{
@@ -3666,7 +3594,7 @@ void CFinalSunDlg::OnOptionsShowbuildingoutline()
 
 	m_view.m_isoview->RedrawWindow(NULL, NULL, RDW_INVALIDATE | RDW_UPDATENOW);
 
-	Options.SaveFile(u8AppDataPath +"\\FinalAlert.ini");
+	Options.SaveFile(u8ExePath +"\\FinalAlert.ini");
 }
 
 
@@ -3722,7 +3650,7 @@ void CFinalSunDlg::InsertPrevFile(CString lpFilename)
 	}
 
 	CIniFile Options;
-	Options.LoadFile(u8AppDataPath +"\\FinalAlert.ini");
+	Options.LoadFile(u8ExePath +"\\FinalAlert.ini");
 
 	for(i=3;i>0;i--)
 	{
@@ -3736,7 +3664,7 @@ void CFinalSunDlg::InsertPrevFile(CString lpFilename)
 	theApp.m_Options.prev_maps[0]=lpFilename;
 	Options.sections["Files"].values["0"]=theApp.m_Options.prev_maps[0];
 
-	Options.SaveFile(u8AppDataPath +"\\FinalAlert.ini");
+	Options.SaveFile(u8ExePath +"\\FinalAlert.ini");
 
 	UpdateStrings(); 
 }
@@ -3773,7 +3701,7 @@ void CFinalSunDlg::OpenMap(LPCSTR lpFilename)
 
 		if(fileToOpen.ReverseFind('\\')>=0) fileToOpen=fileToOpen.Right(fileToOpen.GetLength()-fileToOpen.ReverseFind('\\')-1);
 
-		CString extractFile=u8AppDataPath.c_str();
+		CString extractFile=u8ExePath.c_str();
 		CString pktFile=fileToOpen;
 		pktFile.Replace(".map", ".pkt");
 		extractFile+="\\mmx_tmp.pkt";
@@ -3784,7 +3712,7 @@ void CFinalSunDlg::OpenMap(LPCSTR lpFilename)
 
 		
 
-		extractFile=u8AppDataPath.c_str();
+		extractFile=u8ExePath.c_str();
 		extractFile+="\\mmx_tmp.map";
 		FSunPackLib::XCC_ExtractFile(fileToOpen, extractFile, hMix);
 		fileToOpen=extractFile;
@@ -3867,11 +3795,11 @@ void CFinalSunDlg::OpenMap(LPCSTR lpFilename)
 	{
 		if(bLoadedFromMMX)
 		{
-			//currentMapFile[0]=0;
-			strcpy(currentMapFile, lpFilename);
+			//MapPath[0]=0;
+			strcpy(MapPath, lpFilename);
 		}
 		else
-		strcpy(currentMapFile, fileToOpen);
+		strcpy(MapPath, fileToOpen);
 	}
 
 	Sleep(200);
@@ -3924,7 +3852,7 @@ void CFinalSunDlg::OnHelpShowlogs()
 void CFinalSunDlg::OnOptionsSmoothzoom()
 {
 	CIniFile Options;
-	Options.LoadFile(u8AppDataPath + "\\FinalAlert.ini");
+	Options.LoadFile(u8ExePath + "\\FinalAlert.ini");
 
 	if (GetMenu()->GetMenuState(ID_OPTIONS_SMOOTHZOOM, MF_BYCOMMAND) & MF_CHECKED)
 	{
@@ -3938,7 +3866,7 @@ void CFinalSunDlg::OnOptionsSmoothzoom()
 	} 
 
 	Options.sections["UserInterface"].values["ViewScaleUseSteps"] = theApp.m_Options.viewScaleUseSteps ? "1" : "0";
-	Options.SaveFile(u8AppDataPath + "\\FinalAlert.ini");
+	Options.SaveFile(u8ExePath + "\\FinalAlert.ini");
 }
 
 
@@ -3954,7 +3882,7 @@ BOOL CFinalSunDlg::OnSetCursor(CWnd* pWnd, UINT nHitTest, UINT message)
 void CFinalSunDlg::OnOptionsUsedefaultmousecursor()
 {
 	CIniFile Options;
-	Options.LoadFile(u8AppDataPath + "\\FinalAlert.ini");
+	Options.LoadFile(u8ExePath + "\\FinalAlert.ini");
 
 	if (GetMenu()->GetMenuState(ID_OPTIONS_USEDEFAULTMOUSECURSOR, MF_BYCOMMAND) & MF_CHECKED)
 	{
@@ -3970,5 +3898,5 @@ void CFinalSunDlg::OnOptionsUsedefaultmousecursor()
 	}
 
 	Options.sections["UserInterface"].values["UseDefaultMouseCursor"] = theApp.m_Options.useDefaultMouseCursor ? "1" : "0";
-	Options.SaveFile(u8AppDataPath + "\\FinalAlert.ini");
+	Options.SaveFile(u8ExePath + "\\FinalAlert.ini");
 }

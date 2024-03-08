@@ -44,7 +44,7 @@ static const TCHAR szIntFilePos[] = _T("FilePos");
 static const TCHAR szTimeStamp[] = _T("TimeStamp");
 static const TCHAR szIntStartup[] = _T("StartUp");
 
-extern char AppPath[];
+extern char ExePath[];
 
 CTipDlg::CTipDlg(CWnd* pParent /*=NULL*/)
 	: CDialog(IDD_TIP, pParent)
@@ -56,7 +56,7 @@ CTipDlg::CTipDlg(CWnd* pParent /*=NULL*/)
 	CIniFile optini;
 	CString iniFile;
 		
-	iniFile=AppPath;
+	iniFile=ExePath;
 	iniFile+="\\FinalAlert.ini";
 	optini.LoadFile(iniFile);
 
@@ -65,7 +65,7 @@ CTipDlg::CTipDlg(CWnd* pParent /*=NULL*/)
 	UINT iFilePos = atoi(optini.sections[szSection].values[szIntFilePos]);
 
 	// try top open the tips file
-	CString tipsfile=AppPath;
+	CString tipsfile=ExePath;
 	tipsfile+="\\tips.";
 	tipsfile+=language.sections[theApp.m_Options.LanguageName+"Header"].values["ExtensionName"];
 
@@ -109,7 +109,7 @@ CTipDlg::~CTipDlg()
 		CIniFile optini;
 		CString iniFile;
 		
-		iniFile=AppPath;
+		iniFile=ExePath;
 		iniFile+="\\FinalAlert.ini";
 		optini.LoadFile(iniFile);
 
@@ -187,7 +187,7 @@ void CTipDlg::OnOK()
 	CIniFile optini;
 	CString iniFile;
 		
-	iniFile=AppPath;
+	iniFile=ExePath;
 	iniFile+="\\FinalAlert.ini";
 
 	optini.LoadFile(iniFile);
