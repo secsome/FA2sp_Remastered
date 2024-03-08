@@ -108,20 +108,12 @@ CFinalSunApp::CFinalSunApp()
 	m_Options.bMarbleMadness = FALSE;
 
 	auto log = u8AppDataPath;
-#ifdef TS_MODE
-	log += "finalsunlog.txt";
-#else
 	log += "finalalert2log.txt";
-#endif
 	m_u8LogFileName = log;
 	errstream.open(m_u8LogFileName, ios_base::trunc);
 	errstream << "\uFEFF"; // BOM
 
-#ifdef TS_MODE
-	errstream << "FinalSun log file" << std::endl << "----------------------" << std::endl << std::endl;
-#else
 	errstream << "FinalAlert 2 log file" << std::endl << "----------------------" << std::endl << std::endl;
-#endif
 	errstream << "CFinalSunApp::CFinalSunApp() called" << std::endl;
 
 	errstream << "App Path: " << AppPath << std::endl;
@@ -171,21 +163,13 @@ BOOL CFinalSunApp::InitInstance()
 
 	// Load application data
 	std::string datafile = AppPath;
-#ifdef TS_MODE
-	datafile += "\\FSData.ini";
-#else
 	datafile += "\\FAData.ini";
-#endif
 
 	g_data.LoadFile(datafile);
 
 	// Load language data
 	std::string languagefile = AppPath;
-#ifndef RA2_MODE
-	languagefile += "\\FSLanguage.ini";
-#else
 	languagefile += "\\FALanguage.ini";
-#endif
 	language.LoadFile(languagefile);
 
 	if (language.sections.size() == 0)
@@ -194,13 +178,8 @@ BOOL CFinalSunApp::InitInstance()
 		exit(0);
 	}
 
-#ifndef RA2_MODE
-	const std::string iniName = "FinalSun.ini";
-	const std::string defaultIniName = "FinalSunDefaults.ini";
-#else
 	const std::string iniName = "FinalAlert.ini";
 	const std::string defaultIniName = "FinalAlertDefaults.ini";
-#endif
 
 	// ok lets get some options
 	CIniFile optini;
@@ -216,20 +195,11 @@ BOOL CFinalSunApp::InitInstance()
 
 	optini.LoadFile(iniFile);
 
-#ifdef RA2_MODE
 	CString game = "RA2";
 	CString app = "FinalAlert";
-#else
-	CString game = "TS";
-	CString app = "FinalSun";
-#endif
 
 	std::wstring key;
-#ifdef RA2_MODE
 	key = L"Software\\Westwood\\Red Alert 2";
-#else
-	key = L"Software\\Westwood\\Tiberian Sun";
-#endif
 
 	auto& opts = m_Options;
 

@@ -75,16 +75,10 @@ BOOL CNewMapCreateNewDlg::OnInitDialog()
 	CComboBox& theater=*((CComboBox*)GetDlgItem(IDC_THEATER));
 	theater.AddString(THEATER0);
 	theater.AddString(THEATER1);
-#ifdef RA2_MODE
 	theater.AddString(THEATER2);
-	if(yuri_mode) // MW YR support
-	{
-		theater.AddString(THEATER3);
-		theater.AddString(THEATER4);
-		theater.AddString(THEATER5);
-	}
-
-#endif
+	theater.AddString(THEATER3);
+	theater.AddString(THEATER4);
+	theater.AddString(THEATER5);
 
 	m_Theater=0;
 	m_Width=50;
@@ -110,11 +104,7 @@ void CNewMapCreateNewDlg::OnOK()
 
 	if(m_Width+m_Height>256)
 	{
-#ifdef RA2_MODE
 		int res=MessageBox("Width + height is bigger than 256, this may cause problems in RA2. Continue?","Warning",MB_YESNO);
-#else
-		int res=MessageBox("Width + height is bigger than 256, this may cause problems in TS. Continue?","Warning",MB_YESNO);
-#endif
 		if(res==IDNO) return;
 	}
 

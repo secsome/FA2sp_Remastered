@@ -101,14 +101,8 @@ BOOL CBitmap2MapConverter::Convert(HBITMAP hBitmap, CMapData & mapdata)
 
 	int water_start=i+8; // to 12
 
-
-	int sandset=atoi((*tiles).sections["General"].values["SandTile"]);
-	int greenset=atoi((*tiles).sections["General"].values["GreenTile"]);
-
-#ifdef RA2_MODE
-	sandset=atoi((*tiles).sections["General"].values["GreenTile"]);
-	greenset=atoi((*tiles).sections["General"].values["RoughTile"]);
-#endif
+	int sandset=atoi((*tiles).sections["General"].values["GreenTile"]);
+	int greenset=atoi((*tiles).sections["General"].values["RoughTile"]);
 
 	for(i=0;i<(*tiledata_count);i++)
 		if((*tiledata)[i].wTileSet==sandset) break;
@@ -176,9 +170,7 @@ BOOL CBitmap2MapConverter::Convert(HBITMAP hBitmap, CMapData & mapdata)
 					}
 					if(b<20 && r<20 && g>20)
 					{
-#ifdef RA2_MODE
 						if(g<140) // dark only
-#endif
 						{
 							fd->wGround=green_start;
 							fd->bSubTile=0;

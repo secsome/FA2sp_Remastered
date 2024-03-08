@@ -145,10 +145,7 @@ void CTriggerActionsDlg::OnEditchangeActiontype()
 	}
 
 
-	CString acsec="Actions";
-#ifdef RA2_MODE
-	acsec="ActionsRA2";
-#endif
+	CString acsec="ActionsRA2";
 	
 
 	int pos=1+8*curev;
@@ -159,10 +156,8 @@ void CTriggerActionsDlg::OnEditchangeActiontype()
 
 	eventdata=g_data.sections[acsec].values[eventtype];
 
-#ifdef RA2_MODE
 	if(g_data.sections["ActionsRA2"].FindName(eventtype)>=0)
 		eventdata=g_data.sections["ActionsRA2"].values[eventtype];
-#endif
 
 	CString desc=GetParam(eventdata,10);
 	desc.Replace("%1",",");
@@ -283,12 +278,10 @@ void CTriggerActionsDlg::OnSelchangeParameter()
 	if(curparam>=0 && curparam<6)
 	{
 		CString ParamType=GetParam(g_data.sections["Actions"].values[GetParam(ActionData,startpos)],1+curparam);
-#ifdef RA2_MODE
 		if(g_data.sections["ActionsRA2"].FindName(GetParam(ActionData, startpos))>=0)
 		{
 			ParamType=GetParam(g_data.sections["ActionsRA2"].values[GetParam(ActionData,startpos)],1+curparam);
 		}
-#endif
 		if(atoi(ParamType)<0)
 		{
 		}
@@ -500,11 +493,7 @@ void CTriggerActionsDlg::UpdateDialog()
 	CIniFile& ini=Map->GetIniFile();
 
 	// 9.3.2001: Only support specified section
-#ifndef RA2_MODE
-	CString sec="Actions";
-#else
 	CString sec="ActionsRA2";
-#endif
 
 	while(m_ActionType.DeleteString(0)!=CB_ERR);
 	int i;
@@ -512,20 +501,11 @@ void CTriggerActionsDlg::UpdateDialog()
 	{
 		CString eventid=*g_data.sections[sec].GetValueName(i); //GetParam(*g_data.sections["Actions"].GetValue(i),13);
 		CString eventdata=*g_data.sections[sec].GetValue(i);
-/*#ifdef RA2_MODE
-		if(g_data.sections["ActionsRA2"].FindName(eventid)>=0)
-			eventdata=g_data.sections["ActionsRA2"].values[eventid];
-#endif*/
 		CString text=eventid+" "+GetParam(eventdata,0);
 		text.Replace("%1",",");
 
-#ifdef RA2_MODE
-		if(GetParam(eventdata,12)=="1" && (yuri_mode || !isTrue(GetParam(eventdata, 14))))
+		if(GetParam(eventdata,12)=="1")
 		{		
-#else
-		if(GetParam(eventdata,11)=="1")
-		{
-#endif
 			m_ActionType.AddString(text);
 		}
 	}

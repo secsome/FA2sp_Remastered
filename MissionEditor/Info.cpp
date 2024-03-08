@@ -69,7 +69,6 @@ BOOL CInfo::OnInitDialog()
 {
 	CDialog::OnInitDialog();
 
-#ifdef YR_MODE
 	CStringA license = R"(FinalAlert 2: Yuri's Revenge Mission Editor
 Copyright (C) 1999-2024 Electronic Arts, Inc.
 Authored by Matthias Wagner
@@ -86,41 +85,6 @@ GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.)";
-#elif RA2_MODE
-	CStringA license = R"(FinalAlert 2 Mission Editor
-Copyright (C) 1999-2024 Electronic Arts, Inc.
-Authored by Matthias Wagner
-
-This program is free software: you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation, either version 3 of the License, or
-(at your option) any later version.
-
-This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
-
-You should have received a copy of the GNU General Public License
-along with this program.  If not, see <https://www.gnu.org/licenses/>.)";
-#else // TS_MODE
-	CStringA license = R"(FinalSun Mission Editor
-Copyright (C) 1999-2024 Electronic Arts, Inc.
-Authored by Matthias Wagner
-
-This program is free software: you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation, either version 3 of the License, or
-(at your option) any later version.
-
-This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
-
-You should have received a copy of the GNU General Public License
-along with this program.  If not, see <https://www.gnu.org/licenses/>.)";
-#endif
 
 	license.Replace("\n", "\r\n");
 	GetDlgItem(IDC_LICENSE_AND_COPYRIGHT)->SetWindowTextA(license);

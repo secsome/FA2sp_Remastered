@@ -74,11 +74,7 @@ END_MESSAGE_MAP()
 
 void CTSOptions::OnChoose() 
 {
-#ifndef RA2_MODE
-	CFileDialog fd(TRUE, NULL, "Sun.exe", OFN_FILEMUSTEXIST, "Tiberian Sun EXE|Sun.exe|");
-#else
 	CFileDialog fd(TRUE, NULL, "ra2.exe", OFN_FILEMUSTEXIST, "Red Alert 2 EXE|ra2.exe|");
-#endif
 
 	fd.DoModal();
 

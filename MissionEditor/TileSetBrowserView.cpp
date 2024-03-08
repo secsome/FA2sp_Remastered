@@ -128,7 +128,6 @@ void CTileSetBrowserView::OnDraw(CDC* pDC)
 			int curheight = GetAddedHeight(dwID) + (*tiledata)[dwID].rect.bottom - (*tiledata)[dwID].rect.top;
 			//pDC.TextOut(cur_x, cur_y, c);
 
-#ifdef RA2_MODE
 			if ((m_currentTileSet == 80 && Map->GetTheater() == "TEMPERATE") || (m_currentTileSet == 73 && Map->GetTheater() == "SNOW") || (m_currentTileSet == 101 && Map->GetTheater() == "URBAN"))
 			{
 				if (i == 10 || i == 15)
@@ -137,7 +136,6 @@ void CTileSetBrowserView::OnDraw(CDC* pDC)
 					continue;
 				}
 			}
-#endif
 
 			if (!m_lpDDS[i]) continue;
 
@@ -770,7 +768,6 @@ void CTileSetBrowserView::OnLButtonDown(UINT nFlags, CPoint point)
 			curwidth = m_tile_width;
 			curheight = m_tile_height;
 
-#ifdef RA2_MODE
 			if ((m_currentTileSet == 80 && Map->GetTheater() == "TEMPERATE") || (m_currentTileSet == 73 && Map->GetTheater() == "SNOW") || (m_currentTileSet == 101 && Map->GetTheater() == "URBAN"))
 			{
 
@@ -780,7 +777,6 @@ void CTileSetBrowserView::OnLButtonDown(UINT nFlags, CPoint point)
 					continue;
 				}
 			}
-#endif
 
 			int posaddedx = (m_tile_width - curwidth) / 2;
 			int posaddedy = (m_tile_height - curheight) / 2;

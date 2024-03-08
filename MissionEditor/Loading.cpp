@@ -174,91 +174,12 @@ void CLoading::Load()
 	UpdateWindow();
 	LoadTSIni("Rules.ini", &rules, FALSE);
 
-#ifdef TS_MODE
-	if(bUseFirestorm) 
+	CIniFile rulesmd;
+	LoadTSIni("rulesmd.ini", &rulesmd, TRUE);
+	if (rulesmd.sections.size() > 0)
 	{
-		// very special case, the types list don´t have any order according to the original rules!
-		CIniFile fstorm;
-		LoadTSIni("firestrm.ini", &fstorm, TRUE);
-
-		int i;
-		CString cuSection;
-		cuSection="InfantryTypes";
-		for(i=0;i<fstorm.sections[cuSection].values.size();i++)
-		{
-			// we simply add a FS to the index
-			char c[50];
-			itoa(i, c, 10);
-			strcat(c, "FS");
-			rules.sections[cuSection].values[c]=*fstorm.sections[cuSection].GetValue(i);
-			rules.sections[cuSection].value_orig_pos[c]=rules.sections[cuSection].values.size()-1;
-		}
-		cuSection="VehicleTypes";
-		for(i=0;i<fstorm.sections[cuSection].values.size();i++)
-		{
-			// we simply add a FS to the index
-			char c[50];
-			itoa(i, c, 10);
-			strcat(c, "FS");
-			rules.sections[cuSection].values[c]=*fstorm.sections[cuSection].GetValue(i);
-			rules.sections[cuSection].value_orig_pos[c]=rules.sections[cuSection].values.size()-1;
-		}
-		cuSection="AircraftTypes";
-		for(i=0;i<fstorm.sections[cuSection].values.size();i++)
-		{
-			// we simply add a FS to the index
-			char c[50];
-			itoa(i, c, 10);
-			strcat(c, "FS");
-			rules.sections[cuSection].values[c]=*fstorm.sections[cuSection].GetValue(i);
-			rules.sections[cuSection].value_orig_pos[c]=rules.sections[cuSection].values.size()-1;
-		}
-		cuSection="BuildingTypes";
-		for(i=0;i<fstorm.sections[cuSection].values.size();i++)
-		{
-			// we simply add a FS to the index
-			char c[50];
-			itoa(i, c, 10);
-			strcat(c, "FS");
-			rules.sections[cuSection].values[c]=*fstorm.sections[cuSection].GetValue(i);
-			rules.sections[cuSection].value_orig_pos[c]=rules.sections[cuSection].values.size()-1;
-		}
-		cuSection="SuperWeaponTypes";
-		for(i=0;i<fstorm.sections[cuSection].values.size();i++)
-		{
-			// we simply add a FS to the index
-			char c[50];
-			itoa(i, c, 10);
-			strcat(c, "FS");
-			rules.sections[cuSection].values[c]=*fstorm.sections[cuSection].GetValue(i);
-			rules.sections[cuSection].value_orig_pos[c]=rules.sections[cuSection].values.size()-1;
-		}
-
-		for(i=0;i<fstorm.sections.size(); i++)
-		{
-			cuSection=*fstorm.GetSectionName(i);
-			if(cuSection!="SuperWeaponTypes" && cuSection!="InfantryTypes" && cuSection!="VehicleTypes" && cuSection!="AircraftTypes" && cuSection!="BuildingTypes")
-			{
-				int e;
-				for(e=0;e<fstorm.sections[cuSection].values.size();e++)
-				{
-					CString cuValue=*fstorm.sections[cuSection].GetValueName(e);
-					rules.sections[cuSection].values[cuValue]=*fstorm.sections[cuSection].GetValue(e);
-				}
-			}
-		}
+		rules = rulesmd;
 	}
-#else
-	if(bUseFirestorm && yuri_mode) // MW actually this is Yuri's Revenge
-	{
-		CIniFile rulesmd;
-		LoadTSIni("rulesmd.ini", &rulesmd, TRUE);
-		if(rulesmd.sections.size()>0)
-		{
-			rules=rulesmd;
-		}
-	}
-#endif
 
 	m_progress.SetPos(2);
 	//rules.DeleteLeadingSpaces(TRUE, TRUE);
@@ -275,59 +196,13 @@ void CLoading::Load()
 	m_progress.SetPos(1);
 	UpdateWindow();
 	LoadTSIni("Art.ini", &art, FALSE);
-#ifdef TS_MODE
-	if(bUseFirestorm) // LoadTSIni("ArtFs.ini", &art, TRUE);
+	CIniFile artmd;
+	LoadTSIni("artmd.ini", &artmd, TRUE);
+	if (artmd.sections.size() > 0)
 	{
-		CIniFile artfs;
-		LoadTSIni("artfs.ini", &artfs, TRUE);
-
-		// MW April 8th: bugfix... we erased Movies even if there was no new data!!!
-		if(artfs.sections.size())
-		{
-
-			int i;
-			CString cuSection;
-			cuSection="Movies";
-			art.sections.erase(cuSection);
-			/*for(i=0;i<artfs.sections[cuSection].values.size();i++)
-			{
-				// we simply add a FS to the index
-				char c[50];
-				itoa(i, c, 10);
-				strcat(c, "FS");
-				art.sections[cuSection].values[c]=*artfs.sections[cuSection].GetValue(i);
-				art.sections[cuSection].value_orig_pos[c]=art.sections[cuSection].values.size()-1;
-			}*/
-
-			for(i=0;i<artfs.sections.size(); i++)
-			{
-				cuSection=*artfs.GetSectionName(i);
-				//if(cuSection!="Movies")
-				{
-					int e;
-					for(e=0;e<artfs.sections[cuSection].values.size();e++)
-					{
-						CString cuValue=*artfs.sections[cuSection].GetValueName(e);
-						art.sections[cuSection].values[cuValue]=*artfs.sections[cuSection].GetValue(e);
-						if(cuSection=="Movies") art.sections[cuSection].value_orig_pos[cuValue]=artfs.sections[cuSection].GetValueOrigPos(e);
-					}
-				}
-			}
-		}
-
+		art.Clear();
+		art = artmd;
 	}
-#else
-	if(bUseFirestorm && yuri_mode) // Yuri's Revenge
-	{
-		CIniFile artmd;
-		LoadTSIni("artmd.ini", &artmd, TRUE);
-		if(artmd.sections.size()>0)
-		{
-			art.Clear();
-			art=artmd;
-		}
-	}
-#endif
 
 	
 
@@ -392,11 +267,8 @@ void CLoading::Load()
 	m_progress.SetPos(1);
 	UpdateWindow();
 	LoadTSIni("Ai.ini", &ai, FALSE);
-#ifdef TS_MODE
-	if(bUseFirestorm) LoadTSIni("aifs.ini", &ai, TRUE);;
-#else
-	if(bUseFirestorm && yuri_mode) LoadTSIni("aimd.ini", &ai, TRUE); // YR
-#endif
+
+	LoadTSIni("aimd.ini", &ai, TRUE); // YR
 	m_progress.SetPos(2);
 	UpdateWindow();
 
@@ -408,7 +280,7 @@ void CLoading::Load()
 	m_progress.SetPos(1);
 	UpdateWindow();
 	LoadTSIni("Temperat.ini", &tiles_t, FALSE, preferLocalTheater);
-	if(yuri_mode) LoadTSIni("TemperatMD.ini", &tiles_t, TRUE, preferLocalTheater);
+	LoadTSIni("TemperatMD.ini", &tiles_t, TRUE, preferLocalTheater);
 	m_progress.SetPos(2);
 	UpdateWindow();
 
@@ -417,7 +289,7 @@ void CLoading::Load()
 	m_progress.SetPos(1);
 	UpdateWindow();
 	LoadTSIni("Snow.ini", &tiles_s, FALSE, preferLocalTheater);
-	if(yuri_mode) LoadTSIni("SnowMD.ini", &tiles_s, TRUE, preferLocalTheater);
+	LoadTSIni("SnowMD.ini", &tiles_s, TRUE, preferLocalTheater);
 	m_progress.SetPos(2);
 	UpdateWindow();
 
@@ -426,37 +298,34 @@ void CLoading::Load()
 	m_progress.SetPos(1);
 	UpdateWindow();
 	LoadTSIni("Urban.ini", &tiles_u, FALSE, preferLocalTheater);
-	if(yuri_mode) LoadTSIni("UrbanMD.ini", &tiles_u, TRUE, preferLocalTheater);
+	LoadTSIni("UrbanMD.ini", &tiles_u, TRUE, preferLocalTheater);
 	m_progress.SetPos(2);
 	UpdateWindow();
 
-	if(yuri_mode)
-	{
-		m_cap.SetWindowText(GetLanguageStringACP("LoadLoadUrbanN"));
-		m_progress.SetPos(1);
-		UpdateWindow();
-		LoadTSIni("UrbanNMD.ini", &tiles_un, FALSE, preferLocalTheater);
-		m_progress.SetPos(2);
-		UpdateWindow();
+	m_cap.SetWindowText(GetLanguageStringACP("LoadLoadUrbanN"));
+	m_progress.SetPos(1);
+	UpdateWindow();
+	LoadTSIni("UrbanNMD.ini", &tiles_un, FALSE, preferLocalTheater);
+	m_progress.SetPos(2);
+	UpdateWindow();
 
-		// MW FIX: MAKE URBAN RAMPS MORPHABLE:
-		if(tiles_un.sections["TileSet0117"].FindName("Morphable")<0)
-			tiles_un.sections["TileSet0117"].values["Morphable"]="true";
+	// MW FIX: MAKE URBAN RAMPS MORPHABLE:
+	if (tiles_un.sections["TileSet0117"].FindName("Morphable") < 0)
+		tiles_un.sections["TileSet0117"].values["Morphable"] = "true";
 
-		m_cap.SetWindowText(GetLanguageStringACP("LoadLoadLunar"));
-		m_progress.SetPos(1);
-		UpdateWindow();
-		LoadTSIni("LunarMD.ini", &tiles_l, FALSE, preferLocalTheater);
-		m_progress.SetPos(2);
-		UpdateWindow();
+	m_cap.SetWindowText(GetLanguageStringACP("LoadLoadLunar"));
+	m_progress.SetPos(1);
+	UpdateWindow();
+	LoadTSIni("LunarMD.ini", &tiles_l, FALSE, preferLocalTheater);
+	m_progress.SetPos(2);
+	UpdateWindow();
 
-		m_cap.SetWindowText(GetLanguageStringACP("LoadLoadDesert"));
-		m_progress.SetPos(1);
-		UpdateWindow();
-		LoadTSIni("DesertMD.ini", &tiles_d, FALSE, preferLocalTheater);
-		m_progress.SetPos(2);
-		UpdateWindow();
-	}
+	m_cap.SetWindowText(GetLanguageStringACP("LoadLoadDesert"));
+	m_progress.SetPos(1);
+	UpdateWindow();
+	LoadTSIni("DesertMD.ini", &tiles_d, FALSE, preferLocalTheater);
+	m_progress.SetPos(2);
+	UpdateWindow();
 
 	
 	
@@ -587,13 +456,8 @@ void CLoading::InitPics(CProgressCtrl* prog)
 		((LPDIRECTDRAWSURFACE4)pics["CELLTAG"].pic)->GetSurfaceDesc(&desc);
 		pics["CELLTAG"].wHeight = desc.dwHeight;
 		pics["CELLTAG"].wWidth = desc.dwWidth;
-#ifdef RA2_MODE
 		pics["CELLTAG"].x = -1;
 		pics["CELLTAG"].y = 0;
-#else
-		pics["CELLTAG"].x = -1;
-		pics["CELLTAG"].y = -1;
-#endif
 		pics["CELLTAG"].bType = PICDATA_TYPE_BMP;
 	}
 	catch (const BitmapNotFound&) 
@@ -693,9 +557,6 @@ BOOL CLoading::OnInitDialog()
 
 	CString version;
 	version.LoadString(IDS_VERSIONTEXT);
-#ifdef TS_MODE
-	version.LoadString(IDS_VERSIONTEXTTS);
-#endif
 
 	m_Version.SetWindowText(version);
 	
@@ -718,25 +579,15 @@ BOOL CLoading::OnInitDialog()
 // TODO: this was made for Win9x. It does not work anymore on modern operating systems if you don't run the editor as administrator (which you should not do)
 void CLoading::CreateINI()
 {
-	
-
 	wchar_t iniFile_[MAX_PATH];
 	CIniFile path;
 	CString version;
 	
 	GetWindowsDirectoryW(iniFile_, MAX_PATH);
 	std::string iniFile = utf16ToUtf8(iniFile_);
-#ifdef RA2_MODE
 	iniFile += "\\FinalAlert2.ini";
-#else
-	iniFile += "\\FinalSun.ini";
-#endif
 
-#ifdef RA2_MODE
 	CString app = "FinalAlert";
-#else
-	CString app = "FinalSun";
-#endif
 
 	version.LoadString(IDS_VERSION);
 	path.sections[app].values["Path"]=AppPath;
@@ -1070,11 +921,7 @@ __forceinline void Blit_PalD(BYTE* dst, RECT blrect, const BYTE* src, RECT srcRe
 	
 }
 
-#ifdef TS_MODE
 const Vec3f lightDirection = Vec3f(1.0f, 0.0f, -1.0f).normalize();
-#else
-const Vec3f lightDirection = Vec3f(1.0f, 0.0f, -1.0f).normalize();
-#endif
 
 
 HTSPALETTE CLoading::GetIsoPalette(char theat)
@@ -1880,15 +1727,11 @@ BOOL CLoading::LoadUnitGraphic(LPCTSTR lpUnittype)
 					int XMover, YMover;
 					char c[50];
 					itoa(i, c, 10);
-#ifdef RA2_MODE
+
 					XMover = atoi(g_data.sections["BuildingVoxelBarrelsRA2"].values[(CString)lpUnittype + "X"]);
 					YMover = atoi(g_data.sections["BuildingVoxelBarrelsRA2"].values[(CString)lpUnittype + "Y"]);
 					XMover += atoi(g_data.sections["BuildingVoxelBarrelsRA2"].values[(CString)lpUnittype + (CString)"X" + c]);
 					YMover += atoi(g_data.sections["BuildingVoxelBarrelsRA2"].values[(CString)lpUnittype + (CString)"Y" + c]);
-#else
-					XMover = atoi(g_data.sections["BuildingVoxelBarrels"].values[(CString)lpUnittype + "X"]);
-					YMover = atoi(g_data.sections["BuildingVoxelBarrels"].values[(CString)lpUnittype + "Y"]);
-#endif
 
 					RECT srcRect, destRect;
 
@@ -1927,15 +1770,12 @@ BOOL CLoading::LoadUnitGraphic(LPCTSTR lpUnittype)
 					int XMover, YMover;
 					char c[50];
 					itoa(i, c, 10);
-#ifdef RA2_MODE
+
 					XMover = atoi(g_data.sections["BuildingVoxelTurretsRA2"].values[(CString)lpUnittype + "X"]);
 					YMover = atoi(g_data.sections["BuildingVoxelTurretsRA2"].values[(CString)lpUnittype + "Y"]);
 					XMover += atoi(g_data.sections["BuildingVoxelTurretsRA2"].values[(CString)lpUnittype + (CString)"X" + c]);
 					YMover += atoi(g_data.sections["BuildingVoxelTurretsRA2"].values[(CString)lpUnittype + (CString)"Y" + c]);
-#else
-					XMover = atoi(g_data.sections["BuildingVoxelTurrets"].values[(CString)lpUnittype + "X"]);
-					YMover = atoi(g_data.sections["BuildingVoxelTurrets"].values[(CString)lpUnittype + "Y"]);
-#endif
+
 
 					RECT srcRect, destRect;
 					
@@ -1992,15 +1832,12 @@ BOOL CLoading::LoadUnitGraphic(LPCTSTR lpUnittype)
 					int XMover, YMover;
 					char c[50];
 					itoa(i, c, 10);
-#ifdef RA2_MODE
+
 					XMover = atoi(g_data.sections["BuildingVoxelBarrelsRA2"].values[(CString)lpUnittype + "X"]);
 					YMover = atoi(g_data.sections["BuildingVoxelBarrelsRA2"].values[(CString)lpUnittype + "Y"]);
 					XMover += atoi(g_data.sections["BuildingVoxelBarrelsRA2"].values[(CString)lpUnittype + (CString)"X" + c]);
 					YMover += atoi(g_data.sections["BuildingVoxelBarrelsRA2"].values[(CString)lpUnittype + (CString)"Y" + c]);
-#else
-					XMover = atoi(g_data.sections["BuildingVoxelBarrels"].values[(CString)lpUnittype + "X"]);
-					YMover = atoi(g_data.sections["BuildingVoxelBarrels"].values[(CString)lpUnittype + "Y"]);
-#endif
+
 
 					RECT srcRect, destRect;
 
@@ -2129,13 +1966,9 @@ BOOL CLoading::LoadUnitGraphic(LPCTSTR lpUnittype)
 		}
 
 		int XMover, YMover;
-#ifdef RA2_MODE
+
 		XMover=atoi(g_data.sections["VehicleVoxelTurretsRA2"].values[(CString)lpUnittype+"X"]);
 		YMover=atoi(g_data.sections["VehicleVoxelTurretsRA2"].values[(CString)lpUnittype+"Y"]);
-#else
-		XMover=atoi(g_data.sections["VehicleVoxelTurrets"].values[(CString)lpUnittype+"X"]);
-		YMover=atoi(g_data.sections["VehicleVoxelTurrets"].values[(CString)lpUnittype+"Y"]);
-#endif
 
 		if (artSection.values.find("TurretOffset") != art.sections[image].values.end())
 			iTurretOffset = atoi(art.sections[image].values["TurretOffset"]);
@@ -3264,13 +3097,8 @@ BOOL CLoading::LoadUnitGraphic(LPCTSTR lpUnittype)
 							errstream.flush();
 							
 							int XMover, YMover;
-#ifdef RA2_MODE
 							XMover=atoi(g_data.sections["BuildingVoxelTurretsRA2"].values[(CString)lpUnittype+"X"]);
 							YMover=atoi(g_data.sections["BuildingVoxelTurretsRA2"].values[(CString)lpUnittype+"Y"]);
-#else
-							XMover=atoi(g_data.sections["BuildingVoxelTurrets"].values[(CString)lpUnittype+"X"]);
-							YMover=atoi(g_data.sections["BuildingVoxelTurrets"].values[(CString)lpUnittype+"Y"]);
-#endif
 
 							mx+=XMover;
 							my+=YMover;
@@ -3679,13 +3507,7 @@ BOOL CLoading::InitMixFiles()
 
 	int i;
 
-	yuri_mode=FALSE;
-
-
 	if(!theApp.m_Options.bSearchLikeTS) return TRUE;
-	
-	if(DoesFileExist((CString)TSPath+"\\ra2md.mix"))
-		yuri_mode=TRUE; // MW Apr 17th, make it available right here!
 
 	// load expansion mix files
 	for(i=0;i<101;i++)
@@ -3699,7 +3521,7 @@ BOOL CLoading::InitMixFiles()
 		itoa(i, n, 10);
 		expand=TSPath;
 		expand+="\\Expand";		
-		if(yuri_mode) expand+="md";
+		expand+="md";
 		if(i<10) expand+="0";
 		expand+=n;
 		expand+=".mix";
@@ -3710,7 +3532,7 @@ BOOL CLoading::InitMixFiles()
 		if(i==100) append="md.mix";
 
 		
-		if(yuri_mode) append="md.mix";
+		append="md.mix";
 
 
 		if(i==100) expand=(CString)TSPath+"\\ra2md.mix"; // support the mission disk!!!
@@ -3726,10 +3548,6 @@ BOOL CLoading::InitMixFiles()
 			
 
 			m_hExpand[i].hExpand=FSunPackLib::XCC_OpenMix(expand, NULL);
-
-#ifdef YR_MODE
-			if(i==100 && m_hExpand[i].hExpand) yuri_mode=TRUE;
-#endif
 
 			errstream << (LPCTSTR)expand << " found: loading ";
 			errstream.flush();
@@ -3956,8 +3774,7 @@ BOOL CLoading::InitMixFiles()
 			
 		itoa(i, n, 10);
 		expand=TSPath;
-		if(!yuri_mode) expand+="\\ECache";
-		else expand+="\\ecachemd";
+		expand+="\\ecachemd";
 
 		if(i<10) expand+="0";
 		expand+=n;
@@ -4738,11 +4555,7 @@ BOOL CLoading::LoadTile(LPCSTR lpFilename, HMIXFILE hOwner, HTSPALETTE hPalette,
 
 						if(terraintype==0xa) 
 						{
-#ifdef RA2_MODE
 							td->tiles[i].bHackedTerrainType=TERRAINTYPE_WATER;
-#else
-							td->tiles[i].bHackedTerrainType=TERRAINTYPE_WATER;
-#endif
 						}
 						if(terraintype==TERRAINTYPE_ROUGH) td->tiles[i].bHackedTerrainType=TERRAINTYPE_GROUND;
 
@@ -4768,10 +4581,7 @@ BOOL CLoading::LoadTile(LPCSTR lpFilename, HMIXFILE hOwner, HTSPALETTE hPalette,
 							itoa(i/tileWidth, c, 10);
 							hack+=c;*/
 
-							CString section="ShoreTerrainTS";
-#ifdef RA2_MODE
-							section="ShoreTerrainRA2";
-#endif
+							CString section="ShoreTerrainRA2";
 							
 							if(g_data.sections[section].FindName(hack)>=0)
 							{
@@ -4904,11 +4714,7 @@ BOOL CLoading::LoadTile(LPCSTR lpFilename, HMIXFILE hOwner, HTSPALETTE hPalette,
 
 						if(terraintype==0xa) 
 						{
-#ifdef RA2_MODE
 							td->tiles[i].bHackedTerrainType=TERRAINTYPE_WATER;
-#else
-							td->tiles[i].bHackedTerrainType=TERRAINTYPE_WATER;
-#endif
 						}
 						if(terraintype==TERRAINTYPE_ROUGH) td->tiles[i].bHackedTerrainType=TERRAINTYPE_GROUND;
 
@@ -4934,10 +4740,7 @@ BOOL CLoading::LoadTile(LPCSTR lpFilename, HMIXFILE hOwner, HTSPALETTE hPalette,
 							itoa(i/tileWidth, c, 10);
 							hack+=c;*/
 
-							CString section="ShoreTerrainTS";
-#ifdef RA2_MODE
-							section="ShoreTerrainRA2";
-#endif
+							CString section="ShoreTerrainRA2";
 							
 							if(g_data.sections[section].FindName(hack)>=0)
 							{
@@ -5014,44 +4817,26 @@ void CLoading::LoadOverlayGraphic(LPCTSTR lpOvrlName_, int iOvrlNum)
 	if(cur_theat=='T')
 	{
 		hPalette=m_hPalIsoTemp;
-	#ifdef RA2_MODE
-		hPalette=m_hPalIsoTemp;
-	#endif
 	}
 	if(cur_theat=='A')
 	{
 		hPalette=m_hPalIsoSnow;
-	#ifdef RA2_MODE
-		hPalette=m_hPalIsoSnow;
-	#endif
 	}
 	if(cur_theat=='U' && m_hPalIsoUrb)
 	{
 		hPalette=m_hPalIsoUrb;
-	#ifdef RA2_MODE
-		hPalette=m_hPalIsoUrb;
-	#endif		
 	}
 	if(cur_theat=='N' && m_hPalIsoUbn)
 	{
 		hPalette=m_hPalIsoUbn;
-	#ifdef RA2_MODE
-		hPalette=m_hPalIsoUbn;
-	#endif		
 	}
 	if(cur_theat=='L' && m_hPalIsoLun)
 	{
-		hPalette=m_hPalIsoLun;
-	#ifdef RA2_MODE
-		hPalette=m_hPalIsoLun;
-	#endif		
+		hPalette=m_hPalIsoLun;		
 	}
 	if(cur_theat=='D' && m_hPalIsoDes)
 	{
-		hPalette=m_hPalIsoDes;
-	#ifdef RA2_MODE
-		hPalette=m_hPalIsoDes;
-	#endif		
+		hPalette=m_hPalIsoDes;	
 	}
 
 	HTSPALETTE forcedPalette = 0;
@@ -5211,9 +4996,6 @@ void CLoading::LoadOverlayGraphic(LPCTSTR lpOvrlName_, int iOvrlNum)
 	if(isveinhole==TRUE || isveins==TRUE || istiberium==TRUE)
 	{
 		hPalette=m_hPalTemp;
-#ifndef RA2_MODE
-		hPalette=m_hPalUnitTemp;
-#endif
 	}
 
 	hPalette = forcedPalette ? forcedPalette : hPalette;
@@ -5243,53 +5025,9 @@ void CLoading::LoadOverlayGraphic(LPCTSTR lpOvrlName_, int iOvrlNum)
 			BOOL bIsBlueTib=FALSE;
 			BOOL bIsGreenTib=FALSE;
 			RGBTRIPLE rgbOld[16], rgbNew;
-	#ifndef RA2_MODE
-			if(istiberium)
-			{
-				if(lpOvrlName[4]=='_') // other than green!
-					bIsBlueTib=TRUE;
-				else
-					bIsGreenTib=TRUE;
-
-				
-
-				int i;
-				for(i=0;i<16;i++)
-				{
-					if(bIsGreenTib)
-					{
-						rgbNew.rgbtBlue=0;
-						if(i!=0)
-							rgbNew.rgbtGreen=255-i*16+1;
-						else
-							rgbNew.rgbtGreen=255;
-						rgbNew.rgbtRed=0;
-					}
-					else if(bIsBlueTib)
-					{
-						if(i!=0)
-							rgbNew.rgbtBlue=255-i*16+1;
-						else
-							rgbNew.rgbtBlue=255;
-						rgbNew.rgbtGreen=0;
-						rgbNew.rgbtRed=0; // change green/blue (not RGB but BGR)
-					}
-
-					int rb=rgbNew.rgbtBlue;
-					int rr=rgbNew.rgbtRed;
-
-					FSunPackLib::SetTSPaletteEntry(hPalette, 0x10+i, &rgbNew, &rgbOld[i]);
-				}
-			}
-	#endif
-
+	
 			FSunPackLib::LoadSHPImage(0, maxPics, lpT);
 
-	#ifndef RA2_MODE
-			if(istiberium)
-				for(i=0;i<16;i++)
-					FSunPackLib::SetTSPaletteEntry(hPalette, 0x10+i, &rgbOld[i], NULL);
-	#endif
 
 			for(i=0; i<maxPics; i++)
 			{
@@ -5376,23 +5114,14 @@ void CLoading::LoadOverlayGraphic(LPCTSTR lpOvrlName_, int iOvrlNum)
 	if(cur_theat=='T')
 	{
 		hPalette=m_hPalIsoTemp;
-	#ifdef RA2_MODE
-		hPalette=m_hPalIsoTemp;
-	#endif
 	}
 	if(cur_theat=='A')
 	{
 		hPalette=m_hPalIsoSnow;
-	#ifdef RA2_MODE
-		hPalette=m_hPalIsoSnow;
-	#endif
 	}
 	if(cur_theat=='U' && m_hPalIsoUrb)
 	{
 		hPalette=m_hPalIsoUrb;
-	#ifdef RA2_MODE
-		hPalette=m_hPalIsoUrb;
-	#endif		
 	}
 	
 	HMIXFILE hMix;
@@ -5498,9 +5227,6 @@ void CLoading::LoadOverlayGraphic(LPCTSTR lpOvrlName_, int iOvrlNum)
 	if(isveinhole==TRUE || isveins==TRUE || istiberium==TRUE)
 	{
 		hPalette=m_hPalTemp;
-#ifndef RA2_MODE
-		hPalette=m_hPalUnitTemp;
-#endif
 	}
 
 	if(hMix!=NULL)
@@ -5526,50 +5252,8 @@ void CLoading::LoadOverlayGraphic(LPCTSTR lpOvrlName_, int iOvrlNum)
 			BOOL bIsBlueTib=FALSE;
 			BOOL bIsGreenTib=FALSE;
 			RGBTRIPLE rgbOld[16], rgbNew;
-	#ifndef RA2_MODE
-			if(istiberium)
-			{
-				if(lpOvrlName[4]=='_') // other than green!
-					bIsBlueTib=TRUE;
-				else
-					bIsGreenTib=TRUE;
-
-				
-
-				int i;
-				for(i=0;i<16;i++)
-				{
-					if(bIsGreenTib)
-					{
-						rgbNew.rgbtBlue=0;
-						if(i!=0)
-							rgbNew.rgbtGreen=255-i*16+1;
-						else
-							rgbNew.rgbtGreen=255;
-						rgbNew.rgbtRed=0;
-					}
-					else if(bIsBlueTib)
-					{
-						if(i!=0)
-							rgbNew.rgbtBlue=255-i*16+1;
-						else
-							rgbNew.rgbtBlue=255;
-						rgbNew.rgbtGreen=0;
-						rgbNew.rgbtRed=0;
-					}
-
-					FSunPackLib::SetTSPaletteEntry(hPalette, 0x10+i, &rgbNew, &rgbOld[i]);
-				}
-			}
-	#endif
 
 			FSunPackLib::LoadSHPImageInSurface(v.dd, hPalette, 0, maxPics, lpT);
-
-	#ifndef RA2_MODE
-			if(istiberium)
-				for(i=0;i<16;i++)
-					FSunPackLib::SetTSPaletteEntry(hPalette, 0x10+i, &rgbOld[i], NULL);
-	#endif
 
 			for(i=0; i<maxPics; i++)
 			{
@@ -6242,13 +5926,9 @@ void CLoading::LoadStrings()
 {
 	last_succeeded_operation=9;
 
-#ifdef RA2_MODE
-
 	// MW April 17th, 2002:
 	// ra2md.csf supported!
-	std::string file="RA2.CSF";
-	if(yuri_mode)
-		file="RA2MD.CSF";
+	std::string file="RA2MD.CSF";
 
 	errstream << "LoadStrings() executing" << endl;
 	errstream.flush();
@@ -6446,65 +6126,47 @@ void CLoading::LoadStrings()
 	}
 	
 	
-#else
-	int i;
-	for(i=0;i<rules.sections.size();i++)
-	{
-		if(rules.GetSection(i)->FindName("Name")>=0)
-		{
-			//CCStrings[*rules.GetSectionName(i)].cString=rules.GetSection(i)->values["Name"];
-			//CCStrings[*rules.GetSectionName(i)].SetString=rul
-			CCStrings[*rules.GetSectionName(i)].SetString((LPSTR)(LPCSTR)rules.GetSection(i)->values["Name"]);
-		}
-	}
-#endif
+
 
 
 }
 
 void CLoading::HackRules()
 {
-	if(editor_mode==ra2_mode)
+	int i;
+	int max_c = 0;
+	for (i = 0; i < rules.sections["BuildingTypes"].values.size(); i++)
 	{
-		int i;
-		int max_c=0;
-		for(i=0;i<rules.sections["BuildingTypes"].values.size();i++)
-		{
-			int p=atoi(*rules.sections["BuildingTypes"].GetValueName(i));
-			if(p>max_c) max_c=p;
-		}
-
-		char c[50];		
-		itoa(max_c+1,c,10);
-
-		rules.sections["BuildingTypes"].values[c]=rules.sections["General"].values["GDIGateOne"];
-
-#ifdef RA2_MODE
-		// RULES(MD).INI has the incorrect colors set for the following houses, let's remap them to the expected values.
-		// Fixup YuriCountry colour
-		if (rules.sections["YuriCountry"].GetValueByName("Color") == "DarkRed") {
-			rules.sections["YuriCountry"].values["Color"] = "Purple";
-		}
-		// Fixup Allied colors
-		std::list<CString> allied_houses;
-		allied_houses.push_back("British");
-		allied_houses.push_back("French");
-		allied_houses.push_back("Germans");
-		allied_houses.push_back("Americans");
-		allied_houses.push_back("Alliance");
-		for (std::list<CString>::iterator it = allied_houses.begin(); it != allied_houses.end(); ++it) {
-			if (rules.sections[*it].GetValueByName("Color") == "Gold") {
-				rules.sections[*it].values["Color"] = "DarkBlue";
-			}
-		}
-		// Fixup Nod color
-		if (rules.sections["Nod"].GetValueByName("Color") == "Gold") {
-			rules.sections["Nod"].values["Color"] = "DarkRed";
-		}
-#endif
-
+		int p = atoi(*rules.sections["BuildingTypes"].GetValueName(i));
+		if (p > max_c) max_c = p;
 	}
-	
+
+	char c[50];
+	itoa(max_c + 1, c, 10);
+
+	rules.sections["BuildingTypes"].values[c] = rules.sections["General"].values["GDIGateOne"];
+
+	// RULES(MD).INI has the incorrect colors set for the following houses, let's remap them to the expected values.
+	// Fixup YuriCountry colour
+	if (rules.sections["YuriCountry"].GetValueByName("Color") == "DarkRed") {
+		rules.sections["YuriCountry"].values["Color"] = "Purple";
+	}
+	// Fixup Allied colors
+	std::list<CString> allied_houses;
+	allied_houses.push_back("British");
+	allied_houses.push_back("French");
+	allied_houses.push_back("Germans");
+	allied_houses.push_back("Americans");
+	allied_houses.push_back("Alliance");
+	for (std::list<CString>::iterator it = allied_houses.begin(); it != allied_houses.end(); ++it) {
+		if (rules.sections[*it].GetValueByName("Color") == "Gold") {
+			rules.sections[*it].values["Color"] = "DarkBlue";
+		}
+	}
+	// Fixup Nod color
+	if (rules.sections["Nod"].GetValueByName("Color") == "Gold") {
+		rules.sections["Nod"].values["Color"] = "DarkRed";
+	}
 }
 
 void CLoading::PrepareBuildingTheaters()

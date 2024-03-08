@@ -57,11 +57,7 @@ CTipDlg::CTipDlg(CWnd* pParent /*=NULL*/)
 	CString iniFile;
 		
 	iniFile=AppPath;
-#ifndef RA2_MODE
-	iniFile+="\\FinalSun.ini";
-#else
 	iniFile+="\\FinalAlert.ini";
-#endif
 	optini.LoadFile(iniFile);
 
 	CWinApp* pApp = AfxGetApp();
@@ -114,11 +110,7 @@ CTipDlg::~CTipDlg()
 		CString iniFile;
 		
 		iniFile=AppPath;
-#ifndef RA2_MODE
-		iniFile+="\\FinalSun.ini";
-#else
 		iniFile+="\\FinalAlert.ini";
-#endif
 		optini.LoadFile(iniFile);
 
 		char val[50];
@@ -196,11 +188,7 @@ void CTipDlg::OnOK()
 	CString iniFile;
 		
 	iniFile=AppPath;
-#ifndef RA2_MODE
-	iniFile+="\\FinalSun.ini";
-#else
 	iniFile+="\\FinalAlert.ini";
-#endif
 
 	optini.LoadFile(iniFile);
 

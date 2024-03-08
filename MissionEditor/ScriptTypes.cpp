@@ -712,11 +712,8 @@ void CScriptTypes::ListBehaviours(CComboBox &cb)
 	cb.AddString("27 - Paradrop overlay drop zone");
 	cb.AddString("28 - Wait");
 	cb.AddString("29 - Attack move");
-	if(yuri_mode)
-	{
-	//	cb.AddString("30 - Spyplane approach");
-	//	cb.AddString("31 - Spyplane retreat");
-	}
+	cb.AddString("30 - Spyplane approach");
+	cb.AddString("31 - Spyplane retreat");
 }
 
 BOOL CScriptTypes::OnInitDialog() 

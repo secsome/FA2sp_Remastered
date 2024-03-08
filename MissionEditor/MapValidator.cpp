@@ -150,13 +150,6 @@ BOOL CMapValidator::CheckMap()
 
 		if(ini.sections["Basic"].values.find("Player")==ini.sections["Basic"].values.end())
 		{
-#ifdef TS_MODE
-			if(ini.sections.find(MAPHOUSES)!=ini.sections.end() && ini.sections["Houses"].values.size()>0)
-			{
-				AddItemWithNewLine(m_MapProblemList, GetLanguageStringACP("MV_HousesButNoPlayer"), 1);
-				AddItemWithNewLine(m_MapProblemList, GetLanguageStringACP("MV_HousesInMultiplayer"), 1);
-			}
-#endif
 		}
 	
 		if(ini.sections.find(MAPHOUSES)==ini.sections.end())
@@ -185,11 +178,9 @@ BOOL CMapValidator::CheckMap()
 				if(below8found<2)
 					AddItemWithNewLine(m_MapProblemList, GetLanguageStringACP("MV_HousesNoWaypoints"), 1);
 			}
-			
-#ifdef RA2_MODE
+
 			if(isTrue(ini.sections["Basic"].values["Official"]))
 				AddItemWithNewLine(m_MapProblemList, GetLanguageStringACP("MV_OfficialYes"), 1);
-#endif
 
 		}
 		

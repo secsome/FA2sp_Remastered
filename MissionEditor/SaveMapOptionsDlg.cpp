@@ -70,7 +70,6 @@ void CSaveMapOptionsDlg::DoDataExchange(CDataExchange* pDX)
 	DDX_Radio(pDX, IDC_COMPRESS, m_Compress);
 	DDX_Radio(pDX, IDC_PREVIEWMODE, m_PreviewMode);
 	DDX_Text(pDX, IDC_MAPNAME, m_MapName);
-	#ifdef RA2_MODE
 	DDX_Check(pDX, IDC_AIRWAR, m_AirWar);
 	DDX_Check(pDX, IDC_COOPERATIVE, m_Cooperative);
 	DDX_Check(pDX, IDC_DUEL, m_Duel);
@@ -80,7 +79,6 @@ void CSaveMapOptionsDlg::DoDataExchange(CDataExchange* pDX)
 	DDX_Check(pDX, IDC_NUKEWAR, m_Nukewar);
 	DDX_Check(pDX, IDC_STANDARD, m_Standard);
 	DDX_Check(pDX, IDC_TEAMGAME, m_TeamGame);
-	#endif
 	//}}AFX_DATA_MAP
 }
 
@@ -103,8 +101,6 @@ BOOL CSaveMapOptionsDlg::OnInitDialog()
 		GetDlgItem(IDC_PREVIEWMODE)->EnableWindow(FALSE);
 		GetDlgItem(IDC_NOPREVIEW)->EnableWindow(FALSE);
 		GetDlgItem(IDC_EXISTINGPREVIEW)->EnableWindow(FALSE);
-
-#ifndef TS_MODE
 		GetDlgItem(IDC_AIRWAR)->EnableWindow(FALSE);
 		GetDlgItem(IDC_COOPERATIVE)->EnableWindow(FALSE);
 		GetDlgItem(IDC_DUEL)->EnableWindow(FALSE);
@@ -114,7 +110,6 @@ BOOL CSaveMapOptionsDlg::OnInitDialog()
 		GetDlgItem(IDC_NUKEWAR)->EnableWindow(FALSE);
 		GetDlgItem(IDC_STANDARD)->EnableWindow(FALSE);
 		GetDlgItem(IDC_TEAMGAME)->EnableWindow(FALSE);
-#endif	
 	}
 	
 	return TRUE;  // return TRUE unless you set the focus to a control

@@ -151,11 +151,6 @@ extern int cliff2set;
 extern int cliff2set_start;
 extern int cliffwater2set;
 
-
-// ra2 or TS mode?
-extern int editor_mode;
-extern int yuri_mode;
-
 // debug
 extern int last_succeeded_operation;
 

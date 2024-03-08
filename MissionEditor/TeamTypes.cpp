@@ -307,12 +307,6 @@ CString GetWaypoint(int n)
 // Behandlungsroutinen für Nachrichten CTeamTypes 
 void CTeamTypes::UpdateDialog()
 {
-	if(!yuri_mode)
-	{
-		GetDlgItem(IDC_MINDCONTROLDECISION)->ShowWindow(SW_HIDE);
-		m_MCD_L.ShowWindow(SW_HIDE);
-	}
-
 	CIniFile& ini=Map->GetIniFile();
 
 	CComboBox& taskforces=*(CComboBox*)GetDlgItem(IDC_TASKFORCE);
@@ -468,10 +462,6 @@ void CTeamTypes::UpdateDialog()
 			wayp->SetItemData(wayp->AddString(*ini.sections["Waypoints"].GetValueName(i)),1);		
 		}
 	}
-	
-#ifdef TS_MODE
-	wayp->ShowWindow(SW_HIDE);
-#endif
 
 	m_TeamTypes.SetCurSel(0);
 	if(sel>=0) m_TeamTypes.SetCurSel(sel);
@@ -538,8 +528,6 @@ void CTeamTypes::OnSelchangeTeamtypes()
 	m_TechLevel=sec.values["TechLevel"];
 	m_TransportReturnsOnUnload=stob(sec.values["TransportsReturnOnUnload"]);
 	m_VeteranLevel=sec.values["VeteranLevel"];
-	
-	if(yuri_mode)
 	m_MindControlDecision=sec.values["MindControlDecision"];
 	
 
@@ -551,7 +539,6 @@ void CTeamTypes::OnSelchangeTeamtypes()
 	else
 	m_Waypoint="";
 
-#ifdef RA2_MODE
 	if(isTrue(sec.values["UseTransportOrigin"]))
 	{
 		int w=GetWaypoint(sec.values["TransportWaypoint"]);
@@ -565,7 +552,6 @@ void CTeamTypes::OnSelchangeTeamtypes()
 	}
 	else
 		m_TransportWaypoint=TranslateStringACP("None");
-#endif
 
 	m_Whiner=stob(sec.values["Whiner"]);
 
@@ -817,10 +803,8 @@ void CTeamTypes::OnShowWindow(BOOL bShow, UINT nStatus)
 		OnKillfocusVeteranlevel();
 		OnKillfocusWaypoint();
 		OnKillfocusTag();
-#ifdef RA2_MODE
 		OnKillfocusTransportwaypoint();
-		if(yuri_mode) OnKillfocusMindcontroldecision();
-#endif
+		OnKillfocusMindcontroldecision();
 	}
 }
 
@@ -1166,11 +1150,8 @@ void CTeamTypes::OnNewteamtype()
 	s.values["IsBaseDefense"]="no";
 	s.values["OnlyTargetHouseEnemy"]="no";
 
-#ifdef RA2_MODE
 	s.values["UseTransportOrigin"]="no";
-	if(yuri_mode) s.values["MindControlDecision"]="0";
-	
-#endif
+	s.values["MindControlDecision"]="0";
 		
 	
 	//UpdateDialog();
@@ -1233,10 +1214,6 @@ void CTeamTypes::OnKillfocusTag()
 
 void CTeamTypes::OnEditchangeTransportwaypoint() 
 {
-#ifndef RA2_MODE
-	return;
-#endif
-
 	CIniFile& ini=Map->GetIniFile();
 
 	UpdateData(TRUE);

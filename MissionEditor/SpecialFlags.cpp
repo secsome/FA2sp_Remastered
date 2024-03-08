@@ -121,7 +121,6 @@ void CSpecialFlags::UpdateDialog()
 	m_TiberiumSpreads.SetWindowText(sec->values["TiberiumSpreads"]);
 	m_Visceroids.SetWindowText(sec->values["Visceroids"]);
 
-#ifdef RA2_MODE
 	SetDlgItemText(IDC_LTIBERIUMGROWS,"Ore grows:");
 	SetDlgItemText(IDC_LTIBERIUMSPREADS,"Ore spreads:");
 	GetDlgItem(IDC_LTIBERIUMEXPLOSIVE)->ShowWindow(SW_HIDE);
@@ -135,7 +134,6 @@ void CSpecialFlags::UpdateDialog()
 
 	SetDlgItemText(IDC_LFOGOFWAR, "Shroud:");
 	SetDlgItemText(IDC_LIONSTORMS, "Weather Storms:");
-#endif
 
 };
 /////////////////////////////////////////////////////////////////////////////

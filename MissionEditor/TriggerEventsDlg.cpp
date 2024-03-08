@@ -283,19 +283,14 @@ void CTriggerEventsDlg::OnEditchangeEventtype()
 	ini.sections["Events"].values[(LPCTSTR)m_currentTrigger]=SetParam(ini.sections["Events"].values[(LPCTSTR)m_currentTrigger], pos, (LPCTSTR)eventtype);
 
 
-	CString evsec="Events";
-#ifdef RA2_MODE
-	evsec="EventsRA2";
-#endif
+	CString evsec="EventsRA2";
 
 
 	if(g_data.sections[evsec].FindName(eventtype)<0) return;
 	eventdata=g_data.sections[evsec].values[eventtype];
 
-#ifdef RA2_MODE
 	if(g_data.sections["EventsRA2"].FindName(eventtype)>=0)
 		eventdata=g_data.sections["EventsRA2"].values[eventtype];
-#endif
 
 	CString desc=GetParam(eventdata,5);
 	desc.Replace("%1",",");
@@ -405,18 +400,14 @@ void CTriggerEventsDlg::OnSelchangeParameter()
 	
 	// MW FIX FOR CODE!=0
 	int original_cuparam=curparam;
-#ifdef RA2_MODE
 	CString Param1=GetParam(g_data.sections["EventsRA2"].values[GetParam(EventData,startpos)],1);
 	CString Code=GetParam(g_data.sections["ParamTypes"].values[Param1],2);
 	//MessageBox(Param1, Code);
 	if(atoi(Code)!=0) curparam--;
-#endif
 	// END FIx
 
 	CString ParamType=GetParam(g_data.sections["Events"].values[GetParam(EventData,startpos)],1+curparam);
-#ifdef RA2_MODE
 	if(g_data.sections["EventsRA2"].FindName(GetParam(EventData, startpos))>=0) ParamType=GetParam(g_data.sections["EventsRA2"].values[GetParam(EventData,startpos)],1+curparam);
-#endif
 
 	if(atoi(ParamType)<0)
 	{
@@ -517,34 +508,19 @@ void CTriggerEventsDlg::UpdateDialog()
 	int i;
 
 	//9.3.2001: Only use specified section, do not merge
-#ifndef RA2_MODE 
-	CString sec="Events";
-#else
 	CString sec="EventsRA2";
-#endif
 
 	for(i=0;i<g_data.sections[sec].values.size();i++)
 	{
 		CString eventid = *g_data.sections[sec].GetValueName(i); //GetParam(*g_data.sections["Events"].GetValue(i),8);
 		CString eventdata=*g_data.sections[sec].GetValue(i);
-/*#ifdef RA2_MODE
-		if(g_data.sections["EventsRA2"].FindName(eventid)>=0)
-			eventdata=g_data.sections["EventsRA2"].values[eventid];
-#endif*/
 
 		CString text=eventid+" "+GetParam(eventdata,0);
 		text.Replace("%1",",");
-#ifdef RA2_MODE
 		// MW 07/18/01
 		// for yuri mode, only check if it´s for RA2, else support it only if YR isnt´needed...
-		if(GetParam(eventdata, 7)=="1" && ( yuri_mode || !atoi(GetParam(eventdata,9)) ) )
+		if(GetParam(eventdata, 7)=="1")
 		{
-
-
-#else
-		if(GetParam(eventdata, 6)=="1")
-		{
-#endif
 			m_EventType.AddString(text);
 		}
 	}
