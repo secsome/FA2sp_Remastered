@@ -169,7 +169,7 @@ dp - destination buffer
 	BOOL XCC_ExtractFile(const std::string& szFilename, const std::string& szSaveTo, HMIXFILE hOwner);
 	BOOL XCC_ExtractFile(LPCSTR szFilename, LPCSTR szSaveTo, HMIXFILE hOwner);
 	
-	void* XCC_ReadWholeFile(LPCSTR lpFilename, HMIXFILE hOwner, DWORD* pSize = nullptr);
+	void* XCC_ReadWholeFile(LPCSTR lpFilename, HMIXFILE hOwner, size_t* pSize = nullptr);
 
 	bool XCC_LoadPalette(const void* data, HTSPALETTE& hPal);
 

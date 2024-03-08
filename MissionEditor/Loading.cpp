@@ -500,7 +500,7 @@ void CLoading::CreateINI()
 
 void CLoading::LoadTSIni(LPCTSTR lpFilename, CIniFile& ini)
 {
-	DWORD dwSize = 0;
+	size_t dwSize = 0;
 	const auto buffer = ReadWholeFile(lpFilename, &dwSize);
 	if (nullptr == buffer)
 	{
@@ -3385,7 +3385,7 @@ void CLoading::InitPalettes()
 {
 	auto loadPalette = [this](const char* lpFilename, HTSPALETTE& pal)
     {
-        DWORD size;
+        size_t size;
         auto buffer = ReadWholeFile(lpFilename, &size);
 		if (nullptr == buffer)
 			return false;
@@ -3422,7 +3422,7 @@ void CLoading::InitPalettes()
 	loadPalette("libtem.pal", PAL_LIBTEM);
 }
 
-void* CLoading::ReadWholeFile(LPCSTR lpFilename, DWORD* pSize)
+void* CLoading::ReadWholeFile(LPCSTR lpFilename, size_t* pSize)
 {
 	CString filepath = GamePath;
 	filepath += lpFilename;

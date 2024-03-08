@@ -101,7 +101,7 @@ public:
 	void InitTMPs(CProgressCtrl* prog=NULL);
 	void InitPalettes();
 	
-	void* ReadWholeFile(LPCSTR lpFilename, DWORD* pSize = NULL);
+	void* ReadWholeFile(LPCSTR lpFilename, size_t* pSize = NULL);
 
 	~CLoading();
 	void Unload();

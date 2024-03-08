@@ -536,7 +536,7 @@ namespace FSunPackLib
 		return XCC_ExtractFile(std::string(szFilename), std::string(szSaveTo), hOwner);
 	}
 
-	void* XCC_ReadWholeFile(LPCSTR lpFilename, HMIXFILE hOwner, DWORD* pSize)
+	void* XCC_ReadWholeFile(LPCSTR lpFilename, HMIXFILE hOwner, size_t* pSize)
 	{
 		if (hOwner == NULL)
 			return nullptr; // not supported yet
@@ -553,7 +553,7 @@ namespace FSunPackLib
 		if (file.open(lpFilename, mixfiles[hOwner]) != 0)
 			return nullptr;
 
-		const auto sz = file.get_size();
+		const auto sz = static_cast<size_t>(file.get_size());
 		auto ret = new char[sz];
 		if (nullptr == ret)
 			return nullptr;
@@ -1830,7 +1830,7 @@ namespace FSunPackLib
 			auto volume = extent.x() * extent.y() * extent.z();
 			if (volume >= iLargestVolume)
 			{
-				iLargestVolume = volume;
+				iLargestVolume = static_cast<int>(volume);
 				iLargestSection = i;
 			}
 			if (strstr(header->id, "BODY") == 0)
@@ -1847,8 +1847,8 @@ namespace FSunPackLib
 
 
 		const auto extents = (maxCoords - minCoords);
-		int rtWidth = ceil(extents.x());
-		int rtHeight = ceil(extents.y());
+		int rtWidth = static_cast<int>(ceil(extents.x()));
+		int rtHeight = static_cast<int>(ceil(extents.y()));
 		const int c_pixels = rtWidth * rtHeight;
 
 		// MYASSERT(c_pixels,1);
@@ -2065,7 +2065,7 @@ namespace FSunPackLib
 			auto volume = extent.x() * extent.y() * extent.z();
 			if (volume >= iLargestVolume)
 			{
-				iLargestVolume = volume;
+				iLargestVolume = static_cast<int>(volume);
 				iLargestSection = i;
 			}
 			if (strcmp(header->id, "BODY") == 0)
@@ -2083,8 +2083,8 @@ namespace FSunPackLib
 
 
 		const auto extents = (maxCoords - minCoords);
-		int rtWidth = ceil(extents.x()) + 1;
-		int rtHeight = ceil(extents.y()) + 1;
+		int rtWidth = static_cast<int>(ceil(extents.x())) + 1;
+		int rtHeight = static_cast<int>(ceil(extents.y())) + 1;
 		const int c_pixels = rtWidth * rtHeight;
 
 		MYASSERT(c_pixels, 1);
