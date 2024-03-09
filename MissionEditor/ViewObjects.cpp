@@ -48,8 +48,6 @@ IMPLEMENT_DYNCREATE(CViewObjects, CTreeView)
 
 CViewObjects::CViewObjects()
 {
-	m_ready=FALSE;
-
 }
 
 CViewObjects::~CViewObjects()
@@ -542,654 +540,23 @@ __inline HTREEITEM TV_InsertItemW(HWND hWnd, WCHAR* lpString, int len, HTREEITEM
 
 void CViewObjects::UpdateDialog()
 {
-	OutputDebugString("Objectbrowser redrawn\n");
-
-	CTreeCtrl& tree=GetTreeCtrl();
-	CIniFile& ini=Map->UpdateAndGetIniFile();
-	
-	tree.Select(0,TVGN_CARET   );
-	tree.DeleteAllItems();
-	
-	CString sTreeRoots[15];
-	sTreeRoots[0]=GetLanguageStringACP("InfantryObList");
-	sTreeRoots[1]=GetLanguageStringACP("VehiclesObList");
-	sTreeRoots[2]=GetLanguageStringACP("AircraftObList");
-	sTreeRoots[3]=GetLanguageStringACP("StructuresObList");
-	sTreeRoots[4]=GetLanguageStringACP("TerrainObList");
-	sTreeRoots[5]=GetLanguageStringACP("OverlayObList");
-	sTreeRoots[6]=GetLanguageStringACP("WaypointsObList");
-	sTreeRoots[7]=GetLanguageStringACP("CelltagsObList");
-	sTreeRoots[8]=GetLanguageStringACP("BaseNodesObList");
-	sTreeRoots[9]=GetLanguageStringACP("TunnelObList");
-	sTreeRoots[10]=GetLanguageStringACP("DelObjObList");
-	sTreeRoots[11]=GetLanguageStringACP("ChangeOwnerObList");
-	sTreeRoots[12]=GetLanguageStringACP("StartpointsObList");
-	sTreeRoots[13]=GetLanguageStringACP("GroundObList");
-	sTreeRoots[14]=GetLanguageStringACP("SmudgesObList");
-
-	int i=0;
-
-	//TV_InsertItemW(tree.m_hWnd, L"HELLO", 5, TVI_LAST, TVI_ROOT, -2);
-	
-	HTREEITEM first=tree.InsertItem(TVIF_PARAM | TVIF_TEXT,
-		TranslateStringACP(GetLanguageStringACP("NothingObList")), i, i, 0, 0, -2, TVI_ROOT, TVI_LAST);
-
-	HTREEITEM rootitems[15];
-
-	// we want the change owner at the top
-	
-	rootitems[11] = tree.InsertItem(TVIF_PARAM | TVIF_TEXT,
-		TranslateStringACP(sTreeRoots[11]), i, i, 0, 0, i, TVI_ROOT, TVI_LAST);
-	
-
-	for(i=0;i<10;i++)
-	{
-		BOOL bAllow=TRUE;
-
-		// no tunnels in ra2 mode
-		if(i==9 && !isTrue(CIniFile::FAData.sections["Debug"].values["AllowTunnels"])) bAllow=FALSE;
-
-		if(bAllow)
-		rootitems[i]=tree.InsertItem(TVIF_PARAM | TVIF_TEXT,
-		sTreeRoots[i], i, i, 0, 0, i, TVI_ROOT, TVI_LAST);
-	}
-
-
-	rootitems[13]=tree.InsertItem(TVIF_PARAM | TVIF_TEXT, TranslateStringACP(sTreeRoots[13]), 13, 13, 0, 0, 13, TVI_ROOT, first);
-
-	rootitems[12]=tree.InsertItem(TVIF_PARAM | TVIF_TEXT,
-			TranslateStringACP(sTreeRoots[12]), 12,12, 0, 0, 12, TVI_ROOT, TVI_LAST);
-
-	rootitems[10]=tree.InsertItem(TVIF_PARAM | TVIF_TEXT,
-			TranslateStringACP(sTreeRoots[10]), 10, 10, 0, 0, 10, TVI_ROOT, TVI_LAST);
-
-#ifdef SMUDGE_SUPP
-	rootitems[14]=tree.InsertItem(TVIF_PARAM | TVIF_TEXT,
-			TranslateStringACP(sTreeRoots[14]), 14, 14, 0, 0, 10, TVI_ROOT, rootitems[4]);
-#endif
-
-
-	HTREEITEM structhouses[64];
-
-	HTREEITEM hAllied=tree.InsertItem(TVIF_PARAM | TVIF_TEXT, GetLanguageStringACP("Allied"), 0, 0,0,0,-1,rootitems[3], TVI_LAST);
-	HTREEITEM hSoviet=tree.InsertItem(TVIF_PARAM | TVIF_TEXT, GetLanguageStringACP("Soviet"), 0, 0,0,0,-1,rootitems[3], TVI_LAST);
-	HTREEITEM hYuri=NULL;
-	hYuri = tree.InsertItem(TVIF_PARAM | TVIF_TEXT, GetLanguageStringACP("Yuri"), 0, 0, 0, 0, -1, rootitems[3], TVI_LAST);
-
-	for(i=0;i<sides.size();i++)
-	{
-		if(sides[i].orig_n==0)
-			structhouses[i]=hAllied;
-		else if(sides[i].orig_n==2)
-			structhouses[i]=hYuri;
-		else
-			structhouses[i]=hSoviet;
-		
-	}
-	
-	structhouses[sides.size()]=tree.InsertItem(TVIF_PARAM | TVIF_TEXT, GetLanguageStringACP("Other"), 0, 0,0,0,-1,rootitems[3], TVI_LAST);
-
-
-
-	
-	tree.InsertItem(TVIF_PARAM | TVIF_TEXT, GetLanguageStringACP("CreateWaypObList"), 0,0,0,0, 20, rootitems[6], TVI_LAST );
-	tree.InsertItem(TVIF_PARAM | TVIF_TEXT, GetLanguageStringACP("CreateSpecWaypObList"), 0,0,0,0, 22, rootitems[6], TVI_LAST );
-	tree.InsertItem(TVIF_PARAM | TVIF_TEXT, GetLanguageStringACP("DelWaypObList"), 0,0,0,0, 21, rootitems[6], TVI_LAST );
-
-		
-	int e;
-	int max=8;
-	//if(ini.sections.find(HOUSES)!=ini.sections.end() && ini.sections.find(MAPHOUSES)!=ini.sections.end())
-	if(!Map->IsMultiplayer())
-		max=1;
-	else
-	{
-		
-	}
-	for(e=0;e<max;e++)
-	{
-		CString ins=GetLanguageStringACP("StartpointsPlayerObList");
-		char c[50];
-		itoa(e+1,c,10);
-		ins=TranslateStringVariables(1, ins, c);
-		tree.InsertItem(TVIF_PARAM | TVIF_TEXT, ins, 0,0,0,0, 23+e, rootitems[12], TVI_LAST );
-	}
-	tree.InsertItem(TVIF_PARAM | TVIF_TEXT, GetLanguageStringACP("StartpointsDelete"), 0,0,0,0, 21, rootitems[12], TVI_LAST );
-
-
-
-	tree.InsertItem(TVIF_PARAM | TVIF_TEXT, GetTheaterLanguageString("GroundClearObList"),0,0,0,0,61,rootitems[13], TVI_LAST);
-	tree.InsertItem(TVIF_PARAM | TVIF_TEXT, GetTheaterLanguageString("GroundSandObList"),0,0,0,0,62,rootitems[13], TVI_LAST);
-	tree.InsertItem(TVIF_PARAM | TVIF_TEXT, GetTheaterLanguageString("GroundRoughObList"),0,0,0,0,63,rootitems[13], TVI_LAST);
-	tree.InsertItem(TVIF_PARAM | TVIF_TEXT, GetTheaterLanguageString("GroundGreenObList"),0,0,0,0,65,rootitems[13], TVI_LAST);
-	tree.InsertItem(TVIF_PARAM | TVIF_TEXT, GetTheaterLanguageString("GroundPaveObList"),0,0,0,0,66,rootitems[13], TVI_LAST);
-	tree.InsertItem(TVIF_PARAM | TVIF_TEXT, GetTheaterLanguageString("GroundWaterObList"),0,0,0,0,64,rootitems[13], TVI_LAST);
-
-	if(Map->GetTheater()==THEATER3)
-		tree.InsertItem(TVIF_PARAM | TVIF_TEXT, GetTheaterLanguageString("GroundPave2ObList"),0,0,0,0,67,rootitems[13], TVI_LAST);
-
-	
-	tree.InsertItem(TVIF_PARAM | TVIF_TEXT, GetLanguageStringACP("CreateCelltagObList"), 0,0,0,0, 36, rootitems[7], TVI_LAST );
-	tree.InsertItem(TVIF_PARAM | TVIF_TEXT, GetLanguageStringACP("DelCelltagObList"), 0,0,0,0, 37, rootitems[7], TVI_LAST );
-	tree.InsertItem(TVIF_PARAM | TVIF_TEXT, GetLanguageStringACP("CelltagPropObList"), 0,0,0,0, 38, rootitems[7], TVI_LAST );
-
-
-	tree.InsertItem(TVIF_PARAM | TVIF_TEXT, GetLanguageStringACP("CreateNodeNoDelObList"), 0,0,0,0, 40, rootitems[8], TVI_LAST );
-	tree.InsertItem(TVIF_PARAM | TVIF_TEXT, GetLanguageStringACP("CreateNodeDelObList"), 0,0,0,0, 41, rootitems[8], TVI_LAST );
-	tree.InsertItem(TVIF_PARAM | TVIF_TEXT, GetLanguageStringACP("DelNodeObList"), 0,0,0,0, 42, rootitems[8], TVI_LAST );
-
-
-	HTREEITEM deleteoverlay=tree.InsertItem(TVIF_PARAM | TVIF_TEXT, GetLanguageStringACP("DelOvrlObList"), 0,0,0,0, -1, rootitems[5], TVI_LAST );
-	HTREEITEM tiberium=tree.InsertItem(TVIF_PARAM | TVIF_TEXT, GetLanguageStringACP("GrTibObList"), 0,0,0,0, -1, rootitems[5], TVI_LAST );
-	//HTREEITEM bluetiberium=tree.InsertItem(TVIF_PARAM | TVIF_TEXT, GetLanguageStringACP("BlTibObList"), 0,0,0,0, -1, rootitems[5], TVI_LAST );
-	HTREEITEM bridges=tree.InsertItem(TVIF_PARAM | TVIF_TEXT, GetLanguageStringACP("BridgesObList"), 0,0,0,0, -1, rootitems[5], TVI_LAST );
-	HTREEITEM alloverlay=tree.InsertItem(TVIF_PARAM | TVIF_TEXT, GetLanguageStringACP("OthObList"), 0,0,0,0, -1, rootitems[5], TVI_LAST );
-	HTREEITEM everyoverlay=NULL;
-		
-	everyoverlay=tree.InsertItem(TVIF_PARAM | TVIF_TEXT, GetLanguageStringACP("AllObList"), 0,0,0,0, -1, rootitems[5], TVI_LAST );
-
-
-
-	tree.InsertItem(TVIF_PARAM | TVIF_TEXT, GetLanguageStringACP("OvrlManuallyObList"), 0,0,0,0, valadded*6+1, rootitems[5], TVI_LAST );
-	tree.InsertItem(TVIF_PARAM | TVIF_TEXT, GetLanguageStringACP("OvrlDataManuallyObList"), 0,0,0,0, valadded*6+2, rootitems[5], TVI_LAST );
-
-	tree.InsertItem(TVIF_PARAM | TVIF_TEXT, GetLanguageStringACP("DelOvrl0ObList"), 0,0,0,0, valadded*6+100+0, deleteoverlay, TVI_LAST );
-	tree.InsertItem(TVIF_PARAM | TVIF_TEXT, GetLanguageStringACP("DelOvrl1ObList"), 0,0,0,0, valadded*6+100+1, deleteoverlay, TVI_LAST );
-	tree.InsertItem(TVIF_PARAM | TVIF_TEXT, GetLanguageStringACP("DelOvrl2ObList"), 0,0,0,0, valadded*6+100+2, deleteoverlay, TVI_LAST );
-	tree.InsertItem(TVIF_PARAM | TVIF_TEXT, GetLanguageStringACP("DelOvrl3ObList"), 0,0,0,0, valadded*6+100+3, deleteoverlay, TVI_LAST );
-	
-	//tree.InsertItem(TVIF_PARAM | TVIF_TEXT, GetLanguageStringACP("DrawRanTibObList"), 0,0,0,0, valadded*6+200+0, tiberium, TVI_LAST );
-	tree.InsertItem(TVIF_PARAM | TVIF_TEXT, GetLanguageStringACP("DrawTibObList"), 0,0,0,0, valadded*6+200+10, tiberium, TVI_LAST );
-	//tree.InsertItem(TVIF_PARAM | TVIF_TEXT, GetLanguageStringACP("IncTibSizeObList"), 0,0,0,0, valadded*6+200+20, tiberium, TVI_LAST );
-	//tree.InsertItem(TVIF_PARAM | TVIF_TEXT, GetLanguageStringACP("DecTibSizeObList"), 0,0,0,0, valadded*6+200+21, tiberium, TVI_LAST );
-	
-	//tree.InsertItem(TVIF_PARAM | TVIF_TEXT, GetLanguageStringACP("DrawRanTibObList"), 0,0,0,0, valadded*6+300+0, bluetiberium, TVI_LAST );
-	tree.InsertItem(TVIF_PARAM | TVIF_TEXT, GetLanguageStringACP("DrawTib2ObList"), 0,0,0,0, valadded*6+300+10, tiberium, TVI_LAST );
-	//tree.InsertItem(TVIF_PARAM | TVIF_TEXT, GetLanguageStringACP("IncTibSizeObList"), 0,0,0,0, valadded*6+300+20, bluetiberium, TVI_LAST );
-	//tree.InsertItem(TVIF_PARAM | TVIF_TEXT, GetLanguageStringACP("DecTibSizeObList"), 0,0,0,0, valadded*6+300+21, bluetiberium, TVI_LAST );
-
-	if(Map->GetTheater()!=THEATER4 && Map->GetTheater()!=THEATER5)
-	{
-		tree.InsertItem(TVIF_PARAM | TVIF_TEXT, GetLanguageStringACP("SmallBridgeObList"), 0,0,0,0, valadded*6+500+1, bridges, TVI_LAST );
-		tree.InsertItem(TVIF_PARAM | TVIF_TEXT, GetLanguageStringACP("BigBridgeObList"), 0,0,0,0, valadded*6+500+0, bridges, TVI_LAST );
-		tree.InsertItem(TVIF_PARAM | TVIF_TEXT, GetLanguageStringACP("BigTrackBridgeObList"), 0,0,0,0, valadded*6+500+2, bridges, TVI_LAST );
-		tree.InsertItem(TVIF_PARAM | TVIF_TEXT, GetLanguageStringACP("SmallConcreteBridgeObList"), 0,0,0,0, valadded*6+500+3, bridges, TVI_LAST );
-	}
-	else
-	{
-		if(Map->GetTheater()==THEATER5)
-		{
-		tree.InsertItem(TVIF_PARAM | TVIF_TEXT, GetLanguageStringACP("SmallBridgeObList"), 0,0,0,0, valadded*6+500+1, bridges, TVI_LAST );
-		tree.InsertItem(TVIF_PARAM | TVIF_TEXT, GetLanguageStringACP("SmallConcreteBridgeObList"), 0,0,0,0, valadded*6+500+3, bridges, TVI_LAST );
-		}
-
-	}
-
-	if (isTrue(CIniFile::FAData.sections["Debug"].values["AllowTunnels"]))
-	{
-		tree.InsertItem(TVIF_PARAM | TVIF_TEXT, GetLanguageStringACP("NewTunnelObList"), 0, 0, 0, 0, 50, rootitems[9], TVI_LAST);
-		tree.InsertItem(TVIF_PARAM | TVIF_TEXT, GetLanguageStringACP("ModifyTunnelObList"), 0, 0, 0, 0, 51, rootitems[9], TVI_LAST);
-		if (isTrue(CIniFile::FAData.sections["Debug"].values["AllowUnidirectionalTunnels"]))
-		{
-			tree.InsertItem(TVIF_PARAM | TVIF_TEXT, GetLanguageStringACP("NewTunnelSingleObList"), 0, 0, 0, 0, 52, rootitems[9], TVI_LAST);
-			tree.InsertItem(TVIF_PARAM | TVIF_TEXT, GetLanguageStringACP("ModifyTunnelSingleObList"), 0, 0, 0, 0, 53, rootitems[9], TVI_LAST);
-		}
-		tree.InsertItem(TVIF_PARAM | TVIF_TEXT, GetLanguageStringACP("DelTunnelObList"), 0,0,0,0, 54, rootitems[9], TVI_LAST );
-	}
-
-
-	int lv=1;
-
-	{
-		if(ini.sections.find(MAPHOUSES)!=ini.sections.end() && ini.sections[MAPHOUSES].values.size()>0)
-		{
-			for(i=0;i<ini.sections[MAPHOUSES].values.size();i++)
-			{
-				CString j=*ini.sections[MAPHOUSES].GetValue(i);
-				j.MakeLower();
-				if(j=="nod" || j=="gdi") continue;
-
-				tree.InsertItem(TVIF_PARAM | TVIF_TEXT, TranslateHouse(*ini.sections[MAPHOUSES].GetValue(i), TRUE), 0,0,0,0, valadded*7+i, rootitems[11], TVI_LAST );
-			}
-
-		}
-		else
-		{
-			for(i=0;i<CIniFile::Rules.sections[HOUSES].values.size();i++)
-			{
-				if(CIniFile::Rules.sections[HOUSES].GetValueOrigPos(i)<0) continue;
-				//tree.InsertItem(TVIF_PARAM | TVIF_TEXT, CCStrings[*CIniFile::Rules.sections[HOUSES].GetValue(i)].cString, 
-				//0,0,0,0, valadded*7+i, rootitems[11], TVI_LAST );
-				CString j=*CIniFile::Rules.sections[HOUSES].GetValue(i);
-				j.MakeLower();
-				if(j=="nod" || j=="gdi") continue;
-				TV_InsertItemW(tree.m_hWnd, CCStrings[*CIniFile::Rules.sections[HOUSES].GetValue(i)].wString, CCStrings[*CIniFile::Rules.sections[HOUSES].GetValue(i)].len, TVI_LAST, rootitems[11],valadded*7+i);
-			}
-		}
-	}
-	
-	for(i=0;i<overlay_count;i++)
-	{
-		if(overlay_visible[i])
-		{
-			if(!overlay_trdebug[i] || isTrue(CIniFile::FAData.sections["Debug"].values["EnableTrackLogic"]))
-			tree.InsertItem(TVIF_PARAM | TVIF_TEXT, TranslateStringACP(overlay_name[i]), 0,0,0,0, valadded*6+3000+overlay_number[i], alloverlay, TVI_LAST );
-		}
-	}
-
-	e=0;
-	{
-		for(i=0;i<CIniFile::Rules.sections["OverlayTypes"].values.size();i++)
-		{
-			// it seems there is somewhere a bug that lists empty overlay ids... though they are not in the CIniFile::Rules.ini
-			// so this here is the workaround:
-			CString id=*CIniFile::Rules.sections["OverlayTypes"].GetValue(i);
-			//if(strchr(id,' ')!=NULL){ id[strchr(id,' ')-id;};		
-			if(id.Find(' ')>=0) id = id.Left(id.Find(' '));
-			if(id.GetLength()>0)
-			{
-				
-				CString unitname=*CIniFile::Rules.sections["OverlayTypes"].GetValue(i);
-
-				if (Map->GetTheater()==THEATER0 && CIniFile::FAData.sections["IgnoreTemperateRA2"].FindValue(unitname) >= 0) continue;
-				if (Map->GetTheater()==THEATER1 && CIniFile::FAData.sections["IgnoreSnowRA2"].FindValue(unitname) >= 0) continue;
-				if (Map->GetTheater()==THEATER2 && CIniFile::FAData.sections["IgnoreUrbanRA2"].FindValue(unitname) >= 0) continue;
-				if (Map->GetTheater()==THEATER3 && CIniFile::FAData.sections["IgnoreNewUrbanRA2"].FindValue(unitname) >= 0) continue;
-				if (Map->GetTheater()==THEATER4 && CIniFile::FAData.sections["IgnoreLunarRA2"].FindValue(unitname) >= 0) continue;
-				if (Map->GetTheater()==THEATER5 && CIniFile::FAData.sections["IgnoreDesertRA2"].FindValue(unitname) >= 0) continue;
-
-				if((i>=39 && i<=60) || (i>=180 && i<=201) || i==239 || i==178 || i==167 || i==126
-					|| (i>=122 && i<=125) || i==1 || (i>=0x03 && i<=0x17) || (i>=0x3d && i<=0x43)
-					|| (i>=0x4a && i<=0x65) || (i>=0xcd && i<=0xec))
-				{
-					if(!isTrue(CIniFile::FAData.sections["Debug"].values["DisplayAllOverlay"]))
-					{
-						e++;
-						continue;
-					}
-				}
-
-
-
-				CString val=*CIniFile::Rules.sections["OverlayTypes"].GetValue(i);
-				val.Replace("TIB", "ORE");
-
-				tree.InsertItem(TVIF_PARAM | TVIF_TEXT, val , 0,0,0,0, valadded*6+3000+e, everyoverlay, TVI_LAST );
-				e++;
-			}
-		}
-	}
-	
-	
-	for(i=0;i<CIniFile::Rules.sections["InfantryTypes"].values.size();i++)
-	{
-		CString unitname=*CIniFile::Rules.sections["InfantryTypes"].GetValue(i);
-
-		if(unitname.GetLength()==0) continue;
-
-		if (Map->GetTheater()==THEATER0 && CIniFile::FAData.sections["IgnoreTemperateRA2"].FindValue(unitname) >= 0) continue;
-		if (Map->GetTheater()==THEATER1 && CIniFile::FAData.sections["IgnoreSnowRA2"].FindValue(unitname) >= 0) continue;
-		if (Map->GetTheater()==THEATER2 && CIniFile::FAData.sections["IgnoreUrbanRA2"].FindValue(unitname) >= 0) continue;
-		if (Map->GetTheater()==THEATER3 && CIniFile::FAData.sections["IgnoreNewUrbanRA2"].FindValue(unitname) >= 0) continue;
-		if (Map->GetTheater()==THEATER4 && CIniFile::FAData.sections["IgnoreLunarRA2"].FindValue(unitname) >= 0) continue;
-		if (Map->GetTheater()==THEATER5 && CIniFile::FAData.sections["IgnoreDesertRA2"].FindValue(unitname) >= 0) continue;
-
-		if(CIniFile::FAData.sections["IgnoreRA2"].FindValue(unitname)>=0) continue;
-
-		WCHAR* addedString=Map->GetUnitName(unitname);
-		if(!addedString) continue;
-
-		//addedString=TranslateStringACP(addedString);
-
-		//addedString+=" (";
-		//addedString+=unitname+")";
-
-		TV_InsertItemW(tree.m_hWnd, addedString, wcslen(addedString), TVI_LAST, rootitems[0], valadded*1+i);
-		
-		//tree.InsertItem(TVIF_PARAM | TVIF_TEXT, addedString, 0,0,0,0, valadded*1+i, rootitems[0], TVI_LAST );
-		lv=i;
-	}
-	lv+=1;
-	// okay, now the user-defined types:
-	for(i=0;i<ini.sections["InfantryTypes"].values.size();i++)
-	{
-		if(ini.sections["InfantryTypes"].GetValue(i)->GetLength()==0) continue;
-
-		if(strlen(ini.sections[*ini.sections["InfantryTypes"].GetValue(i)].values["Name"])>0)
-			tree.InsertItem(TVIF_PARAM | TVIF_TEXT, ini.sections[*ini.sections["InfantryTypes"].GetValue(i)].values["Name"], 0,0,0,0, valadded*1+CIniFile::Rules.sections["InfantryTypes"].values.size()+i, rootitems[0], TVI_LAST );
-		else
-			tree.InsertItem(TVIF_PARAM | TVIF_TEXT, (*ini.sections["InfantryTypes"].GetValue(i)+" NOTDEFINED"), 0,0,0,0, valadded*1+CIniFile::Rules.sections["InfantryTypes"].values.size()+i, rootitems[0], TVI_LAST );
-
-
-	}
-
-	CString theater=Map->GetTheater();
-
-	
-	auto needed_terrain=TheaterChar::None;
-	if(tiledata==&s_tiledata) needed_terrain=TheaterChar::A;
-	else if(tiledata==&t_tiledata) needed_terrain=TheaterChar::T;
-    
-	for(i=0;i<CIniFile::Rules.sections["BuildingTypes"].values.size();i++)
-	{
-				
-		CString unitname=*CIniFile::Rules.sections["BuildingTypes"].GetValue(i);
-
-		if(unitname.GetLength()==0) continue;
-		
-		if (Map->GetTheater()==THEATER0 && CIniFile::FAData.sections["IgnoreTemperateRA2"].FindValue(unitname) >= 0) continue;
-		if (Map->GetTheater()==THEATER1 && CIniFile::FAData.sections["IgnoreSnowRA2"].FindValue(unitname) >= 0) continue;
-		if (Map->GetTheater()==THEATER2 && CIniFile::FAData.sections["IgnoreUrbanRA2"].FindValue(unitname) >= 0) continue;
-		if (Map->GetTheater()==THEATER3 && CIniFile::FAData.sections["IgnoreNewUrbanRA2"].FindValue(unitname) >= 0) continue;
-		if (Map->GetTheater()==THEATER4 && CIniFile::FAData.sections["IgnoreLunarRA2"].FindValue(unitname) >= 0) continue;
-		if (Map->GetTheater()==THEATER5 && CIniFile::FAData.sections["IgnoreDesertRA2"].FindValue(unitname) >= 0) continue;
-
-		if (CIniFile::FAData.sections["IgnoreRA2"].FindValue(unitname) >= 0) continue;
-		if (!isTrue(CIniFile::FAData.sections["Debug"].GetString("ShowBuildingsWithToTile", "0")) && !CIniFile::Rules.sections[unitname].GetString("ToTile").IsEmpty())
-			continue;
-
-
-		WCHAR* addedString=Map->GetUnitName(unitname);
-		if(!addedString) continue;
-
-
-
-		CString owner=CIniFile::Rules.sections[unitname].values["Owner"];
-		int baseplanningside=-1;
-		baseplanningside=-1;
-		if(CIniFile::Rules.sections[unitname].values.find("AIBasePlanningSide")!=CIniFile::Rules.sections[unitname].values.end())
-		{
-			baseplanningside=atoi(CIniFile::Rules.sections[unitname].values["AIBasePlanningSide"]);
-		}
-		if(CIniFile::FAData.sections.find(unitname)!=CIniFile::FAData.sections.end() && CIniFile::FAData.sections[unitname].values.find("AIBasePlanningSide")!=CIniFile::FAData.sections[unitname].values.end())
-		{
-			baseplanningside=atoi(CIniFile::FAData.sections[unitname].values["AIBasePlanningSide"]);
-		}
-
-
-		int id=Map->GetBuildingID(unitname);
-		if(id<0 /*|| (buildinginfo[id].pic[0].bTerrain!=0 && buildinginfo[id].pic[0].bTerrain!=needed_terrain)*/)
-			continue;
-
-		if(theater==THEATER0 && !buildinginfo[id].bTemp) { /*MessageBox("Ignored", unitname,0);*/ continue;}
-		if(theater==THEATER1 && !buildinginfo[id].bSnow)  { /*MessageBox("Ignored", unitname,0);*/ continue;}
-		if(theater==THEATER2 && !buildinginfo[id].bUrban)  { /*MessageBox("Ignored", unitname,0);*/ continue;}
-
-		// check if mapfile contains other value for owner
-		if(ini.sections.find(unitname)!=ini.sections.end())
-		{
-			if(ini.sections[unitname].values.find("Owner")!=ini.sections[unitname].values.end())
-				owner=ini.sections[unitname].values["Owner"];
-		}
-
-		//addedString=TranslateStringACP(addedString);
-
-		//addedString+=" (";
-		//addedString+=unitname+")";
-
-		BOOL addedfor[3]={FALSE,FALSE,FALSE};
-
-		// MW fixed below for YR... uhhh...
-		int e;
-		BOOL bAdded=FALSE;
-		for(e=0;e<sides.size();e++)
-		{
-			//MessageBox(sides[e].name);
-			
-			if(isIncluded(owner,sides[e].name))
-			{
-
-				if(!addedfor[sides[e].orig_n])
-				if(baseplanningside==-1 || baseplanningside==sides[e].orig_n)
-				{
-					
-					//tree.InsertItem(TVIF_PARAM | TVIF_TEXT, addedString, 0,0,0,0, valadded*2+i, structhouses[e], TVI_LAST );
-					TV_InsertItemW(tree.m_hWnd, addedString, wcslen(addedString), TVI_LAST, structhouses[e], valadded*2+i);
-					bAdded=TRUE;
-					addedfor[sides[e].orig_n]=TRUE;
-
-				}
-			}
-			
-			
-		}
-		
-		if(bAdded==FALSE)
-		{
-			//tree.InsertItem(TVIF_PARAM | TVIF_TEXT, addedString, 0,0,0,0, valadded*2+i, structhouses[e+1], TVI_LAST );
-			TV_InsertItemW(tree.m_hWnd, addedString, wcslen(addedString), TVI_LAST, structhouses[sides.size()], valadded*2+i);
-		}
-
-		lv=i;
-	}
-	lv+=1;
-	// okay, now the user-defined types:
-	for(i=0;i<ini.sections["BuildingTypes"].values.size();i++)
-	{
-		if(ini.sections["BuildingTypes"].GetValue(i)->GetLength()==0) continue;
-
-		int id=Map->GetBuildingID(*ini.sections["BuildingTypes"].GetValue(i));
-		if(id<0 || (buildinginfo[id].pic[0].bTerrain!=TheaterChar::None && buildinginfo[id].pic[0].bTerrain!=needed_terrain))
-			continue;
-
-		int e=2;
-		CString owner;
-		BOOL bAdded=FALSE;
-		owner=ini.sections[*ini.sections["BuildingTypes"].GetValue(i)].values["Owner"];
-		owner.MakeUpper();
-		if(strlen(ini.sections[*ini.sections["BuildingTypes"].GetValue(i)].values["Name"])>0)
-		{
-			CString addedString=ini.sections[*ini.sections["BuildingTypes"].GetValue(i)].values["Name"];
-			int e;
-			for(e=0;e<sides.size();e++)
-			{
-				if(isIncluded(owner, sides[e].name))
-				{
-					tree.InsertItem(TVIF_PARAM | TVIF_TEXT, addedString, 0,0,0,0, valadded*2+i, structhouses[e], TVI_LAST );
-					bAdded=TRUE;
-				}
-				else if(e==sides.size()-1 && bAdded==FALSE)
-				{
-					tree.InsertItem(TVIF_PARAM | TVIF_TEXT, addedString, 0,0,0,0, valadded*2+i, structhouses[e+1], TVI_LAST );
-				}
-			}
-		}		
-		else
-		{
-			CString addedString=(*ini.sections["BuildingTypes"].GetValue(i)+" UNDEFINED");
-			BOOL addedfor[2]={FALSE,FALSE};
-
-			int e;
-			for(e=0;e<sides.size();e++)
-			{
-				if(!addedfor[sides[e].orig_n])
-				if(isIncluded(owner, sides[e].name) || (e==2 && owner=="YuriCountry"))
-				{
-					tree.InsertItem(TVIF_PARAM | TVIF_TEXT, addedString, 0,0,0,0, valadded*2+i, structhouses[e], TVI_LAST );
-					bAdded=TRUE;
-					addedfor[sides[e].orig_n]=TRUE;
-
-				}
-				else if(e==sides.size()-1 && bAdded==FALSE)
-				{
-					tree.InsertItem(TVIF_PARAM | TVIF_TEXT, addedString, 0,0,0,0, valadded*2+i, structhouses[e+1], TVI_LAST );
-				}
-			}	
-		}
-
-	}
-
-
-
-	for(i=0;i<CIniFile::Rules.sections["AircraftTypes"].values.size();i++)
-	{
-		CString unitname=*CIniFile::Rules.sections["AircraftTypes"].GetValue(i);
-		if(unitname.GetLength()==0) continue;
-
-		if (Map->GetTheater()==THEATER0 && CIniFile::FAData.sections["IgnoreTemperateRA2"].FindValue(unitname) >= 0) continue;
-		if (Map->GetTheater()==THEATER1 && CIniFile::FAData.sections["IgnoreSnowRA2"].FindValue(unitname) >= 0) continue;
-		if (Map->GetTheater()==THEATER2 && CIniFile::FAData.sections["IgnoreUrbanRA2"].FindValue(unitname) >= 0) continue;
-		if (Map->GetTheater()==THEATER3 && CIniFile::FAData.sections["IgnoreNewUrbanRA2"].FindValue(unitname) >= 0) continue;
-		if (Map->GetTheater()==THEATER4 && CIniFile::FAData.sections["IgnoreLunarRA2"].FindValue(unitname) >= 0) continue;
-		if (Map->GetTheater()==THEATER5 && CIniFile::FAData.sections["IgnoreDesertRA2"].FindValue(unitname) >= 0) continue;
-
-		if (CIniFile::FAData.sections["IgnoreRA2"].FindValue(unitname) >= 0) continue;
-
-		WCHAR* addedString=Map->GetUnitName(unitname);
-		if(!addedString) continue;
-
-		//addedString=TranslateStringACP(addedString);
-
-		//addedString+=" (";
-		//addedString+=unitname+")";
-
-		TV_InsertItemW(tree.m_hWnd, addedString, wcslen(addedString), TVI_LAST, rootitems[2], valadded*3+i);
-		
-		//tree.InsertItem(TVIF_PARAM | TVIF_TEXT, addedString, 0,0,0,0, valadded*3+i, rootitems[2], TVI_LAST );
-		lv=i;
-	}
-	lv+=1;
-	// okay, now the user-defined types:
-	for(i=0;i<ini.sections["AircraftTypes"].values.size();i++)
-	{
-		if(ini.sections["AircraftTypes"].GetValue(i)->GetLength()==0) continue;
-
-		if(strlen(ini.sections[*ini.sections["AircraftTypes"].GetValue(i)].values["Name"])>0)
-			tree.InsertItem(TVIF_PARAM | TVIF_TEXT, ini.sections[*ini.sections["AircraftTypes"].GetValue(i)].values["Name"], 0,0,0,0, valadded*3+i+CIniFile::Rules.sections["AircraftTypes"].values.size(), rootitems[2], TVI_LAST );
-		else
-			tree.InsertItem(TVIF_PARAM | TVIF_TEXT, (*ini.sections["AircraftTypes"].GetValue(i)+" NOTDEFINED"), 0,0,0,0, valadded*3+i+CIniFile::Rules.sections["AircraftTypes"].values.size(), rootitems[2], TVI_LAST );
-
-
-	}
-
-	
-	for(i=0;i<CIniFile::Rules.sections["VehicleTypes"].values.size();i++)
-	{
-		CString unitname=*CIniFile::Rules.sections["VehicleTypes"].GetValue(i);
-		if(unitname.GetLength()==0) continue;
-
-		if (Map->GetTheater()==THEATER0 && CIniFile::FAData.sections["IgnoreTemperateRA2"].FindValue(unitname) >= 0) continue;
-		if (Map->GetTheater()==THEATER1 && CIniFile::FAData.sections["IgnoreSnowRA2"].FindValue(unitname) >= 0) continue;
-		if (Map->GetTheater()==THEATER2 && CIniFile::FAData.sections["IgnoreUrbanRA2"].FindValue(unitname) >= 0) continue;
-		if (Map->GetTheater()==THEATER3 && CIniFile::FAData.sections["IgnoreNewUrbanRA2"].FindValue(unitname) >= 0) continue;
-		if (Map->GetTheater()==THEATER4 && CIniFile::FAData.sections["IgnoreLunarRA2"].FindValue(unitname) >= 0) continue;
-		if (Map->GetTheater()==THEATER5 && CIniFile::FAData.sections["IgnoreDesertRA2"].FindValue(unitname) >= 0) continue;
-		
-		if (CIniFile::FAData.sections["IgnoreRA2"].FindValue(unitname) >= 0) continue;
-
-		WCHAR* addedString=Map->GetUnitName(unitname);
-		if(!addedString) continue;
-
-		//addedString=TranslateStringACP(addedString);
-
-		//addedString+=" (";
-		//addedString+=unitname+")";
-
-		TV_InsertItemW(tree.m_hWnd, addedString, wcslen(addedString), TVI_LAST, rootitems[1], valadded*4+i);
-		
-		//tree.InsertItem(TVIF_PARAM | TVIF_TEXT, addedString, 0,0,0,0, valadded*4+i, rootitems[1], TVI_LAST );
-		lv=i;
-	}
-	lv+=1;
-	// okay, now the user-defined types:
-	for(i=0;i<ini.sections["VehicleTypes"].values.size();i++)
-	{
-		if(ini.sections["VehicleTypes"].GetValue(i)->GetLength()==0) continue;
-
-		if(strlen(ini.sections[*ini.sections["VehicleTypes"].GetValue(i)].values["Name"])>0)
-			tree.InsertItem(TVIF_PARAM | TVIF_TEXT, ini.sections[*ini.sections["VehicleTypes"].GetValue(i)].values["Name"], 0,0,0,0, valadded*4+i+CIniFile::Rules.sections["VehicleTypes"].values.size(), rootitems[1], TVI_LAST );
-		else
-			tree.InsertItem(TVIF_PARAM | TVIF_TEXT, (*ini.sections["VehicleTypes"].GetValue(i)+" NOTDEFINED"), 0,0,0,0, valadded*4+i+CIniFile::Rules.sections["VehicleTypes"].values.size(), rootitems[1], TVI_LAST );
-
-
-	}
-
-	HTREEITEM hTrees=tree.InsertItem(GetLanguageStringACP("TreesObList"), rootitems[4], TVI_LAST);
-	HTREEITEM hTL=tree.InsertItem(GetLanguageStringACP("TrafficLightsObList"), rootitems[4], TVI_LAST);
-	HTREEITEM hSigns=tree.InsertItem(GetLanguageStringACP("SignsObList"), rootitems[4], TVI_LAST);
-	HTREEITEM hLightPosts=tree.InsertItem(GetLanguageStringACP("LightPostsObList"), rootitems[4], TVI_LAST);
-	
-	// random tree placer
-	tree.InsertItem(TVIF_PARAM | TVIF_TEXT,  GetLanguageStringACP("RndTreeObList"), 0,0,0,0, valadded*5+999, hTrees, TVI_LAST);
-
-	for(i=0;i<CIniFile::Rules.sections["TerrainTypes"].values.size();i++)
-	{
-		CString unitname=*CIniFile::Rules.sections["TerrainTypes"].GetValue(i);
-		CString addedString=Map->GetUnitName(unitname);
-
-		if (Map->GetTheater()==THEATER0 && CIniFile::FAData.sections["IgnoreTemperateRA2"].FindValue(unitname) >= 0) continue;
-		if (Map->GetTheater()==THEATER1 && CIniFile::FAData.sections["IgnoreSnowRA2"].FindValue(unitname) >= 0) continue;
-		if (Map->GetTheater()==THEATER2 && CIniFile::FAData.sections["IgnoreUrbanRA2"].FindValue(unitname) >= 0) continue;
-		if (Map->GetTheater()==THEATER3 && CIniFile::FAData.sections["IgnoreNewUrbanRA2"].FindValue(unitname) >= 0) continue;
-		if (Map->GetTheater()==THEATER4 && CIniFile::FAData.sections["IgnoreLunarRA2"].FindValue(unitname) >= 0) continue;
-		if (Map->GetTheater()==THEATER5 && CIniFile::FAData.sections["IgnoreDesertRA2"].FindValue(unitname) >= 0) continue;
-
-		if (CIniFile::FAData.sections["IgnoreRA2"].FindValue(unitname) >= 0) continue;
-		if (CIniFile::FAData.sections["IgnoreTerrainRA2"].FindValue(unitname) >= 0) continue;
-	
-		addedString=TranslateStringACP(addedString);
-			
-		UINT flags=MF_STRING;
-		
-		HTREEITEM howner=rootitems[4];
-
-		if(unitname.Find("SIGN")>=0) howner=hSigns;
-		if(unitname.Find("TRFF")>=0) howner=hTL;
-		if(unitname.Find("TREE")>=0) howner=hTrees;
-		if(unitname.Find("LT")>=0) howner=hLightPosts;		
-		
-		if(howner==hTrees)
-		{
-			int TreeMin=atoi(CIniFile::FAData.sections[Map->GetTheater()+"Limits"].values["TreeMin"]);
-			int TreeMax=atoi(CIniFile::FAData.sections[Map->GetTheater()+"Limits"].values["TreeMax"]);
-			
-			CString id=unitname;
-			id.Delete(0, 4);
-			int n=atoi(id);
-
-			if(n<TreeMin || n>TreeMax) continue;
-		}
-
-		if(unitname.GetLength()>0 && unitname!="VEINTREE" && unitname.Find("ICE")<0 && unitname.Find("BOXES")<0 && unitname.Find("SPKR")<0) // out with it :-)
-		tree.InsertItem(TVIF_PARAM | TVIF_TEXT,  (addedString+ " (" + unitname +")"), 0,0,0,0, valadded*5+i, howner, TVI_LAST );
-
-		lv=i;
-	}
-
-#ifdef SMUDGE_SUPP
-	for(i=0;i<CIniFile::Rules.sections["SmudgeTypes"].values.size();i++)
-	{
-		CString unitname=*CIniFile::Rules.sections["SmudgeTypes"].GetValue(i);
-		CString addedString=unitname;
-
-		if (Map->GetTheater()==THEATER0 && CIniFile::FAData.sections["IgnoreTemperateRA2"].FindValue(unitname) >= 0) continue;
-		if (Map->GetTheater()==THEATER1 && CIniFile::FAData.sections["IgnoreSnowRA2"].FindValue(unitname) >= 0) continue;
-		if (Map->GetTheater()==THEATER2 && CIniFile::FAData.sections["IgnoreUrbanRA2"].FindValue(unitname) >= 0) continue;
-		if (Map->GetTheater()==THEATER3 && CIniFile::FAData.sections["IgnoreNewUrbanRA2"].FindValue(unitname) >= 0) continue;
-		if (Map->GetTheater()==THEATER4 && CIniFile::FAData.sections["IgnoreLunarRA2"].FindValue(unitname) >= 0) continue;
-		if (Map->GetTheater()==THEATER5 && CIniFile::FAData.sections["IgnoreDesertRA2"].FindValue(unitname) >= 0) continue;
-
-		if (CIniFile::FAData.sections["IgnoreRA2"].FindValue(unitname) >= 0) continue;
-	
-		addedString=TranslateStringACP(addedString);
-			
-		UINT flags=MF_STRING;
-		
-		HTREEITEM howner=rootitems[14];
-
-		
-		if(unitname.GetLength()>0) 
-		tree.InsertItem(TVIF_PARAM | TVIF_TEXT,  unitname, 0,0,0,0, valadded*8+i, howner, TVI_LAST );
-
-		lv=i;
-	}
-#endif
-
-	
-
-	OutputDebugString("Objectbrowser redraw finished\n");
-	
-
+	Redraw_Initialize();
+	Redraw_MainList();
+	Redraw_Ground();
+	Redraw_Owner();
+	Redraw_Infantry();
+	Redraw_Vehicle();
+	Redraw_Aircraft();
+	Redraw_Building();
+	Redraw_Terrain();
+	Redraw_Smudge();
+	Redraw_Overlay();
+	Redraw_Waypoint();
+	Redraw_Celltag();
+	Redraw_Basenode();
+	Redraw_Tunnel();
+	Redraw_PlayerLocation(); // player location is just waypoints!
+	// Redraw_PropertyBrush();
 }
 
 int CViewObjects::OnCreate(LPCREATESTRUCT lpCreateStruct) 
@@ -1205,9 +572,6 @@ int CViewObjects::OnCreate(LPCREATESTRUCT lpCreateStruct)
 void CViewObjects::OnInitialUpdate() 
 {
 	CTreeView::OnInitialUpdate();
-	
-	
-	m_ready=TRUE;
 }
 
 void CViewObjects::OnKeydown(NMHDR* pNMHDR, LRESULT* pResult) 
@@ -1247,4 +611,752 @@ void CViewObjects::HandleBrushSize(int iTile)
 		}
 	}
 
+}
+
+HTREEITEM CViewObjects::InsertString(const char* pString, DWORD dwItemData, HTREEITEM hParent, HTREEITEM hInsertAfter)
+{
+	return GetTreeCtrl().InsertItem(TVIF_PARAM | TVIF_TEXT, pString, 0,0,0,0, dwItemData, hParent, hInsertAfter);
+}
+
+HTREEITEM CViewObjects::InsertTranslatedString(const char* pOriginString, DWORD dwItemData, HTREEITEM hParent, HTREEITEM hInsertAfter)
+{
+	return InsertString(GetLanguageStringACP(pOriginString), dwItemData, hParent, hInsertAfter);
+}
+
+static int ParseToInt(const char* str, int defaultValue)
+{
+	int ret;
+	if (std::sscanf(str, "%d", &ret) == 1) [[likely]]
+        return ret;
+	return defaultValue;
+}
+
+void CViewObjects::Redraw_Initialize()
+{
+	for (auto root : ExtNodes)
+		root = NULL;
+	KnownItem.clear();
+	IgnoreSet.clear();
+	ForceName.clear();
+	Owners.clear();
+	this->GetTreeCtrl().DeleteAllItems();
+
+	auto& rules = CIniFile::Rules;
+	auto& fadata = CIniFile::FAData;
+	auto& doc = Map->GetIniFile();
+
+	auto loadSet = [this](const char* pTypeName, int nType)
+	{
+		ExtSets[nType].clear();
+		auto&& section = MapRules.GetSection(pTypeName);
+		for (auto& itr : section)
+			ExtSets[nType].insert(itr.second);
+	};
+
+	loadSet("BuildingTypes", Set_Building);
+	loadSet("InfantryTypes", Set_Infantry);
+	loadSet("VehicleTypes", Set_Vehicle);
+	loadSet("AircraftTypes", Set_Aircraft);
+
+	if (theApp.m_Configs.ViewObjects_GuessMode == 1)
+	{
+		auto loadOwner = [this]()
+			{
+				auto&& sides = MapRules.ParseIndicies("Sides", true);
+				for (size_t i = 0, sz = sides.size(); i < sz; ++i)
+				{
+					for (const auto& owner 
+						: std::string_view{ sides[i] } 
+						| std::views::split(',') 
+						| std::views::transform([](auto rng) {
+						return std::string_view(rng);
+					}))
+						Owners[owner.data()] = i;
+				}
+			};
+		loadOwner();
+	}
+
+	if (const auto knownSection = fadata.GetSection("ForceSides"))
+	{
+		for (const auto& [id, side] : knownSection->values)
+		{
+			int sideIndex = ParseToInt(side, -1);
+			if (sideIndex >= fadata.GetKeyCount("Sides"))
+				continue;
+			if (sideIndex < -1)
+				sideIndex = -1;
+			KnownItem[id] = sideIndex;
+		}
+	}
+
+	if (const auto ignores = fadata.GetSection("IgnoreRA2"))
+	{
+		for (const auto& [_, id] : ignores->values)
+		{
+			CString tmp = id;
+			tmp.Trim();
+			IgnoreSet.emplace(tmp);
+		}
+	}
+
+	if (const auto forcenames = fadata.GetSection("ForceName"))
+	{
+		for (const auto& [_, id] : forcenames->values)
+		{
+			CString tmp = id;
+			tmp.Trim();
+			ForceName.emplace(tmp);
+		}
+	}
+}
+
+void CViewObjects::Redraw_MainList()
+{
+	ExtNodes[Root_Nothing] = InsertTranslatedString("NothingObList", -2);
+	ExtNodes[Root_Ground] = InsertTranslatedString("GroundObList", 13);
+	ExtNodes[Root_Owner] = InsertTranslatedString("ChangeOwnerObList");
+	ExtNodes[Root_Infantry] = InsertTranslatedString("InfantryObList", 0);
+	ExtNodes[Root_Vehicle] = InsertTranslatedString("VehiclesObList", 1);
+	ExtNodes[Root_Aircraft] = InsertTranslatedString("AircraftObList", 2);
+	ExtNodes[Root_Building] = InsertTranslatedString("StructuresObList", 3);
+	ExtNodes[Root_Terrain] = InsertTranslatedString("TerrainObList", 4);
+	ExtNodes[Root_Smudge] = InsertTranslatedString("SmudgesObList", 10);
+	ExtNodes[Root_Overlay] = InsertTranslatedString("OverlayObList", 5);
+	ExtNodes[Root_Waypoint] = InsertTranslatedString("WaypointsObList", 6);
+	ExtNodes[Root_Celltag] = InsertTranslatedString("CelltagsObList", 7);
+	ExtNodes[Root_Basenode] = InsertTranslatedString("BaseNodesObList", 8);
+	ExtNodes[Root_Tunnel] = InsertTranslatedString("TunnelObList", 9);
+	ExtNodes[Root_PlayerLocation] = InsertTranslatedString("StartpointsObList", 12);
+	// ExtNodes[Root_PropertyBrush] = InsertTranslatedString("PropertyBrushObList", 14);
+	ExtNodes[Root_Delete] = InsertTranslatedString("DelObjObList", 10);
+}
+
+void CViewObjects::Redraw_Ground()
+{
+	HTREEITEM& hGround = ExtNodes[Root_Ground];
+	if (hGround == NULL)    return;
+
+	auto& doc = Map->GetIniFile();
+	auto theater = doc.GetString("Map", "Theater");
+	if (theater == "NEWURBAN")
+		theater = "UBN";
+
+	CString suffix;
+	if (theater != "")
+		suffix = theater.Mid(0, 3);
+
+	this->InsertTranslatedString("GroundClearObList" + suffix, 61, hGround);
+	this->InsertTranslatedString("GroundSandObList" + suffix, 62, hGround);
+	this->InsertTranslatedString("GroundRoughObList" + suffix, 63, hGround);
+	this->InsertTranslatedString("GroundGreenObList" + suffix, 65, hGround);
+	this->InsertTranslatedString("GroundPaveObList" + suffix, 66, hGround);
+	this->InsertTranslatedString("GroundWaterObList", 64, hGround);
+
+	//if (CIniFile::CurrentTheater)
+	//{
+	//	int i = 67;
+	//	for (auto& morphables : TheaterInfo::CurrentInfo)
+	//	{
+	//		auto InsertTile = [&](int nTileset)
+	//		{
+	//			FA2sp::Buffer.Format("TileSet%04d", nTileset);
+	//			FA2sp::Buffer = CINI::CurrentTheater->GetString(FA2sp::Buffer, "SetName", FA2sp::Buffer);
+	//			ppmfc::CString buffer;
+	//			Translations::GetTranslationItem(FA2sp::Buffer, FA2sp::Buffer);
+	//			return this->InsertString(FA2sp::Buffer, i++, hGround, TVI_LAST);
+	//		};
+	//
+	//		InsertTile(morphables.Morphable);
+	//	}
+	//}
+}
+
+void CViewObjects::Redraw_Owner()
+{
+	HTREEITEM& hOwner = ExtNodes[Root_Owner];
+	if (hOwner == NULL)    return;
+
+	if (theApp.m_Configs.ViewObjects_SafeHouses)
+	{
+		if (Map->IsMultiplayer())
+		{
+			auto&& section = MapRules.GetSection("Countries");
+			auto itr = section.begin();
+			for (size_t i = 0, sz = section.size(); i < sz; ++i, ++itr)
+			{
+				if (strcmp(itr->second, "Neutral") == 0 || strcmp(itr->second, "Special") == 0)
+					this->InsertString(itr->second, Const_House + i, hOwner);
+			}
+		}
+		else
+		{
+			auto&& section = MapRules.ParseIndicies("Houses", true);
+			for (size_t i = 0, sz = section.size(); i < sz; ++i)
+				this->InsertString(section[i], Const_House + i, hOwner);
+		}
+	}
+	else
+	{
+		if (Map->IsMultiplayer())
+		{
+			if (auto pSection = CIniFile::Rules.GetSection("Countries"))
+			{
+				auto& section = pSection->values;
+				size_t i = 0;
+				for (auto& itr : section)
+					this->InsertString(itr.second, Const_House + i++, hOwner);
+			}
+		}
+		else
+		{
+			if (auto pSection = Map->GetIniFile().GetSection("Houses"))
+			{
+				auto& section = pSection->values;
+				size_t i = 0;
+				for (auto& itr : section)
+					this->InsertString(itr.second, Const_House + i++, hOwner);
+			}
+		}
+	}
+}
+
+
+void CViewObjects::Redraw_Infantry()
+{
+	HTREEITEM& hInfantry = ExtNodes[Root_Infantry];
+	if (hInfantry == NULL)   return;
+
+	std::map<int, HTREEITEM> subNodes;
+
+	auto& fadata = CIniFile::FAData;
+
+	int i = 0;
+	if (auto sides = fadata.GetSection("Sides"))
+		for (auto& itr : sides->values)
+			subNodes[i++] = this->InsertString(itr.second, -1, hInfantry);
+	else
+	{
+		subNodes[i++] = this->InsertString("Allied", -1, hInfantry);
+		subNodes[i++] = this->InsertString("Soviet", -1, hInfantry);
+		subNodes[i++] = this->InsertString("Yuri", -1, hInfantry);
+	}
+	subNodes[-1] = this->InsertTranslatedString("OthObList", -1, hInfantry);
+
+	auto&& infantries = MapRules.GetSection("InfantryTypes");
+	for (auto& inf : infantries)
+	{
+		if (IgnoreSet.find(inf.second) != IgnoreSet.end())
+			continue;
+		int index = ParseToInt(inf.first, -1);
+		if (index == -1)   continue;
+		int side = GuessSide(inf.second, Set_Infantry);
+		if (subNodes.find(side) == subNodes.end())
+			side = -1;
+		this->InsertString(
+			QueryUIName(inf.second) + " (" + inf.second + ")",
+			Const_Infantry + index,
+			subNodes[side]
+		);
+	}
+
+	// Clear up
+	if (theApp.m_Configs.ViewObjects_Cleanup)
+	{
+		for (auto& subnode : subNodes)
+		{
+			if (!this->GetTreeCtrl().ItemHasChildren(subnode.second))
+				this->GetTreeCtrl().DeleteItem(subnode.second);
+		}
+	}
+}
+
+void CViewObjects::Redraw_Vehicle()
+{
+    HTREEITEM& hVehicle = ExtNodes[Root_Vehicle];
+    if (hVehicle == NULL)    return;
+
+    std::map<int, HTREEITEM> subNodes;
+
+    auto& fadata = CIniFile::FAData;
+
+    int i = 0;
+    if (auto sides = fadata.GetSection("Sides"))
+        for (auto& itr : sides->values)
+            subNodes[i++] = this->InsertString(itr.second, -1, hVehicle);
+	else
+	{
+        subNodes[i++] = this->InsertString("Allied", -1, hVehicle);
+        subNodes[i++] = this->InsertString("Soviet", -1, hVehicle);
+        subNodes[i++] = this->InsertString("Yuri", -1, hVehicle);
+    }
+    subNodes[-1] = this->InsertTranslatedString("OthObList", -1, hVehicle);
+
+    auto&& vehicles = MapRules.GetSection("VehicleTypes");
+	for (auto& veh : vehicles)
+	{
+        if (IgnoreSet.find(veh.second) != IgnoreSet.end())
+            continue;
+        int index = ParseToInt(veh.first, -1);
+        if (index == -1)   continue;
+        int side = GuessSide(veh.second, Set_Vehicle);
+        if (subNodes.find(side) == subNodes.end())
+            side = -1;
+		this->InsertString(
+            QueryUIName(veh.second) + " (" + veh.second + ")",
+            Const_Vehicle + index,
+            subNodes[side]
+        );
+    }
+
+    // Clear up
+	if (theApp.m_Configs.ViewObjects_Cleanup)
+	{
+		for (auto& subnode : subNodes)
+		{
+            if (!this->GetTreeCtrl().ItemHasChildren(subnode.second))
+                this->GetTreeCtrl().DeleteItem(subnode.second);
+        }
+    }
+}
+
+void CViewObjects::Redraw_Aircraft()
+{
+    HTREEITEM& hAircraft = ExtNodes[Root_Aircraft];
+    if (hAircraft == NULL)    return;
+
+    std::map<int, HTREEITEM> subNodes;
+
+    auto& fadata = CIniFile::FAData;
+
+    int i = 0;
+    if (auto sides = fadata.GetSection("Sides"))
+        for (auto& itr : sides->values)
+            subNodes[i++] = this->InsertString(itr.second, -1, hAircraft);
+	else
+	{
+        subNodes[i++] = this->InsertString("Allied", -1, hAircraft);
+        subNodes[i++] = this->InsertString("Soviet", -1, hAircraft);
+        subNodes[i++] = this->InsertString("Yuri", -1, hAircraft);
+    }
+    subNodes[-1] = this->InsertTranslatedString("OthObList", -1, hAircraft);
+
+    auto&& aircrafts = MapRules.GetSection("AircraftTypes");
+	for (auto& air : aircrafts)
+	{
+        if (IgnoreSet.find(air.second) != IgnoreSet.end())
+            continue;
+        int index = ParseToInt(air.first, -1);
+        if (index == -1)   continue;
+        int side = GuessSide(air.second, Set_Aircraft);
+        if (subNodes.find(side) == subNodes.end())
+            side = -1;
+		this->InsertString(
+            QueryUIName(air.second) + " (" + air.second + ")",
+            Const_Aircraft + index,
+            subNodes[side]
+        );
+    }
+
+    // Clear up
+	if (theApp.m_Configs.ViewObjects_Cleanup)
+	{
+		for (auto& subnode : subNodes)
+		{
+            if (!this->GetTreeCtrl().ItemHasChildren(subnode.second))
+                this->GetTreeCtrl().DeleteItem(subnode.second);
+        }
+    }
+}
+
+void CViewObjects::Redraw_Building()
+{
+    HTREEITEM& hBuilding = ExtNodes[Root_Building];
+    if (hBuilding == NULL)    return;
+
+    std::map<int, HTREEITEM> subNodes;
+
+    auto& fadata = CIniFile::FAData;
+
+    int i = 0;
+    if (auto sides = fadata.GetSection("Sides"))
+        for (auto& itr : sides->values)
+            subNodes[i++] = this->InsertString(itr.second, -1, hBuilding);
+	else
+	{
+        subNodes[i++] = this->InsertString("Allied", -1, hBuilding);
+        subNodes[i++] = this->InsertString("Soviet", -1, hBuilding);
+        subNodes[i++] = this->InsertString("Yuri", -1, hBuilding);
+    }
+    subNodes[-1] = this->InsertTranslatedString("OthObList", -1, hBuilding);
+
+    auto&& buildings = MapRules.GetSection("BuildingTypes");
+	for (auto& bld : buildings)
+	{
+        if (IgnoreSet.find(bld.second) != IgnoreSet.end())
+            continue;
+        int index = ParseToInt(bld.first, -1);
+        if (index == -1)   continue;
+        int side = GuessSide(bld.second, Set_Building);
+        if (subNodes.find(side) == subNodes.end())
+            side = -1;
+		this->InsertString(
+            QueryUIName(bld.second) + " (" + bld.second + ")",
+            Const_Building + index,
+            subNodes[side]
+        );
+    }
+
+    // Clear up
+	if (theApp.m_Configs.ViewObjects_Cleanup)
+	{
+		for (auto& subnode : subNodes)
+		{
+            if (!this->GetTreeCtrl().ItemHasChildren(subnode.second))
+                this->GetTreeCtrl().DeleteItem(subnode.second);
+        }
+    }
+}
+
+void CViewObjects::Redraw_Terrain()
+{
+	HTREEITEM& hTerrain = ExtNodes[Root_Terrain];
+	if (hTerrain == NULL)   return;
+
+	std::vector<std::pair<HTREEITEM, CString>> nodes;
+
+	if (auto pSection = CIniFile::FAData.GetSection("ObjectBrowser.TerrainTypes"))
+	{
+		std::map<int, CString> collector;
+
+		for (auto& pair : pSection->value_orig_pos)
+			collector[pair.second] = pair.first;
+
+		for (auto& pair : collector)
+		{
+			const auto& contains = pair.second;
+			const auto& translation = pSection->values.find(contains)->second;
+
+			nodes.push_back(std::make_pair(this->InsertTranslatedString(translation, -1, hTerrain), contains));
+		}
+	}
+	HTREEITEM hOther = this->InsertTranslatedString("OthObList", -1, hTerrain);
+
+	auto&& terrains = MapRules.ParseIndicies("TerrainTypes", true);
+	for (size_t i = 0, sz = terrains.size(); i < sz; ++i)
+	{
+		if (IgnoreSet.find(terrains[i]) == IgnoreSet.end())
+		{
+			auto buffer = QueryUIName(terrains[i]);
+			buffer += " (" + terrains[i] + ")";
+			bool bNotOther = false;
+			for (const auto& node : nodes)
+			{
+				if (terrains[i].Find(node.second) >= 0)
+				{
+					this->InsertString(buffer, Const_Terrain + i, node.first);
+					bNotOther = true;
+				}
+			}
+			if (!bNotOther)
+				this->InsertString(buffer, Const_Terrain + i, hOther);
+		}
+	}
+
+	this->InsertTranslatedString("RndTreeObList", 50999, hTerrain);
+}
+
+
+void CViewObjects::Redraw_Smudge()
+{
+	HTREEITEM& hSmudge = ExtNodes[Root_Smudge];
+	if (hSmudge == NULL)   return;
+
+	std::vector<std::pair<HTREEITEM, CString>> nodes;
+
+	if (auto pSection = CIniFile::FAData.GetSection("ObjectBrowser.SmudgeTypes"))
+	{
+		std::map<int, CString> collector;
+
+		for (auto& pair : pSection->value_orig_pos)
+			collector[pair.second] = pair.first;
+
+		for (auto& pair : collector)
+		{
+			const auto& contains = pair.second;
+			const auto& translation = pSection->values.find(contains)->second;
+
+			nodes.push_back(std::make_pair(this->InsertTranslatedString(translation, -1, hSmudge), contains));
+		}
+	}
+	HTREEITEM hOther = this->InsertTranslatedString("OthObList", -1, hSmudge);
+
+	auto&& smudges = MapRules.ParseIndicies("SmudgeTypes", true);
+	for (size_t i = 0, sz = smudges.size(); i < sz; ++i)
+	{
+		if (IgnoreSet.find(smudges[i]) == IgnoreSet.end())
+		{
+			bool bNotOther = false;
+			for (const auto& node : nodes)
+			{
+				if (smudges[i].Find(node.second) >= 0)
+				{
+					this->InsertString(smudges[i], Const_Smudge + i, node.first);
+					bNotOther = true;
+				}
+			}
+			if (!bNotOther)
+				this->InsertString(smudges[i], Const_Smudge + i, hOther);
+		}
+	}
+}
+
+
+void CViewObjects::Redraw_Overlay()
+{
+	HTREEITEM& hOverlay = ExtNodes[Root_Overlay];
+	if (hOverlay == NULL)   return;
+
+	HTREEITEM hTemp;
+	hTemp = this->InsertTranslatedString("DelOvrlObList", -1, hOverlay);
+	this->InsertTranslatedString("DelOvrl0ObList", 60100, hTemp);
+	this->InsertTranslatedString("DelOvrl1ObList", 60101, hTemp);
+	this->InsertTranslatedString("DelOvrl2ObList", 60102, hTemp);
+	this->InsertTranslatedString("DelOvrl3ObList", 60103, hTemp);
+
+	hTemp = this->InsertTranslatedString("GrTibObList", -1, hOverlay);
+	this->InsertTranslatedString("DrawTibObList", 60210, hTemp);
+	this->InsertTranslatedString("DrawTib2ObList", 60310, hTemp);
+
+	hTemp = this->InsertTranslatedString("BridgesObList", -1, hOverlay);
+	this->InsertTranslatedString("BigBridgeObList", 60500, hTemp);
+	this->InsertTranslatedString("SmallBridgeObList", 60501, hTemp);
+	this->InsertTranslatedString("BigTrackBridgeObList", 60502, hTemp);
+	this->InsertTranslatedString("SmallConcreteBridgeObList", 60503, hTemp);
+
+	// Walls
+	HTREEITEM hWalls = this->InsertTranslatedString("OthObList", -1, hOverlay);
+
+	hTemp = this->InsertTranslatedString("AllObList", -1, hOverlay);
+
+	this->InsertTranslatedString("OvrlManuallyObList", 60001, hOverlay);
+	this->InsertTranslatedString("OvrlDataManuallyObList", 60002, hOverlay);
+
+	if (nullptr == CIniFile::Rules.GetSection("OverlayTypes"))
+		return;
+
+	// a rough support for tracks
+	this->InsertTranslatedString("Tracks", Const_Overlay + 39, hOverlay);
+
+	MultimapHelper mmh;
+	mmh.AddINI(&CIniFile::Rules);
+	auto&& overlays = mmh.ParseIndicies("OverlayTypes", true);
+	for (size_t i = 0, sz = std::min<unsigned int>(overlays.size(), 255); i < sz; ++i)
+	{
+		CString buffer;
+		buffer = QueryUIName(overlays[i]);
+		buffer += " (" + overlays[i] + ")";
+		if (CIniFile::Rules.GetBoolean(overlays[i], "Wall"))
+			this->InsertString(
+				QueryUIName(overlays[i]),
+				Const_Overlay + i,
+				hWalls
+			);
+		if (IgnoreSet.find(overlays[i]) == IgnoreSet.end())
+			this->InsertString(buffer, Const_Overlay + i, hTemp);
+	}
+}
+
+
+void CViewObjects::Redraw_Waypoint()
+{
+	HTREEITEM& hWaypoint = ExtNodes[Root_Waypoint];
+	if (hWaypoint == NULL)   return;
+
+	this->InsertTranslatedString("CreateWaypObList", 20, hWaypoint);
+	this->InsertTranslatedString("DelWaypObList", 21, hWaypoint);
+	this->InsertTranslatedString("CreateSpecWaypObList", 22, hWaypoint);
+}
+
+void CViewObjects::Redraw_Celltag()
+{
+	HTREEITEM& hCellTag = ExtNodes[Root_Celltag];
+	if (hCellTag == NULL)   return;
+
+	this->InsertTranslatedString("CreateCelltagObList", 36, hCellTag);
+	this->InsertTranslatedString("DelCelltagObList", 37, hCellTag);
+	this->InsertTranslatedString("CelltagPropObList", 38, hCellTag);
+}
+
+void CViewObjects::Redraw_Basenode()
+{
+	HTREEITEM& hBasenode = ExtNodes[Root_Basenode];
+	if (hBasenode == NULL)   return;
+
+	this->InsertTranslatedString("CreateNodeNoDelObList", 40, hBasenode);
+	this->InsertTranslatedString("CreateNodeDelObList", 41, hBasenode);
+	this->InsertTranslatedString("DelNodeObList", 42, hBasenode);
+}
+
+void CViewObjects::Redraw_Tunnel()
+{
+	HTREEITEM& hTunnel = ExtNodes[Root_Tunnel];
+	if (hTunnel == NULL)   return;
+
+	if (CIniFile::FAData.GetBoolean("Debug", "AllowTunnels"))
+	{
+		this->InsertTranslatedString("NewTunnelObList", 50, hTunnel);
+		this->InsertTranslatedString("ModifyTunnelObList", 51, hTunnel);
+		this->InsertTranslatedString("NewTunnelSingleObList", 52, hTunnel);
+		this->InsertTranslatedString("ModifyTunnelSingleObList", 53, hTunnel);
+		this->InsertTranslatedString("DelTunnelObList", 54, hTunnel);
+	}
+}
+
+void CViewObjects::Redraw_PlayerLocation()
+{
+	HTREEITEM& hPlayerLocation = ExtNodes[Root_PlayerLocation];
+	if (hPlayerLocation == NULL)   return;
+
+	this->InsertTranslatedString("StartpointsDelete", 21, hPlayerLocation);
+
+	if (Map->IsMultiplayer())
+	{
+		for (int i = 0; i < 8; ++i)
+			this->InsertString(std::format("Player {0}", i).c_str(), 23 + i, hPlayerLocation);
+	}
+}
+
+bool CViewObjects::IsIgnored(const char* pItem)
+{
+	return IgnoreSet.find(pItem) != IgnoreSet.end();
+}
+
+CString CViewObjects::QueryUIName(const char* pRegName, bool bOnlyOneLine)
+{
+	if (!bOnlyOneLine)
+	{
+		if (ForceName.find(pRegName) != ForceName.end())
+			return MapRules.GetString(pRegName, "Name", pRegName);
+		else
+			return Map->GetUnitName(pRegName);
+	}
+
+	CString buffer;
+
+	if (ForceName.find(pRegName) != ForceName.end())
+		buffer = MapRules.GetString(pRegName, "Name", pRegName);
+	else
+		buffer = Map->GetUnitName(pRegName);
+
+	int idx = buffer.Find('\n');
+	return idx == -1 ? buffer : buffer.Mid(0, idx);
+}
+
+int CViewObjects::GuessType(const char* pRegName)
+{
+	if (ExtSets[Set_Building].find(pRegName) != ExtSets[Set_Building].end())
+		return Set_Building;
+	if (ExtSets[Set_Infantry].find(pRegName) != ExtSets[Set_Infantry].end())
+		return Set_Infantry;
+	if (ExtSets[Set_Vehicle].find(pRegName) != ExtSets[Set_Vehicle].end())
+		return Set_Vehicle;
+	if (ExtSets[Set_Aircraft].find(pRegName) != ExtSets[Set_Aircraft].end())
+		return Set_Aircraft;
+	return -1;
+}
+
+int CViewObjects::GuessSide(const char* pRegName, int nType)
+{
+	auto&& knownIterator = KnownItem.find(pRegName);
+	if (knownIterator != KnownItem.end())
+		return knownIterator->second;
+
+	int result = -1;
+	switch (nType)
+	{
+	case -1:
+	default:
+		break;
+	case Set_Building:
+		result = GuessBuildingSide(pRegName);
+		break;
+	case Set_Infantry:
+		result = GuessGenericSide(pRegName, Set_Infantry);
+		break;
+	case Set_Vehicle:
+		result = GuessGenericSide(pRegName, Set_Vehicle);
+		break;
+	case Set_Aircraft:
+		result = GuessGenericSide(pRegName, Set_Aircraft);
+		break;
+	}
+	KnownItem[pRegName] = result;
+	return result;
+}
+
+int CViewObjects::GuessBuildingSide(const char* pRegName)
+{
+	auto& rules = CIniFile::Rules;
+
+	int planning;
+	planning = rules.GetInteger(pRegName, "AIBasePlanningSide", -1);
+	if (planning >= rules.GetKeyCount("Sides"))
+		return -1;
+	if (planning >= 0)
+		return planning;
+	size_t i = 0;
+	for (const auto& con : SplitString(rules.GetString("AI", "BuildConst")))
+	{
+		if (con == pRegName)
+            return i;
+		++i;
+	}
+	if (i >= rules.GetKeyCount("Sides"))
+		return -1;
+	return GuessGenericSide(pRegName, Set_Building);
+}
+
+int CViewObjects::GuessGenericSide(const char* pRegName, int nType)
+{
+	const auto& set = ExtSets[nType];
+
+	if (set.find(pRegName) == set.end())
+		return -1;
+
+	switch (theApp.m_Configs.ViewObjects_GuessMode)
+	{
+	default:
+	case 0:
+	{
+		for (const auto& prep : SplitString(MapRules.GetString(pRegName, "Prerequisite")))
+		{
+			int guess = -1;
+			for (const auto& subprep : SplitString(MapRules.GetString("GenericPrerequisites", prep)))
+			{
+				if (subprep == pRegName) // Avoid build myself crash
+					return -1;
+				guess = GuessSide(subprep, GuessType(subprep));
+				if (guess != -1)
+					return guess;
+			}
+			if (prep == pRegName) // Avoid build myself crash
+				return -1;
+			guess = GuessSide(prep, GuessType(prep));
+			if (guess != -1)
+				return guess;
+		}
+		return -1;
+	}
+	case 1:
+	{
+		auto&& owners = SplitString(MapRules.GetString(pRegName, "Owner"));
+		if (owners.size() <= 0)
+			return -1;
+		auto&& itr = Owners.find(owners[0]);
+		if (itr == Owners.end())
+			return -1;
+		return itr->second;
+	}
+	}
 }

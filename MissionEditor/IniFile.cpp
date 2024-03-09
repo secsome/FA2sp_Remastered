@@ -268,6 +268,18 @@ CIniFileSection* CIniFile::GetSection(const CString& section)
 	return &it->second;
 }
 
+size_t CIniFile::GetKeyCount(const CString& sectionName) const
+{
+	if (const auto section = GetSection(sectionName))
+		return section->values.size();
+	return 0;
+}
+
+size_t CIniFile::GetSectionCount() const
+{
+	return sections.size();
+}
+
 bool CIniFile::DeleteSection(const CString& sectionName)
 {
 	auto itr = sections.find(sectionName);

@@ -167,6 +167,7 @@ BOOL CFinalSunApp::InitInstance()
 	datafile += "\\FAData.ini";
 
 	CIniFile::FAData.LoadFile(datafile);
+	ReadConfigs();
 
 	// Load language data
 	std::string languagefile = ExePath;
@@ -304,6 +305,14 @@ void CFinalSunApp::ShowTipOfTheDay(void)
 	CTipDlg dlg;
 	dlg.DoModal();
 
+}
+
+void CFinalSunApp::ReadConfigs()
+{
+	const auto& ini = CIniFile::FAData;
+	m_Configs.ViewObjects_GuessMode = ini.GetInteger("Configs", "ViewObjects.GuessMode", 1);
+	m_Configs.ViewObjects_Cleanup = ini.GetBoolean("Configs", "ViewObjects.Cleanup", true);
+	m_Configs.ViewObjects_SafeHouses = ini.GetBoolean("Configs", "ViewObjects.SafeHouses", false);
 }
 
 int CFinalSunApp::Run()

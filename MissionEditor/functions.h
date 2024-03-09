@@ -145,6 +145,7 @@ CString TranslateStringACP(WCHAR* u16EnglishString);
 // general play sound function. uses parameter in defines.h. Does only play if user has not deactivated sounds
 void Sound(int ID);
 
+std::vector<CString> SplitString(const char* str, char delimiter = ',');
 
 class BitmapNotFound : std::runtime_error
 {

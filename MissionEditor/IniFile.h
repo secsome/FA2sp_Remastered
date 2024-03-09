@@ -115,6 +115,8 @@ public:
 	CIniFileSection* GetSection(std::size_t index);
 	const CIniFileSection* GetSection(const CString& section) const;
 	CIniFileSection* GetSection(const CString& section);
+	size_t GetKeyCount(const CString& section) const;
+	size_t GetSectionCount() const;
 
 	bool DeleteSection(const CString& sectionName);
 	bool DeleteKey(const CString& section, const CString& keyName);

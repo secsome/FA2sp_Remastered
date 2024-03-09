@@ -94,7 +94,7 @@ END_MESSAGE_MAP()
 
 void CLoading::Load()
 {
-	auto startTime = std::chrono::steady_clock::now();
+	m_progress.SetRange(0, 100);
 
 	CString artFile;
 
@@ -117,6 +117,7 @@ void CLoading::Load()
 	ms.dwLength=sizeof(MEMORYSTATUS);
 	GlobalMemoryStatus(&ms);
 	int cs=ms.dwAvailPhys+ms.dwAvailPageFile;
+	m_progress.SetPos(10); UpdateWindow();
 	InitMixFiles();
 	errstream << "Loading palettes" << std::endl << std::endl;
 	errstream.flush();
@@ -127,122 +128,81 @@ void CLoading::Load()
 
 	
 	// create a ini file containing some info XCC Mixer needs
-	CreateINI();
-
-	// set progress bar range to 0-2
-	m_progress.SetRange(0,2);	
+	CreateINI();	
 	
 	// CIniFile::Rules.ini
 	m_cap.SetWindowText(GetLanguageStringACP("LoadLoadRules"));
-	m_progress.SetPos(1);
-	UpdateWindow();
+	m_progress.SetPos(30); UpdateWindow();
 	LoadTSIni(CIniFile::FAData.GetString("Filenames", "Rules", "rulesmd.ini"), CIniFile::Rules);
-	m_progress.SetPos(2);
 	PrepareHouses();
 	//HackRules();
-	UpdateWindow();
 
 
 	// CIniFile::Art.ini
 	m_cap.SetWindowText(GetLanguageStringACP("LoadLoadArt"));
-	m_progress.SetPos(1);
-	UpdateWindow();
+	m_progress.SetPos(35); UpdateWindow();
 	LoadTSIni(CIniFile::FAData.GetString("Filenames", "Art", "artmd.ini"), CIniFile::Art);
-	m_progress.SetPos(2);
-	UpdateWindow();
 
 	// sound.ini
 	m_cap.SetWindowText(GetLanguageStringACP("LoadLoadSound"));
-	m_progress.SetPos(1);
-	UpdateWindow();	
+	m_progress.SetPos(40); UpdateWindow();
 	LoadTSIni(CIniFile::FAData.GetString("Filenames", "Sound", "soundmd.ini"), CIniFile::Sound);
-	m_progress.SetPos(2);
-	UpdateWindow();
+
 
 	// eva.INI
 	m_cap.SetWindowText(GetLanguageStringACP("LoadLoadEva"));
-	m_progress.SetPos(1);
-	UpdateWindow();
+	m_progress.SetPos(45); UpdateWindow();
 	LoadTSIni(CIniFile::FAData.GetString("Filenames", "Eva", "evamd.ini"), CIniFile::Eva);
-	m_progress.SetPos(2);
-	UpdateWindow();
 
 	// theme.INI
 	m_cap.SetWindowText(GetLanguageStringACP("LoadLoadTheme"));
-	m_progress.SetPos(1);
-	UpdateWindow();
+	m_progress.SetPos(50); UpdateWindow();
 	LoadTSIni(CIniFile::FAData.GetString("Filenames", "Theme", "thememd.ini"), CIniFile::Theme);
-	m_progress.SetPos(2);
-	UpdateWindow();
 
 
 	// AI.INI
 	m_cap.SetWindowText(GetLanguageStringACP("LoadLoadAI"));
-	m_progress.SetPos(1);
-	UpdateWindow();
+	m_progress.SetPos(55); UpdateWindow();
 	LoadTSIni(CIniFile::FAData.GetString("Filenames", "AI", "aimd.ini"), CIniFile::Ai);
-	m_progress.SetPos(2);
-	UpdateWindow();
 
 	// Temperat.INI
 	m_cap.SetWindowText(GetLanguageStringACP("LoadLoadTemperat"));
-	m_progress.SetPos(1);
-	UpdateWindow();
+	m_progress.SetPos(60); UpdateWindow();
 	LoadTSIni(CIniFile::FAData.GetString("Filenames", "Temperate", "temperatmd.ini"), CIniFile::Temperate);
-	m_progress.SetPos(2);
-	UpdateWindow();
 
 	// Snow.INI
 	m_cap.SetWindowText(GetLanguageStringACP("LoadLoadSnow"));
-	m_progress.SetPos(1);
-	UpdateWindow();
+	m_progress.SetPos(65); UpdateWindow();
 	LoadTSIni(CIniFile::FAData.GetString("Filenames", "Snow", "snowmd.ini"), CIniFile::Snow);
-	m_progress.SetPos(2);
-	UpdateWindow();
 
 	// Urban.INI
 	m_cap.SetWindowText(GetLanguageStringACP("LoadLoadUrban"));
-	m_progress.SetPos(1);
-	UpdateWindow();
+	m_progress.SetPos(70); UpdateWindow();
 	LoadTSIni(CIniFile::FAData.GetString("Filenames", "Urban", "urbanmd.ini"), CIniFile::Urban);
-	m_progress.SetPos(2);
-	UpdateWindow();
 
 	m_cap.SetWindowText(GetLanguageStringACP("LoadLoadUrbanN"));
-	m_progress.SetPos(1);
-	UpdateWindow();
+	m_progress.SetPos(75); UpdateWindow();
 	LoadTSIni(CIniFile::FAData.GetString("Filenames", "NewUrban", "urbannmd.ini"), CIniFile::NewUrban);
-	m_progress.SetPos(2);
-	UpdateWindow();
 
 	m_cap.SetWindowText(GetLanguageStringACP("LoadLoadLunar"));
-	m_progress.SetPos(1);
-	UpdateWindow();
+	m_progress.SetPos(80); UpdateWindow();
 	LoadTSIni(CIniFile::FAData.GetString("Filenames", "Lunar", "lunarmd.ini"), CIniFile::Lunar);
-	m_progress.SetPos(2);
-	UpdateWindow();
 
 	m_cap.SetWindowText(GetLanguageStringACP("LoadLoadDesert"));
-	m_progress.SetPos(1);
-	UpdateWindow();
+	m_progress.SetPos(85); UpdateWindow();
 	LoadTSIni(CIniFile::FAData.GetString("Filenames", "Desert", "desertmd.ini"), CIniFile::Desert);
-	m_progress.SetPos(2);
-	UpdateWindow();
 
 	
 	
 	// load Command & Conquer Rules.ini section names
+	m_progress.SetPos(90); UpdateWindow();
 	LoadStrings();
-
 
 	// ok now directdraw
 	m_cap.SetWindowText(GetLanguageStringACP("LoadInitDDraw"));
-	m_progress.SetRange(0,4);
-	
+	m_progress.SetPos(95); UpdateWindow();
 	InitDirectDraw();
-
-	m_progress.SetPos(3);
-	UpdateWindow();
+	m_progress.SetPos(100); UpdateWindow();
 	
 	/*errstream << "Now calling InitPics()\n";
 	errstream.flush();
@@ -250,12 +210,6 @@ void CLoading::Load()
 	InitPics();
 	errstream << "InitPics() finished\n\n\n";
 	errstream.flush();*/
-
-	auto delay = std::chrono::duration<double>(theApp.m_Options.fLoadScreenDelayInSeconds);
-	if ((std::chrono::steady_clock::now() - startTime) < delay)
-	{
-		std::this_thread::sleep_until(startTime + delay);
-	}
 
 	DestroyWindow();
 
@@ -279,8 +233,6 @@ void CLoading::InitPics(CProgressCtrl* prog)
 	
 	
 	CalcPicCount();
-
-	if(m_progress.m_hWnd!=NULL) m_progress.SetRange(0,m_pic_count/15+1);
 
 	if(!theApp.m_Options.bDoNotLoadBMPs)
 	{
@@ -321,12 +273,6 @@ void CLoading::InitPics(CProgressCtrl* prog)
 				}
 				catch (const BitmapNotFound&)
 				{
-				}
-
-				if(m_progress.m_hWnd!=NULL && k%15==0)
-				{
-					m_progress.SetPos(m_progress.GetPos()+1);
-					UpdateWindow();
 				}
 			}
 		}
@@ -544,61 +490,36 @@ void CLoading::InitSHPs(CProgressCtrl* prog)
 	for(i=0;i<CIniFile::Rules.sections["OverlayTypes"].values.size();i++)
 	{
 		LoadOverlayGraphic(*CIniFile::Rules.sections["OverlayTypes"].GetValue(i), i);
-		if(m_progress.m_hWnd!=NULL && i%15==0) {
-			m_progress.SetPos(m_progress.GetPos()+1);
-			UpdateWindow();
-		}
 	}	
 
 	if(!theApp.m_Options.bDoNotLoadVehicleGraphics)
 	for(i=0;i<CIniFile::Rules.sections["VehicleTypes"].values.size();i++)
 	{
 		LoadUnitGraphic(*CIniFile::Rules.sections["VehicleTypes"].GetValue(i));
-		if(m_progress.m_hWnd!=NULL && i%15==0) {
-			m_progress.SetPos(m_progress.GetPos()+1);
-			UpdateWindow();
-		}
 	}
 
 	if(!theApp.m_Options.bDoNotLoadInfantryGraphics)
 	for(i=0;i<CIniFile::Rules.sections["InfantryTypes"].values.size();i++)
 	{
 		LoadUnitGraphic(*CIniFile::Rules.sections["InfantryTypes"].GetValue(i));
-		if(m_progress.m_hWnd!=NULL && i%15==0){
-			m_progress.SetPos(m_progress.GetPos()+1);
-			UpdateWindow();
-		}
 	}
 
 	if(!theApp.m_Options.bDoNotLoadBuildingGraphics)
 	for(i=0;i<CIniFile::Rules.sections["BuildingTypes"].values.size();i++)
 	{
 		LoadUnitGraphic(*CIniFile::Rules.sections["BuildingTypes"].GetValue(i));
-		if(m_progress.m_hWnd!=NULL && i%15==0) {
-			m_progress.SetPos(m_progress.GetPos()+1);
-			UpdateWindow();
-		}
 	}
 
 	if(!theApp.m_Options.bDoNotLoadAircraftGraphics)
 	for(i=0;i<CIniFile::Rules.sections["AircraftTypes"].values.size();i++)
 	{
 		LoadUnitGraphic(*CIniFile::Rules.sections["AircraftTypes"].GetValue(i));
-		if(m_progress.m_hWnd!=NULL && i%15==0) {
-			m_progress.SetPos(m_progress.GetPos()+1);
-			UpdateWindow();
-		}
 	}
 
 	if(!theApp.m_Options.bDoNotLoadTreeGraphics)
 	for(i=0;i<CIniFile::Rules.sections["TerrainTypes"].values.size();i++)
 	{
 		LoadUnitGraphic(*CIniFile::Rules.sections["TerrainTypes"].GetValue(i));
-		if(m_progress.m_hWnd!=NULL && i%15==0)
-		{
-			m_progress.SetPos(m_progress.GetPos()+1);
-			UpdateWindow();
-		}
 	}
 
 #ifdef SMUDGE_SUPP
@@ -4727,9 +4648,6 @@ BOOL CLoading::InitDirectDraw()
 	errstream << "DirectDrawCreate() successful\n\n";
 	errstream.flush();
 
-	if(m_progress.m_hWnd) m_progress.SetPos(1);
-	if(m_hWnd) UpdateWindow();
-
 	errstream << "Now querying the DirectX 7 or 6 interface\n";
 	errstream.flush();
 
@@ -4769,10 +4687,6 @@ BOOL CLoading::InitDirectDraw()
 
 	errstream << "SetCooperativeLevel() successful\n\nCreating primary surface\n";
 	errstream.flush();
-
-
-	if(m_progress.m_hWnd) m_progress.SetPos(2);
-	if(m_hWnd) UpdateWindow();
 		
 	DDSURFACEDESC2 ddsd;
 

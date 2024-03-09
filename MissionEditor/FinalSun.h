@@ -71,6 +71,13 @@ struct OPTIONS{
 public:
 };
 
+struct CONFIGS
+{
+	int ViewObjects_GuessMode;
+	bool ViewObjects_Cleanup;
+	bool ViewObjects_SafeHouses;
+};
+
 
 /////////////////////////////////////////////////////////////////////////////
 // CFinalSunApp:
@@ -82,7 +89,9 @@ class CFinalSunApp : public CWinApp
 public:
 	DWORD pidInst;
 	OPTIONS m_Options;
+	CONFIGS m_Configs;
 	CLoading* m_loading;
+
 	CFinalSunApp();
 
 	const std::string& getLogFileName() const
@@ -117,6 +126,8 @@ public:
 	void ShowTipOfTheDay(void);
 
 private:
+	void ReadConfigs();
+
 	std::string m_u8LogFileName;
 };
 

@@ -28,13 +28,6 @@
 #include "inlines.h"
 #include "mmsystem.h"
 
-
-#define DBG
-#undef DBG
-
-#define DBG2
-#undef DBG2
-
 bool isValidUtf8(const char* utf8)
 {
 	// wstring_convert and codecvt_utf8_utf16 are deprecated in C++17, fallback to Win32
@@ -223,6 +216,18 @@ void Sound(int ID)
 	{
 		PlaySound(lpSound, GetModuleHandle(NULL), SND_ASYNC | SND_RESOURCE);
 	}
+}
+
+std::vector<CString> SplitString(const char* str, char delimiter)
+{
+	auto&& v = std::string_view{ str }
+		| std::views::split(delimiter)
+		| std::views::transform([](auto rng) { return std::string_view(rng); });
+	
+	std::vector<CString> result;
+	for (const auto& s : v)
+		result.emplace_back(s.data());
+	return result;
 }
 
 void HandleParamList(CComboBox &cb, int type)
