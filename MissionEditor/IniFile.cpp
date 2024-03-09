@@ -268,6 +268,31 @@ CIniFileSection* CIniFile::GetSection(const CString& section)
 	return &it->second;
 }
 
+bool CIniFile::DeleteSection(const CString& sectionName)
+{
+	auto itr = sections.find(sectionName);
+	if (itr != sections.end())
+	{
+		sections.erase(itr);
+		return true;
+	}
+	return false;
+}
+
+bool CIniFile::DeleteKey(const CString& sectionName, const CString& keyName)
+{
+	if (auto section = GetSection(sectionName))
+	{
+		auto itr = section->values.find(keyName);
+		if (itr != section->values.end())
+		{
+            section->values.erase(itr);
+            return true;
+        }
+	}
+	return false;
+}
+
 const CString* CIniFileSection::GetValue(std::size_t index) const noexcept
 {
 	if (index > values.size() - 1)
@@ -292,13 +317,13 @@ CString* CIniFileSection::GetValue(std::size_t index) noexcept
 	return &i->second;
 }
 
-CString CIniFileSection::GetValueByName(const CString& valueName, const CString& defaultValue) const
+CString CIniFileSection::GetString(const CString& valueName, const CString& defaultValue) const
 {
 	auto it = values.find(valueName);
 	return (it == values.end()) ? defaultValue : it->second;
 }
 
-const CString* CIniFileSection::TryGetValueByName(const CString& name) const
+const CString* CIniFileSection::TryGetString(const CString& name) const
 {
 	auto it = values.find(name);
 	return (it == values.end()) ? nullptr : &it->second;
@@ -437,20 +462,73 @@ void CIniFile::DeleteEndingSpaces(BOOL bValueNames, BOOL bValues)
 	}
 }
 
-CString CIniFile::GetValueByName(const CString& sectionName, const CString& valueName, const CString& defaultValue) const
+CString CIniFile::GetString(const CString& sectionName, const CString& valueName, const CString& defaultValue) const
 {
-	auto section = GetSection(sectionName);
-	if (!section)
-		return defaultValue;
-	return section->GetValueByName(valueName, defaultValue);
+	if (auto result = TryGetString(sectionName, valueName))
+        return *result;
+	return defaultValue;
 }
 
-const CString* CIniFile::TryGetValueByName(const CString& sectionName, const CString& valueName) const
+const CString* CIniFile::TryGetString(const CString& sectionName, const CString& valueName) const
 {
 	auto section = GetSection(sectionName);
 	if (!section)
 		return nullptr;
-	return section->TryGetValueByName(valueName);
+	return section->TryGetString(valueName);
+}
+
+int CIniFile::GetInteger(const CString& sectionName, const CString& valueName, int defaultValue) const
+{
+	CString value = GetString(sectionName, valueName, "");
+	int ret = 0;
+	if (1 == std::sscanf(value.GetBuffer(), "%d", &ret)) [[likely]]
+        return ret;
+	return defaultValue;
+}
+
+float CIniFile::GetSingle(const CString& sectionName, const CString& valueName, float defaultValue) const
+{
+	CString value = GetString(sectionName, valueName, "");
+    float ret = 0.0f;
+	if (1 == std::sscanf(value.GetBuffer(), "%f", &ret)) [[likely]]
+	{
+		if (value.Find('%') != -1)
+			ret *= 0.01f;
+		return ret;
+	}
+    return defaultValue;
+}
+
+double CIniFile::GetDouble(const CString& sectionName, const CString& valueName, double defaultValue) const
+{
+	CString value = GetString(sectionName, valueName, "");
+    double ret = 0.0;
+	if (1 == std::sscanf(value.GetBuffer(), "%lf", &ret)) [[likely]]
+	{
+        if (value.Find('%') != -1)
+            ret *= 0.01;
+        return ret;
+    }
+    return defaultValue;
+}
+
+bool CIniFile::GetBoolean(const CString& sectionName, const CString& valueName, bool defaultValue) const
+{
+    CString value = GetString(sectionName, valueName, "");
+    
+	switch (std::toupper(value[0]))
+	{
+	case '1':
+	case 'T':
+	case 'Y':
+        return true;
+	case '0':
+	case 'F':
+	case 'N':
+        return false;
+	default: [[unlikely]]
+		return defaultValue;
+	}
 }
 
 int CIniFileSection::GetValueOrigPos(int index) const noexcept

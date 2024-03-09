@@ -136,7 +136,7 @@ void CLoading::Load()
 	m_cap.SetWindowText(GetLanguageStringACP("LoadLoadRules"));
 	m_progress.SetPos(1);
 	UpdateWindow();
-	LoadTSIni(CIniFile::FAData.GetValueByName("Filenames", "Rules", "rulesmd.ini"), CIniFile::Rules);
+	LoadTSIni(CIniFile::FAData.GetString("Filenames", "Rules", "rulesmd.ini"), CIniFile::Rules);
 	m_progress.SetPos(2);
 	PrepareHouses();
 	//HackRules();
@@ -147,7 +147,7 @@ void CLoading::Load()
 	m_cap.SetWindowText(GetLanguageStringACP("LoadLoadArt"));
 	m_progress.SetPos(1);
 	UpdateWindow();
-	LoadTSIni(CIniFile::FAData.GetValueByName("Filenames", "Art", "artmd.ini"), CIniFile::Art);
+	LoadTSIni(CIniFile::FAData.GetString("Filenames", "Art", "artmd.ini"), CIniFile::Art);
 	m_progress.SetPos(2);
 	UpdateWindow();
 
@@ -155,7 +155,7 @@ void CLoading::Load()
 	m_cap.SetWindowText(GetLanguageStringACP("LoadLoadSound"));
 	m_progress.SetPos(1);
 	UpdateWindow();	
-	LoadTSIni(CIniFile::FAData.GetValueByName("Filenames", "Sound", "soundmd.ini"), CIniFile::Sound);
+	LoadTSIni(CIniFile::FAData.GetString("Filenames", "Sound", "soundmd.ini"), CIniFile::Sound);
 	m_progress.SetPos(2);
 	UpdateWindow();
 
@@ -163,7 +163,7 @@ void CLoading::Load()
 	m_cap.SetWindowText(GetLanguageStringACP("LoadLoadEva"));
 	m_progress.SetPos(1);
 	UpdateWindow();
-	LoadTSIni(CIniFile::FAData.GetValueByName("Filenames", "Eva", "evamd.ini"), CIniFile::Eva);
+	LoadTSIni(CIniFile::FAData.GetString("Filenames", "Eva", "evamd.ini"), CIniFile::Eva);
 	m_progress.SetPos(2);
 	UpdateWindow();
 
@@ -171,7 +171,7 @@ void CLoading::Load()
 	m_cap.SetWindowText(GetLanguageStringACP("LoadLoadTheme"));
 	m_progress.SetPos(1);
 	UpdateWindow();
-	LoadTSIni(CIniFile::FAData.GetValueByName("Filenames", "Theme", "thememd.ini"), CIniFile::Theme);
+	LoadTSIni(CIniFile::FAData.GetString("Filenames", "Theme", "thememd.ini"), CIniFile::Theme);
 	m_progress.SetPos(2);
 	UpdateWindow();
 
@@ -180,7 +180,7 @@ void CLoading::Load()
 	m_cap.SetWindowText(GetLanguageStringACP("LoadLoadAI"));
 	m_progress.SetPos(1);
 	UpdateWindow();
-	LoadTSIni(CIniFile::FAData.GetValueByName("Filenames", "AI", "aimd.ini"), CIniFile::Ai);
+	LoadTSIni(CIniFile::FAData.GetString("Filenames", "AI", "aimd.ini"), CIniFile::Ai);
 	m_progress.SetPos(2);
 	UpdateWindow();
 
@@ -188,7 +188,7 @@ void CLoading::Load()
 	m_cap.SetWindowText(GetLanguageStringACP("LoadLoadTemperat"));
 	m_progress.SetPos(1);
 	UpdateWindow();
-	LoadTSIni(CIniFile::FAData.GetValueByName("Filenames", "Temperate", "temperatmd.ini"), CIniFile::Temperate);
+	LoadTSIni(CIniFile::FAData.GetString("Filenames", "Temperate", "temperatmd.ini"), CIniFile::Temperate);
 	m_progress.SetPos(2);
 	UpdateWindow();
 
@@ -196,7 +196,7 @@ void CLoading::Load()
 	m_cap.SetWindowText(GetLanguageStringACP("LoadLoadSnow"));
 	m_progress.SetPos(1);
 	UpdateWindow();
-	LoadTSIni(CIniFile::FAData.GetValueByName("Filenames", "Snow", "snowmd.ini"), CIniFile::Snow);
+	LoadTSIni(CIniFile::FAData.GetString("Filenames", "Snow", "snowmd.ini"), CIniFile::Snow);
 	m_progress.SetPos(2);
 	UpdateWindow();
 
@@ -204,28 +204,28 @@ void CLoading::Load()
 	m_cap.SetWindowText(GetLanguageStringACP("LoadLoadUrban"));
 	m_progress.SetPos(1);
 	UpdateWindow();
-	LoadTSIni(CIniFile::FAData.GetValueByName("Filenames", "Urban", "urbanmd.ini"), CIniFile::Urban);
+	LoadTSIni(CIniFile::FAData.GetString("Filenames", "Urban", "urbanmd.ini"), CIniFile::Urban);
 	m_progress.SetPos(2);
 	UpdateWindow();
 
 	m_cap.SetWindowText(GetLanguageStringACP("LoadLoadUrbanN"));
 	m_progress.SetPos(1);
 	UpdateWindow();
-	LoadTSIni(CIniFile::FAData.GetValueByName("Filenames", "NewUrban", "urbannmd.ini"), CIniFile::NewUrban);
+	LoadTSIni(CIniFile::FAData.GetString("Filenames", "NewUrban", "urbannmd.ini"), CIniFile::NewUrban);
 	m_progress.SetPos(2);
 	UpdateWindow();
 
 	m_cap.SetWindowText(GetLanguageStringACP("LoadLoadLunar"));
 	m_progress.SetPos(1);
 	UpdateWindow();
-	LoadTSIni(CIniFile::FAData.GetValueByName("Filenames", "Lunar", "lunarmd.ini"), CIniFile::Lunar);
+	LoadTSIni(CIniFile::FAData.GetString("Filenames", "Lunar", "lunarmd.ini"), CIniFile::Lunar);
 	m_progress.SetPos(2);
 	UpdateWindow();
 
 	m_cap.SetWindowText(GetLanguageStringACP("LoadLoadDesert"));
 	m_progress.SetPos(1);
 	UpdateWindow();
-	LoadTSIni(CIniFile::FAData.GetValueByName("Filenames", "Desert", "desertmd.ini"), CIniFile::Desert);
+	LoadTSIni(CIniFile::FAData.GetString("Filenames", "Desert", "desertmd.ini"), CIniFile::Desert);
 	m_progress.SetPos(2);
 	UpdateWindow();
 
@@ -835,9 +835,9 @@ std::optional<FindShpResult> CLoading::FindUnitShp(const CString& image, char pr
 		forcedPalette = GetIsoPalette(preferred_theat);
 	}
 
-	const bool isTheater = isTrue(artSection.GetValueByName("Theater"));
-	const bool isNewTheater = isTrue(artSection.GetValueByName("NewTheater"));
-	const bool terrainPalette = isTrue(artSection.GetValueByName("TerrainPalette"));
+	const bool isTheater = isTrue(artSection.GetString("Theater"));
+	const bool isNewTheater = isTrue(artSection.GetString("NewTheater"));
+	const bool terrainPalette = isTrue(artSection.GetString("TerrainPalette"));
 
 	auto unitOrIsoPalette = terrainPalette ? GetIsoPalette(preferred_theat) : GetUnitPalette(preferred_theat);
 
@@ -987,7 +987,7 @@ BOOL CLoading::LoadUnitGraphic(LPCTSTR lpUnittype)
 		HTSPALETTE hPalette = shp->palette;
 		const auto hShpMix = shp->mixfile;
 		theat = static_cast<char>(shp->theat);
-		auto limited_to_theater = isTrue(artSection.GetValueByName("TerrainPalette")) ? shp->mixfile_theater : TheaterChar::None;
+		auto limited_to_theater = isTrue(artSection.GetString("TerrainPalette")) ? shp->mixfile_theater : TheaterChar::None;
 
 		
 		SHPHEADER head;
@@ -1090,7 +1090,7 @@ BOOL CLoading::LoadUnitGraphic(LPCTSTR lpUnittype)
 					turretanim_filename = turretanim_name + ".shp";
 					if (CIniFile::Art.sections[turretanim_name].values.find("Image") != CIniFile::Art.sections[turretanim_name].values.end()) turretanim_filename = CIniFile::Art.sections[turretanim_name].values["Image"] + ".shp";
 
-					if (isTrue(artSection.GetValueByName("NewTheater")))
+					if (isTrue(artSection.GetString("NewTheater")))
 					{
 						auto tmp = turretanim_filename;
 						tmp.SetAt(1, theat);
@@ -1987,13 +1987,13 @@ BOOL CLoading::LoadUnitGraphic(LPCTSTR lpUnittype)
 }
 void CLoading::LoadBuildingSubGraphic(const CString& subkey, const CIniFileSection& artSection, BOOL bAlwaysSetChar, char theat, HMIXFILE hShpMix, SHPHEADER& shp_h, BYTE*& shp)
 {
-	CString subname = artSection.GetValueByName(subkey);
+	CString subname = artSection.GetString(subkey);
 	if (subname.GetLength() > 0)
 	{
 		auto res = FindUnitShp(subname, theat, artSection);
 		/*CString subfilename = subname + ".shp";
 
-		if (isTrue(artSection.GetValueByName("NewTheater")) || bAlwaysSetChar || subfilename.GetAt(0) == 'G' || subfilename.GetAt(0) == 'N' || subfilename.GetAt(0) == 'Y' || subfilename.GetAt(0) == 'C')
+		if (isTrue(artSection.GetString("NewTheater")) || bAlwaysSetChar || subfilename.GetAt(0) == 'G' || subfilename.GetAt(0) == 'N' || subfilename.GetAt(0) == 'Y' || subfilename.GetAt(0) == 'C')
 		{
 			auto subfilename_theat = subfilename;
 			subfilename_theat.SetAt(1, theat);
@@ -2062,7 +2062,7 @@ BOOL CLoading::LoadUnitGraphic(LPCTSTR lpUnittype)
 		
 		
 		BOOL isNewTerrain=FALSE;
-		if(isTrue(CIniFile::Art.sections[image].values["NewTheater"]))//&& isTrue(artSection.GetValueByName("TerrainPalette")))//(filename.GetAt(0)=='G' || filename.GetAt(0)=='N' || filename.GetAt(0)=='C') && filename.GetAt(1)=='A')
+		if(isTrue(CIniFile::Art.sections[image].values["NewTheater"]))//&& isTrue(artSection.GetString("TerrainPalette")))//(filename.GetAt(0)=='G' || filename.GetAt(0)=='N' || filename.GetAt(0)=='C') && filename.GetAt(1)=='A')
 		{
 			hPalette=PAL_UNITTEM;
 			if(theat=='A') hPalette=PAL_UNITSNO;
@@ -2104,7 +2104,7 @@ BOOL CLoading::LoadUnitGraphic(LPCTSTR lpUnittype)
 		}
 
 		
-		if(isTrue(artSection.GetValueByName("TerrainPalette")))
+		if(isTrue(artSection.GetString("TerrainPalette")))
 		{
 			bIgnoreTerrain=FALSE;
 			
@@ -2203,7 +2203,7 @@ BOOL CLoading::LoadUnitGraphic(LPCTSTR lpUnittype)
 
 			// now we need to find out the palette
 			
-				if(isTrue(artSection.GetValueByName("TerrainPalette"))) // it´s a file in isotemp.mix/isosno.mix
+				if(isTrue(artSection.GetString("TerrainPalette"))) // it´s a file in isotemp.mix/isosno.mix
 				{
 										
 				}
@@ -3216,6 +3216,28 @@ BOOL CLoading::LoadUnitGraphic(LPCTSTR lpUnittype)
 bool CLoading::InitMixFiles()
 {
 	// Load Extra Mixes
+	if (auto pSection = CIniFile::FAData.GetSection("ExtraMixes"))
+	{
+		std::map<int, CString> collector;
+
+		for (const auto& [key, index] : pSection->value_orig_pos)
+			collector[index] = key;
+
+		CString path;
+
+		for (const auto& [_, key] : collector)
+		{
+			if (CIniFile::FAData.GetBoolean("ExtraMixes", key))
+				path = ExePath;
+			else
+				path = GamePath;
+			path += "\\" + key;
+			if (const auto hMix = FSunPackLib::XCC_OpenMix(path, NULL))
+				std::println(errstream, "[MixLoader][EXTRA] %04d - %s loaded.", hMix, path);
+			else
+				std::println(errstream, "[MixLoader][EXTRA] %s failed!", path);
+		}
+	}
 
 	CString Dir = GamePath;
 	Dir += "\\";
@@ -3254,7 +3276,7 @@ bool CLoading::InitMixFiles()
 	};
 
 	
-	CString format = "EXPAND" + CIniFile::FAData.GetValueByName("Filenames", "MixExtension", "MD") + "%02d.MIX";
+	CString format = "EXPAND" + CIniFile::FAData.GetString("Filenames", "MixExtension", "MD") + "%02d.MIX";
 	for (int i = 99; i >= 0; --i)
 	{
 		CString filename;
@@ -3536,7 +3558,7 @@ void CLoading::InitTMPs(CProgressCtrl* prog)
 		CIniFile::CurrentTheater->sections[sec].values["NonMarbleMadness"].MakeLower();
 		if(CIniFile::CurrentTheater->sections[sec].values["NonMarbleMadness"].GetLength()>0)
 			bMadness=TRUE;
-		auto tilesetAnimSection = CIniFile::CurrentTheater->GetSection(CIniFile::CurrentTheater->sections[sec].GetValueByName("SetName"));
+		auto tilesetAnimSection = CIniFile::CurrentTheater->GetSection(CIniFile::CurrentTheater->sections[sec].GetString("SetName"));
 
 		tilesets_start[i]=tilecount;
 
@@ -3602,10 +3624,10 @@ void CLoading::InitTMPs(CProgressCtrl* prog)
 
 			if (tilesetAnimSection)
 			{
-				auto anim = tilesetAnimSection->GetValueByName(std::format("Tile{}Anim", sId).c_str());
-				auto offsetX = std::atoi(tilesetAnimSection->GetValueByName(std::format("Tile{}XOffset", sId).c_str()));
-				auto offsetY = std::atoi(tilesetAnimSection->GetValueByName(std::format("Tile{}YOffset", sId).c_str()));
-				auto attachesTo = std::atoi(tilesetAnimSection->GetValueByName(std::format("Tile{}AttachesTo", sId).c_str()));
+				auto anim = tilesetAnimSection->GetString(std::format("Tile{}Anim", sId).c_str());
+				auto offsetX = std::atoi(tilesetAnimSection->GetString(std::format("Tile{}XOffset", sId).c_str()));
+				auto offsetY = std::atoi(tilesetAnimSection->GetString(std::format("Tile{}YOffset", sId).c_str()));
+				auto attachesTo = std::atoi(tilesetAnimSection->GetString(std::format("Tile{}AttachesTo", sId).c_str()));
 				auto animFileName = anim + suffix;
 				HMIXFILE hAnimMix = FindFileInMix(animFileName);
 				if (hAnimMix)
@@ -4165,7 +4187,7 @@ void CLoading::LoadOverlayGraphic(LPCTSTR lpOvrlName_, int iOvrlNum)
 	if(hMix==NULL)
 	{
 		filename=image+".shp";
-		if(isTrue(artSection.GetValueByName("NewTheater")))
+		if(isTrue(artSection.GetString("NewTheater")))
 			filename.SetAt(1, theat);
 
 		if(current_theater=='U' && PAL_UNITURB) hPalette=PAL_UNITURB;
@@ -5293,7 +5315,7 @@ void CLoading::LoadStrings()
 		delete[] lpData;
 	};
 	
-	load_csf(CIniFile::FAData.GetValueByName("Filenames", "CSF", "ra2md.csf"));
+	load_csf(CIniFile::FAData.GetString("Filenames", "CSF", "ra2md.csf"));
 	for (int i = 1; i <= 99; ++i)
 	{
 		CString filename;
@@ -5312,13 +5334,13 @@ void CLoading::LoadStrings()
 				else
 				{
 					CCStrings[*CIniFile::Rules.GetSectionName(i)].SetString(strings[CIniFile::Rules.GetSection(i)->values["UIName"]].wString, strings[CIniFile::Rules.GetSection(i)->values["UIName"]].len);
-					CCStrings[*CIniFile::Rules.GetSectionName(i)].cString = CIniFile::Rules.GetSection(i)->GetValueByName("Name");
+					CCStrings[*CIniFile::Rules.GetSectionName(i)].cString = CIniFile::Rules.GetSection(i)->GetString("Name");
 				}
 			}
 			else
-				CCStrings[*CIniFile::Rules.GetSectionName(i)].SetString((LPSTR)(LPCSTR)CIniFile::Rules.GetSection(i)->GetValueByName("Name"));
+				CCStrings[*CIniFile::Rules.GetSectionName(i)].SetString((LPSTR)(LPCSTR)CIniFile::Rules.GetSection(i)->GetString("Name"));
 		}
-		else CCStrings[*CIniFile::Rules.GetSectionName(i)].SetString((LPSTR)(LPCSTR)CIniFile::Rules.GetSection(i)->GetValueByName("Name"));
+		else CCStrings[*CIniFile::Rules.GetSectionName(i)].SetString((LPSTR)(LPCSTR)CIniFile::Rules.GetSection(i)->GetString("Name"));
 	}
 	
 	std::println(errstream, "Loaded {0} {1} strings.", AllStrings.size(), CCStrings.size());
@@ -5341,7 +5363,7 @@ void CLoading::HackRules()
 
 	// RULES(MD).INI has the incorrect colors set for the following houses, let's remap them to the expected values.
 	// Fixup YuriCountry colour
-	if (CIniFile::Rules.sections["YuriCountry"].GetValueByName("Color") == "DarkRed") {
+	if (CIniFile::Rules.sections["YuriCountry"].GetString("Color") == "DarkRed") {
 		CIniFile::Rules.sections["YuriCountry"].values["Color"] = "Purple";
 	}
 	// Fixup Allied colors
@@ -5352,12 +5374,12 @@ void CLoading::HackRules()
 	allied_houses.push_back("Americans");
 	allied_houses.push_back("Alliance");
 	for (std::list<CString>::iterator it = allied_houses.begin(); it != allied_houses.end(); ++it) {
-		if (CIniFile::Rules.sections[*it].GetValueByName("Color") == "Gold") {
+		if (CIniFile::Rules.sections[*it].GetString("Color") == "Gold") {
 			CIniFile::Rules.sections[*it].values["Color"] = "DarkBlue";
 		}
 	}
 	// Fixup Nod color
-	if (CIniFile::Rules.sections["Nod"].GetValueByName("Color") == "Gold") {
+	if (CIniFile::Rules.sections["Nod"].GetString("Color") == "Gold") {
 		CIniFile::Rules.sections["Nod"].values["Color"] = "DarkRed";
 	}
 }
@@ -5429,7 +5451,7 @@ void CLoading::PrepareUnitGraphic(LPCSTR lpUnittype)
 		
 		
 		BOOL isNewTerrain=FALSE;
-		if(isTrue(artSection.GetValueByName("NewTheater")))//&& isTrue(artSection.GetValueByName("TerrainPalette")))//(filename.GetAt(0)=='G' || filename.GetAt(0)=='N' || filename.GetAt(0)=='C') && filename.GetAt(1)=='A')
+		if(isTrue(artSection.GetString("NewTheater")))//&& isTrue(artSection.GetString("TerrainPalette")))//(filename.GetAt(0)=='G' || filename.GetAt(0)=='N' || filename.GetAt(0)=='C') && filename.GetAt(1)=='A')
 		{
 			hPalette=PAL_UNITTEM;
 			if(theat=='A') hPalette=PAL_UNITSNO;
@@ -5494,7 +5516,7 @@ void CLoading::PrepareUnitGraphic(LPCSTR lpUnittype)
 		}
 
 		
-		if(isTrue(artSection.GetValueByName("TerrainPalette")))
+		if(isTrue(artSection.GetString("TerrainPalette")))
 		{
 			bIgnoreTerrain=FALSE;
 			
@@ -5620,7 +5642,7 @@ void CLoading::PrepareUnitGraphic(LPCSTR lpUnittype)
 
 			// now we need to find out the palette
 			
-				if(isTrue(artSection.GetValueByName("TerrainPalette"))) // it´s a file in isotemp.mix/isosno.mix
+				if(isTrue(artSection.GetString("TerrainPalette"))) // it´s a file in isotemp.mix/isosno.mix
 				{
 										
 				}
@@ -5643,7 +5665,7 @@ void CLoading::PrepareUnitGraphic(LPCSTR lpUnittype)
 		filename = shp->filename;
 		hPalette = shp->palette;
 
-		auto limited_to_theater = isTrue(artSection.GetValueByName("TerrainPalette")) ? shp->mixfile_theater : TheaterChar::None;
+		auto limited_to_theater = isTrue(artSection.GetString("TerrainPalette")) ? shp->mixfile_theater : TheaterChar::None;
 
 		if(filename=="tibtre01.tem" || filename=="tibtre02.tem" || filename=="tibtre03.tem" || filename=="veinhole.tem")
 		{

@@ -885,7 +885,7 @@ void CViewObjects::UpdateDialog()
 		if (Map->GetTheater()==THEATER5 && CIniFile::FAData.sections["IgnoreDesertRA2"].FindValue(unitname) >= 0) continue;
 
 		if (CIniFile::FAData.sections["IgnoreRA2"].FindValue(unitname) >= 0) continue;
-		if (!isTrue(CIniFile::FAData.sections["Debug"].GetValueByName("ShowBuildingsWithToTile", "0")) && !CIniFile::Rules.sections[unitname].GetValueByName("ToTile").IsEmpty())
+		if (!isTrue(CIniFile::FAData.sections["Debug"].GetString("ShowBuildingsWithToTile", "0")) && !CIniFile::Rules.sections[unitname].GetString("ToTile").IsEmpty())
 			continue;
 
 

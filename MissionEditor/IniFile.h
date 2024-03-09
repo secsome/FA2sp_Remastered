@@ -52,8 +52,8 @@ public:
 	CIniFileSection();
 	virtual ~CIniFileSection();
 
-	CString GetValueByName(const CString& name, const CString& defaultValue = CString()) const;
-	const CString* TryGetValueByName(const CString& name) const;
+	CString GetString(const CString& name, const CString& defaultValue = CString()) const;
+	const CString* TryGetString(const CString& name) const;
 	CString& AccessValueByName(const CString& name);
 
 	auto begin() noexcept
@@ -115,8 +115,17 @@ public:
 	CIniFileSection* GetSection(std::size_t index);
 	const CIniFileSection* GetSection(const CString& section) const;
 	CIniFileSection* GetSection(const CString& section);
-	CString GetValueByName(const CString& sectionName, const CString& valueName, const CString& defaultValue) const;
-	const CString* TryGetValueByName(const CString& sectionName, const CString& valueName) const;
+
+	bool DeleteSection(const CString& sectionName);
+	bool DeleteKey(const CString& section, const CString& keyName);
+
+	CString GetString(const CString& sectionName, const CString& valueName, const CString& defaultValue = "") const;
+	const CString* TryGetString(const CString& sectionName, const CString& valueName) const;
+	int GetInteger(const CString& sectionName, const CString& valueName, int defaultValue = 0) const;
+	float GetSingle(const CString& sectionName, const CString& valueName, float defaultValue = 0.0f) const;
+	double GetDouble(const CString& sectionName, const CString& valueName, double defaultValue = 0.0) const;
+	bool GetBoolean(const CString& sectionName, const CString& valueName, bool defaultValue = false) const;
+
 	void Clear();
 	WORD InsertFile(const CString& filename, const char* Section, BOOL bNoSpaces = FALSE);
 	WORD InsertFile(const std::string& filename, const char* Section, BOOL bNoSpaces = FALSE);

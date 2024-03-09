@@ -54,10 +54,10 @@ inline CString GetUnitPictureFilename(LPCTSTR lpUnitName, DWORD dwPicIndex)
 
 	CString UnitName = lpUnitName;
 
-	UnitName = CIniFile::Rules.sections[lpUnitName].GetValueByName("Image", lpUnitName);
+	UnitName = CIniFile::Rules.sections[lpUnitName].GetString("Image", lpUnitName);
 
 	if (ini.sections.find(lpUnitName) != ini.sections.end())
-		UnitName = ini.sections[lpUnitName].GetValueByName("Image", UnitName);
+		UnitName = ini.sections[lpUnitName].GetString("Image", UnitName);
 
 	if (CIniFile::Rules.sections[lpUnitName].values.find("Image") != CIniFile::Rules.sections[lpUnitName].values.end())
 		UnitName = CIniFile::Rules.sections[lpUnitName].values["Image"];

@@ -37,7 +37,7 @@ const CString* MultimapHelper::TryGetString(CString pSection, CString pKey)
 {
     for (auto ritr = data.rbegin(); ritr != data.rend(); ++ritr)
     {
-        if (auto pRet = (*ritr)->TryGetValueByName(pSection, pKey))
+        if (auto pRet = (*ritr)->TryGetString(pSection, pKey))
             if (!pRet->IsEmpty())
                 return pRet;
     }
@@ -103,7 +103,7 @@ std::vector<CString> MultimapHelper::ParseIndicies(CString pSection, bool bParse
             auto&& cur = pINI->ParseIndiciesData(pSection);
             for (auto& pair : cur)
             {
-                CString value = pINI->GetValueByName(pSection, pair.second, pair.second);
+                CString value = pINI->GetString(pSection, pair.second, pair.second);
                 auto&& unitr = tmp2.find(value);
                 if (unitr == tmp2.end())
                 {

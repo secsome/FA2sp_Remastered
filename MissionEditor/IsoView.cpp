@@ -3495,7 +3495,7 @@ COLORREF CIsoView::GetColor(const char* house, const char* vcolor)
 	unsigned char hsv[3];
 	if (!color.IsEmpty())
 	{
-		if (auto const ppValue = CIniFile::Rules.TryGetValueByName("Colors", color))
+		if (auto const ppValue = CIniFile::Rules.TryGetString("Colors", color))
 			sscanf_s(*ppValue, "%hhu,%hhu,%hhu", &hsv[0], &hsv[1], &hsv[2]);
 	}
 

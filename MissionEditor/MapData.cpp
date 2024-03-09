@@ -2507,10 +2507,10 @@ void CMapData::InitializeUnitTypes()
 	terrainid.clear();
 
 	int i;
-	m_overlayCredits[OverlayCredits_Riparius] = atoi(m_mapfile.GetValueByName("Riparius", "Value", CIniFile::Rules.sections["Riparius"].AccessValueByName("Value")));
-	m_overlayCredits[OverlayCredits_Cruentus] = atoi(m_mapfile.GetValueByName("Cruentus", "Value", CIniFile::Rules.sections["Cruentus"].AccessValueByName("Value"))); 
-	m_overlayCredits[OverlayCredits_Vinifera] = atoi(m_mapfile.GetValueByName("Vinifera", "Value", CIniFile::Rules.sections["Vinifera"].AccessValueByName("Value")));
-	m_overlayCredits[OverlayCredits_Aboreus] = atoi(m_mapfile.GetValueByName("Aboreus", "Value", CIniFile::Rules.sections["Aboreus"].AccessValueByName("Value")));
+	m_overlayCredits[OverlayCredits_Riparius] = MapRules.GetInteger("Riparius", "Value");
+	m_overlayCredits[OverlayCredits_Cruentus] = MapRules.GetInteger("Cruentus", "Value");
+	m_overlayCredits[OverlayCredits_Vinifera] = MapRules.GetInteger("Vinifera", "Value");
+	m_overlayCredits[OverlayCredits_Aboreus] = MapRules.GetInteger("Aboreus", "Value");
 	for (i = 0;i < CIniFile::Rules.sections["BuildingTypes"].values.size();i++)
 	{
 		CString type = *CIniFile::Rules.sections["BuildingTypes"].GetValue(i);
@@ -2728,7 +2728,7 @@ void CMapData::GetCelltagData(DWORD dwIndex, CString* lpTag, DWORD* lpdwPos) con
 	pos = *section->GetValueName(dwIndex);
 	PosToXY(pos, &x, &y);
 
-	const auto tag = section->GetValueByName(pos);
+	const auto tag = section->GetString(pos);
 	*lpTag = tag;
 	*lpdwPos = x + y * GetIsoSize();
 }
@@ -5067,9 +5067,9 @@ bool CMapData::hasLat(WORD wGround) const
 
 	for (int i = 0; i < tile_to_lat_count; ++i)
 	{
-		const int tile = atoi(sec.GetValueByName(tile_to_lat[i][0], empty));
-		const int lat = atoi(sec.GetValueByName(tile_to_lat[i][1], empty));
-		const int target_tile = atoi(sec.GetValueByName(tile_to_lat[i][2], empty));
+		const int tile = atoi(sec.GetString(tile_to_lat[i][0], empty));
+		const int lat = atoi(sec.GetString(tile_to_lat[i][1], empty));
+		const int target_tile = atoi(sec.GetString(tile_to_lat[i][2], empty));
 		if (lat &&
 			(set == tile ||
 				set == lat ||
@@ -5096,9 +5096,9 @@ void CMapData::SmoothAllAt(DWORD dwPos)
 
 	for (int i = 0; i < tile_to_lat_count; ++i)
 	{
-		const int tile = atoi(sec.GetValueByName(tile_to_lat[i][0], empty));
-		const int lat = atoi(sec.GetValueByName(tile_to_lat[i][1], empty));
-		const int target_tile = atoi(sec.GetValueByName(tile_to_lat[i][2], empty));
+		const int tile = atoi(sec.GetString(tile_to_lat[i][0], empty));
+		const int lat = atoi(sec.GetString(tile_to_lat[i][1], empty));
+		const int target_tile = atoi(sec.GetString(tile_to_lat[i][2], empty));
 		if (strlen(tile_to_lat[i][2]) &&
 			lat &&
 			(set == tile ||
