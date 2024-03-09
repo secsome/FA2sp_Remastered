@@ -109,11 +109,15 @@
     <ClCompile Include="BackCliffModifier.cpp" />
     <ClCompile Include="Basic.cpp" />
     <ClCompile Include="Bitmap2MapConverter.cpp" />
+    <ClCompile Include="Blowfish.cpp" />
+    <ClCompile Include="Buffer.cpp" />
     <ClCompile Include="Building.cpp" />
+    <ClCompile Include="CCFile.cpp" />
     <ClCompile Include="CellTag.cpp" />
     <ClCompile Include="ChangeSizeDlg.cpp" />
     <ClCompile Include="CliffModifier.cpp" />
     <ClCompile Include="ComboUInputDlg.cpp" />
+    <ClCompile Include="CRC.cpp" />
     <ClCompile Include="DynamicGraphDlg.cpp" />
     <ClCompile Include="FinalSun.cpp" />
     <ClCompile Include="FinalSunDlg.cpp" />
@@ -127,10 +131,12 @@
     <ClCompile Include="Info.cpp" />
     <ClCompile Include="IniFile.cpp" />
     <ClCompile Include="InputBox.cpp" />
+    <ClCompile Include="Int.cpp" />
     <ClCompile Include="IsoView.cpp" />
     <ClCompile Include="Lighting.cpp" />
     <ClCompile Include="LineDrawer.cpp" />
     <ClCompile Include="Loading.cpp" />
+    <ClCompile Include="LZO.cpp" />
     <ClCompile Include="MapD.cpp" />
     <ClCompile Include="MapData.cpp" />
     <ClCompile Include="MapLoadingDlg.cpp" />
@@ -138,7 +144,9 @@
     <ClCompile Include="MapOpenDialog.cpp" />
     <ClCompile Include="MapValidator.cpp" />
     <ClCompile Include="MiniMap.cpp" />
+    <ClCompile Include="MixFile.cpp" />
     <ClCompile Include="MMXSavingOptionsDlg.cpp" />
+    <ClCompile Include="MP.cpp" />
     <ClCompile Include="MultimapHelper.cpp" />
     <ClCompile Include="MultiSaveOptionsDlg.cpp" />
     <ClCompile Include="MyComboBox.cpp" />
@@ -150,13 +158,16 @@
     <ClCompile Include="NewMapSpDlg.cpp" />
     <ClCompile Include="NewMapTypeDlg.cpp" />
     <ClCompile Include="NewRA2HouseDlg.cpp" />
+    <ClCompile Include="PKey.cpp" />
     <ClCompile Include="ProgressDlg.cpp" />
+    <ClCompile Include="Random.cpp" />
     <ClCompile Include="RightFrame.cpp" />
     <ClCompile Include="RTPDlg.cpp" />
     <ClCompile Include="SaveMapOptionsDlg.cpp" />
     <ClCompile Include="SavingDlg.cpp" />
     <ClCompile Include="ScriptTypes.cpp" />
     <ClCompile Include="SearchWaypointDlg.cpp" />
+    <ClCompile Include="SHA.cpp" />
     <ClCompile Include="ShutDownDlg.cpp" />
     <ClCompile Include="SingleplayerSettings.cpp" />
     <ClCompile Include="SpecialFlags.cpp" />
@@ -166,6 +177,7 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='FinalAlertRelease YR|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='FinalAlertRelease YR|Win32'">stdafx.h</PrecompiledHeaderFile>
     </ClCompile>
+    <ClCompile Include="Straw.cpp" />
     <ClCompile Include="structs.cpp" />
     <ClCompile Include="Tags.cpp" />
     <ClCompile Include="TaskForce.cpp" />
@@ -204,13 +216,18 @@
     <ClInclude Include="BackCliffModifier.h" />
     <ClInclude Include="Basic.h" />
     <ClInclude Include="Bitmap2MapConverter.h" />
+    <ClInclude Include="Blowfish.h" />
+    <ClInclude Include="Buffer.h" />
     <ClInclude Include="Building.h" />
+    <ClInclude Include="CCFile.h" />
     <ClInclude Include="CellTag.h" />
     <ClInclude Include="ChangeSizeDlg.h" />
     <ClInclude Include="CliffModifier.h" />
     <ClInclude Include="ComboUInputDlg.h" />
+    <ClInclude Include="CRC.h" />
     <ClInclude Include="defines.h" />
     <ClInclude Include="FormatExtensions.h" />
+    <ClInclude Include="Int.h" />
     <ClInclude Include="LineDrawer.h" />
     <ClInclude Include="DynamicGraphDlg.h" />
     <ClInclude Include="FinalSun.h" />
@@ -228,7 +245,10 @@
     <ClInclude Include="InputBox.h" />
     <ClInclude Include="IsoView.h" />
     <ClInclude Include="Lighting.h" />
+    <ClInclude Include="ListNode.h" />
     <ClInclude Include="Loading.h" />
+    <ClInclude Include="LZO.h" />
+    <ClInclude Include="LZOConfig.h" />
     <ClInclude Include="macros.h" />
     <ClInclude Include="MapD.h" />
     <ClInclude Include="MapData.h" />
@@ -238,7 +258,9 @@
     <ClInclude Include="MapTool.h" />
     <ClInclude Include="MapValidator.h" />
     <ClInclude Include="MiniMap.h" />
+    <ClInclude Include="MixFile.h" />
     <ClInclude Include="MMXSavingOptionsDlg.h" />
+    <ClInclude Include="MP.h" />
     <ClInclude Include="MultimapHelper.h" />
     <ClInclude Include="MultiSaveOptionsDlg.h" />
     <ClInclude Include="MyComboBox.h" />
@@ -251,7 +273,9 @@
     <ClInclude Include="NewMapTypeDlg.h" />
     <ClInclude Include="NewRA2HouseDlg.h" />
     <ClInclude Include="ovrlinline.h" />
+    <ClInclude Include="PKey.h" />
     <ClInclude Include="ProgressDlg.h" />
+    <ClInclude Include="Random.h" />
     <ClInclude Include="Resource.h" />
     <ClInclude Include="RightFrame.h" />
     <ClInclude Include="RTPDlg.h" />
@@ -259,10 +283,12 @@
     <ClInclude Include="SavingDlg.h" />
     <ClInclude Include="ScriptTypes.h" />
     <ClInclude Include="SearchWaypointDlg.h" />
+    <ClInclude Include="SHA.h" />
     <ClInclude Include="ShutDownDlg.h" />
     <ClInclude Include="SingleplayerSettings.h" />
     <ClInclude Include="SpecialFlags.h" />
     <ClInclude Include="StdAfx.h" />
+    <ClInclude Include="Straw.h" />
     <ClInclude Include="structs.h" />
     <ClInclude Include="Tags.h" />
     <ClInclude Include="TaskForce.h" />
