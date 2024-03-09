@@ -266,6 +266,8 @@ BOOL CFinalSunApp::InitInstance()
 	}
 
 	strcpy(GamePath, theApp.m_Options.TSExe);
+	// I AM THE GAME
+	SetCurrentDirectory(GamePath);
 
 	// MW 01/23/2013: changed the global CMapData Map to a global CMapData* to get rid of static initialization/shutdown problems
 	{
