@@ -592,18 +592,6 @@ void CMapData::LoadMap(const std::string& file)
 	m_mapfile.Clear();
 	m_mapfile.LoadFile(file, TRUE);
 
-	// any .mpr is a multi map. Previous FinalAlert/FinalSun versions did not set this value correctly->
-	char lowc[MAX_PATH] = { 0 };
-	strcpy_s(lowc, file.c_str());
-	_strlwr(lowc);
-	if (strstr(lowc, ".mpr"))
-	{
-		m_mapfile.sections["Basic"].values["MultiplayerOnly"] = "1";
-		if (m_mapfile.sections["Basic"].FindName("Player") >= 0) m_mapfile.sections["Basic"].values.erase("Player");
-	}
-
-
-
 	errstream << "LoadMap() repairs Taskforces (if needed)\n";
 	errstream.flush();
 
@@ -638,7 +626,6 @@ void CMapData::LoadMap(const std::string& file)
 	dlg.UpdateWindow();
 
 	theApp.m_loading->Unload();
-	theApp.m_loading->InitMixFiles();
 
 	map<CString, PICDATA>::iterator it = pics.begin();
 	for (int e = 0;e < pics.size();e++)
@@ -912,25 +899,11 @@ void CMapData::LoadMap(const std::string& file)
 
 	isInitialized = TRUE;
 
-	errstream << "LoadMap() allocates fielddata\n";
-	errstream.flush();
-
 	fielddata = new(FIELDDATA[(GetIsoSize() + 1) * (GetIsoSize() + 1)]);
 	fielddata_size = (GetIsoSize() + 1) * (GetIsoSize() + 1);
 
-	errstream << "LoadMap() unpacks data\n";
-	errstream.flush();
-
-
-
 	Unpack();
-
-	errstream << "LoadMap() updates from ini\n";
-	errstream.flush();
-
-
 	UpdateIniFile(MAPDATA_UPDATE_FROM_INI);
-
 }
 
 
@@ -2947,55 +2920,6 @@ void CMapData::UpdateMapFieldData(BOOL bSave)
 	{
 		int i;
 		int e;
-		/*for(i=0;i<GetIsoSize()*GetIsoSize();i++)
-		{
-			int dwX=i%m_IsoSize;
-			int dwY=i/m_IsoSize;
-			int mapwidth=Map->GetWidth();
-				int mapheight=Map->GetHeight();
-				int k=1;
-
-			if( dwX<1|| dwY<1 || dwX+dwY<mapwidth+k || dwX+dwY>mapwidth+mapheight*2 || (dwY+k>mapwidth && dwX-k<dwY-mapwidth) || (dwX+k>mapwidth && dwY+mapwidth-k<dwX))
-			{
-
-			}
-			else
-			{
-				BOOL bFound=FALSE;
-				for(e=0;e<dwIsoMapSize;e++)
-				{
-					MAPFIELDDATA* mfd=(MAPFIELDDATA*)&m_mfd[e*MAPFIELDDATA_SIZE];
-					if(mfd->wY==dwX && mfd->wX==dwY)
-					{
-						bFound=TRUE;
-						break;
-					}
-				}
-
-				if(!bFound)
-				{
-					errstream << dwX << " " << dwY << " not found";
-					errstream.flush();
-				}
-			}
-		}*/
-
-		/*	int count=0;
-			int max_count=0;
-			BYTE b;
-			b=m_mfd[0];
-			for (i=0;i<dwIsoMapSize*MAPFIELDDATA_SIZE;i++)
-			{
-				if(m_mfd[i]!=b) { b=m_mfd[i]; count=0; }
-				if(m_mfd[i]==b) count++;
-				if(max_count<count) max_count=count;
-				if(count>10) MessageBox(0,"uh","",0);
-			}
-
-			char c[50];
-			itoa(max_count,c,10);
-			MessageBox(0,c,"",0);*/
-
 		const bool mp = IsMultiplayer();
 		for (i = 0;i < dwIsoMapSize;i++)
 		{
@@ -3022,17 +2946,6 @@ void CMapData::UpdateMapFieldData(BOOL bSave)
 
 				Mini_UpdatePos(i % GetIsoSize(), i / GetIsoSize(), mp);
 
-				/*int dwX=mfd->wY;
-				int dwY=mfd->wX;
-				int mapwidth=Map->GetWidth();
-				int mapheight=Map->GetHeight();
-				const int k=1;
-				if( dwX<1|| dwY<1 || dwX+dwY<mapwidth+k || dwX+dwY>mapwidth+mapheight*2 || (dwY+k>mapwidth && dwX-k<dwY-mapwidth) || (dwX+k>mapwidth && dwY+mapwidth-k<dwX))
-				{
-					errstream << "Outside " << dwX << " " << dwY << endl;
-					errstream.flush();
-				}*/
-
 			}
 			else // if(mfd->wY==0xFFFE && mfd->wX==0xFFFE)
 			{
@@ -3041,31 +2954,6 @@ void CMapData::UpdateMapFieldData(BOOL bSave)
 				c[1] = 0;
 				OutputDebugString(c);
 			}
-
-			/*if(mfd->bData[0] || mfd->bData[1] || mfd->bData2[0])
-			{
-				char c[50];
-				itoa(mfd->wY, c, 10);
-				OutputDebugString("Data at ");
-				OutputDebugString(c);
-				OutputDebugString(" ");
-				itoa(mfd->wX,c,10);
-				OutputDebugString(c);
-				OutputDebugString(": ");
-				itoa(mfd->bData[0], c, 10);
-				OutputDebugString(c);
-				OutputDebugString(" ");
-				itoa(mfd->bData[1], c, 10);
-				OutputDebugString(c);
-				OutputDebugString(" ");
-				itoa(mfd->bData[2], c, 10);
-				OutputDebugString(c);
-				OutputDebugString(" ");
-				itoa(mfd->bData2[0], c, 10);
-				OutputDebugString(c);
-				OutputDebugString("\n");
-			}*/
-
 		}
 
 		for (i = 0;i < m_IsoSize;i++)
@@ -3095,41 +2983,27 @@ void CMapData::UpdateMapFieldData(BOOL bSave)
 	{
 		int x, y, n = 0;
 
-		// this code here must be improved to produce smaller maps. Just ignore the data outside the visible rect!
-
 		if (m_mfd) delete[] m_mfd;
 		dwIsoMapSize = m_IsoSize * m_IsoSize + 15;
 		m_mfd = new(BYTE[(dwIsoMapSize + m_IsoSize * m_IsoSize) * MAPFIELDDATA_SIZE]);
 		memset(m_mfd, 0, dwIsoMapSize * MAPFIELDDATA_SIZE);
 
-
-
 		int p = 0;
 		const int width = m_maprect.right;
 		const int height = m_maprect.bottom;
-
-		errstream << "Memory allocated for mappack, saving fielddata into mapfields" << endl;
-		errstream.flush();
 
 		int i;
 		int mapwidth = m_maprect.right;
 		int mapheight = m_maprect.bottom;
 
-		//#ifdef UNUSED
 		int dwX, dwY;
 		for (dwX = 0;dwX <= m_IsoSize;dwX++)
 		{
 			for (dwY = 0;dwY <= m_IsoSize;dwY++)
 			{
-				/*for(i=0;i<fielddata_size;i++)
-				{*/
-				//int dwX=i%m_IsoSize;
-				//int dwY=i/m_IsoSize;
 				i = dwX + dwY * m_IsoSize;
 
-				//if( dwX<2|| dwY<2 || dwX+dwY<mapwidth+2 || dwX+dwY+2>mapwidth+mapheight*2 || (dwY+2>mapwidth && dwX-2<dwY-mapwidth) || (dwX+2>mapwidth && dwY+mapwidth-2<dwX)) continue;
 				if (dwX < 1 || dwY < 1 || dwX + dwY<mapwidth + 1 || dwX + dwY>mapwidth + mapheight * 2 || (dwY + 1 > mapwidth && dwX - 1 < dwY - mapwidth) || (dwX + 1 > mapwidth && dwY + mapwidth - 1 < dwX)) continue;
-
 
 				MAPFIELDDATA* mfd = (MAPFIELDDATA*)&m_mfd[p * MAPFIELDDATA_SIZE];
 				mfd->wGround = fielddata[i].wGround;
@@ -3138,206 +3012,11 @@ void CMapData::UpdateMapFieldData(BOOL bSave)
 				mfd->bHeight = fielddata[i].bHeight;
 				memcpy(&mfd->bData, &fielddata[i].bMapData, 3); // includes fielddata[i].bSubTile!
 				memcpy(&mfd->bData2, &fielddata[i].bMapData2, 1);
-
 				p++;
 			}
 
 		}
-		//#endif
-
-		/*
-
-
-				if(width>height)
-				{
-					int add_bottom=1;
-					int add_top=-1;
-					int n_bottom, n_top;
-					n_bottom=n_top=width;
-					for(x=0;x<width+height+1;x++)
-					{
-
-						for(y=n_top;y<=n_bottom;y++)
-						{
-							if(y<width+height+1 && y>=0)
-							{
-								if( x<1|| y<1 || x+y<mapwidth+1 || x+y>mapwidth+mapheight*2 || (y+1>mapwidth && x-1<y-mapwidth) || (x+1>mapwidth && y+mapwidth-1<x)) continue;
-
-
-								int pos=y+x*GetIsoSize();
-
-								MAPFIELDDATA* mfd=(MAPFIELDDATA*)&m_mfd[p*MAPFIELDDATA_SIZE];
-								mfd->wGround=fielddata[pos].wGround;
-								mfd->wX=x;
-								mfd->wY=y;
-								mfd->bHeight=fielddata[pos].bHeight;
-								memcpy(&mfd->bData, &fielddata[pos].bMapData, 3);
-								memcpy(&mfd->bData2, &fielddata[pos].bMapData2, 1);
-
-								p++;
-							}
-						}
-
-						if(x==height) add_bottom=-1;
-						if(x==width) add_top=1;
-
-						n_top+=add_top;
-						n_bottom+=add_bottom;
-					}
-				}
-				else
-				{
-					int add_right=1;
-					int add_left=-1;
-					int n_right, n_left;
-					n_right=n_left=height;
-					for(y=width+height;y>=0;y--)
-					{
-
-						for(x=n_left;x<=n_right;x++)
-						{
-							if(x<width+height && x>=0)
-							{
-								if( x<1|| y<1 || x+y<mapwidth+1 || x+y>mapwidth+mapheight*2 || (y+1>mapwidth && x-1<y-mapwidth) || (x+1>mapwidth && y+mapwidth-1<x)) continue;
-
-								int pos=y+x*GetIsoSize();
-
-								//if(pos>0 && pos<=
-								MAPFIELDDATA* mfd=(MAPFIELDDATA*)&m_mfd[p*MAPFIELDDATA_SIZE];
-								mfd->wGround=fielddata[pos].wGround;
-								mfd->wX=x;
-								mfd->wY=y;
-								mfd->bHeight=fielddata[pos].bHeight;
-								memcpy(&mfd->bData, &fielddata[pos].bMapData, 3);
-								memcpy(&mfd->bData2, &fielddata[pos].bMapData2, 1);
-
-								p++;
-							}
-						}
-
-						if(y==height) add_right=-1;
-						if(y==width) add_left=1;
-
-						n_left+=add_left;
-						n_right+=add_right;
-					}
-				}*/
-
-				/*
-				else
-				{
-					for(y=height;y>=0;y--)
-					{
-						for(x=0;x<=n;x++)
-						{
-							int pos=y+x*GetIsoSize();
-
-							MAPFIELDDATA* mfd=(MAPFIELDDATA*)&m_mfd[p*MAPFIELDDATA_SIZE];
-							mfd->wGround=fielddata[pos].wGround;
-							mfd->wX=x;
-							mfd->wY=y;
-							mfd->bHeight=fielddata[pos].bHeight;
-							memcpy(&mfd->bData, &fielddata[pos].bMapData, 3);
-							memcpy(&mfd->bData2, &fielddata[pos].bMapData2, 1);
-							char c[50];
-							itoa(x,c,10);
-							OutputDebugString(c);
-							OutputDebugString(" ");
-							itoa(y,c,10);
-							OutputDebugString(c);
-							OutputDebugString(" ");
-							itoa(p,c,10);
-							OutputDebugString(c);
-							OutputDebugString(" ");
-							OutputDebugString("\n");
-							p++;
-						}
-						if(height-y<width)
-						n++;
-						else if(y<=width)
-						n--;
-
-
-					}
-				}*/
-
-		dwIsoMapSize = p;//+14; // dwIsoMapSize is smaller than whole iso map!
-
-
-
-		int startpos = (p)*MAPFIELDDATA_SIZE;
-		/*for(i=0;i<14;i++)
-		{
-			MAPFIELDDATA* mfd=(MAPFIELDDATA*)&m_mfd[startpos+i*MAPFIELDDATA_SIZE];
-			mfd->wX=0xFFFE;
-			mfd->wY=0xFFFE;
-			int c;
-			switch(i)
-			{
-			case 0:
-				c='F';
-				break;
-			case 1:
-				c='I';
-				break;
-			case 2:
-				c='N';
-				break;
-			case 3:
-				c='A';
-				break;
-			case 4:
-				c='L';
-				break;
-			case 5:
-				c='S';
-				break;
-			case 6:
-				c='U';
-				break;
-			case 7:
-				c='N';
-				break;
-			case 8:
-				c='/';
-				break;
-			case 9:
-				c='A';
-				break;
-			case 10:
-				c='L';
-				break;
-			case 11:
-				c='E';
-				break;
-			case 12:
-				c='R';
-				break;
-			case 13:
-				c='T';
-				break;
-			}
-			mfd->bHeight=c;
-
-		}*/
-		/*for(i=0;i<m_IsoSize;i++)
-		{
-			for(e=0;e<m_IsoSize;e++)
-			{
-				int pos=e+i*GetIsoSize();
-
-				MAPFIELDDATA* mfd=(MAPFIELDDATA*)&m_mfd[n*MAPFIELDDATA_SIZE];
-				mfd->wGround=fielddata[pos].wGround;
-				mfd->wX=i;
-				mfd->wY=e;
-				mfd->bHeight=fielddata[pos].bHeight;
-				memcpy(&mfd->bData, &fielddata[pos].bMapData, 3);
-				memcpy(&mfd->bData2, &fielddata[pos].bMapData2, 1);
-				n++;
-			}
-		}*/
-
-
+		dwIsoMapSize = p;
 	}
 }
 
@@ -3868,7 +3547,6 @@ void CMapData::CreateMap(DWORD dwWidth, DWORD dwHeight, LPCTSTR lpTerrainType, D
 	if (theApp.m_loading)
 	{
 		theApp.m_loading->Unload();
-		theApp.m_loading->InitMixFiles();
 
 		if (theApp.m_pMainWnd)
 			((CFinalSunDlg*)theApp.m_pMainWnd)->m_view.m_isoview->UpdateOverlayPictures();

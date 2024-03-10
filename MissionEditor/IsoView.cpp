@@ -5516,12 +5516,8 @@ void CIsoView::DrawMap()
 	// the code here draws the coordinate system
 	int i;
 
-	
 	// now, we draw all the objects
-	
-
 	int left, right, top, bottom;
-
 	{
 		RECT cr;
 		GetClientRect(&cr);
@@ -5541,8 +5537,6 @@ void CIsoView::DrawMap()
 	right += 7;
 	bottom += 7;
 
-
-
 	// validate the coordinates
 	if (left < 0) left = 0;
 	if (bottom >= Map->GetIsoSize() || bottom < top) bottom = Map->GetIsoSize();
@@ -5551,10 +5545,8 @@ void CIsoView::DrawMap()
 
 
 	BOOL bMarbleHeight = TRUE;
-	//if(Map->GetTheater()==THEATER4 || Map->GetTheater()==THEATER3) bMarbleHeight=FALSE;
 
 	// Now left, right, top & bottom contain the needed values
-
 	DWORD MM_heightstart = tilesets_start[atoi((*CIniFile::CurrentTheater).sections["General"].values["HeightBase"])];
 
 	// now draw everything
@@ -5585,13 +5577,10 @@ void CIsoView::DrawMap()
 		{
 			const MapCoords mapCoords(u, v);
 			if (bCancelDraw)
-			{
 				bCancelDraw = FALSE;
-			}
 				
 			if (u < 1 || v < 1 || u + v<mapwidth + 1 || u + v>mapwidth + mapheight * 2 || (v + 1 > mapwidth && u - 1 < v - mapwidth) || (u + 1 > mapwidth && v + mapwidth - 1 < u))
 				continue;
-
 
 			FIELDDATA m = *Map->GetFielddataAt(mapCoords);
 			const auto drawCoords = GetRenderTargetCoordinates(mapCoords);
@@ -5606,13 +5595,10 @@ void CIsoView::DrawMap()
 			{
 				if ((*tiledata)[m.wGround].wMarbleGround != 0xFFFF)
 				{
-
 					m.wGround = (*tiledata)[m.wGround].wMarbleGround;
 				}
 				else if (bMarbleHeight)
 				{
-					//drawy+=f_y*m.bHeight;
-
 					m.wGround = MM_heightstart + m.bHeight;
 					m.bSubTile = 0;
 				}
@@ -5620,7 +5606,6 @@ void CIsoView::DrawMap()
 
 			if (!m.bRedrawTerrain)
 			{
-
 				TILEDATA* td = &(*tiledata)[m.wGround];
 				if (td->bReplacementCount)
 				{
@@ -5659,7 +5644,6 @@ void CIsoView::DrawMap()
 
 		}
 	}
-
 
 	for (u = left;u < right;u++)
 	{
