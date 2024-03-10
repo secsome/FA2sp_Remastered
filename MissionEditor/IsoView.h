@@ -35,7 +35,6 @@
 
 #include <vector>
 #include <memory>
-#include "MissionEditorPackLib.h"
 #include "Structs.h"
 
 
@@ -166,7 +165,6 @@ public:
 	void HideTileSet(DWORD dwTileSet);
 	void FlipHighResBuffer();
 	void BlitBackbufferToHighRes();
-	void RenderUIOverlay();
 	int m_BrushSize_x;
 	int m_BrushSize_y;
 	BOOL ReachableFrom(DWORD dwStart, DWORD dwEnd);
@@ -175,9 +173,6 @@ public:
 	void UpdateStatusBar(int x, int y);
 	void DrawCell(int x, int y, int w, int h, COLORREF col, BOOL dotted=FALSE, HDC hDC=nullptr);
 	void DrawCell(void* dest, int dest_width, int dest_height, int dest_pitch, int x, int y, int w, int h, int col, bool dotted=false, bool touchNeighbours=false, int colNeighbour=CLR_INVALID) const;
-	void DrawCellCursor(const MapCoords& mapCoords, const DDSURFACEDESC2& desc);
-	void DrawTube(const CTube& tube, const DDSURFACEDESC2* ddsd=nullptr, const COLORREF* color=nullptr) const;
-
 	/// <summary>
 	/// Converts from (world) pixel coordinates to logical map coordinates
 	/// </summary>
@@ -336,7 +331,6 @@ public:
 		else
 			lpdsBack->BltFast(x,y, pic, NULL, DDBLTFAST_SRCCOLORKEY);
 	}
-	void updateFontScaled();
 	void TextOut(int x, int y, const char* text, COLORREF col);
 	void TextOut(HDC hDC, int x, int y, const char* text, COLORREF col);
 	LPDIRECTDRAWSURFACE4 lpdsBack;
@@ -344,7 +338,6 @@ public:
 	LPDIRECTDRAWSURFACE4 lpdsBackHighRes; // used for rendering text and some lines in high-res
 	LPDIRECTDRAWSURFACE4 lpds;
 	DDPIXELFORMAT pf;	
-	std::unique_ptr<FSunPackLib::ColorConverter> m_color_converter;
 	LPDIRECTDRAW4 dd;
 	LPDIRECTDRAW dd_1;
 	HGLRC m_hglrc;
@@ -354,14 +347,6 @@ public:
 	BOOL b_IsLoading;
 	int m_fontDefaultHeight;
 	int m_Font9Height;
-	std::unique_ptr<TextDrawer> m_textDefault;	
-	std::unique_ptr<TextDrawer> m_textScaled;
-	std::unique_ptr<TextDrawer> m_text9;
-	std::unique_ptr<TextDrawer> m_text9Scaled;
-	std::unique_ptr<TextDrawer> m_textBlue;
-	std::unique_ptr<TextDrawer> m_textBlue9;
-	std::unique_ptr<TextDrawer> m_textBlueScaled;
-	std::unique_ptr<TextDrawer> m_textBlue9Scaled;
 
 private:
 	void UpdateScrollRanges();

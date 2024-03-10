@@ -185,21 +185,7 @@ void AddTubeTool::onMouseMove(const ProjectedCoords& projCoords, const MapCoords
 }
 
 void AddTubeTool::render()
-{
-	if (m_mm_tube)
-	{
-		// mouse-move tube
-		getView().DrawTube(*m_mm_tube);
-	}
-	else if (m_tube) {
-		getView().DrawTube(*m_tube);
-	}
-	else if (m_hover_tube)
-	{
-		COLORREF col = RGB(0, 255, 0);
-		getView().DrawTube(*m_hover_tube, nullptr, &col);
-	}
-	
+{	
 }
 
 RemoveTubeTool::RemoveTubeTool(CMapData& map, CIsoView& view) : MapTool(map, view)
@@ -229,11 +215,6 @@ void RemoveTubeTool::onMouseMove(const ProjectedCoords& projCoords, const MapCoo
 
 void RemoveTubeTool::render()
 {
-	for(auto& tube: m_hover_tubes)
-	{
-		COLORREF col = RGB(0, 255, 0);
-		getView().DrawTube(*tube, nullptr, &col);
-	}
 }
 
 ModifyTubeTool::ModifyTubeTool(CMapData& map, CIsoView& view, bool bidirectional): AddTubeTool(map, view, bidirectional)

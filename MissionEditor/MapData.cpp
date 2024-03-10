@@ -25,7 +25,6 @@
 #include "stdafx.h"
 #include "MapData.h"
 #include "DynamicGraphDlg.h"
-#include "MissionEditorPackLib.h"
 #include "inlines.h"
 #include "variables.h"
 #include "maploadingdlg.h"
@@ -349,9 +348,61 @@ void CMapData::CalcMapRect()
 
 }
 
-
-
-
+void CMapData::InitTheater()
+{
+	auto theater = m_mapfile.GetString("Map", "Theater", "temperate");
+	theater.MakeUpper();
+	if (theater == THEATER0)
+	{
+		CIniFile::CurrentTheater = &CIniFile::Temperate;
+		tiledata = &t_tiledata;
+		tiledata_count = &t_tiledata_count;
+		theApp.m_loading->current_theater = 'T';
+	}
+	else if (theater == THEATER1)
+	{
+		CIniFile::CurrentTheater = &CIniFile::Snow;
+		tiledata = &s_tiledata;
+		tiledata_count = &s_tiledata_count;
+		theApp.m_loading->current_theater = 'A';
+    }
+    else if (theater == THEATER2)
+    {
+        CIniFile::CurrentTheater = &CIniFile::Urban;
+		tiledata = &u_tiledata;
+		tiledata_count = &u_tiledata_count;
+		theApp.m_loading->current_theater = 'U';
+    }
+    else if (theater == THEATER3)
+    {
+        CIniFile::CurrentTheater = &CIniFile::NewUrban;
+		tiledata = &un_tiledata;
+		tiledata_count = &un_tiledata_count;
+		theApp.m_loading->current_theater = 'N';
+    }
+    else if (theater == THEATER4)
+    {
+        CIniFile::CurrentTheater = &CIniFile::Lunar;
+		tiledata = &l_tiledata;
+		tiledata_count = &l_tiledata_count;
+		theApp.m_loading->current_theater = 'L';
+    }
+    else if (theater == THEATER5)
+    {
+        CIniFile::CurrentTheater = &CIniFile::Desert;
+		tiledata = &d_tiledata;
+		tiledata_count = &d_tiledata_count;
+		theApp.m_loading->current_theater = 'D';
+    }
+    else
+    {
+        CIniFile::CurrentTheater = &CIniFile::Temperate;
+		tiledata = &t_tiledata;
+		tiledata_count = &t_tiledata_count;
+		theApp.m_loading->current_theater = 'T';
+	}
+	theApp.m_loading->InitTMPs();
+}
 
 WORD CMapData::GetHousesCount(BOOL bCountries)
 {
@@ -592,6 +643,8 @@ void CMapData::LoadMap(const std::string& file)
 	m_mapfile.Clear();
 	m_mapfile.LoadFile(file, TRUE);
 
+	InitTheater();
+
 	errstream << "LoadMap() repairs Taskforces (if needed)\n";
 	errstream.flush();
 
@@ -673,227 +726,11 @@ void CMapData::LoadMap(const std::string& file)
 	pics.clear();
 	missingimages.clear();
 
-	theApp.m_loading->InitPics();
-
 	UpdateBuildingInfo();
 	UpdateTreeInfo();
 	((CFinalSunDlg*)theApp.m_pMainWnd)->m_view.m_isoview->UpdateOverlayPictures();
 
-
-	if (m_mapfile.sections["Map"].values["Theater"] == THEATER0)
-	{
-		tiledata = &s_tiledata;
-		tiledata_count = &s_tiledata_count;
-		CIniFile::CurrentTheater = &CIniFile::Snow;
-		theApp.m_loading->FreeTileSet();
-		tiledata = &u_tiledata;
-		tiledata_count = &u_tiledata_count;
-		CIniFile::CurrentTheater = &CIniFile::Urban;
-		theApp.m_loading->FreeTileSet();
-
-		// MW new tilesets
-		tiledata = &un_tiledata;
-		tiledata_count = &un_tiledata_count;
-		CIniFile::CurrentTheater = &CIniFile::NewUrban;
-		theApp.m_loading->FreeTileSet();
-		tiledata = &d_tiledata;
-		tiledata_count = &d_tiledata_count;
-		CIniFile::CurrentTheater = &CIniFile::Desert;
-		theApp.m_loading->FreeTileSet();
-		tiledata = &l_tiledata;
-		tiledata_count = &l_tiledata_count;
-		CIniFile::CurrentTheater = &CIniFile::Lunar;
-		theApp.m_loading->FreeTileSet();
-
-		tiledata = &t_tiledata;
-		tiledata_count = &t_tiledata_count;
-		CIniFile::CurrentTheater = &CIniFile::Temperate;
-		theApp.m_loading->FreeTileSet();
-		theApp.m_loading->InitTMPs(&dlg.m_Progress);
-		theApp.m_loading->current_theater = 'T';
-
-	}
-	else if (m_mapfile.sections["Map"].values["Theater"] == THEATER1)
-	{
-		tiledata = &t_tiledata;
-		tiledata_count = &t_tiledata_count;
-		CIniFile::CurrentTheater = &CIniFile::Temperate;
-		theApp.m_loading->FreeTileSet();
-		tiledata = &u_tiledata;
-		tiledata_count = &u_tiledata_count;
-		CIniFile::CurrentTheater = &CIniFile::Urban;
-		theApp.m_loading->FreeTileSet();
-
-		// MW new tilesets
-		tiledata = &un_tiledata;
-		tiledata_count = &un_tiledata_count;
-		CIniFile::CurrentTheater = &CIniFile::NewUrban;
-		theApp.m_loading->FreeTileSet();
-		tiledata = &d_tiledata;
-		tiledata_count = &d_tiledata_count;
-		CIniFile::CurrentTheater = &CIniFile::Desert;
-		theApp.m_loading->FreeTileSet();
-		tiledata = &l_tiledata;
-		tiledata_count = &l_tiledata_count;
-		CIniFile::CurrentTheater = &CIniFile::Lunar;
-		theApp.m_loading->FreeTileSet();
-
-		tiledata = &s_tiledata;
-		tiledata_count = &s_tiledata_count;
-		CIniFile::CurrentTheater = &CIniFile::Snow;
-		theApp.m_loading->FreeTileSet();
-		theApp.m_loading->InitTMPs(&dlg.m_Progress);
-		theApp.m_loading->current_theater = 'A';
-	}
-	else if (m_mapfile.sections["Map"].values["Theater"] == THEATER2)
-	{
-		tiledata = &t_tiledata;
-		tiledata_count = &t_tiledata_count;
-		CIniFile::CurrentTheater = &CIniFile::Temperate;
-		theApp.m_loading->FreeTileSet();
-		tiledata = &s_tiledata;
-		tiledata_count = &s_tiledata_count;
-		CIniFile::CurrentTheater = &CIniFile::Snow;
-		theApp.m_loading->FreeTileSet();
-
-		// MW new tilesets
-		tiledata = &un_tiledata;
-		tiledata_count = &un_tiledata_count;
-		CIniFile::CurrentTheater = &CIniFile::NewUrban;
-		theApp.m_loading->FreeTileSet();
-		tiledata = &d_tiledata;
-		tiledata_count = &d_tiledata_count;
-		CIniFile::CurrentTheater = &CIniFile::Desert;
-		theApp.m_loading->FreeTileSet();
-		tiledata = &l_tiledata;
-		tiledata_count = &l_tiledata_count;
-		CIniFile::CurrentTheater = &CIniFile::Lunar;
-		theApp.m_loading->FreeTileSet();
-
-		tiledata = &u_tiledata;
-		tiledata_count = &u_tiledata_count;
-		CIniFile::CurrentTheater = &CIniFile::Urban;
-		theApp.m_loading->FreeTileSet();
-		theApp.m_loading->InitTMPs(&dlg.m_Progress);
-		theApp.m_loading->current_theater = 'U';
-	}
-	else if (m_mapfile.sections["Map"].values["Theater"] == THEATER3)
-	{
-		tiledata = &t_tiledata;
-		tiledata_count = &t_tiledata_count;
-		CIniFile::CurrentTheater = &CIniFile::Temperate;
-		theApp.m_loading->FreeTileSet();
-		tiledata = &s_tiledata;
-		tiledata_count = &s_tiledata_count;
-		CIniFile::CurrentTheater = &CIniFile::Snow;
-		theApp.m_loading->FreeTileSet();
-
-		// MW new tilesets
-
-		tiledata = &d_tiledata;
-		tiledata_count = &d_tiledata_count;
-		CIniFile::CurrentTheater = &CIniFile::Desert;
-		theApp.m_loading->FreeTileSet();
-		tiledata = &l_tiledata;
-		tiledata_count = &l_tiledata_count;
-		CIniFile::CurrentTheater = &CIniFile::Lunar;
-		theApp.m_loading->FreeTileSet();
-
-		tiledata = &u_tiledata;
-		tiledata_count = &u_tiledata_count;
-		CIniFile::CurrentTheater = &CIniFile::Urban;
-		theApp.m_loading->FreeTileSet();
-
-		tiledata = &un_tiledata;
-		tiledata_count = &un_tiledata_count;
-		CIniFile::CurrentTheater = &CIniFile::NewUrban;
-		theApp.m_loading->FreeTileSet();
-
-		theApp.m_loading->InitTMPs(&dlg.m_Progress);
-		theApp.m_loading->current_theater = 'N';
-	}
-	else if (m_mapfile.sections["Map"].values["Theater"] == THEATER4)
-	{
-		tiledata = &t_tiledata;
-		tiledata_count = &t_tiledata_count;
-		CIniFile::CurrentTheater = &CIniFile::Temperate;
-		theApp.m_loading->FreeTileSet();
-		tiledata = &s_tiledata;
-		tiledata_count = &s_tiledata_count;
-		CIniFile::CurrentTheater = &CIniFile::Snow;
-		theApp.m_loading->FreeTileSet();
-
-		// MW new tilesets
-		tiledata = &un_tiledata;
-		tiledata_count = &un_tiledata_count;
-		CIniFile::CurrentTheater = &CIniFile::NewUrban;
-		theApp.m_loading->FreeTileSet();
-		tiledata = &d_tiledata;
-		tiledata_count = &d_tiledata_count;
-		CIniFile::CurrentTheater = &CIniFile::Desert;
-		theApp.m_loading->FreeTileSet();
-
-
-		tiledata = &u_tiledata;
-		tiledata_count = &u_tiledata_count;
-		CIniFile::CurrentTheater = &CIniFile::Urban;
-		theApp.m_loading->FreeTileSet();
-
-		tiledata = &l_tiledata;
-		tiledata_count = &l_tiledata_count;
-		CIniFile::CurrentTheater = &CIniFile::Lunar;
-		theApp.m_loading->FreeTileSet();
-
-		theApp.m_loading->InitTMPs(&dlg.m_Progress);
-		theApp.m_loading->current_theater = 'L';
-	}
-	else if (m_mapfile.sections["Map"].values["Theater"] == THEATER5)
-	{
-		tiledata = &t_tiledata;
-		tiledata_count = &t_tiledata_count;
-		CIniFile::CurrentTheater = &CIniFile::Temperate;
-		theApp.m_loading->FreeTileSet();
-		tiledata = &s_tiledata;
-		tiledata_count = &s_tiledata_count;
-		CIniFile::CurrentTheater = &CIniFile::Snow;
-		theApp.m_loading->FreeTileSet();
-
-		// MW new tilesets
-		tiledata = &un_tiledata;
-		tiledata_count = &un_tiledata_count;
-		CIniFile::CurrentTheater = &CIniFile::NewUrban;
-		theApp.m_loading->FreeTileSet();
-
-		tiledata = &l_tiledata;
-		tiledata_count = &l_tiledata_count;
-		CIniFile::CurrentTheater = &CIniFile::Lunar;
-		theApp.m_loading->FreeTileSet();
-
-
-		tiledata = &u_tiledata;
-		tiledata_count = &u_tiledata_count;
-		CIniFile::CurrentTheater = &CIniFile::Urban;
-		theApp.m_loading->FreeTileSet();
-
-		tiledata = &d_tiledata;
-		tiledata_count = &d_tiledata_count;
-		CIniFile::CurrentTheater = &CIniFile::Desert;
-		theApp.m_loading->FreeTileSet();
-
-		theApp.m_loading->InitTMPs(&dlg.m_Progress);
-		theApp.m_loading->current_theater = 'D';
-	}
-	else
-	{
-		theApp.m_loading->FreeAll();
-		CString s = "Fatal error! %9 doesn´t support the theater of this map!";
-		s = TranslateStringACP(s);
-		MessageBox(0, s, "Error", 0);
-		exit(0);
-	}
 	dlg.DestroyWindow();
-
-
 
 	CalcMapRect();
 
@@ -3435,16 +3272,11 @@ void CMapData::CreateMap(DWORD dwWidth, DWORD dwHeight, LPCTSTR lpTerrainType, D
 	}
 	if (m_snapshots != NULL) delete[] m_snapshots;
 
-
-
-
-
 	fielddata = NULL;
 	fielddata_size = 0;
 	m_snapshots = NULL;
 	dwSnapShotCount = 0;
 	m_cursnapshot = -1;
-
 
 	m_tubes.clear();
 	m_tubes.reserve(32);
@@ -3486,6 +3318,8 @@ void CMapData::CreateMap(DWORD dwWidth, DWORD dwHeight, LPCTSTR lpTerrainType, D
 
 	m_mapfile.sections["Map"].values["Theater"] = lpTerrainType;
 	m_mapfile.sections["Map"].values["LocalSize"] = mapsize;
+
+	InitTheater();
 
 	map<CString, PICDATA>::iterator it = pics.begin();
 	for (int e = 0;e < pics.size();e++)
@@ -3550,232 +3384,9 @@ void CMapData::CreateMap(DWORD dwWidth, DWORD dwHeight, LPCTSTR lpTerrainType, D
 
 		if (theApp.m_pMainWnd)
 			((CFinalSunDlg*)theApp.m_pMainWnd)->m_view.m_isoview->UpdateOverlayPictures();
-
-		theApp.m_loading->InitPics();
-
-		if (m_mapfile.sections["Map"].values["Theater"] == THEATER0)
-		{
-			tiledata = &s_tiledata;
-			tiledata_count = &s_tiledata_count;
-			CIniFile::CurrentTheater = &CIniFile::Snow;
-			theApp.m_loading->FreeTileSet();
-			tiledata = &u_tiledata;
-			tiledata_count = &u_tiledata_count;
-			CIniFile::CurrentTheater = &CIniFile::Urban;
-			theApp.m_loading->FreeTileSet();
-
-			// MW new tilesets
-			tiledata = &un_tiledata;
-			tiledata_count = &un_tiledata_count;
-			CIniFile::CurrentTheater = &CIniFile::NewUrban;
-			theApp.m_loading->FreeTileSet();
-			tiledata = &d_tiledata;
-			tiledata_count = &d_tiledata_count;
-			CIniFile::CurrentTheater = &CIniFile::Desert;
-			theApp.m_loading->FreeTileSet();
-			tiledata = &l_tiledata;
-			tiledata_count = &l_tiledata_count;
-			CIniFile::CurrentTheater = &CIniFile::Lunar;
-			theApp.m_loading->FreeTileSet();
-
-			tiledata = &t_tiledata;
-			tiledata_count = &t_tiledata_count;
-			CIniFile::CurrentTheater = &CIniFile::Temperate;
-			theApp.m_loading->FreeTileSet();
-			if (dlg)
-				theApp.m_loading->InitTMPs(&dlg->m_Progress);
-			theApp.m_loading->current_theater = 'T';
-
-		}
-		else if (m_mapfile.sections["Map"].values["Theater"] == THEATER1)
-		{
-			tiledata = &t_tiledata;
-			tiledata_count = &t_tiledata_count;
-			CIniFile::CurrentTheater = &CIniFile::Temperate;
-			theApp.m_loading->FreeTileSet();
-			tiledata = &u_tiledata;
-			tiledata_count = &u_tiledata_count;
-			CIniFile::CurrentTheater = &CIniFile::Urban;
-			theApp.m_loading->FreeTileSet();
-
-			// MW new tilesets
-			tiledata = &un_tiledata;
-			tiledata_count = &un_tiledata_count;
-			CIniFile::CurrentTheater = &CIniFile::NewUrban;
-			theApp.m_loading->FreeTileSet();
-			tiledata = &d_tiledata;
-			tiledata_count = &d_tiledata_count;
-			CIniFile::CurrentTheater = &CIniFile::Desert;
-			theApp.m_loading->FreeTileSet();
-			tiledata = &l_tiledata;
-			tiledata_count = &l_tiledata_count;
-			CIniFile::CurrentTheater = &CIniFile::Lunar;
-			theApp.m_loading->FreeTileSet();
-
-			tiledata = &s_tiledata;
-			tiledata_count = &s_tiledata_count;
-			CIniFile::CurrentTheater = &CIniFile::Snow;
-			theApp.m_loading->FreeTileSet();
-			if (dlg)
-				theApp.m_loading->InitTMPs(&dlg->m_Progress);
-			theApp.m_loading->current_theater = 'A';
-		}
-		else if (m_mapfile.sections["Map"].values["Theater"] == THEATER2)
-		{
-			tiledata = &t_tiledata;
-			tiledata_count = &t_tiledata_count;
-			CIniFile::CurrentTheater = &CIniFile::Temperate;
-			theApp.m_loading->FreeTileSet();
-			tiledata = &s_tiledata;
-			tiledata_count = &s_tiledata_count;
-			CIniFile::CurrentTheater = &CIniFile::Snow;
-			theApp.m_loading->FreeTileSet();
-
-			// MW new tilesets
-			tiledata = &un_tiledata;
-			tiledata_count = &un_tiledata_count;
-			CIniFile::CurrentTheater = &CIniFile::NewUrban;
-			theApp.m_loading->FreeTileSet();
-			tiledata = &d_tiledata;
-			tiledata_count = &d_tiledata_count;
-			CIniFile::CurrentTheater = &CIniFile::Desert;
-			theApp.m_loading->FreeTileSet();
-			tiledata = &l_tiledata;
-			tiledata_count = &l_tiledata_count;
-			CIniFile::CurrentTheater = &CIniFile::Lunar;
-			theApp.m_loading->FreeTileSet();
-
-			tiledata = &u_tiledata;
-			tiledata_count = &u_tiledata_count;
-			CIniFile::CurrentTheater = &CIniFile::Urban;
-			theApp.m_loading->FreeTileSet();
-			if (dlg)
-				theApp.m_loading->InitTMPs(&dlg->m_Progress);
-			theApp.m_loading->current_theater = 'U';
-		}
-		else if (m_mapfile.sections["Map"].values["Theater"] == THEATER3)
-		{
-			tiledata = &t_tiledata;
-			tiledata_count = &t_tiledata_count;
-			CIniFile::CurrentTheater = &CIniFile::Temperate;
-			theApp.m_loading->FreeTileSet();
-			tiledata = &s_tiledata;
-			tiledata_count = &s_tiledata_count;
-			CIniFile::CurrentTheater = &CIniFile::Snow;
-			theApp.m_loading->FreeTileSet();
-
-			// MW new tilesets
-
-			tiledata = &d_tiledata;
-			tiledata_count = &d_tiledata_count;
-			CIniFile::CurrentTheater = &CIniFile::Desert;
-			theApp.m_loading->FreeTileSet();
-			tiledata = &l_tiledata;
-			tiledata_count = &l_tiledata_count;
-			CIniFile::CurrentTheater = &CIniFile::Lunar;
-			theApp.m_loading->FreeTileSet();
-
-			tiledata = &u_tiledata;
-			tiledata_count = &u_tiledata_count;
-			CIniFile::CurrentTheater = &CIniFile::Urban;
-			theApp.m_loading->FreeTileSet();
-
-			tiledata = &un_tiledata;
-			tiledata_count = &un_tiledata_count;
-			CIniFile::CurrentTheater = &CIniFile::NewUrban;
-			theApp.m_loading->FreeTileSet();
-
-			if (dlg)
-				theApp.m_loading->InitTMPs(&dlg->m_Progress);
-			theApp.m_loading->current_theater = 'N';
-		}
-		else if (m_mapfile.sections["Map"].values["Theater"] == THEATER4)
-		{
-			tiledata = &t_tiledata;
-			tiledata_count = &t_tiledata_count;
-			CIniFile::CurrentTheater = &CIniFile::Temperate;
-			theApp.m_loading->FreeTileSet();
-			tiledata = &s_tiledata;
-			tiledata_count = &s_tiledata_count;
-			CIniFile::CurrentTheater = &CIniFile::Snow;
-			theApp.m_loading->FreeTileSet();
-
-			// MW new tilesets
-			tiledata = &un_tiledata;
-			tiledata_count = &un_tiledata_count;
-			CIniFile::CurrentTheater = &CIniFile::NewUrban;
-			theApp.m_loading->FreeTileSet();
-			tiledata = &d_tiledata;
-			tiledata_count = &d_tiledata_count;
-			CIniFile::CurrentTheater = &CIniFile::Desert;
-			theApp.m_loading->FreeTileSet();
-
-
-			tiledata = &u_tiledata;
-			tiledata_count = &u_tiledata_count;
-			CIniFile::CurrentTheater = &CIniFile::Urban;
-			theApp.m_loading->FreeTileSet();
-
-			tiledata = &l_tiledata;
-			tiledata_count = &l_tiledata_count;
-			CIniFile::CurrentTheater = &CIniFile::Lunar;
-			theApp.m_loading->FreeTileSet();
-
-			if (dlg)
-			{
-				theApp.m_loading->InitTMPs(&dlg->m_Progress);
-			}
-			theApp.m_loading->current_theater = 'L';
-		}
-		else if (m_mapfile.sections["Map"].values["Theater"] == THEATER5)
-		{
-			tiledata = &t_tiledata;
-			tiledata_count = &t_tiledata_count;
-			CIniFile::CurrentTheater = &CIniFile::Temperate;
-			theApp.m_loading->FreeTileSet();
-			tiledata = &s_tiledata;
-			tiledata_count = &s_tiledata_count;
-			CIniFile::CurrentTheater = &CIniFile::Snow;
-			theApp.m_loading->FreeTileSet();
-
-			// MW new tilesets
-			tiledata = &un_tiledata;
-			tiledata_count = &un_tiledata_count;
-			CIniFile::CurrentTheater = &CIniFile::NewUrban;
-			theApp.m_loading->FreeTileSet();
-
-			tiledata = &l_tiledata;
-			tiledata_count = &l_tiledata_count;
-			CIniFile::CurrentTheater = &CIniFile::Lunar;
-			theApp.m_loading->FreeTileSet();
-
-
-			tiledata = &u_tiledata;
-			tiledata_count = &u_tiledata_count;
-			CIniFile::CurrentTheater = &CIniFile::Urban;
-			theApp.m_loading->FreeTileSet();
-
-			tiledata = &d_tiledata;
-			tiledata_count = &d_tiledata_count;
-			CIniFile::CurrentTheater = &CIniFile::Desert;
-			theApp.m_loading->FreeTileSet();
-
-			if (dlg)
-				theApp.m_loading->InitTMPs(&dlg->m_Progress);
-			theApp.m_loading->current_theater = 'D';
-		}
-		else
-		{
-			theApp.m_loading->FreeAll();
-			CString s = "Fatal error! %9 doesn´t support the theater of this map!";
-			s = TranslateStringACP(s);
-			MessageBox(0, s, "Error", 0);
-			exit(0);
-		}
 	}
 	else
 	{
-		// e.g. unittests
 		CIniFile::CurrentTheater = &CIniFile::Temperate;
 	}
 
@@ -3821,186 +3432,6 @@ void CMapData::CreateMap(DWORD dwWidth, DWORD dwHeight, LPCTSTR lpTerrainType, D
 	errstream.flush();
 
 }
-
-/*void CMapData::CreateSlopesAt(DWORD dwPos)
-{
-	//OutputDebugString("CreateSlopes()\n");
-
-	FIELDDATA m=*GetFielddataAt(dwPos);
-	if(m.wGround==0xFFFF) m.wGround=0;
-
-	TILEDATA& d=(*tiledata)[m.wGround];
-
-	int ns=-1;
-	int i,e,p=0;
-	int h[3][3];
-	for(i=0;i<3; i++)
-	{
-		for(e=0;e<3;e++)
-		{
-			int pos=dwPos+(i-1)+(e-1)*m_IsoSize;
-			if(pos<0 || pos>=m_IsoSize*m_IsoSize)
-			{
-				h[i][e]=0;
-			}
-			else
-			{
-				FIELDDATA m2=*GetFielddataAt(pos);
-
-				h[i][e]=m.bHeight-m2.bHeight;
-			}
-
-
-		}
-	}
-
-	// hmm... check if the current tile must be heightened anyway
-	if(!theApp.m_Options.bDisableSlopeCorrection && d.bMorphable)
-	{
-		if((h[0][1]<0 && h[2][1]<0) || (h[1][0]<0 && h[1][2]<0)
-
-			|| (h[1][0]<0 && h[0][2]<0 && h[0][1]>=0)
-			|| (h[1][0]<0 && h[2][2]<0 && h[2][1]>=0)
-
-			|| (h[0][1]<0 && h[2][0]<0 && h[1][0]>=0)
-			|| (h[0][1]<0 && h[2][2]<0 && h[1][2]>=0)
-
-			|| (h[1][2]<0 && h[0][0]<0 && h[0][1]>=0)
-			|| (h[1][2]<0 && h[2][0]<0 && h[2][1]>=0)
-
-			|| (h[2][1]<0 && h[0][0]<0 && h[1][0]>=0)
-			|| (h[2][1]<0 && h[0][2]<0 && h[1][2]>=0)
-
-			|| (h[1][0]<0 && h[0][1]<0 && h[0][0]>=0)
-			|| (h[0][1]<0 && h[1][2]<0 && h[0][2]>=0)
-			|| (h[1][2]<0 && h[2][1]<0 && h[2][2]>=0)
-			|| (h[2][1]<0 && h[1][0]<0 && h[2][0]>=0)
-
-			)
-		{
-			SetHeightAt(dwPos, m.bHeight+1);
-			for(i=-1;i<2;i++)
-				for(e=-1;e<2;e++)
-					CreateSlopesAt(dwPos+i+e*m_IsoSize);
-
-			return;
-		}
-	}
-
-	//OutputDebugString("Running check\n");
-
-	BOOL checkOtherSlopes=FALSE;
-	/*if(h[0][0] && h[0][1] && h[0][2] && h[1][0] && h[1][2] && h[2][0] && h[2][1] && h[2][2])
-	{
-		ns=-1;
-		checkOtherSlopes=TRUE;
-	}*//*
-
-	if(h[0][0]==-1 && h[2][2]==-1 && h[2][0]>=0 && h[0][2]>=0 && h[1][0]>=0 && h[1][2]>=0 && h[0][1]>=0 && h[2][1]>=0) ns=SLOPE_UP_LEFTTOP_AND_RIGHTBOTTOM;
-	if(h[0][2]==-1 && h[2][0]==-1 && h[0][0]>=0 && h[2][2]>=0 && h[0][1]>=0 && h[1][0]>=0 && h[1][2]>=0 && h[2][1]>=0) ns=SLOPE_UP_LEFTBOTTOM_AND_RIGHTTOP;
-
-	// that would just be another solution:
-	// if(h[0][0]==-1 && h[2][2]==-1 && h[2][0]>=0 && h[0][2]>=0 && h[1][0]>=0 && h[1][2]>=0 && h[0][1]>=0 && h[2][1]>=0) ns=SLOPE_UP_LEFTTOP_AND_RIGHTBOTTOM2;
-	// if(h[0][2]==-1 && h[2][0]==-1 && h[0][0]>=0 && h[2][2]>=0 && h[0][1]>=0 && h[1][0]>=0 && h[1][2]>=0 && h[2][1]>=0) ns=SLOPE_UP_LEFTBOTTOM_AND_RIGHTTOP2;
-
-
-
-	if(ns==-1)
-	if(h[1][0]==-1 && h[0][1]!=-1 && h[1][2]!=-1 && h[2][1]!=-1)
-	{
-		ns=SLOPE_UP_LEFT;
-	}
-	else if(h[0][1]==-1 && h[1][0]!=-1 && h[2][1]!=-1 && h[1][2]!=-1)
-	{
-		ns=SLOPE_UP_TOP;
-	}
-	else if(h[1][2]==-1 && h[0][1]!=-1 && h[1][0]!=-1 && h[2][1]!=-1)
-	{
-		ns=SLOPE_UP_RIGHT;
-	}
-	else if(h[2][1]==-1 && h[0][1]!=-1 && h[1][0]!=-1 && h[1][2]!=-1)
-	{
-		ns=SLOPE_UP_BOTTOM;
-	}
-
-	if(ns==-1)
-	{
-		if(h[0][0]==-2) ns=SLOPE_DOWN_BOTTOM;
-		if(h[2][0]==-2) ns=SLOPE_DOWN_RIGHT;
-		if(h[0][2]==-2) ns=SLOPE_DOWN_LEFT;
-		if(h[2][2]==-2) ns=SLOPE_DOWN_TOP;
-	}
-
-	if(ns==-1 && h[0][0]==-1)
-	{
-		if(h[1][0]==-1 && h[0][1]==-1 ) ns=SLOPE_DOWN_RIGHTBOTTOM;
-		else if(h[1][0]==0 && h[0][1]==0) ns=SLOPE_UP_LEFTTOP;
-		//else if(h[2][2]==1) ns=SLOPE_DOWN_BOTTOM;
-	}
-
-	if( ns==-1 && h[2][0]==-1)
-	{
-		if(h[1][0]==-1 && h[2][1]==-1 ) ns=SLOPE_DOWN_RIGHTTOP;
-		else if(h[1][0]==0 && h[2][1]==0) ns=SLOPE_UP_LEFTBOTTOM;
-		//else if(h[0][2]==1) ns=SLOPE_DOWN_RIGHT;
-	}
-	if( ns==-1 && h[0][2]==-1)
-	{
-		if(h[1][2]==-1 && h[0][1]==-1 ) ns=SLOPE_DOWN_LEFTBOTTOM;
-		else if(h[1][2]==0 && h[0][1]==0) ns=SLOPE_UP_RIGHTTOP;
-		//else if(h[2][0]==1) ns=SLOPE_DOWN_LEFT;
-	}
-	if( ns==-1 && h[2][2]==-1)
-	{
-		if(h[1][2]==-1 && h[2][1]==-1 ) ns=SLOPE_DOWN_LEFTTOP;
-		else if(h[1][2]==0 && h[2][1]==0) ns=SLOPE_UP_RIGHTBOTTOM;
-		//else if(h[0][0]==1) ns=SLOPE_DOWN_TOP;
-	}
-
-	if(ns==-1 && h[1][0]==-1 && h[2][1]==-1 ) ns=SLOPE_DOWN_RIGHTTOP;
-	if(ns==-1 && h[1][2]==-1 && h[2][1]==-1 ) ns=SLOPE_DOWN_LEFTTOP;
-	if(ns==-1 && h[1][0]==-1 && h[0][1]==-1 ) ns=SLOPE_DOWN_RIGHTBOTTOM;
-	if(ns==-1 && h[1][2]==-1 && h[0][1]==-1 ) ns=SLOPE_DOWN_LEFTBOTTOM;
-
-
-	//OutputDebugString("Applying changes()\n");
-
-
-
-	int rampbase=atoi((*CIniFile::CurrentTheater).sections["General"].values["RampBase"]);
-	int rampsmooth=atoi((*CIniFile::CurrentTheater).sections["General"].values["RampSmooth"]);
-
-	//if((rampbase==d.wTileSet || rampsmooth==d.wTileSet) && m.bSubTile==ns)
-	//	return;
-
-	if(ns==-1 && (d.wTileSet==rampbase || d.wTileSet==rampsmooth) && d.bMorphable)
-	{
-		SetTileAt(dwPos, 0, 0);
-	}
-	if(d.bMorphable && ns!=-1)
-	{
-		SetTileAt(dwPos, GetTileID(rampbase, ns-1), 0);
-
-	}
-
-
-
-	/*if(ns!=-1 || checkOtherSlopes)
-	{
-		for(i=-1;i<2;i++)
-		{
-			for(e=-1;e<2;e++)
-			{
-				int pos=dwPos+(i)+(e)*m_IsoSize;
-				if(pos>0 && pos<m_IsoSize*m_IsoSize)
-				{
-					CreateSlopesAt(pos);
-				}
-			}
-		}
-	}*//*
-
-}*/
 
 int CMapData::GetNecessarySlope(DWORD dwPos)
 {

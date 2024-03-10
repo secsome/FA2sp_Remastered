@@ -24,7 +24,6 @@
 
 #include "inlines.h"
 
-#ifndef __INTELLISENSE__
 // This file had problems with Intellisense. Until this is fixed, deactivate intellisense parsing here.
 
 int sgn(int v)
@@ -358,6 +357,3 @@ bool CTube::walk(const std::function<bool(const WalkInfo&)>& walker) const
 	}	
 	return true;
 }
-
-
-#endif

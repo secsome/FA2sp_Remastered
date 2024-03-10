@@ -120,15 +120,6 @@
       <ModuleDefinitionFile>.\MissionEditorPackLib.def</ModuleDefinitionFile>
     </Link>
   </ItemDefinitionGroup>
-  <ItemGroup>
-    <ClCompile Include="VoxelNormals.cpp" />
-    <ClCompile Include="MissionEditorPackLib.cpp" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="Vec3.h" />
-    <ClInclude Include="VoxelNormals.h" />
-    <ClInclude Include="MissionEditorPackLib.h" />
-  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>

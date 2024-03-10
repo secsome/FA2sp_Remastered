@@ -44,7 +44,6 @@
 #include "variables.h"
 #include "GlobalsDlg.h"
 #include "savemapoptionsdlg.h"
-#include "MissionEditorPackLib.h"
 #include "bitmap2mapconverter.h"
 #include "multisaveoptionsdlg.h"
 #include <afxinet.h>
@@ -2602,9 +2601,6 @@ LONG __stdcall ExceptionHandler(
 	itoa(last_succeeded_operation,c,10);
 	s3+=c;
 	s3+="";
-	s3+="\nLast library operation: ";
-	itoa(FSunPackLib::last_succeeded_operation,c,10);
-	s3+=c;
 	s3+="\n";
 	s3+="\nException data:\n";
 	s3+=s;
@@ -2617,7 +2613,6 @@ LONG __stdcall ExceptionHandler(
 
 	errstream << "Exception occured. Current data:" << endl;
 	errstream << "Last succeeded operation:" << last_succeeded_operation << endl;
-	errstream << "Last succeeded library operation:" << FSunPackLib::last_succeeded_operation << endl;
 	errstream << "Trying to save current map" << endl;
 	errstream.flush();
 

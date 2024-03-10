@@ -27,6 +27,9 @@ public:
 	void Decode_Modulus(void* buffer);
 	void Decode_Exponent(void* buffer);
 
+	BigInt& GetModulus() { return Modulus; }
+	BigInt& GetExponent() { return Exponent; }
+
 	static void Generate(Straw& random, int bits, PKey& fastkey, PKey& slowkey);
 
 	enum { FAST_EXPONENT = 65537L };

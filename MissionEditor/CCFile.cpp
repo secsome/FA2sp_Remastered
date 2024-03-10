@@ -1241,6 +1241,29 @@ void CCFileClass::Error(int error, bool canretry, char const* filename)
 {
 }
 
+void* CCFileClass::ReadWholeFile()
+{
+	void* result = nullptr;
+	if (Is_Available())
+	{
+		auto size = Size();
+		result = new char[size];
+		if (result)
+			Read(result, size);
+	}
+	return result;
+}
+
+void* CCFileClass::ReadWholeFile(char const* filename, size_t* size)
+{
+	CCFileClass file{ filename };
+	auto ret = file.ReadWholeFile();
+	if (size)
+        *size = file.Size();
+	file.Close();
+	return ret;
+}
+
 RAMFileClass::RAMFileClass(void* buffer, int len) noexcept
 	: Buffer{ (char*)buffer }
 	, MaxLength{ len }

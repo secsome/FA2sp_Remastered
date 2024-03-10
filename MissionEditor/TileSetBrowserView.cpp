@@ -715,8 +715,6 @@ LPDIRECTDRAWSURFACE4 CTileSetBrowserView::RenderTile(DWORD dwID)
 		}
 	}
 
-	FSunPackLib::SetColorKey(lpdds, -1);
-
 	return lpdds;
 }
 
@@ -934,7 +932,6 @@ void CTileSetBrowserView::SetOverlay(DWORD dwID)
 	}
 	if (!bFound)
 	{
-		theApp.m_loading->LoadOverlayGraphic(*CIniFile::Rules.sections["OverlayTypes"].GetValue(dwID), dwID);
 		((CFinalSunDlg*)(theApp.m_pMainWnd))->m_view.m_isoview->UpdateOverlayPictures();
 		//p=ovrlpics[dwID][k];
 	}

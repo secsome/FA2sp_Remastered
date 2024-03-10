@@ -30,7 +30,6 @@
 #include "variables.h"
 #include "functions.h"
 #include "inlines.h"
-#include "rtpdlg.h"
 #include "TubeTool.h"
 
 #ifdef _DEBUG
@@ -405,12 +404,7 @@ void CViewObjects::OnSelchanged(NMHDR* pNMHDR, LRESULT* pResult)
 
 			if(subpos==999)
 			{
-				
-				CRTPDlg dlg;
-				if(dlg.DoModal()==IDOK)
-				{
-					AD.mode=ACTIONMODE_RANDOMTERRAIN;					
-				}
+				// TODO: Random Terrain Place
 			}
 			else
 			{

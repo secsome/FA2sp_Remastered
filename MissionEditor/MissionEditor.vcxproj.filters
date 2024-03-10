@@ -174,9 +174,6 @@
     <ClCompile Include="RightFrame.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="RTPDlg.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="SaveMapOptionsDlg.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -274,9 +271,6 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="structs.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="TextDrawer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="MultimapHelper.cpp">
@@ -496,9 +490,6 @@
     <ClInclude Include="RightFrame.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="RTPDlg.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="SaveMapOptionsDlg.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -605,9 +596,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Vec2.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="TextDrawer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="FormatExtensions.h">

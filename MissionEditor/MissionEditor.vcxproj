@@ -165,7 +165,6 @@
     <ClCompile Include="ProgressDlg.cpp" />
     <ClCompile Include="Random.cpp" />
     <ClCompile Include="RightFrame.cpp" />
-    <ClCompile Include="RTPDlg.cpp" />
     <ClCompile Include="SaveMapOptionsDlg.cpp" />
     <ClCompile Include="SavingDlg.cpp" />
     <ClCompile Include="ScriptTypes.cpp" />
@@ -187,7 +186,6 @@
     <ClCompile Include="TeamTypes.cpp" />
     <ClCompile Include="TerrainDlg.cpp" />
     <ClCompile Include="TerrainModifier.cpp" />
-    <ClCompile Include="TextDrawer.cpp" />
     <ClCompile Include="TileSetBrowserFrame.cpp" />
     <ClCompile Include="TileSetBrowserView.cpp" />
     <ClCompile Include="TipDlg.cpp" />
@@ -284,7 +282,6 @@
     <ClInclude Include="Random.h" />
     <ClInclude Include="Resource.h" />
     <ClInclude Include="RightFrame.h" />
-    <ClInclude Include="RTPDlg.h" />
     <ClInclude Include="SaveMapOptionsDlg.h" />
     <ClInclude Include="SavingDlg.h" />
     <ClInclude Include="ScriptTypes.h" />
@@ -302,7 +299,6 @@
     <ClInclude Include="TerrainDlg.h" />
     <ClInclude Include="TerrainModifier.h" />
     <ClInclude Include="tests.h" />
-    <ClInclude Include="TextDrawer.h" />
     <ClInclude Include="TileSetBrowserFrame.h" />
     <ClInclude Include="TileSetBrowserView.h" />
     <ClInclude Include="TipDlg.h" />
@@ -357,9 +353,6 @@
   <ItemGroup>
     <ProjectReference Include="..\3rdParty\xcc\Library\XCC Library.vcxproj">
       <Project>{5e445578-cb45-4d82-9a1c-fc7d3e8d866a}</Project>
-    </ProjectReference>
-    <ProjectReference Include="..\MissionEditorPackLib\MissionEditorPackLib.vcxproj">
-      <Project>{deb40ef0-e215-4c2f-a0ad-3742e2e01a8c}</Project>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

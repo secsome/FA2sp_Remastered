@@ -610,6 +610,8 @@ public:
 	void UpdateBuildingInfo(LPCSTR lpUnitType = NULL);
 	void CalcMapRect();
 
+	void InitTheater();
+
 	// MW change: UpdateStructures() public, so that houses dialog can access it
 	void UpdateStructures(BOOL bSave = FALSE);
 

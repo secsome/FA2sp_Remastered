@@ -199,6 +199,10 @@ public:
 	virtual bool Set_Date_Time(unsigned int datetime) override;
 	virtual void Error(int error, bool canretry = false, char const* filename = nullptr) override;
 
+	void* ReadWholeFile();
+
+	static void* ReadWholeFile(char const* filename, size_t* size = nullptr);
+
 	bool Is_Resident() const { return Data.Get_Buffer() != nullptr; }
 
 	template <typename T>

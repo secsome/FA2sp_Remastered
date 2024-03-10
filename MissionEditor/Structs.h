@@ -29,7 +29,6 @@
 #include <vector>
 #include <memory>
 #include <cstdint>
-#include "MissionEditorPackLib.h"
 #include "Vec2.h"
 
 class MapTool;
@@ -125,7 +124,6 @@ struct PICDATA{
 	std::shared_ptr<std::vector<VBORDER>> _vBorder;
 #endif
 	
-	FSunPackLib::VoxelNormalClass normalClass = FSunPackLib::VoxelNormalClass::Unknown;
 	short x = 0; // for SHPs (starting point of main graphic inside surface)
 	short y = 0; // for SHPs (starting point of main graphic inside surface)
 	WORD wWidth = 0; // for non-shps: size of whole surface, else size of main graphic
