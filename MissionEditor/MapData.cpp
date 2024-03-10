@@ -572,11 +572,7 @@ void CMapData::UpdateIniFile(DWORD dwFlags)
 		UpdateUnits(bSave);
 		UpdateWaypoints(bSave);
 		UpdateTubes(bSave);
-		errstream << "UpdateMapFieldData() called" << endl;
-		errstream.flush();
 		UpdateMapFieldData(bSave);
-		errstream << "About to call Pack()" << endl;
-		errstream.flush();
 		Pack(dwFlags & MAPDATA_UPDATE_TO_INI_ALL_PREVIEW, dwFlags & MAPDATA_UPDATE_TO_INI_ALL_COMPRESSED);
 		return;
 	}
