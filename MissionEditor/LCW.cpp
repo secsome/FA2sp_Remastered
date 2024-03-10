@@ -153,11 +153,11 @@ unsigned int LCW_Uncompress(void* source, void* dest)
 			{
 				if (op_code == 0xfe)
 				{
-					count = *source_ptr + ((unsigned)*(source_ptr + 1) << 8);
+					count = *source_ptr + ((size_t)*(source_ptr + 1) << 8);
 					word_data = data = *(source_ptr + 2);
 					word_data = (word_data << 24) + (word_data << 16) + (word_data << 8) + word_data;
 					source_ptr += 3;
-					copy_ptr = dest_ptr + 4 - ((unsigned)dest_ptr & 0x3);
+					copy_ptr = dest_ptr + 4 - ((size_t)dest_ptr & 0x3);
 					count -= (copy_ptr - dest_ptr);
 					while (dest_ptr < copy_ptr) *dest_ptr++ = data;
 					word_dest_ptr = (unsigned*)dest_ptr;
@@ -175,15 +175,15 @@ unsigned int LCW_Uncompress(void* source, void* dest)
 				{
 					if (op_code == 0xff)
 					{
-						count = *source_ptr + ((unsigned)*(source_ptr + 1) << 8);
-						copy_ptr = (unsigned char*)dest + *(source_ptr + 2) + ((unsigned)*(source_ptr + 3) << 8);
+						count = *source_ptr + ((size_t)*(source_ptr + 1) << 8);
+						copy_ptr = (unsigned char*)dest + *(source_ptr + 2) + ((size_t)*(source_ptr + 3) << 8);
 						source_ptr += 4;
 						while (count--) *dest_ptr++ = *copy_ptr++;
 					}
 					else
 					{
 						count = (op_code & 0x3f) + 3;
-						copy_ptr = (unsigned char*)dest + *source_ptr + ((unsigned)*(source_ptr + 1) << 8);
+						copy_ptr = (unsigned char*)dest + *source_ptr + ((size_t)*(source_ptr + 1) << 8);
 						source_ptr += 2;
 						while (count--) *dest_ptr++ = *copy_ptr++;
 					}

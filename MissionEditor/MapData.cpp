@@ -258,94 +258,11 @@ CMapData::~CMapData()
 
 void CMapData::CalcMapRect()
 {
-	CIniFileSection& sec = m_mapfile.sections["Map"];
-	char msize[50];
-	strcpy_s(msize, sec.values["Size"]);
-
-
-	int cupos = 0;
-	static const int custr_size = 20;
-	char custr[custr_size];
-	char* cucomma;
-
-	cucomma = strchr(&msize[cupos], ',');
-	if (cucomma == NULL) return;
-	memcpy_s(custr, custr_size, &msize[cupos], (cucomma - msize) - cupos + 1);
-	custr[(cucomma - msize) - cupos] = 0;
-	cupos = cucomma - msize + 1;
-
-	m_maprect.left = atoi(custr);
-
-
-	cucomma = strchr(&msize[cupos], ',');
-	if (cucomma == NULL) return;
-	memcpy_s(custr, custr_size, &msize[cupos], (cucomma - msize) - cupos + 1);
-	custr[((cucomma - msize)) - cupos] = 0;
-	cupos = cucomma - msize + 1;
-
-	m_maprect.top = atoi(custr);
-
-
-	cucomma = strchr(&msize[cupos], ',');
-	if (cucomma == NULL) return;
-	memcpy_s(custr, custr_size, &msize[cupos], (cucomma - msize) - cupos + 1);
-	custr[((cucomma - msize)) - cupos] = 0;
-	cupos = cucomma - msize + 1;
-
-	m_maprect.right = atoi(custr);
-
-	cucomma = strchr(&msize[cupos], ','); // we check again... could be there is a new ini format
-	if (cucomma == NULL) cucomma = (char*)((int)msize + strlen(msize));
-	memcpy_s(custr, custr_size, &msize[cupos], (cucomma - msize) - cupos + 1);
-	custr[((cucomma - msize)) - cupos] = 0;
-	cupos = cucomma - msize + 1;
-
-	m_maprect.bottom = atoi(custr);
-
+	CString str = m_mapfile.GetString("Map", "Size", "0,0,50,50");
+	std::sscanf(str, "%d,%d,%d,%d", &m_maprect.left, &m_maprect.top, &m_maprect.right, &m_maprect.bottom);
 	m_IsoSize = m_maprect.right + m_maprect.bottom;
-
-	// local size
-
-	strcpy_s(msize, sec.values["LocalSize"]);
-	cupos = 0;
-
-
-	cucomma = strchr(&msize[cupos], ',');
-	if (cucomma == NULL) return;
-	memcpy_s(custr, custr_size, &msize[cupos], (cucomma - msize) - cupos + 1);
-	custr[(cucomma - msize) - cupos] = 0;
-	cupos = cucomma - msize + 1;
-
-	m_vismaprect.left = atoi(custr);
-
-
-	cucomma = strchr(&msize[cupos], ',');
-	if (cucomma == NULL) return;
-	memcpy_s(custr, custr_size, &msize[cupos], (cucomma - msize) - cupos + 1);
-	custr[((cucomma - msize)) - cupos] = 0;
-	cupos = cucomma - msize + 1;
-
-	m_vismaprect.top = atoi(custr);
-
-
-	cucomma = strchr(&msize[cupos], ',');
-	if (cucomma == NULL) return;
-	memcpy_s(custr, custr_size, &msize[cupos], (cucomma - msize) - cupos + 1);
-	custr[((cucomma - msize)) - cupos] = 0;
-	cupos = cucomma - msize + 1;
-
-	m_vismaprect.right = atoi(custr);
-
-
-	cucomma = strchr(&msize[cupos], ','); // we check again... could be there is a new ini format
-	if (cucomma == NULL) cucomma = (char*)((int)msize + strlen(msize));
-	memcpy_s(custr, custr_size, &msize[cupos], (cucomma - msize) - cupos + 1);
-	custr[((cucomma - msize)) - cupos] = 0;
-	cupos = cucomma - msize + 1;
-
-	m_vismaprect.bottom = atoi(custr);
-
-
+	str = m_mapfile.GetString("Map", "LocalSize", "0,0,50,50");
+	std::sscanf(str, "%d,%d,%d,%d", &m_vismaprect.left, &m_vismaprect.top, &m_vismaprect.right, &m_vismaprect.bottom);
 }
 
 void CMapData::InitTheater()

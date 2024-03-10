@@ -8,13 +8,19 @@ EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		FinalAlertDebug YR|Win32 = FinalAlertDebug YR|Win32
+		FinalAlertDebug YR|x64 = FinalAlertDebug YR|x64
 		FinalAlertRelease YR|Win32 = FinalAlertRelease YR|Win32
+		FinalAlertRelease YR|x64 = FinalAlertRelease YR|x64
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{9326D29A-6547-42B9-A668-519F3C0720A9}.FinalAlertDebug YR|Win32.ActiveCfg = FinalAlertDebug YR|Win32
 		{9326D29A-6547-42B9-A668-519F3C0720A9}.FinalAlertDebug YR|Win32.Build.0 = FinalAlertDebug YR|Win32
+		{9326D29A-6547-42B9-A668-519F3C0720A9}.FinalAlertDebug YR|x64.ActiveCfg = FinalAlertDebug YR|x64
+		{9326D29A-6547-42B9-A668-519F3C0720A9}.FinalAlertDebug YR|x64.Build.0 = FinalAlertDebug YR|x64
 		{9326D29A-6547-42B9-A668-519F3C0720A9}.FinalAlertRelease YR|Win32.ActiveCfg = FinalAlertRelease YR|Win32
 		{9326D29A-6547-42B9-A668-519F3C0720A9}.FinalAlertRelease YR|Win32.Build.0 = FinalAlertRelease YR|Win32
+		{9326D29A-6547-42B9-A668-519F3C0720A9}.FinalAlertRelease YR|x64.ActiveCfg = FinalAlertRelease YR|x64
+		{9326D29A-6547-42B9-A668-519F3C0720A9}.FinalAlertRelease YR|x64.Build.0 = FinalAlertRelease YR|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

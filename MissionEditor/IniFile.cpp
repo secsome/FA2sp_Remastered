@@ -163,7 +163,7 @@ size_t CIniFile::WriteBase64String(const CString& sectionName, const void* data,
 	CString key;
 	while (length > 0)
 	{
-		const auto line_length = std::min(length, 70u);
+		const auto line_length = std::min(length, (size_t)70);
 		key.Format("%d", line++);
 		CString value ;
 		sections[sectionName].values[key] = CString{ ptr, static_cast<int>(line_length) };

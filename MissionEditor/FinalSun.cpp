@@ -248,6 +248,7 @@ BOOL CFinalSunApp::InitInstance()
 	// MW 07/19/01
 	opts.bShowCells = optini.sections["UserInterface"].values["ShowBuildingCells"] == "1";
 
+	optini["RA2"]["Exe"] = opts.TSExe;
 	optini.SaveFile(iniFile);
 
 	// MW 07/20/01: Load file list
