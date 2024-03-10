@@ -6,9 +6,6 @@
     <IntDir>$(SolutionDir)\build\intermediate\$(Configuration)-$(Platform)\$(ProjectName)\</IntDir>
     <DisableFastUpToDateCheck>True</DisableFastUpToDateCheck>
   </PropertyGroup>
-  <PropertyGroup>
-    <XccDir>$(MSBuildThisFileDirectory)..\..\3rdParty\xcc</XccDir>
-  </PropertyGroup>
   <ItemDefinitionGroup>
     <ClCompile>
       <SuppressStartupBanner>true</SuppressStartupBanner>

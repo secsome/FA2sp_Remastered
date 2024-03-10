@@ -1015,9 +1015,6 @@ void CLoading::FreeAll()
 
 void CLoading::PostNcDestroy() 
 {
-
-//	delete this; // on stack!
-//	CDialog::PostNcDestroy();
 }
 
 void CLoading::PrepareHouses()
@@ -1053,16 +1050,6 @@ void CLoading::PrepareHouses()
 		}
 		
 	}
-}
-
-
-BYTE* Search(BYTE** lpData, BYTE* lpSearched)
-{
-	BYTE* lpDat=*lpData;
-	
-	lpDat=(BYTE*)strstr((LPCSTR)lpDat, (LPCSTR)lpSearched)+strlen((LPCSTR)lpSearched);
-
-	return lpDat;
 }
 
 class SortDummy2{

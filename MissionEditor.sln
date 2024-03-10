@@ -4,11 +4,6 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 VisualStudioVersion = 17.7.34302.85
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "MissionEditor", "MissionEditor\MissionEditor.vcxproj", "{9326D29A-6547-42B9-A668-519F3C0720A9}"
-	ProjectSection(ProjectDependencies) = postProject
-		{5E445578-CB45-4D82-9A1C-FC7D3E8D866A} = {5E445578-CB45-4D82-9A1C-FC7D3E8D866A}
-	EndProjectSection
-EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "XCC Library", "3rdParty\xcc\Library\XCC Library.vcxproj", "{5E445578-CB45-4D82-9A1C-FC7D3E8D866A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -20,10 +15,6 @@ Global
 		{9326D29A-6547-42B9-A668-519F3C0720A9}.FinalAlertDebug YR|Win32.Build.0 = FinalAlertDebug YR|Win32
 		{9326D29A-6547-42B9-A668-519F3C0720A9}.FinalAlertRelease YR|Win32.ActiveCfg = FinalAlertRelease YR|Win32
 		{9326D29A-6547-42B9-A668-519F3C0720A9}.FinalAlertRelease YR|Win32.Build.0 = FinalAlertRelease YR|Win32
-		{5E445578-CB45-4D82-9A1C-FC7D3E8D866A}.FinalAlertDebug YR|Win32.ActiveCfg = DebugMinimal|Win32
-		{5E445578-CB45-4D82-9A1C-FC7D3E8D866A}.FinalAlertDebug YR|Win32.Build.0 = DebugMinimal|Win32
-		{5E445578-CB45-4D82-9A1C-FC7D3E8D866A}.FinalAlertRelease YR|Win32.ActiveCfg = ReleaseMinimal|Win32
-		{5E445578-CB45-4D82-9A1C-FC7D3E8D866A}.FinalAlertRelease YR|Win32.Build.0 = ReleaseMinimal|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

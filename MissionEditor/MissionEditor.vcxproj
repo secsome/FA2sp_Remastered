@@ -351,11 +351,6 @@
     <Media Include="Res\uqeue.wav" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\3rdParty\xcc\Library\XCC Library.vcxproj">
-      <Project>{5e445578-cb45-4d82-9a1c-fc7d3e8d866a}</Project>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
     <None Include="data\FinalSun\FSData.ini" />
     <None Include="res\ra2_arrow.cur" />
     <None Include="res\ts_arrow.cur" />
