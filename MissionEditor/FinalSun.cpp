@@ -533,3 +533,8 @@ BOOL CFinalSunApp::OnIdle(LONG lCount)
 	//MessageBox(0,"Idled","",0);
 	return CWinApp::OnIdle(lCount);
 }
+
+CFinalSunDlg* CFinalSunApp::GetMainWnd()
+{
+	return (CFinalSunDlg*)m_pMainWnd;
+}

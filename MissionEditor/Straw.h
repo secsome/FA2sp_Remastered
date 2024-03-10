@@ -260,3 +260,37 @@ public:
 protected:
 	SHAEngine SHA;
 };
+
+class LCWStraw : public Straw
+{
+public:
+	enum CompControl
+	{
+		COMPRESS,
+		DECOMPRESS
+	};
+
+	explicit LCWStraw(CompControl control, int blocksize = 1024 * 8) noexcept;
+
+	LCWStraw(const LCWStraw&) = delete;
+	LCWStraw& operator=(const LCWStraw&) = delete;
+	LCWStraw(LCWStraw&&) = default;
+	LCWStraw& operator=(LCWStraw&&) = default;
+
+	virtual ~LCWStraw() override;
+
+	virtual int Get(void* buffer, int length) override;
+
+private:
+	CompControl Control;
+	int Counter;
+	char* Buffer;
+	char* Buffer2;
+	int BlockSize;
+	int SafetyMargin;
+	struct
+	{
+		unsigned short CompCount;
+		unsigned short UncompCount;
+	} BlockHeader;
+};

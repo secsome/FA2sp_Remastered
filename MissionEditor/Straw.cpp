@@ -3,7 +3,8 @@
 #include "Straw.h"
 #include "CCFile.h"
 #include "Blowfish.h"
-#include "LZO.h"
+#include "LZO1X.h"
+#include "LCW.h"
 #include "PKey.h"
 #include "SHA.h"
 
@@ -550,4 +551,81 @@ int SHAStraw::Get(void* buffer, int length)
 int SHAStraw::Result(void* result) const
 {
 	return SHA.Result(result);
+}
+
+LCWStraw::LCWStraw(CompControl control, int blocksize) noexcept
+	: Control{ control }
+	, Counter{ 0 }
+	, Buffer{ nullptr }
+	, Buffer2{ nullptr }
+	, BlockSize{ blocksize }
+	, BlockHeader{ 0,0 }
+{
+	SafetyMargin = BlockSize / 128 + 1;
+	Buffer = new char[BlockSize + SafetyMargin];
+	if (control == COMPRESS)
+		Buffer2 = new char[BlockSize + SafetyMargin];
+}
+
+LCWStraw::~LCWStraw()
+{
+	delete[] Buffer;
+	Buffer = nullptr;
+
+	if (Buffer2)
+	{
+		delete[] Buffer2;
+		Buffer2 = nullptr;
+	}
+}
+
+int LCWStraw::Get(void* buffer, int length)
+{
+	if (buffer == nullptr || length < 1)
+		return 0;
+
+	int total = 0;
+	while (length > 0)
+	{
+		if (Counter)
+		{
+			int len = std::min(length, Counter);
+			if (Control == DECOMPRESS)
+				memmove(buffer, &Buffer[BlockHeader.UncompCount - Counter], len);
+			else
+				memmove(buffer, &Buffer2[(BlockHeader.CompCount + sizeof(BlockHeader)) - Counter], len);
+
+			buffer = ((char*)buffer) + len;
+			length -= len;
+			Counter -= len;
+			total += len;
+		}
+		if (length == 0)
+			break;
+
+		if (Control == DECOMPRESS)
+		{
+			int incount = Straw::Get(&BlockHeader, sizeof(BlockHeader));
+			if (incount != sizeof(BlockHeader))
+				break;
+
+			void* ptr = &Buffer[(BlockSize + SafetyMargin) - BlockHeader.CompCount];
+			incount = Straw::Get(ptr, BlockHeader.CompCount);
+			if (incount != BlockHeader.CompCount)
+				break;
+			LCW_Uncompress(ptr, Buffer);
+			Counter = BlockHeader.UncompCount;
+		}
+		else
+		{
+			BlockHeader.UncompCount = (unsigned short)Straw::Get(Buffer, BlockSize);
+			if (BlockHeader.UncompCount == 0)
+				break;
+			BlockHeader.CompCount = (unsigned short)LCW_Compress(Buffer, &Buffer2[sizeof(BlockHeader)], BlockHeader.UncompCount);
+			memmove(Buffer2, &BlockHeader, sizeof(BlockHeader));
+			Counter = BlockHeader.CompCount + sizeof(BlockHeader);
+		}
+	}
+
+	return total;
 }

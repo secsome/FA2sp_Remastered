@@ -111,6 +111,9 @@ public:
 	virtual BOOL PreTranslateMessage(MSG* pMsg);
 	virtual BOOL OnCmdMsg(UINT nID, int nCode, void* pExtra, AFX_CMDHANDLERINFO* pHandlerInfo);
 	virtual BOOL OnIdle(LONG lCount);
+
+	virtual CFinalSunDlg* GetMainWnd() override;
+
 	//}}AFX_VIRTUAL
 
 // Implementierung

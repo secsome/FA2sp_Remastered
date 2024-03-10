@@ -76,6 +76,11 @@ public:
 		return values.end();
 	}
 
+	auto& operator[](const CString& name) noexcept
+	{
+        return values[name];
+    }
+
 	[[deprecated("instead use iterators or for_each")]]
 	int GetValueOrigPos(int index) const noexcept;
 
@@ -128,6 +133,10 @@ public:
 	double GetDouble(const CString& sectionName, const CString& valueName, double defaultValue = 0.0) const;
 	bool GetBoolean(const CString& sectionName, const CString& valueName, bool defaultValue = false) const;
 
+	// Write encoded UUBlock
+	std::string ReadBase64String(const CString& sectionName) const;
+	size_t WriteBase64String(const CString& sectionName, const void* data, size_t length);
+
 	void Clear();
 	WORD InsertFile(const CString& filename, const char* Section, BOOL bNoSpaces = FALSE);
 	WORD InsertFile(const std::string& filename, const char* Section, BOOL bNoSpaces = FALSE);
@@ -175,6 +184,11 @@ public:
 	{
 		return sections.end();
 	}
+
+	auto& operator[](const CString& section) noexcept
+	{
+        return sections[section];
+    }
 
 	map<CString, CIniFileSection> sections;
 	CIniFile();

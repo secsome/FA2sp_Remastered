@@ -107,6 +107,7 @@
     <ClCompile Include="AiTriggerTypesEnable.cpp" />
     <ClCompile Include="All.cpp" />
     <ClCompile Include="BackCliffModifier.cpp" />
+    <ClCompile Include="Base64.cpp" />
     <ClCompile Include="Basic.cpp" />
     <ClCompile Include="Bitmap2MapConverter.cpp" />
     <ClCompile Include="Blowfish.cpp" />
@@ -133,10 +134,11 @@
     <ClCompile Include="InputBox.cpp" />
     <ClCompile Include="Int.cpp" />
     <ClCompile Include="IsoView.cpp" />
+    <ClCompile Include="LCW.cpp" />
     <ClCompile Include="Lighting.cpp" />
     <ClCompile Include="LineDrawer.cpp" />
     <ClCompile Include="Loading.cpp" />
-    <ClCompile Include="LZO.cpp" />
+    <ClCompile Include="LZO1X.cpp" />
     <ClCompile Include="MapD.cpp" />
     <ClCompile Include="MapData.cpp" />
     <ClCompile Include="MapLoadingDlg.cpp" />
@@ -158,6 +160,7 @@
     <ClCompile Include="NewMapSpDlg.cpp" />
     <ClCompile Include="NewMapTypeDlg.cpp" />
     <ClCompile Include="NewRA2HouseDlg.cpp" />
+    <ClCompile Include="Pipe.cpp" />
     <ClCompile Include="PKey.cpp" />
     <ClCompile Include="ProgressDlg.cpp" />
     <ClCompile Include="Random.cpp" />
@@ -214,6 +217,7 @@
     <ClInclude Include="AiTriggerTypesEnable.h" />
     <ClInclude Include="All.h" />
     <ClInclude Include="BackCliffModifier.h" />
+    <ClInclude Include="Base64.h" />
     <ClInclude Include="Basic.h" />
     <ClInclude Include="Bitmap2MapConverter.h" />
     <ClInclude Include="Blowfish.h" />
@@ -228,6 +232,7 @@
     <ClInclude Include="defines.h" />
     <ClInclude Include="FormatExtensions.h" />
     <ClInclude Include="Int.h" />
+    <ClInclude Include="LCW.h" />
     <ClInclude Include="LineDrawer.h" />
     <ClInclude Include="DynamicGraphDlg.h" />
     <ClInclude Include="FinalSun.h" />
@@ -247,7 +252,7 @@
     <ClInclude Include="Lighting.h" />
     <ClInclude Include="ListNode.h" />
     <ClInclude Include="Loading.h" />
-    <ClInclude Include="LZO.h" />
+    <ClInclude Include="LZO1X.h" />
     <ClInclude Include="LZOConfig.h" />
     <ClInclude Include="macros.h" />
     <ClInclude Include="MapD.h" />
@@ -273,6 +278,7 @@
     <ClInclude Include="NewMapTypeDlg.h" />
     <ClInclude Include="NewRA2HouseDlg.h" />
     <ClInclude Include="ovrlinline.h" />
+    <ClInclude Include="Pipe.h" />
     <ClInclude Include="PKey.h" />
     <ClInclude Include="ProgressDlg.h" />
     <ClInclude Include="Random.h" />

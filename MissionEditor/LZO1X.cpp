@@ -1,6 +1,6 @@
 #include "StdAfx.h"
 
-#include "LZO.h"
+#include "LZO1X.h"
 
 #pragma warning(disable : 4244)
 

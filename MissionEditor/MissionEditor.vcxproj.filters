@@ -294,7 +294,7 @@
     <ClCompile Include="Blowfish.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="LZO.cpp">
+    <ClCompile Include="LZO1X.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="CRC.cpp">
@@ -316,6 +316,15 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="MixFile.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Base64.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="LCW.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Pipe.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -625,7 +634,7 @@
     <ClInclude Include="Blowfish.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="LZO.h">
+    <ClInclude Include="LZO1X.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="LZOConfig.h">
@@ -647,6 +656,15 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Random.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Base64.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="LCW.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Pipe.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

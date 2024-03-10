@@ -29,6 +29,7 @@
 #include <string>
 #include <algorithm>
 #include <stdexcept>
+#include <sstream>
 
 #ifdef _DEBUG
 #undef THIS_FILE
@@ -130,6 +131,49 @@ std::map<unsigned int, CString> CIniFile::ParseIndiciesData(CString pSection)
 	return ret;
 }
 
+std::string CIniFile::ReadBase64String(const CString& sectionName) const
+{
+	std::ostringstream oss;
+	size_t line = 1;
+
+	const auto& section = sections.find(sectionName);
+	if (section == sections.end())
+		return "";
+
+	CString key;
+	while (true)
+	{
+		key.Format("%d", line++);
+		auto kvpair = section->second.values.find(key);
+		if (kvpair == section->second.values.end())
+            break;
+
+		oss << kvpair->second;
+	}
+
+	return oss.str();
+}
+
+// data is encoded base64 string
+size_t CIniFile::WriteBase64String(const CString& sectionName, const void* data, size_t length)
+{
+	size_t line = 1;
+	
+	const char* ptr = static_cast<const char*>(data);
+	CString key;
+	while (length > 0)
+	{
+		const auto line_length = std::min(length, 70u);
+		key.Format("%d", line++);
+		CString value ;
+		sections[sectionName].values[key] = CString{ ptr, static_cast<int>(line_length) };
+
+		ptr += line_length;
+		length -= line_length;
+    }
+
+	return line - 1;
+}
 
 void CIniFile::Clear()
 {

@@ -33,6 +33,11 @@
 #include "Structs.h"
 #include "Tube.h"
 
+#include "LCW.h"
+#include "Base64.h"
+#include "Straw.h"
+#include "Pipe.h"
+
 #ifdef _DEBUG
 #undef THIS_FILE
 static char THIS_FILE[] = __FILE__;
@@ -40,18 +45,6 @@ static char THIS_FILE[] = __FILE__;
 #endif
 
 typedef map<CString, CString, SortDummy> OURMAP;
-
-
-
-void DoEvents()
-{
-	/*MSG msg;
-	while(PeekMessage(&msg, NULL, 0, 0, PM_REMOVE))
-	{
-		TranslateMessage(&msg);
-		DispatchMessage(&msg);
-	}*/
-}
 
 
 void GetNodeName(CString& name, int n);
@@ -951,413 +944,138 @@ void CMapData::Unpack()
 	d.ShowWindow(SW_SHOW);
 	d.UpdateWindow();
 
-	CString ovrl;
-	int i;
+	d.m_Progress.SetRange(0, 3);
 
-
-	ovrl = "";
-
-	for (i = 0;i < m_mapfile.sections["OverlayPack"].values.size();i++)
+	auto& ini = m_mapfile;
+	
+	d.m_Progress.SetPos(0); d.m_Progress.UpdateWindow();
 	{
-		ovrl += *m_mapfile.sections["OverlayPack"].GetValue(i);
+		auto data = ini.ReadBase64String("OverlayPack");
+		data = base64::decode(data);
+		BufferStraw buffer_straw{ data.data(), (int)data.length() };
+		LCWStraw lcw_straw{ LCWStraw::DECOMPRESS };
+		lcw_straw.Get_From(buffer_straw);
+		lcw_straw.Get(m_Overlay, sizeof(m_Overlay));
 	}
-
-	//BYTE values[262144];
-	const size_t VALUESIZE = 262144;
-	std::vector<BYTE> values(VALUESIZE, 0xFF);
-	int hexlen;
-
-
-	if (ovrl.GetLength() > 0)
+	d.m_Progress.SetPos(1); d.m_Progress.UpdateWindow();
 	{
-		std::vector<BYTE> hex;
-		hexlen = FSunPackLib::DecodeBase64(ovrl, hex);
-		FSunPackLib::DecodeF80(hex.data(), hexlen, values, VALUESIZE);
-		values.resize(VALUESIZE, 0xFF);  // fill rest
+		auto data = ini.ReadBase64String("OverlayDataPack");
+		data = base64::decode(data);
+		BufferStraw buffer_straw{ data.data(), (int)data.length() };
+		LCWStraw lcw_straw{ LCWStraw::DECOMPRESS };
+		lcw_straw.Get_From(buffer_straw);
+		lcw_straw.Get(m_OverlayData, sizeof(m_OverlayData));
 	}
-
-	memcpy(m_Overlay, values.data(), std::min(VALUESIZE, values.size()));
-
-	ovrl = "";
-
-	for (i = 0;i < m_mapfile.sections["OverlayDataPack"].values.size();i++)
+	d.m_Progress.SetPos(2); d.m_Progress.UpdateWindow();
 	{
-		ovrl += *m_mapfile.sections["OverlayDataPack"].GetValue(i);
-	}
-
-	values.assign(VALUESIZE, 0);
-	if (ovrl.GetLength() > 0)
-	{
-		std::vector<BYTE> hex;
-
-		hexlen = FSunPackLib::DecodeBase64(ovrl, hex);
-		FSunPackLib::DecodeF80(hex.data(), hexlen, values, VALUESIZE);
-		values.resize(VALUESIZE, 0xFF);  // fill rest
-	}
-
-	memcpy(m_OverlayData, values.data(), std::min(VALUESIZE, values.size()));
-
-
-	CString IsoMapPck;
-	int len_needed = 0;
-
-	CIniFileSection& sec = m_mapfile.sections["IsoMapPack5"];
-	int lines = sec.values.size();
-
-	/*char c[50];
-	itoa(m_mapfile.sections["IsoMapPack5"].values.size(), c, 10);
-	MessageBox(0,c,"",0);*/
-
-	for (i = 0;i < lines;i++)
-	{
-		len_needed += sec.GetValue(i)->GetLength();
-	}
-
-	LPSTR lpMapPack = new(char[len_needed + 1]);
-	memset(lpMapPack, 0, len_needed + 1);
-
-	int cur_pos = 0;
-	for (i = 0;i < lines;i++)
-	{
-		memcpy(lpMapPack + cur_pos, (LPCSTR)*sec.GetValue(i), sec.GetValue(i)->GetLength());
-		cur_pos += sec.GetValue(i)->GetLength();
-		DoEvents();
-
-		//IsoMapPck+=*sec.GetValue(i);
-	}
-
-	IsoMapPck = lpMapPack;
-
-	delete[] lpMapPack;
-
-
-	if (m_mfd != NULL) delete[] m_mfd;
-	m_mfd = NULL;
-	dwIsoMapSize = 0;
-
-	if (IsoMapPck.GetLength() > 0)
-	{
-		std::vector<BYTE> hexC;
-
-		//DoEvents();
-
-		hexlen = FSunPackLib::DecodeBase64(IsoMapPck, hexC);
-
-		// first let´s find out the size of the mappack data
-		const auto hex = hexC.data();
-		int SP = 0;
-		int MapSizeBytes = 0;
-		int sec = 0;
-		while (SP < hexlen)
+		auto data = ini.ReadBase64String("IsoMapPack5");
+		data = base64::decode(data);
+		BufferStraw buffer_straw{ data.data(), (int)data.length() };
+		LZOStraw lzo_straw{ LZOStraw::DECOMPRESS };
+		lzo_straw.Get_From(buffer_straw);
+		std::string buffer;
+		while (true)
 		{
-			WORD wSrcSize;
-			WORD wDestSize;
-			memcpy(&wSrcSize, hex + SP, 2);
-			SP += 2;
-			memcpy(&wDestSize, hex + SP, 2);
-			SP += 2;
-
-			MapSizeBytes += wDestSize;
-			SP += wSrcSize;
-
-			sec++;
+			char lzo_entry[MAPFIELDDATA_SIZE] = { 0 };
+			lzo_straw.Get(lzo_entry, sizeof(lzo_entry));
+			if (*reinterpret_cast<int32_t*>(lzo_entry) == 0)
+				break;
+			buffer.append(lzo_entry, sizeof(lzo_entry));
 		}
 
-		m_mfd = new(BYTE[MapSizeBytes]);
-		dwIsoMapSize = MapSizeBytes / MAPFIELDDATA_SIZE;
+		if (m_mfd != nullptr)
+			delete[] m_mfd;
 
-		FSunPackLib::DecodeIsoMapPack5(hex, hexlen, (BYTE*)m_mfd, d.m_Progress.m_hWnd, TRUE);
-
-		int k;
-		/*fstream f;
-		f.open("C:\\isomappack5.txt",ios_base::in | ios_base::out | ios_base::trunc);
-		for(k=0;k<150;k++)
-		{
-			f << "Byte " << k << ":	" << (int)m_mfd[k] << endl;
-		}
-		f.flush();*/
+		m_mfd = new BYTE[buffer.length()];
+		std::memcpy(m_mfd, buffer.data(), buffer.length());
+		dwIsoMapSize = buffer.length() / MAPFIELDDATA_SIZE;
 	}
-
+	d.m_Progress.SetPos(3); d.m_Progress.UpdateWindow();
 	d.DestroyWindow();
-
 }
-
-
-
-
-
 
 void CMapData::Pack(BOOL bCreatePreview, BOOL bCompression)
 {
+	UNREFERENCED_PARAMETER(bCompression);
+
 	if (!isInitialized) return;
 
-	errstream << "Erasing sections" << endl;
-	errstream.flush();
+	auto& ini = m_mapfile;
+	ini.DeleteSection("OverlayPack");
+	ini.DeleteSection("OverlayDataPack");
+	ini.DeleteSection("IsoMapPack5");
+	ini.DeleteSection("Digest");
 
-	int i;
-	BYTE* base64 = NULL; // must be freed!
-
-	m_mapfile.sections.erase("OverlayPack");
-	m_mapfile.sections.erase("OverlayDataPack");
-	m_mapfile.sections.erase("IsoMapPack5"); // only activate when packing isomappack is supported
-
-	DWORD pos;
-
-	errstream << "Creating Digest" << endl;
-	errstream.flush();
-
-	if (m_mapfile.sections["Digest"].values.size() == 0)
 	{
-		srand(GetTickCount());
-		unsigned short vals[10];
-		for (i = 0;i < 10;i++)
-			vals[i] = rand() * 65536 / RAND_MAX;
-
-		base64 = FSunPackLib::EncodeBase64((BYTE*)vals, 20);
-
-		i = 0;
-		pos = 0;
-		while (TRUE)
-		{
-			i++;
-			char cLine[50];
-			itoa(i, cLine, 10);
-			char str[200];
-			memset(str, 0, 200);
-			WORD cpysize = 70;
-			if (pos + cpysize > strlen((char*)base64)) cpysize = strlen((char*)base64) - pos;
-			memcpy(str, &base64[pos], cpysize);
-			if (strlen(str) > 0)
-				m_mapfile.sections["Digest"].values[cLine] = str;
-			if (cpysize < 70) break;
-			pos += 70;
-		}
-
-		delete[] base64;
-		base64 = NULL;
+		DynamicBufferPipe buffer_pipe;
+		LCWPipe lcw_pipe{ LCWPipe::COMPRESS };
+		lcw_pipe.Put_To(buffer_pipe);
+		lcw_pipe.Put(m_Overlay, sizeof(m_Overlay));
+		lcw_pipe.Flush();
+		auto data = base64::encode(buffer_pipe.GetBuffer(), buffer_pipe.GetLength());
+		ini.WriteBase64String("OverlayPack", data.c_str(), data.length());
+	}
+	{
+		DynamicBufferPipe buffer_pipe;
+		LCWPipe lcw_pipe{ LCWPipe::COMPRESS };
+		lcw_pipe.Put_To(buffer_pipe);
+		lcw_pipe.Put(m_OverlayData, sizeof(m_OverlayData));
+		lcw_pipe.Flush();
+		auto data = base64::encode(buffer_pipe.GetBuffer(), buffer_pipe.GetLength());
+		ini.WriteBase64String("OverlayDataPack", data.c_str(), data.length());
+	}
+	{
+		DynamicBufferPipe buffer_pipe;
+		LZOPipe lzo_pipe{ LZOPipe::COMPRESS };
+		lzo_pipe.Put_To(buffer_pipe);
+		lzo_pipe.Put(m_mfd, dwIsoMapSize * MAPFIELDDATA_SIZE);
+		lzo_pipe.Flush();
+		auto data = base64::encode(buffer_pipe.GetBuffer(), buffer_pipe.GetLength());
+		ini.WriteBase64String("IsoMapPack5", data.c_str(), data.length());
 	}
 
-
-	BYTE* values = new(BYTE[262144]);
-	BYTE* hexpacked = NULL; // must be freed!
-
-
-	errstream << "Values allocated. Pointer: " << (int)values << endl;
-	errstream.flush();
-
-
-	errstream << "Packing overlay" << endl;
-	errstream.flush();
-
-	for (i = 0;i < 262144;i++)
-	{
-		values[i] = m_Overlay[i];
-	}
-
-	int hexpackedLen = FSunPackLib::EncodeF80(values, 262144, 32, &hexpacked);
-	base64 = FSunPackLib::EncodeBase64(hexpacked, hexpackedLen);
-
-
-	errstream << "Saving overlay" << endl;
-
-	i = 0;
-	pos = 0;
-	while (TRUE)
-	{
-		i++;
-		char cLine[50];
-		itoa(i, cLine, 10);
-		char str[200];
-		memset(str, 0, 200);
-		WORD cpysize = 70;
-		if (pos + cpysize > strlen((char*)base64)) cpysize = strlen((char*)base64) - pos;
-		memcpy(str, &base64[pos], cpysize);
-		if (strlen(str) > 0)
-			m_mapfile.sections["OverlayPack"].values[cLine] = str;
-		if (cpysize < 70) break;
-		pos += 70;
-	}
-
-
-
-#ifndef _DEBUG__
-	delete[] hexpacked;
-	delete[] base64;
-#endif
-
-	errstream << "Pack overlaydata" << endl;
-	errstream.flush();
-
-	for (i = 0;i < 262144;i++)
-	{
-		values[i] = m_OverlayData[i];
-	}
-
-	hexpacked = NULL;
-
-	errstream << "Format80" << endl;
-	errstream.flush();
-
-	hexpackedLen = FSunPackLib::EncodeF80(values, 262144, 32, &hexpacked);
-
-
-	errstream << "Base64" << endl;
-	errstream.flush();
-
-	base64 = FSunPackLib::EncodeBase64(hexpacked, hexpackedLen);
-
-
-	errstream << "Overlaydata done" << endl;
-	errstream.flush();
-
-	i = 0;
-	pos = 0;
-	while (TRUE)
-	{
-		i++;
-		char cLine[50];
-		itoa(i, cLine, 10);
-		char str[200];
-		memset(str, 0, 200);
-		WORD cpysize = 70;
-		if (pos + cpysize > strlen((char*)base64)) cpysize = strlen((char*)base64) - pos;
-		memcpy(str, &base64[pos], cpysize);
-		if (strlen(str) > 0)
-			m_mapfile.sections["OverlayDataPack"].values[cLine] = str;
-		if (cpysize < 70) break;
-		pos += 70;
-	}
-
-
-#ifndef _DEBUG__
-	delete[] hexpacked;
-	delete[] base64;
-#endif
-
-	hexpacked = NULL;
-
-	errstream << "Pack isomappack" << endl;
-	errstream.flush();
-
-
-	hexpackedLen = FSunPackLib::EncodeIsoMapPack5(m_mfd, dwIsoMapSize * MAPFIELDDATA_SIZE, &hexpacked);
-
-
-	errstream << "done" << endl;
-	errstream.flush();
-
-	errstream << "hexdata size: " << hexpackedLen;
-	errstream << endl << "Now converting to base64";
-	errstream.flush();
-	base64 = FSunPackLib::EncodeBase64(hexpacked, hexpackedLen);
-	errstream << "done" << endl;
-	errstream.flush();
-
-	i = 0;
-	pos = 0;
-	int base64len = strlen((char*)base64);
-	while (TRUE)
-	{
-		i++;
-		char cLine[50];
-		itoa(i, cLine, 10);
-		char str[200];
-		memset(str, 0, 200);
-		int cpysize = 70;
-		if (pos + cpysize > base64len) cpysize = base64len - pos;
-		memcpy(str, &base64[pos], cpysize);
-		if (cpysize)
-			m_mapfile.sections["IsoMapPack5"].values[cLine] = str;
-
-		if (cpysize < 70) break;
-		pos += 70;
-	}
-
-	errstream << "finished copying into inifile" << endl;
-	errstream.flush();
-
-
-#ifndef _DEBUG__
-	delete[] hexpacked;
-	delete[] base64;
-#endif
-
-
-	// create minimap
 	if (bCreatePreview)
 	{
-		BITMAPINFO biinfo;
-		BYTE* lpDibData;
+		ini.DeleteSection("PreviewPack");
+		ini.DeleteSection("Preview");
+
+		BITMAPINFO bmi;
+		BYTE* buffer;
 		int pitch;
-		((CFinalSunDlg*)theApp.m_pMainWnd)->m_view.m_minimap.DrawMinimap(&lpDibData, biinfo, pitch);
+		theApp.GetMainWnd()->m_view.m_minimap.DrawMinimap(&buffer, bmi, pitch);
 
-		m_mapfile.sections.erase("PreviewPack");
-		m_mapfile.sections["Preview"].values["Size"] = m_mapfile.sections["Map"].values["Size"];
-		char c[50];
-		itoa(biinfo.bmiHeader.biWidth, c, 10);
-		m_mapfile.sections["Preview"].values["Size"] = SetParam(m_mapfile.sections["Preview"].values["Size"], 2, c);
-		itoa(biinfo.bmiHeader.biHeight, c, 10);
-		m_mapfile.sections["Preview"].values["Size"] = SetParam(m_mapfile.sections["Preview"].values["Size"], 3, c);
+		const auto width = bmi.bmiHeader.biWidth;
+		const auto height = bmi.bmiHeader.biHeight;
+		
+		std::vector<unsigned char> raw;
+		raw.resize(width * height * 3);
 
-		BYTE* lpRAW = new(BYTE[biinfo.bmiHeader.biWidth * biinfo.bmiHeader.biHeight * 3]);
-
-		int mapwidth = GetWidth();
-		int mapheight = GetHeight();
-		int e;
-		for (i = 0;i < biinfo.bmiHeader.biWidth;i++)
+		auto p = raw.data();
+		for (int x = 0; x < width; ++x)
 		{
-			for (e = 0;e < biinfo.bmiHeader.biHeight;e++)
-			{
-				int dest = i * 3 + e * biinfo.bmiHeader.biWidth * 3;
-				int src = i * 3 + (biinfo.bmiHeader.biHeight - e - 1) * pitch;
-				memcpy(&lpRAW[dest + 2], &lpDibData[src + 0], 1);
-				memcpy(&lpRAW[dest + 1], &lpDibData[src + 1], 1);
-				memcpy(&lpRAW[dest + 0], &lpDibData[src + 2], 1);
-			}
+			for (int y = 0; y < height; ++y)
+            {
+				const auto idx = 3 * (x + width * y);
+				auto color = p + pitch * (height - y - 1);
+				raw[idx + 0] = color[2];
+				raw[idx + 1] = color[1];
+				raw[idx + 2] = color[0];
+            }
+			p += 3;
 		}
 
+		DynamicBufferPipe buffer_pipe;
+		LZOPipe lzo_pipe{ LZOPipe::COMPRESS };
+		lzo_pipe.Put_To(buffer_pipe);
+		lzo_pipe.Put(raw.data(), raw.size());
+		lzo_pipe.Flush();
+		auto data = base64::encode(buffer_pipe.GetBuffer(), buffer_pipe.GetLength());
+		ini.WriteBase64String("PreviewPack", data.c_str(), data.length());
 
-		hexpacked = NULL;
-		hexpackedLen = FSunPackLib::EncodeIsoMapPack5(lpRAW, biinfo.bmiHeader.biWidth * biinfo.bmiHeader.biHeight * 3, &hexpacked);
-
-		base64 = FSunPackLib::EncodeBase64(hexpacked, hexpackedLen);
-
-		// uses IsoMapPack5 encoding routine
-
-
-		errstream << "Saving minimap" << endl;
-
-		i = 0;
-		pos = 0;
-		while (TRUE)
-		{
-			i++;
-			char cLine[50];
-			itoa(i, cLine, 10);
-			char str[200];
-			memset(str, 0, 200);
-			WORD cpysize = 70;
-			if (pos + cpysize > strlen((char*)base64)) cpysize = strlen((char*)base64) - pos;
-			memcpy(str, &base64[pos], cpysize);
-			if (strlen(str) > 0)
-				m_mapfile.sections["PreviewPack"].values[cLine] = str;
-			if (cpysize < 70) break;
-			pos += 70;
-		}
-
-
-
-		//#ifndef _DEBUG__
-		delete[] base64;
-		delete[] hexpacked;
-		//#endif
-
-
-		delete[] lpRAW;
-		//delete[] lpDibData;
+		CString sz;
+		sz.Format("0,0,%d,%d", width, height);
+		ini.sections["Preview"].values["Size"] = sz;
 	}
-
-	delete[] values;
 }
 
 void CMapData::ClearOverlayData()
@@ -6241,7 +5959,7 @@ void CMapData::Paste(int x, int y, int z_mod)
 
 			FIELDDATA* fd = Map->GetFielddataAt(i + x + (y + e) * m_IsoSize);
 			int ground = fd->wGround;
-			if (ground = 0xFFFF) ground = 0;
+			if (ground == 0xFFFF) ground = 0;
 
 
 			int height = fd->bHeight;//-(*tiledata)[ground].tiles[fd->bSubTile].bZHeight;
