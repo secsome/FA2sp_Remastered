@@ -56,6 +56,8 @@ public:
 	const CString* TryGetString(const CString& name) const;
 	CString& AccessValueByName(const CString& name);
 
+	bool DeleteKey(const CString& name);
+
 	auto begin() noexcept
 	{
 		return values.begin();

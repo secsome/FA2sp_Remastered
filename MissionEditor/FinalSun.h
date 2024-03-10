@@ -40,7 +40,7 @@
 struct OPTIONS{
 	CString TSExe;
 	CString LanguageName;
-	CString prev_maps[4];
+	CString prev_maps[9];
 	BOOL bFlat;
 	BOOL bMarbleMadness;
 	BOOL bSupportMarbleMadness;

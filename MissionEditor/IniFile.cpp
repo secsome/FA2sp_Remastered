@@ -402,6 +402,17 @@ CString& CIniFileSection::AccessValueByName(const CString& valueName)
 	return values[valueName];
 }
 
+bool CIniFileSection::DeleteKey(const CString& name)
+{
+	auto itr = values.find(name);
+	if (itr != values.end())
+	{
+		values.erase(itr);
+		return true;
+	}
+	return false;
+}
+
 const CString* CIniFileSection::GetValueName(std::size_t index) const noexcept
 {
 	if (index > values.size() - 1)

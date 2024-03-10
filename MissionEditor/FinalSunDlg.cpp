@@ -53,20 +53,16 @@
 #include "SearchWaypointDlg.h"
 #include "userscriptsdlg.h"
 
+#include <sstream>
+#include "SHA.h"
+#include "Base64.h"
+
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
 #undef THIS_FILE
 static char THIS_FILE[] = __FILE__;
 #endif
-
-
-
-#include <fcntl.h>
-#include <sys/types.h>
-#include <sys/stat.h>
-#include <io.h>
-#include <stdio.h>
 
 extern ACTIONDATA AD;
 extern BOOL bNoDraw;
@@ -902,316 +898,125 @@ void CFinalSunDlg::SaveMap(CString FileName_)
 	UpdateWindow();	
 	errstream << "Calling UpdateIniFile()"<<endl;
 	
-	
-	
 	CSavingDlg dlg;
 	dlg.ShowWindow(SW_SHOW);
 	dlg.BringWindowToTop();
 	dlg.UpdateWindow();
 	Map->UpdateIniFile(dwFlags);
 
-		
-
-	CIniFile& ini=Map->UpdateAndGetIniFile();
-
-
-	for(i=0;i<ini.sections.size();i++)
-	{
-		if(ini.GetSection(i)->values.size()==0 || ini.GetSectionName(i)->GetLength()==0)
-		{
-			ini.sections.erase(*ini.GetSectionName(i));
-		}
-	}
-
-	for(i=0;i<ini.sections.size();i++)
-	{
-		CIniFileSection& sec=*ini.GetSection(i);
-		int e;
-		if(*ini.GetSectionName(i)!="IsoMapPack5")
-		for(e=0;e<sec.values.size();e++)
-		{
-			sec.GetValue(e)->TrimLeft();
-			{
-				CString value=*sec.GetValue(e);
-				CString name=*sec.GetValueName(e);
-
-				sec.values.erase(name);
-				name.TrimLeft();
-				sec.values[name]=value;
-			}
-		}
-	}
-
-	for(i=0;i<ini.sections.size();i++)
-	{
-		CIniFileSection& sec=*ini.GetSection(i);
-		int e;
-		if(*ini.GetSectionName(i)!="IsoMapPack5")
-		for(e=0;e<sec.values.size();e++)
-		{
-			sec.GetValue(e)->TrimRight();
-			{
-				CString value=*sec.GetValue(e);
-				CString name=*sec.GetValueName(e);
-
-				sec.values.erase(name);
-				name.TrimRight();
-				sec.values[name]=value;
-			}
-		}
-	}
-
-	
-	
 	SetText("Saving...");
 	UpdateWindow();
 
-	
-		
-
-	std::wstring FileName = utf8ToUtf16(FileName_.GetString());
-
-	map<CString, BOOL> rulessections;
-		
-	std::string tempfile=u8ExePath;
-	tempfile+="\\TmpMap.map";
-	std::wstring u16tempfile = utf8ToUtf16(tempfile);
-
-		CString fi;
-		
-		deleteFile(tempfile);
-		HANDLE hFile=CreateFileW(u16tempfile.c_str(), GENERIC_WRITE, 0, NULL, TRUNCATE_EXISTING, FILE_ATTRIBUTE_NORMAL | FILE_FLAG_SEQUENTIAL_SCAN, NULL);
-		CloseHandle(hFile);
-		hFile=CreateFileW(u16tempfile.c_str(), GENERIC_WRITE, 0, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL | FILE_FLAG_SEQUENTIAL_SCAN, NULL);
-		
-
-		DWORD bwr;
-		
-		fi= "; Map created with FinalAlert 2 Mission Editor";
-		fi+="\n";
-		fi+= "; note that all comments were truncated" ;
-		fi+= "\n";
-		fi+="\n";
-
-		WriteFile(hFile, fi, fi.GetLength(), &bwr, NULL);
-
-		fi="";
-
-		// MW 07/28/01: Header saving at top
-		for(i=0;i<ini.sections.size();i++)
-		{
-			if(*ini.GetSectionName(i)=="Header")
-			{
-				rulessections[*ini.GetSectionName(i)]=TRUE;
-
-				fi= "[" ;
-				fi+= *ini.GetSectionName(i);
-				fi+= "]" ;
-				fi+= "\n";
-
-				WriteFile(hFile, fi, fi.GetLength(), &bwr, NULL);
-				
-				int e;
-				CIniFileSection& sec=*ini.GetSection(i);
-				CString d;
-				
-			
-				char c[50];
-				for(e=0;e<sec.values.size();e++)
-				{
-					fi= *sec.GetValueName(e);
-					fi+= "=" ;
-					fi+= *sec.GetValue(e) ;
-					fi+= "\n";
-					WriteFile(hFile, fi, fi.GetLength(), &bwr, NULL);
-	
-					
-					if(e%500==0)
-					{
-						int percent=e*100/sec.values.size();
-						d=*ini.GetSectionName(i);
-						itoa(percent,c ,10);
-						SetText((CString)"Saving... "+d+"( "+c+"% )");
-						UpdateWindow();
-					}
-					
-				}
-
-				fi= "\n";
-				WriteFile(hFile, fi, fi.GetLength(), &bwr, NULL);	
-			}
-
-		}
-
-		for(i=0;i<ini.sections.size();i++)
-		{
-			if(Map->IsRulesSection(*ini.GetSectionName(i)))
-			{
-				rulessections[*ini.GetSectionName(i)]=TRUE;
-
-				fi= "[" ;
-				fi+= *ini.GetSectionName(i);
-				fi+= "]" ;
-				fi+= "\n";
-
-				WriteFile(hFile, fi, fi.GetLength(), &bwr, NULL);
-				
-				int e;
-				CIniFileSection& sec=*ini.GetSection(i);
-				CString d;
-				
-			
-				char c[50];
-				for(e=0;e<sec.values.size();e++)
-				{
-					fi= *sec.GetValueName(e);
-					fi+= "=" ;
-					fi+= *sec.GetValue(e) ;
-					fi+= "\n";
-					WriteFile(hFile, fi, fi.GetLength(), &bwr, NULL);
-	
-					
-					if(e%500==0)
-					{
-						int percent=e*100/sec.values.size();
-						d=*ini.GetSectionName(i);
-						itoa(percent,c ,10);
-						SetText((CString)"Saving... "+d+"( "+c+"% )");
-						UpdateWindow();
-					}
-					
-				}
-
-				fi= "\n";
-				WriteFile(hFile, fi, fi.GetLength(), &bwr, NULL);	
-			}
-
-		}
-
-		// the preview must be before map data...
-		if(hidePreview)
-		{
-			fi+= "; this is a hidden preview";fi+= "\n";
-			fi+= "[Preview]" ;fi+= "\n" ;
-			fi+= "Size=0,0,106,61" ;fi+= "\n" ;fi+= "\n";
-			fi+= "[PreviewPack]" ;fi+= "\n";
-			fi+= "2=BIACcgAEwBtAMnRABAAaQCSANMAVQASAAnIABMAbQDJ0QAQAGkAkgDTAFUAEgAJyAATAG0" ;fi+= "\n";
-			fi+= "1=yAsAIAXQ5PDQ5PDQ6JQATAEE6PDQ4PDI4JgBTAFEAkgAJyAATAG0AydEAEABpAJIA0wBVA" ;fi+= "\n" ;fi+= "\n";
-		}
-		else{
-			fi+= "[Preview]" ;fi+= "\n";
-			int e;
-			for(e=0;e<ini.sections["Preview"].values.size();e++)
-			{
-				fi+= *ini.sections["Preview"].GetValueName(e) ;fi+= "=" ;
-				fi+= *ini.sections["Preview"].GetValue(e);
-				fi+= "\n";
-			}
-			fi+= "\n";
-			fi+= "[PreviewPack]" ;fi+= "\n";
-			for(e=0;e<ini.sections["PreviewPack"].values.size();e++)
-			{
-				fi+= *ini.sections["PreviewPack"].GetValueName(e) ;fi+= "=" ;
-				fi+= *ini.sections["PreviewPack"].GetValue(e) ;
-				fi+= "\n";
-			}
-			fi+= "\n";
-		}
-
-		
-		WriteFile(hFile, fi, fi.GetLength(), &bwr, NULL);
-
-		for(i=0;i<ini.sections.size();i++)
-		{
-			if(rulessections.find(*ini.GetSectionName(i))!=rulessections.end() || (*ini.GetSectionName(i)=="Digest" || *ini.GetSectionName(i)=="PreviewPack" || *ini.GetSectionName(i)=="Preview" || *ini.GetSectionName(i)=="Header"))
-			{
-
-				
-
-				
-			}
-			else if(*ini.GetSectionName(i)!="")
-			{
-				//MessageBox(ini.GetSectionName(i)->data());
-				
-				
-				//its a standard section:
-				fi= "[" ;
-				fi+= *ini.GetSectionName(i);
-				fi+= "]" ;
-				fi+= "\n";
-
-				WriteFile(hFile, fi, fi.GetLength(), &bwr, NULL);
-				
-				int e;
-				CIniFileSection& sec=*ini.GetSection(i);
-				CString d;
-				
-			
-				char c[50];
-				for(e=0;e<sec.values.size();e++)
-				{
-					fi= *sec.GetValueName(e);
-					fi+= "=" ;
-					fi+= *sec.GetValue(e) ;
-					fi+= "\n";
-					WriteFile(hFile, fi, fi.GetLength(), &bwr, NULL);
-
-					
-										
-					
-					if(e%500==0)
-					{
-						int percent=e*100/sec.values.size();
-						d=*ini.GetSectionName(i);
-						itoa(percent,c ,10);
-						SetText((CString)"Saving... "+d+"( "+c+"% )");
-						UpdateWindow();
-					}
-					
-				}
-
-				fi= "\n";
-				WriteFile(hFile, fi, fi.GetLength(), &bwr, NULL);			
-				
-			}
-		}
-
-		
-		fi+= "\n";
-		fi+= "[Digest]" ;fi+= "\n";
-		int e;
-		for(e=0;e<ini.sections["Digest"].values.size();e++)
-		{
-			fi+= *ini.sections["Digest"].GetValueName(e) ;fi+= "=" ;
-			fi+= *ini.sections["Digest"].GetValue(e) ;
-			fi+= "\n";
-		}
-		fi+= "\n";
-		WriteFile(hFile, fi, fi.GetLength(), &bwr, NULL);
-
-				
-		CloseHandle(hFile);
-
-		dlg.DestroyWindow();
-
-		auto DestName=FileName;
-		const auto u8FileName = utf16ToUtf8(FileName);
-
-		if(!CopyFileW(u16tempfile.c_str(), FileName.c_str(), FALSE))
-		{
-			MessageBox("Error: file cannot be saved. Make sure the file is not read only","Error",MB_OK);
-		}
+	// Save .map only
+	{
+		auto idx = FileName_.ReverseFind('.');
+		if (idx == -1)
+			FileName_ += ".map";
 		else
+			FileName_ = FileName_.Mid(0, idx) + ".map";
+	}
+	CIniFile& ini = Map->UpdateAndGetIniFile();
+
+	const auto u16FileName = utf8ToUtf16(FileName_.GetString());
+	const auto u8Filename = utf16ToUtf8(u16FileName);
+
+	// Remove empty sections and keys
+	{
+		std::vector<CString> sections_to_remove;
+		for (auto& [section_name, section] : ini.sections)
 		{
-			SetText(TranslateStringVariables(1,GetLanguageStringACP("FileSaved"), u8FileName.c_str()));
-			InsertPrevFile(u8FileName.c_str());
+			CString name = section_name;
+			name.Trim();
+			if (name.GetLength() == 0 || section.values.empty())
+			{
+				sections_to_remove.push_back(section_name);
+				continue;
+			}
+
+			std::vector<CString> keys_to_remove;
+			for (const auto& [key_name, value] : section.values)
+            {
+                CString key = key_name;
+				key.Trim();
+                if (key.GetLength() == 0)
+                    keys_to_remove.push_back(key_name);
+            }
+
+			for (const auto& key : keys_to_remove)
+				section.DeleteKey(key);
+
+			if (section.values.empty())
+				sections_to_remove.push_back(section_name);
+		}
+		for (const auto& section : sections_to_remove)
+            ini.sections.erase(section);
+	}
+
+	std::ofstream fout;
+	fout.open(u8Filename, fout.out | fout.trunc);
+	if (!fout.is_open()) [[unlikely]]
+		MessageBox("Failed to create file!", "Error", MB_OK | MB_ICONERROR);
+	else
+	{
+		ini.DeleteSection("Digest");
+
+		std::ostringstream oss;
+		
+		oss <<
+			"; Map created with FinalAlert 2(tm) Mission Editor\n"
+			"; Get it at http://www.ea.com\n"
+			"; note that all comments were truncated\n"
+			"\n"
+			"; This FA2 modified version for YR is created by secsome\n\n";
+
+		// YR requires Preview and PreviewPack before Map section
+		if (const auto section = ini.GetSection("Preview"))
+		{
+			oss << "[Preview]\n";
+			for (const auto& [key, value] : section->values)
+                oss << key << "=" << value << "\n";
+			oss << "\n";
+		}
+		if (const auto section = ini.GetSection("PreviewPack"))
+		{
+            oss << "[PreviewPack]\n";
+            for (const auto& [key, value] : section->values)
+                oss << key << "=" << value << "\n";
+            oss << "\n";
+        }
+
+		for (const auto& [section_name, section] : ini)
+		{
+			if (!strcmp(section_name, "Preview") || !strcmp(section_name, "PreviewPack"))
+                continue;
+
+			oss << "[" << section_name << "]\n";
+			for (const auto& [key, value] : section.values)
+                oss << key << "=" << value << "\n";
+			oss << "\n";
 		}
 
-		deleteFile(tempfile);
+		// Generate digest
+		SHAEngine sha;
+		sha.Hash(oss.str().c_str(), oss.str().size());
+		unsigned char digest[20];
+		sha.Result(digest);
 
-	SetCursor(m_hArrowCursor);
+		// As sha1 hash length is only 20, the length of base64 result won't
+		// go over the limitation of uublock's 70 per line. So only one row!
+		oss << "[Digest]\n1=" << base64::encode(digest, sizeof(digest)) << "\n";
+
+		// Now just write to the file
+		fout << oss.str();
+		fout.flush();
+		fout.close();
 	}
+
+	SetText(TranslateStringVariables(1,GetLanguageStringACP("FileSaved"), u8Filename.c_str()));
+	InsertPrevFile(u8Filename.c_str());
+	
+	SetCursor(m_hArrowCursor);
+}
 
 void CFinalSunDlg::SetReady()
 {
@@ -3399,47 +3204,39 @@ void CFinalSunDlg::OnFileFile4()
 void CFinalSunDlg::InsertPrevFile(CString lpFilename)
 {
 	int i;
-	
+
 	//int free_at=-1;
-	for(i=0;i<4;i++)
+	for (i = 0; i < 9; i++)
 	{
-		CString f=theApp.m_Options.prev_maps[i];
-		CString f2=lpFilename;
+		CString f = theApp.m_Options.prev_maps[i];
+		CString f2 = lpFilename;
 		f2.MakeLower();
 		f.MakeLower();
 
-		if(f==f2)
+		if (f == f2)
 		{
 			return;
 		}
-
-		/*if(free_at<0)
-		{
-			if(theApp.m_Options.prev_maps[i].GetLength()==0)
-			{
-				free_at=i;
-			}
-		}*/
 	}
 
 	CIniFile Options;
-	Options.LoadFile(u8ExePath +"\\FinalAlert.ini");
+	Options.LoadFile(u8ExePath + "\\FinalAlert.ini");
 
-	for(i=3;i>0;i--)
+	for (i = 8; i > 0; i--)
 	{
-		theApp.m_Options.prev_maps[i]=theApp.m_Options.prev_maps[i-1];
+		theApp.m_Options.prev_maps[i] = theApp.m_Options.prev_maps[i - 1];
 		char e[10];
 		itoa(i, e, 10);
 
-		Options.sections["Files"].values[e]=theApp.m_Options.prev_maps[i];
+		Options.sections["Files"].values[e] = theApp.m_Options.prev_maps[i];
 	}
 
-	theApp.m_Options.prev_maps[0]=lpFilename;
-	Options.sections["Files"].values["0"]=theApp.m_Options.prev_maps[0];
+	theApp.m_Options.prev_maps[0] = lpFilename;
+	Options.sections["Files"].values["0"] = theApp.m_Options.prev_maps[0];
 
-	Options.SaveFile(u8ExePath +"\\FinalAlert.ini");
+	Options.SaveFile(u8ExePath + "\\FinalAlert.ini");
 
-	UpdateStrings(); 
+	UpdateStrings();
 }
 
 // MW 07/20/01: New: for files clicked in the file list... copied from OnFileOpenmap();
@@ -3447,17 +3244,9 @@ void CFinalSunDlg::OpenMap(LPCSTR lpFilename)
 {
 	CString r=GetLanguageStringACP("SAVEDLG_FILETYPES");
     r=TranslateStringVariables(8, r, ";");
-	//CFileDialog dlg(TRUE, NULL, NULL,  OFN_HIDEREADONLY | OFN_OVERWRITEPROMPT | OFN_FILEMUSTEXIST, r);
 
 	char cuPath[MAX_PATH];
 	GetCurrentDirectory(MAX_PATH, cuPath);
-	//dlg.m_ofn.lpstrInitialDir=cuPath;
-
-	//if(theApp.m_Options.TSExe.GetLength()) dlg.m_ofn.lpstrInitialDir=(char*)(LPCTSTR)theApp.m_Options.TSExe;
-
-
-	//if(dlg.DoModal()==IDCANCEL) return;	
-
 
 	m_PKTHeader.Clear();
 
@@ -3491,11 +3280,8 @@ void CFinalSunDlg::OpenMap(LPCSTR lpFilename)
 	errstream << "Map->LoadMap() will be called" << endl;
 	errstream.flush();
 
-	
-
 	Map->LoadMap((char*)(LPCTSTR)fileToOpen);
 
-	
 	BOOL bNoMapFile=FALSE;
 	if(!Map->CheckMapPackData())
 	{
