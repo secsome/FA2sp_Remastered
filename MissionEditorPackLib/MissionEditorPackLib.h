@@ -165,9 +165,6 @@ Returns the SHP image header of a image in a SHP file
 	// modelOffset is applied before VXL/HVA translates and scales and before model-to-world rotation
 	BOOL LoadVXLImage(const VoxelNormalTables& normalTables, Vec3f lightDirection, Vec3f rotation, Vec3f modelOffset, std::vector<BYTE>& image, std::vector<BYTE>& lighting, int* lpXCenter = NULL, int* lpYCenter = NULL, int ZAdjust = 0, int* lpXCenterZMax = NULL, int* lpYCenterZMax = NULL, int i3dCenterX = -1, int i3dCenterY = -1, RECT* vxlrect = NULL);
 
-
-	BOOL WriteMixFile(LPCTSTR lpMixFile, LPCSTR* lpFiles, DWORD dwFileCount, Game game);
-
 	HRESULT SetColorKey(IDirectDrawSurface4* pDDS, COLORREF rgb);
 
 };

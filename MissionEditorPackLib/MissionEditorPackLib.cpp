@@ -2112,31 +2112,6 @@ namespace FSunPackLib
 		return xcc_game;
 	}
 
-	BOOL WriteMixFile(LPCTSTR lpMixFile, LPCSTR* lpFiles, DWORD dwFileCount, Game game)
-	{
-		if (!lpFiles)
-			return FALSE;
-		if (!lpMixFile)
-			return FALSE;
-
-		Cmix_file_write mix(GameToXCCGame(game));
-
-		DWORD i;
-		for (i = 0;i < dwFileCount;i++)
-		{
-			LPCSTR lpFile = lpFiles[i];
-			Cvirtual_binary file = Cvirtual_binary(std::string(lpFile));
-
-			if (file.data())
-			{
-				mix.add_file(lpFile, file);
-			}
-		}
-
-		auto binary = mix.write();
-		return binary.save(lpMixFile) == 0;
-	}
-
 	class ColorConverterImpl
 	{
 	public:

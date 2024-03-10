@@ -47,7 +47,6 @@
 #include "MissionEditorPackLib.h"
 #include "bitmap2mapconverter.h"
 #include "multisaveoptionsdlg.h"
-#include "mmxsavingoptionsdlg.h"
 #include <afxinet.h>
 #include "inlines.h"
 #include "MapCode.h"
@@ -492,36 +491,7 @@ void CFinalSunDlg::OnFileOpenmap()
 	fileToOpen.MakeLower();	
 	CString ext=dlg.GetFileExt();
 	ext.MakeLower();
-	BOOL bLoadedFromMMX=FALSE;
-	if(ext=="mmx")
-	{
-		HMIXFILE hMix=FSunPackLib::XCC_OpenMix(fileToOpen, NULL);
-		fileToOpen.Replace(".mmx", ".map");
-
-		if(fileToOpen.ReverseFind('\\')>=0) fileToOpen=fileToOpen.Right(fileToOpen.GetLength()-fileToOpen.ReverseFind('\\')-1);
-
-		CString extractFile=u8ExePath.c_str();
-		CString pktFile=fileToOpen;
-		pktFile.Replace(".map", ".pkt");
-		extractFile+="\\mmx_tmp.pkt";
-		
-		FSunPackLib::XCC_ExtractFile(pktFile, extractFile, hMix);
-		m_PKTHeader.LoadFile(extractFile, TRUE);
-		fileToOpen=m_PKTHeader.sections["MultiMaps"].values["1"]+".map";
-
-		
-
-		extractFile=u8ExePath.c_str();
-		extractFile+="\\mmx_tmp.map";
-		FSunPackLib::XCC_ExtractFile(fileToOpen, extractFile, hMix);
-		fileToOpen=extractFile;
-		
-			
 	
-		FSunPackLib::XCC_CloseMix(hMix);
-		bLoadedFromMMX=TRUE;
-	}
-
 	CIniFile f;
 	f.InsertFile(fileToOpen, "Map");
 	if((f.sections["Map"].values["Theater"]==THEATER0 && theApp.m_Options.bDoNotLoadTemperateGraphics) || (f.sections["Map"].values["Theater"]==THEATER1 && theApp.m_Options.bDoNotLoadSnowGraphics))
@@ -592,15 +562,7 @@ void CFinalSunDlg::OnFileOpenmap()
 	}
 	
 	if(!bNoMapFile)
-	{
-		if(bLoadedFromMMX)
-		{
-			//MapPath[0]=0;
-			strcpy(MapPath, dlg.GetPathName());
-		}
-		else
 		strcpy(MapPath, fileToOpen);
-	}
 
 	Sleep(200);
 
@@ -717,42 +679,7 @@ void CFinalSunDlg::OnFileSaveas()
 
 void CFinalSunDlg::OnOptionsExportrulesini() 
 {
-	int res=MessageBox("This will export the Rules.Ini of Tiberian Sun V1.13 MMX. ou should not modify this CIniFile::Rules.ini because you won´t be able to play online then and ecause this could cause compatibility problems.\nIf you want to modify the CIniFile::Rules.ini, you need to rename it before you play online.", "Export Rules.INI", MB_OK);
-
-	CFileDialog dlg(FALSE, ".ini", "CIniFile::Rules.ini", OFN_HIDEREADONLY | OFN_OVERWRITEPROMPT, "Rules.INI|CIniFile::Rules.ini|");
-
-	char cuPath[MAX_PATH];
-	BOOL hidePreview=FALSE;
-	BOOL previewPrinted=FALSE;
-	GetCurrentDirectory(MAX_PATH, cuPath);
-	dlg.m_ofn.lpstrInitialDir=cuPath;
-
-	if(dlg.DoModal()!=IDCANCEL)
-	{
-		SetCursor(LoadCursor(NULL, IDC_WAIT));
-
-		HRSRC r;
-		r=FindResource(NULL, MAKEINTRESOURCE(IDR_RULES) ,"TEXTFILE");
-
-		if(r==0) {MessageBox("FindResource() failed to find IDR_RULES", "DEBUG");return;}
-
-		HGLOBAL hres=LoadResource(NULL, r);
-		
-		if(hres==0) {MessageBox("LoadResource() failed to load IDR_RULES", "DEBUG");return;}
-
-		char* data=(char*)LockResource(hres);
-
-		int hfile=_open((char*)(LPCTSTR)dlg.GetPathName(),_O_BINARY | _O_CREAT | _O_WRONLY, _S_IREAD | _S_IWRITE);
-		
-		if(hfile==-1) { MessageBox("File could not be opened","DEBUG"); return; }
-		
-		_write(hfile, (void*) data, strlen(data));
-
-		_close(hfile);
-
-		SetCursor(m_hArrowCursor);
-
-	}
+	MessageBox("Not implemented");
 }
 
 void CFinalSunDlg::OnHelpInfo() 
@@ -804,13 +731,8 @@ void CFinalSunDlg::SaveMap(CString FileName_)
 
 	errstream << "SaveMap() called" << endl;
 	errstream.flush();
-
-	BOOL bSaveAsMMX=FALSE;
 	BOOL hidePreview=FALSE;
 	BOOL previewPrinted=FALSE;
-
-	
-
 	FileName_.MakeLower();
 	FileName_=(LPCSTR)FileName_; // GetLength() needs to return proper size
 
@@ -835,7 +757,6 @@ void CFinalSunDlg::SaveMap(CString FileName_)
 
 	if(Map->IsMultiplayer())
 	{
-		if(FileName_.Find(".mmx")>=0) bSaveAsMMX=TRUE; else bSaveAsMMX=FALSE;
 		if(FileName_.Find(".map")>=0) FileName_.Replace(".map",".mpr");
 		
 		// MW 07/27/01: Check for YRM
@@ -904,161 +825,78 @@ void CFinalSunDlg::SaveMap(CString FileName_)
 		sec.values["StartX"]=c;
 		itoa(starty, c, 10);
 		sec.values["StartY"]=c;
-		
-		/*CMultiSaveOptionsDlg mso;
-			
-		if(FileName.Find(".mmx")>=0) mso.m_mmx=0; else mso.m_mmx=1;
-
-		if(mso.DoModal()==IDCANCEL) return;
-		
-		if(mso.m_mmx==0)
-		{
-			FileName.Replace(".mpr", ".map");
-			//FileName.Replace(" ", "");
-			if(CoreName.GetLength()>8) 
-			{
-				CoreName=CoreName.Left(8);
-				FileName=CoreName+".map";
-				
-				CString s="The maximum filename length for MMX files is 8 chars, do you want to save the map as ";
-				s+=CoreName;
-				s+=".mmx?";
-				int res=MessageBox(s,"Error", MB_YESNO);
-				if(res!=IDYES) return;
-			}
-
-			bSaveAsMMX=TRUE;
-						
-		}
-		else
-		{
-			FileName.Replace(".mmx", ".mpr");
-			bSaveAsMMX=FALSE;
-		}*/
 	}
-
-	CString MMXFileName=CoreName;
-	MMXFileName+=".mmx";
-
-	CString PKTFileName=CoreName;
-	PKTFileName+=".pkt";
 
 	CString MAPFileName=CoreName;
 	MAPFileName+=".map";
 
 	DWORD dwFlags=MAPDATA_UPDATE_TO_INI_ALL;
 
-	if(!bSaveAsMMX)
+	CSaveMapOptionsDlg opt;
+
+
+	CString gm = Map->UpdateAndGetIniFile().sections["Basic"].values["GameMode"];
+	gm.MakeLower();
+	if (gm.GetLength())
 	{
-		CSaveMapOptionsDlg opt;
-
-
-		CString gm=Map->UpdateAndGetIniFile().sections["Basic"].values["GameMode"];
-		gm.MakeLower();
-		if(gm.GetLength())
-		{
-			opt.m_Standard=gm.Find("standard")>=0;
-			opt.m_AirWar=gm.Find("airwar")>=0;
-			opt.m_Cooperative=gm.Find("cooperative")>=0;
-			opt.m_Duel=gm.Find("duel")>=0;
-			opt.m_Navalwar=gm.Find("navalwar")>=0;
-			opt.m_Nukewar=gm.Find("nukewar")>=0;
-			opt.m_Meatgrind=gm.Find("meatgrind")>=0;
-			opt.m_Megawealth=gm.Find("megawealth")>=0;
-			opt.m_TeamGame=gm.Find("teamgame")>=0;
-		}
-		else
-			opt.m_Standard=TRUE;
-
-		
-		if(opt.DoModal()==IDCANCEL) return;
-
-		gm="";
-		if(opt.m_Standard) gm+="standard, ";
-		if(opt.m_Meatgrind) gm+="meatgrind, ";
-		if(opt.m_Navalwar) gm+="navalwar, ";
-		if(opt.m_Nukewar) gm+="nukewar, ";
-		if(opt.m_AirWar) gm+="airwar, ";
-		if(opt.m_Megawealth) gm+="megawealth, ";
-		if(opt.m_Duel) gm+="duel, ";
-		if(opt.m_Cooperative) gm+="cooperative, ";
-		if(opt.m_TeamGame) gm+="teamgame, ";
-
-		if(gm.ReverseFind(',')>=0) gm=gm.Left(gm.ReverseFind(','));
-
-		if(gm.GetLength()==0) gm="standard";
-		
-
-		Map->UpdateAndGetIniFile().sections["Basic"].values["Name"]=opt.m_MapName;
-		Map->UpdateAndGetIniFile().sections["Basic"].values["GameMode"]=gm;
-
-		int i;
-		int count=0;
-		for(i=0;i<Map->GetWaypointCount();i++)
-		{
-			CString id;
-			DWORD pos;
-			Map->GetWaypointData(i, &id, &pos);
-			int idi;
-			idi=atoi(id);
-			if(idi!=i) break;
-			if(idi>=0 && idi<8) count++;			
-		}
-
-		if(count<2) count=2;
-
-		Map->UpdateAndGetIniFile().sections["Basic"].values["MinPlayer"]="2";
-		char c[50];
-		itoa(count, c, 10);
-		Map->UpdateAndGetIniFile().sections["Basic"].values["MaxPlayer"]=c;
-		
-		if(opt.m_Compress==0) dwFlags|=MAPDATA_UPDATE_TO_INI_ALL_COMPRESSED;
-		if(opt.m_PreviewMode==0) dwFlags|=MAPDATA_UPDATE_TO_INI_ALL_PREVIEW;
-		if(opt.m_PreviewMode==2) hidePreview=TRUE;
+		opt.m_Standard = gm.Find("standard") >= 0;
+		opt.m_AirWar = gm.Find("airwar") >= 0;
+		opt.m_Cooperative = gm.Find("cooperative") >= 0;
+		opt.m_Duel = gm.Find("duel") >= 0;
+		opt.m_Navalwar = gm.Find("navalwar") >= 0;
+		opt.m_Nukewar = gm.Find("nukewar") >= 0;
+		opt.m_Meatgrind = gm.Find("meatgrind") >= 0;
+		opt.m_Megawealth = gm.Find("megawealth") >= 0;
+		opt.m_TeamGame = gm.Find("teamgame") >= 0;
 	}
 	else
+		opt.m_Standard = TRUE;
+
+
+	if (opt.DoModal() == IDCANCEL) return;
+
+	gm = "";
+	if (opt.m_Standard) gm += "standard, ";
+	if (opt.m_Meatgrind) gm += "meatgrind, ";
+	if (opt.m_Navalwar) gm += "navalwar, ";
+	if (opt.m_Nukewar) gm += "nukewar, ";
+	if (opt.m_AirWar) gm += "airwar, ";
+	if (opt.m_Megawealth) gm += "megawealth, ";
+	if (opt.m_Duel) gm += "duel, ";
+	if (opt.m_Cooperative) gm += "cooperative, ";
+	if (opt.m_TeamGame) gm += "teamgame, ";
+
+	if (gm.ReverseFind(',') >= 0) gm = gm.Left(gm.ReverseFind(','));
+
+	if (gm.GetLength() == 0) gm = "standard";
+
+
+	Map->UpdateAndGetIniFile().sections["Basic"].values["Name"] = opt.m_MapName;
+	Map->UpdateAndGetIniFile().sections["Basic"].values["GameMode"] = gm;
+
+	int i;
+	int count = 0;
+	for (i = 0; i < Map->GetWaypointCount(); i++)
 	{
-		CMMXSavingOptionsDlg opt;
+		CString id;
+		DWORD pos;
+		Map->GetWaypointData(i, &id, &pos);
+		int idi;
+		idi = atoi(id);
+		if (idi != i) break;
+		if (idi >= 0 && idi < 8) count++;
+	}
 
-		if(m_PKTHeader.sections.size()>0) // old pkt header exists
-		{
-			CIniFileSection& sec=m_PKTHeader.sections[m_PKTHeader.sections["MultiMaps"].values["1"]];
-			if(sec.values["Description"].GetLength()>0) opt.m_Description=sec.values["Description"];
-			opt.m_MinPlayers=atoi(sec.values["MinPlayers"])-2;
-			opt.m_Maxplayers=atoi(sec.values["MaxPlayers"])-2;
-			CString gm=sec.values["GameMode"];
-			gm.MakeLower();
-			opt.m_Standard=gm.Find("standard")>=0;
-			opt.m_AirWar=gm.Find("airwar")>=0;
-			opt.m_Cooperative=gm.Find("cooperative")>=0;
-			opt.m_Duel=gm.Find("duel")>=0;
-			opt.m_NavalWar=gm.Find("navalwar")>=0;
-			opt.m_NukeWar=gm.Find("nukewar")>=0;
-			opt.m_Meatgrind=gm.Find("meatgrind")>=0;
-			opt.m_MegaWealth=gm.Find("megawealth")>=0;
-		}
+	if (count < 2) count = 2;
 
-		if(opt.DoModal()==IDCANCEL) return;
+	Map->UpdateAndGetIniFile().sections["Basic"].values["MinPlayer"] = "2";
+	char c[50];
+	itoa(count, c, 10);
+	Map->UpdateAndGetIniFile().sections["Basic"].values["MaxPlayer"] = c;
 
-		Description=opt.m_Description;
-		standard=opt.m_Standard;
-		airwar=opt.m_AirWar;
-		cooperative=opt.m_Cooperative;
-		duel=opt.m_Duel;
-		navalwar=opt.m_NavalWar;
-		nukewar=opt.m_NukeWar;
-		meatgrind=opt.m_Meatgrind;
-		megawealth=opt.m_MegaWealth;
-
-		maxplayers=opt.m_Maxplayers+2;
-		minplayers=opt.m_MinPlayers+2;
-
-		dwFlags|=MAPDATA_UPDATE_TO_INI_ALL_PREVIEW;
-
-		Map->UpdateAndGetIniFile().sections["Basic"].values["Official"]="Yes";
-
-		// Map->UpdateAndGetIniFile().sections["Basic"].values["Name"]=opt.m_Description;
-	}	
+	if (opt.m_Compress == 0) dwFlags |= MAPDATA_UPDATE_TO_INI_ALL_COMPRESSED;
+	if (opt.m_PreviewMode == 0) dwFlags |= MAPDATA_UPDATE_TO_INI_ALL_PREVIEW;
+	if (opt.m_PreviewMode == 2) hidePreview = TRUE;
 	
 	SetText("Packing data...");
 	UpdateWindow();	
@@ -1076,8 +914,6 @@ void CFinalSunDlg::SaveMap(CString FileName_)
 
 	CIniFile& ini=Map->UpdateAndGetIniFile();
 
-
-	int i;
 
 	for(i=0;i<ini.sections.size();i++)
 	{
@@ -1360,16 +1196,6 @@ void CFinalSunDlg::SaveMap(CString FileName_)
 		dlg.DestroyWindow();
 
 		auto DestName=FileName;
-		if(bSaveAsMMX) 
-		{
-			MAPFileName.Replace(" ", "");
-			MMXFileName.Replace(" ", "");
-			PKTFileName.Replace(" ", "");
-			CoreName.Replace(" ", "");
-		}
-		if (bSaveAsMMX)
-			FileName = utf8ToUtf16(MAPFileName.GetString());
-		
 		const auto u8FileName = utf16ToUtf8(FileName);
 
 		if(!CopyFileW(u16tempfile.c_str(), FileName.c_str(), FALSE))
@@ -1379,66 +1205,12 @@ void CFinalSunDlg::SaveMap(CString FileName_)
 		else
 		{
 			SetText(TranslateStringVariables(1,GetLanguageStringACP("FileSaved"), u8FileName.c_str()));
-			if(bSaveAsMMX)
-			{				
-				SetText(TranslateStringVariables(1,GetLanguageStringACP("FileSaved"), MMXFileName));
-				
-				// MW 07/20/01:
-				InsertPrevFile(MMXFileName);
-
-				CIniFile f;
-				//CoreName.Replace(" ", "");
-				//Description.Replace(" ","");
-				
-				f.sections["MultiMaps"].values["1"]=CoreName;
-				f.sections[CoreName].values["Description"]=Description;
-				CString gm;
-				if(standard) gm+="standard, ";
-				if(meatgrind) gm+="meatgrind, ";
-				if(navalwar) gm+="navalwar, ";
-				if(nukewar) gm+="nukewar, ";
-				if(airwar) gm+="airwar, ";
-				if(megawealth) gm+="megawealth, ";
-				if(duel) gm+="duel, ";
-				if(cooperative) gm+="cooperative, ";
-
-				if(gm.ReverseFind(',')>=0) gm=gm.Left(gm.ReverseFind(','));
-
-				f.sections[CoreName].values["GameMode"]=gm;
-
-				char c[50];
-				itoa(maxplayers, c, 10);
-				f.sections[CoreName].values["MaxPlayers"]=c;
-				itoa(minplayers,c,10);
-				f.sections[CoreName].values["MinPlayers"]=c;
-
-				f.sections[CoreName].values["CD"]="0,1";
-				
-
-				f.SaveFile(PKTFileName);
-
-				LPCSTR files[2];
-				files[0]=(LPCSTR)PKTFileName;
-				files[1]=(LPCSTR)MAPFileName;
-
-				auto game = FSunPackLib::Game::RA2_YR;
-				FSunPackLib::WriteMixFile(MMXFileName, files, 2, game);
-
-				DeleteFile(PKTFileName);
-				DeleteFile(MAPFileName);
-			}
-			else
-			{
-				// MW 07/20/01:
-				InsertPrevFile(u8FileName.c_str());
-			}
+			InsertPrevFile(u8FileName.c_str());
 		}
 
 		deleteFile(tempfile);
 
 	SetCursor(m_hArrowCursor);
-	//SetReady();
-
 	}
 
 void CFinalSunDlg::SetReady()
@@ -3694,36 +3466,6 @@ void CFinalSunDlg::OpenMap(LPCSTR lpFilename)
 	CString ext=fileToOpen.Right(fileToOpen.GetLength()-fileToOpen.ReverseFind('.')-1); //dlg.GetFileExt();
 	
 	ext.MakeLower();
-	BOOL bLoadedFromMMX=FALSE;
-	if(ext=="mmx")
-	{
-		HMIXFILE hMix=FSunPackLib::XCC_OpenMix(fileToOpen, NULL);
-		fileToOpen.Replace(".mmx", ".map");
-
-		if(fileToOpen.ReverseFind('\\')>=0) fileToOpen=fileToOpen.Right(fileToOpen.GetLength()-fileToOpen.ReverseFind('\\')-1);
-
-		CString extractFile=u8ExePath.c_str();
-		CString pktFile=fileToOpen;
-		pktFile.Replace(".map", ".pkt");
-		extractFile+="\\mmx_tmp.pkt";
-		
-		FSunPackLib::XCC_ExtractFile(pktFile, extractFile, hMix);
-		m_PKTHeader.LoadFile(extractFile, TRUE);
-		fileToOpen=m_PKTHeader.sections["MultiMaps"].values["1"]+".map";
-
-		
-
-		extractFile=u8ExePath.c_str();
-		extractFile+="\\mmx_tmp.map";
-		FSunPackLib::XCC_ExtractFile(fileToOpen, extractFile, hMix);
-		fileToOpen=extractFile;
-		
-			
-	
-		FSunPackLib::XCC_CloseMix(hMix);
-		bLoadedFromMMX=TRUE;
-	}
-
 	CIniFile f;
 	f.InsertFile(fileToOpen, "Map");
 	if((f.sections["Map"].values["Theater"]==THEATER0 && theApp.m_Options.bDoNotLoadTemperateGraphics) || (f.sections["Map"].values["Theater"]==THEATER1 && theApp.m_Options.bDoNotLoadSnowGraphics))
@@ -3793,15 +3535,7 @@ void CFinalSunDlg::OpenMap(LPCSTR lpFilename)
 	}
 	
 	if(!bNoMapFile)
-	{
-		if(bLoadedFromMMX)
-		{
-			//MapPath[0]=0;
-			strcpy(MapPath, lpFilename);
-		}
-		else
 		strcpy(MapPath, fileToOpen);
-	}
 
 	Sleep(200);
 
