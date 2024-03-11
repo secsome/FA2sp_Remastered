@@ -47,55 +47,6 @@ inline BOOL isFalse(CString expr)
 	return FALSE;
 }
 
-// retrieve the picture filename of a unit (as it is saved in the pics map). The returned file may not exist in the pics map (you need to do a check!).
-inline CString GetUnitPictureFilename(LPCTSTR lpUnitName, DWORD dwPicIndex)
-{
-	CIniFile& ini = Map->UpdateAndGetIniFile();
-
-	CString UnitName = lpUnitName;
-
-	UnitName = CIniFile::Rules.sections[lpUnitName].GetString("Image", lpUnitName);
-
-	if (ini.sections.find(lpUnitName) != ini.sections.end())
-		UnitName = ini.sections[lpUnitName].GetString("Image", UnitName);
-
-	if (CIniFile::Rules.sections[lpUnitName].values.find("Image") != CIniFile::Rules.sections[lpUnitName].values.end())
-		UnitName = CIniFile::Rules.sections[lpUnitName].values["Image"];
-
-	CString artname = UnitName;
-
-	if (CIniFile::Art.sections[UnitName].values.find("Image") != CIniFile::Art.sections[UnitName].values.end())
-	{
-		if (!isTrue(CIniFile::FAData.sections["IgnoreArtImage"].AccessValueByName(UnitName)))
-			artname = CIniFile::Art.sections[UnitName].AccessValueByName("Image");
-	}
-		
-
-	CString filename = UnitName;
-
-	if (CIniFile::Art.sections[UnitName].FindName("NewTheater") >= 0 && CIniFile::Art.sections[UnitName].AccessValueByName("DemandLoad") != "yes")
-		if (CIniFile::Art.sections[UnitName].AccessValueByName("NewTheater") == "yes")
-			filename.SetAt(1, 'T');
-
-	char n[50];
-	itoa(dwPicIndex, n, 10);
-
-
-	if (pics.find(artname + n) != pics.end())
-	{
-		filename = artname; // yes, found
-		filename += n;
-	}
-	else if (pics.find(artname + ".bmp") != pics.end()) // since June, 15th (Matze): Only use BMP if no SHP/VXL exists
-	{
-		filename = (CString)artname + ".bmp";
-	}
-	else
-		filename = "";
-
-	return filename;
-}
-
 inline CString GetParam(const CString& data, const int param)
 {
 	int paramStrPos = 0;

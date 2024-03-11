@@ -47,8 +47,6 @@ CMapData* Map;
 /* actiondata used for iso view */
 ACTIONDATA AD;
 
-/* A map with all the pictures in the pics directory, and some special pics */
-map<CString, PICDATA> pics;
 TILEDATA* t_tiledata=NULL;
 DWORD t_tiledata_count=0;
 TILEDATA* s_tiledata=NULL;

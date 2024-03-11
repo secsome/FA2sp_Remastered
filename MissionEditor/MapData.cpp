@@ -588,7 +588,6 @@ void CMapData::LoadMap(const std::string& file)
 
 	theApp.m_loading->Unload();
 
-	pics.clear();
 	missingimages.clear();
 
 	((CFinalSunDlg*)theApp.m_pMainWnd)->m_view.m_isoview->UpdateOverlayPictures();
@@ -2808,8 +2807,6 @@ void CMapData::CreateMap(DWORD dwWidth, DWORD dwHeight, LPCTSTR lpTerrainType, D
 
 	InitTheater();
 
-	
-	pics.clear();
 	missingimages.clear();
 
 	if (theApp.m_loading)

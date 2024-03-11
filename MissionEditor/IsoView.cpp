@@ -3271,8 +3271,6 @@ inline PICDATA* GetOverlayPic(BYTE ovrl, BYTE ovrldata)
 
 	// MessageBox(0,fname,"",0);
 
-	if (pics.find(fname) != pics.end()) return &pics[fname];
-
 	//errstream << "pic " << (LPCSTR)fname << " not found" << endl;
 
 
