@@ -91,18 +91,22 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='FinalAlertDebug YR|Win32'">
     <LinkIncremental>true</LinkIncremental>
     <TargetName>FinalAlert2YR_D</TargetName>
+    <MultiProcFXC>true</MultiProcFXC>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='FinalAlertDebug YR|x64'">
     <LinkIncremental>true</LinkIncremental>
     <TargetName>FinalAlert2YR_D</TargetName>
+    <MultiProcFXC>true</MultiProcFXC>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='FinalAlertRelease YR|Win32'">
     <LinkIncremental>false</LinkIncremental>
     <TargetName>FinalAlert2YR</TargetName>
+    <MultiProcFXC>true</MultiProcFXC>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='FinalAlertRelease YR|x64'">
     <LinkIncremental>false</LinkIncremental>
     <TargetName>FinalAlert2YR</TargetName>
+    <MultiProcFXC>true</MultiProcFXC>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='FinalAlertDebug YR|Win32'">
     <ClCompile>
@@ -123,6 +127,10 @@
       <LargeAddressAware>true</LargeAddressAware>
       <AdditionalDependencies>dwrite.lib;d2d1.lib;d3d11.lib;d3dcompiler.lib;dxguid.lib;winmm.lib;gdiplus.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
+    <FxCompile>
+      <ShaderType>
+      </ShaderType>
+    </FxCompile>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='FinalAlertDebug YR|x64'">
     <ClCompile>
@@ -143,6 +151,10 @@
       <LargeAddressAware>true</LargeAddressAware>
       <AdditionalDependencies>dwrite.lib;d2d1.lib;d3d11.lib;d3dcompiler.lib;dxguid.lib;winmm.lib;gdiplus.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
+    <FxCompile>
+      <ShaderType>
+      </ShaderType>
+    </FxCompile>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='FinalAlertRelease YR|Win32'">
     <ClCompile>
@@ -164,6 +176,10 @@
       <LargeAddressAware>true</LargeAddressAware>
       <AdditionalDependencies>dwrite.lib;d2d1.lib;d3d11.lib;d3dcompiler.lib;dxguid.lib;winmm.lib;gdiplus.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
+    <FxCompile>
+      <ShaderType>
+      </ShaderType>
+    </FxCompile>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='FinalAlertRelease YR|x64'">
     <ClCompile>
@@ -185,6 +201,10 @@
       <LargeAddressAware>true</LargeAddressAware>
       <AdditionalDependencies>dwrite.lib;d2d1.lib;d3d11.lib;d3dcompiler.lib;dxguid.lib;winmm.lib;gdiplus.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
+    <FxCompile>
+      <ShaderType>
+      </ShaderType>
+    </FxCompile>
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Aircraft.cpp" />
@@ -199,6 +219,7 @@
     <ClCompile Include="Blowfish.cpp" />
     <ClCompile Include="Buffer.cpp" />
     <ClCompile Include="Building.cpp" />
+    <ClCompile Include="Camera.cpp" />
     <ClCompile Include="CCFile.cpp" />
     <ClCompile Include="CellTag.cpp" />
     <ClCompile Include="ChangeSizeDlg.cpp" />
@@ -314,6 +335,7 @@
     <ClInclude Include="Blowfish.h" />
     <ClInclude Include="Buffer.h" />
     <ClInclude Include="Building.h" />
+    <ClInclude Include="Camera.h" />
     <ClInclude Include="CCFile.h" />
     <ClInclude Include="CellTag.h" />
     <ClInclude Include="ChangeSizeDlg.h" />
@@ -453,6 +475,36 @@
   </ItemGroup>
   <ItemGroup>
     <Text Include="data\shared\Changelog.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <FxCompile Include="VS.hlsl">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='FinalAlertRelease YR|Win32'">false</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='FinalAlertDebug YR|Win32'">false</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='FinalAlertRelease YR|x64'">false</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='FinalAlertDebug YR|x64'">false</ExcludedFromBuild>
+      <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='FinalAlertRelease YR|Win32'">false</DeploymentContent>
+      <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='FinalAlertDebug YR|Win32'">false</DeploymentContent>
+      <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='FinalAlertRelease YR|x64'">false</DeploymentContent>
+      <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='FinalAlertDebug YR|x64'">false</DeploymentContent>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='FinalAlertRelease YR|Win32'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='FinalAlertDebug YR|Win32'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='FinalAlertRelease YR|x64'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='FinalAlertDebug YR|x64'">Vertex</ShaderType>
+    </FxCompile>
+    <FxCompile Include="PS.hlsl">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='FinalAlertRelease YR|Win32'">false</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='FinalAlertDebug YR|Win32'">false</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='FinalAlertRelease YR|x64'">false</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='FinalAlertDebug YR|x64'">false</ExcludedFromBuild>
+      <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='FinalAlertRelease YR|Win32'">false</DeploymentContent>
+      <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='FinalAlertDebug YR|Win32'">false</DeploymentContent>
+      <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='FinalAlertRelease YR|x64'">false</DeploymentContent>
+      <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='FinalAlertDebug YR|x64'">false</DeploymentContent>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='FinalAlertRelease YR|Win32'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='FinalAlertDebug YR|Win32'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='FinalAlertRelease YR|x64'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='FinalAlertDebug YR|x64'">Pixel</ShaderType>
+    </FxCompile>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

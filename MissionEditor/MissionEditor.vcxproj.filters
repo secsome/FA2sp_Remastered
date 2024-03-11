@@ -25,6 +25,9 @@
     <Filter Include="Data\Shared">
       <UniqueIdentifier>{42e5d16b-680f-450d-a61c-b87814ca4c22}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Shader Files">
+      <UniqueIdentifier>{047baf0b-1657-4621-b638-f4b45b78a4fe}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Aircraft.cpp">
@@ -328,6 +331,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="GameScene.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Camera.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -673,6 +679,9 @@
     <ClInclude Include="GameScene.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Camera.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Image Include="res\clifftoo.bmp">
@@ -770,5 +779,13 @@
     <Text Include="data\shared\Changelog.txt">
       <Filter>Data\Shared</Filter>
     </Text>
+  </ItemGroup>
+  <ItemGroup>
+    <FxCompile Include="VS.hlsl">
+      <Filter>Shader Files</Filter>
+    </FxCompile>
+    <FxCompile Include="PS.hlsl">
+      <Filter>Shader Files</Filter>
+    </FxCompile>
   </ItemGroup>
 </Project>

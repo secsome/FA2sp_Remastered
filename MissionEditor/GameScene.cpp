@@ -6,7 +6,10 @@
 #include "variables.h"
 #include "functions.h"
 
+#include "ShpFile.h"
+
 #include <DirectXColors.h>
+#include <DirectXMath.h>
 
 HRESULT GameScene::Initialize(HWND hwnd)
 {
@@ -126,7 +129,7 @@ void GameScene::Render()
 	);
 
 	m_d2dRenderTarget->FillRectangle(&rect, pLightSlateGrayBrush);
-
+	
 	const auto str = utf8ToUtf16(Map->GetIniFile().GetString("Basic", "Name", "No name"));
 	m_d2dRenderTarget->DrawText(
 		str.c_str(),
@@ -275,7 +278,11 @@ HRESULT GameScene::InitDirect3D()
 	m_d3dDeviceContext->RSSetViewports(1, &vp);
 
 	// Compile shaders
-	// TODO
+	hr = InitializeSceneShaders();
+	if (FAILED(hr))
+        return hr;
+
+	
 
 	return S_OK;
 }
@@ -347,6 +354,41 @@ HRESULT GameScene::CreateDirect2DResources()
 HRESULT GameScene::ReleaseDirect2DResources()
 {
 	HRESULT hr = S_OK;
+
+	return S_OK;
+}
+
+HRESULT GameScene::CompileShaderFromFile(const WCHAR* szFileName, LPCSTR szEntryPoint, LPCSTR szShaderModel, ID3DBlob** ppBlobOut)
+{
+	HRESULT hr = S_OK;
+
+	DWORD dwShaderFlags = D3DCOMPILE_ENABLE_STRICTNESS;
+#ifdef _DEBUG
+	dwShaderFlags |= D3DCOMPILE_DEBUG;
+	dwShaderFlags |= D3DCOMPILE_SKIP_OPTIMIZATION;
+#endif
+
+	std::wstring FullPath = u16ExePath + L"\\";
+	FullPath += szFileName;
+
+	CComPtr<ID3DBlob> pErrorBlob = nullptr;
+	hr = D3DCompileFromFile(FullPath.c_str(), nullptr, nullptr, szEntryPoint, szShaderModel,
+		        dwShaderFlags, 0, ppBlobOut, &pErrorBlob);
+	if (FAILED(hr))
+	{
+		if (pErrorBlob)
+            OutputDebugStringA(reinterpret_cast<const char*>(pErrorBlob->GetBufferPointer()));
+		return hr;
+	}
+
+	return S_OK;
+}
+
+HRESULT GameScene::InitializeSceneShaders()
+{
+	HRESULT hr = S_OK;
+
+	// Create shader and related input layout stuffs
 
 	return S_OK;
 }

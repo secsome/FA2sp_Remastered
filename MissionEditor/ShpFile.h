@@ -51,6 +51,16 @@ public:
     bool LoadTexture(ID3D11Device* device, size_t index);
     void ClearTextures();
 
+    size_t FrameCount() const
+    {
+        return Data->Count;
+    }
+
+    ID3D11Texture2D* GetTexture(size_t index) const
+    {
+        return FrameTextures[index];
+    }
+
 private:
     std::unique_ptr<ShpStruct> Data;
     std::vector<CComPtr<ID3D11Texture2D>> FrameTextures;

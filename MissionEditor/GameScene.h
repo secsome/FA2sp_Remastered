@@ -2,6 +2,7 @@
 
 #include <d3d11.h>
 #include <d2d1.h>
+#include <d3dcompiler.h>
 #include <dwrite.h>
 #include <atlbase.h>
 
@@ -29,6 +30,9 @@ private:
 	// So we have to recreate the resources when that's happening
 	HRESULT CreateDirect2DResources();
 	HRESULT ReleaseDirect2DResources();
+
+	HRESULT CompileShaderFromFile(const WCHAR* szFileName, LPCSTR szEntryPoint, LPCSTR szShaderModel, ID3DBlob** ppBlobOut);
+	HRESULT InitializeSceneShaders();
 
 private:
 	HWND hWnd{};
