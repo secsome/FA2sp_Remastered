@@ -38,6 +38,7 @@
 #include "Structs.h"
 
 #include <d3d11.h>
+#include <d2d1.h>
 
 class CTube;
 
@@ -56,7 +57,10 @@ private:
 	CComPtr<ID3D11RenderTargetView> m_d3dRenderTargetView;
 	CComPtr<ID3D11Texture2D> m_d3dDepthStencil;
 	CComPtr<ID3D11DepthStencilView> m_d3dDepthStencilView;
-
+	CComPtr<ID2D1Factory> m_d2dFactory;
+	CComPtr<ID2D1RenderTarget> m_d2dRenderTarget;
+	CComPtr<IDWriteFactory> m_dwriteFactory;
+	CComPtr<IDWriteTextFormat> m_dwriteTextFormat;
 
 // attributes
 public:
@@ -248,6 +252,7 @@ public:
 	int GetOverlayDirection(int x, int y);
 	void SetError(const char* text);
 	CWnd* owner;
+	HRESULT InitDirect2D();
 	HRESULT InitDXDevice();
 	void ReInitDXDevice();
 	COLORREF GetColor(const char* house, const char* color = nullptr);

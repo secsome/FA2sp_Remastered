@@ -103,12 +103,9 @@ CFinalSunDlg::CFinalSunDlg(CWnd* pParent /*=NULL*/)
 void CFinalSunDlg::DoDataExchange(CDataExchange* pDX)
 {
 	CDialog::DoDataExchange(pDX);
-	//{{AFX_DATA_MAP(CFinalSunDlg)
-	//}}AFX_DATA_MAP
 }
 
 BEGIN_MESSAGE_MAP(CFinalSunDlg, CDialog)
-	//{{AFX_MSG_MAP(CFinalSunDlg)
 	ON_WM_PAINT()
 	ON_WM_QUERYDRAGICON()
 	ON_COMMAND(ID_FILE_QUIT, OnFileQuit)
@@ -218,11 +215,10 @@ BEGIN_MESSAGE_MAP(CFinalSunDlg, CDialog)
 	ON_COMMAND(ID_FILE_FILE4, OnFileFile4)
 	ON_COMMAND(ID_MAPTOOLS_SEARCHWAYPOINT, OnMaptoolsSearchwaypoint)
 	ON_COMMAND(ID_MAPTOOLS_TOOLSCRIPTS, OnMaptoolsToolscripts)
-	//}}AFX_MSG_MAP
-		ON_COMMAND(ID_OPTIONS_SMOOTHZOOM, &CFinalSunDlg::OnOptionsSmoothzoom)
-		ON_WM_SETCURSOR()
-		ON_COMMAND(ID_OPTIONS_USEDEFAULTMOUSECURSOR, &CFinalSunDlg::OnOptionsUsedefaultmousecursor)
-		END_MESSAGE_MAP()
+	ON_COMMAND(ID_OPTIONS_SMOOTHZOOM, &OnOptionsSmoothzoom)
+	ON_WM_SETCURSOR()
+	ON_COMMAND(ID_OPTIONS_USEDEFAULTMOUSECURSOR, &OnOptionsUsedefaultmousecursor)
+END_MESSAGE_MAP()
 
 /////////////////////////////////////////////////////////////////////////////
 // CFinalSunDlg message handler

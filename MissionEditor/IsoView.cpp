@@ -3222,6 +3222,53 @@ void CIsoView::OnSize(UINT nType, int cx, int cy)
 {
 	CMyViewFrame& dlg = theApp.GetMainWnd()->m_view;
 	
+	if (m_dxSwapChain)
+	{
+		m_d3dDeviceContext->OMSetRenderTargets(0, nullptr, nullptr);
+		m_d3dRenderTargetView.Release();
+		m_d2dRenderTarget.Release();
+		HRESULT hr;
+		hr = m_dxSwapChain->ResizeBuffers(0, 0, 0, DXGI_FORMAT_UNKNOWN, 0);
+
+		if (FAILED(hr))
+		{
+			MessageBox("DXGI Failed on RESIZE!");
+			exit(1);
+		}
+
+		CComPtr<ID3D11Texture2D> pBuffer = nullptr;
+		hr = m_dxSwapChain->GetBuffer(0, __uuidof(ID3D11Texture2D), reinterpret_cast<void**>(&pBuffer));
+		if (FAILED(hr))
+		{
+            MessageBox("DXGI Failed on GETBUFFER!");
+            exit(1);
+        }
+
+		hr = m_d3dDevice->CreateRenderTargetView(pBuffer, nullptr, &m_d3dRenderTargetView);
+		if (FAILED(hr))
+		{
+            MessageBox("DXGI Failed on CREATE RTV!");
+            exit(1);
+		}
+
+		m_d3dDeviceContext->OMSetRenderTargets(1, &m_d3dRenderTargetView, nullptr);
+
+		D3D11_VIEWPORT vp;
+		vp.Width = static_cast<FLOAT>(cx);
+		vp.Height = static_cast<FLOAT>(cy);
+		vp.MinDepth = 0.0f;
+		vp.MaxDepth = 1.0f;
+		vp.TopLeftX = 0;
+		vp.TopLeftY = 0;
+		m_d3dDeviceContext->RSSetViewports(1, &vp);
+
+		if (FAILED(InitDirect2D()))
+		{
+			MessageBox("Direct2D failed to initialize ONSIZE!");
+            exit(1);
+		}
+	}
+
 	dlg.m_minimap.RedrawWindow(NULL, NULL, RDW_INVALIDATE | RDW_UPDATENOW);
 
 	UpdateScrollRanges();
@@ -3287,6 +3334,53 @@ void CIsoView::OnDraw(CDC* pDC)
 	DrawMap();
 }
 
+HRESULT CIsoView::InitDirect2D()
+{
+	HRESULT hr = S_OK;
+
+	// Create a Direct2D render target
+	CComPtr<IDXGISurface> dxgiBackBuffer = nullptr;
+	hr = m_dxSwapChain->GetBuffer(0, __uuidof(IDXGISurface), reinterpret_cast<void**>(&dxgiBackBuffer));
+	if (FAILED(hr))
+		return hr;
+
+	D2D1_RENDER_TARGET_PROPERTIES props = D2D1::RenderTargetProperties(
+		D2D1_RENDER_TARGET_TYPE_DEFAULT,
+		D2D1::PixelFormat(DXGI_FORMAT_UNKNOWN, D2D1_ALPHA_MODE_PREMULTIPLIED)
+	);
+
+	hr = m_d2dFactory->CreateDxgiSurfaceRenderTarget(dxgiBackBuffer, &props, &m_d2dRenderTarget);
+	if (FAILED(hr))
+		return hr;
+
+	hr = DWriteCreateFactory(DWRITE_FACTORY_TYPE_SHARED, __uuidof(IDWriteFactory), reinterpret_cast<IUnknown**>(&m_dwriteFactory));
+	if (FAILED(hr))
+		return hr;
+
+	hr = m_dwriteFactory->CreateTextFormat(
+        L"Fira Code",
+        nullptr,
+		DWRITE_FONT_WEIGHT_REGULAR,
+        DWRITE_FONT_STYLE_NORMAL,
+        DWRITE_FONT_STRETCH_NORMAL,
+        72.0f,
+        L"en-us",
+        &m_dwriteTextFormat
+    );
+	if (FAILED(hr))
+        return hr;
+
+	hr = m_dwriteTextFormat->SetTextAlignment(DWRITE_TEXT_ALIGNMENT_CENTER);
+	if (FAILED(hr))
+        return hr;
+
+	hr = m_dwriteTextFormat->SetParagraphAlignment(DWRITE_PARAGRAPH_ALIGNMENT_CENTER);
+	if (FAILED(hr))
+        return hr;	
+
+	return S_OK;
+}
+
 HRESULT CIsoView::InitDXDevice()
 {
 	HRESULT hr = S_OK;
@@ -3297,7 +3391,7 @@ HRESULT CIsoView::InitDXDevice()
 	UINT width = rc.right - rc.left;
 	UINT height = rc.bottom - rc.top;
 
-	UINT createDeviceFlags = 0;
+	UINT createDeviceFlags = D3D11_CREATE_DEVICE_BGRA_SUPPORT;
 #ifdef _DEBUG
 	createDeviceFlags |= D3D11_CREATE_DEVICE_DEBUG;
 #endif
@@ -3362,7 +3456,7 @@ HRESULT CIsoView::InitDXDevice()
 		sd.SampleDesc.Quality = 0;
 		sd.Windowed = TRUE;
 
-		hr = dxgiFactory->CreateSwapChain(m_d3dDevice, &sd, &m_swapChain);
+		hr = dxgiFactory->CreateSwapChain(m_d3dDevice, &sd, &m_dxSwapChain);
 
 		if (FAILED(hr))
             return hr;
@@ -3371,11 +3465,11 @@ HRESULT CIsoView::InitDXDevice()
 	// Create a render target view
 	{
         CComPtr<ID3D11Texture2D> pBackBuffer = nullptr;
-        hr = m_swapChain->GetBuffer(0, __uuidof(ID3D11Texture2D), reinterpret_cast<void**>(&pBackBuffer));
+        hr = m_dxSwapChain->GetBuffer(0, __uuidof(ID3D11Texture2D), reinterpret_cast<void**>(&pBackBuffer));
         if (FAILED(hr))
             return hr;
 
-        hr = m_d3dDevice->CreateRenderTargetView(pBackBuffer, nullptr, &m_renderTargetView);
+        hr = m_d3dDevice->CreateRenderTargetView(pBackBuffer, nullptr, &m_d3dRenderTargetView);
         if (FAILED(hr))
             return hr;
     }
@@ -3394,7 +3488,7 @@ HRESULT CIsoView::InitDXDevice()
 		descDepth.BindFlags = D3D11_BIND_DEPTH_STENCIL;
 		descDepth.CPUAccessFlags = 0;
 		descDepth.MiscFlags = 0;
-		hr = m_d3dDevice->CreateTexture2D(&descDepth, nullptr, &m_depthStencil);
+		hr = m_d3dDevice->CreateTexture2D(&descDepth, nullptr, &m_d3dDepthStencil);
 		if (FAILED(hr))
             return hr;
 
@@ -3403,12 +3497,12 @@ HRESULT CIsoView::InitDXDevice()
 		descDSV.Format = descDepth.Format;
 		descDSV.ViewDimension = D3D11_DSV_DIMENSION_TEXTURE2D;
 		descDSV.Texture2D.MipSlice = 0;
-		hr = m_d3dDevice->CreateDepthStencilView(m_depthStencil, &descDSV, &m_depthStencilView);
+		hr = m_d3dDevice->CreateDepthStencilView(m_d3dDepthStencil, &descDSV, &m_d3dDepthStencilView);
 		if (FAILED(hr))
 			return hr;
 	}
 
-	m_d3dDeviceContext->OMSetRenderTargets(1, &m_renderTargetView.p, m_depthStencilView);
+	m_d3dDeviceContext->OMSetRenderTargets(1, &m_d3dRenderTargetView.p, m_d3dDepthStencilView);
 	
 	// Setup viewport
 	D3D11_VIEWPORT vp;
@@ -3420,8 +3514,14 @@ HRESULT CIsoView::InitDXDevice()
 	vp.TopLeftY = 0;
 	m_d3dDeviceContext->RSSetViewports(1, &vp);
 
+	hr = D2D1CreateFactory(D2D1_FACTORY_TYPE_SINGLE_THREADED, &m_d2dFactory);
+	if (FAILED(hr))
+        return hr;
+
 	// Compile shaders
 	// TODO
+
+	InitDirect2D();
 
 	return S_OK;
 }
@@ -5018,8 +5118,54 @@ for(i=15;i>=0;i--)
 
 void CIsoView::DrawMap()
 {
-	m_d3dDeviceContext->ClearRenderTargetView(m_renderTargetView, DirectX::Colors::WhiteSmoke);
-	m_swapChain->Present(0, 0);
+	m_d3dDeviceContext->ClearRenderTargetView(m_d3dRenderTargetView, DirectX::Colors::WhiteSmoke);
+	
+	DXGI_SWAP_CHAIN_DESC desc;
+	HRESULT hr = m_dxSwapChain->GetDesc(&desc);
+	if (SUCCEEDED(hr))
+	{
+		if (m_d2dRenderTarget)
+		{
+			D2D1_SIZE_F targetSize = m_d2dRenderTarget->GetSize();
+
+			m_d2dRenderTarget->BeginDraw();
+
+			CComPtr<ID2D1SolidColorBrush> pLightSlateGrayBrush;
+			hr = m_d2dRenderTarget->CreateSolidColorBrush(
+				D2D1::ColorF(D2D1::ColorF::LightSlateGray),
+				&pLightSlateGrayBrush
+			);
+
+			CComPtr<ID2D1SolidColorBrush> pBlackBrush;
+			hr = m_d2dRenderTarget->CreateSolidColorBrush(
+                D2D1::ColorF(D2D1::ColorF::Black),
+                &pBlackBrush
+            );
+
+			D2D1_RECT_F rect = D2D1::RectF(
+				100.0f,
+				100.0f,
+				targetSize.width - 100.0f,
+				targetSize.height - 100.0f
+			);
+
+			m_d2dRenderTarget->FillRectangle(&rect, pLightSlateGrayBrush);
+
+			const auto str = utf8ToUtf16(Map->GetIniFile().GetString("Basic", "Name", "No name"));
+			m_d2dRenderTarget->DrawText(
+				str.c_str(),
+				str.length(),
+				m_dwriteTextFormat,
+				rect,
+				pBlackBrush
+			);
+
+			hr = m_d2dRenderTarget->EndDraw();
+		}
+	}
+	
+	
+	m_dxSwapChain->Present(0, 0);
 }
 
 void CIsoView::OnRButtonDown(UINT nFlags, CPoint point)
@@ -5166,7 +5312,6 @@ void CIsoView::Zoom(CPoint& pt, float f)
 
 void CIsoView::OnMButtonDown(UINT nFlags, CPoint point)
 {
-	// TODO: Fügen Sie hier Ihren Meldungshandlercode ein, und/oder benutzen Sie den Standard.
 	m_MButtonDown = point;
 	m_MButtonMoveZooming = point;
 	m_zooming = true;
@@ -5175,7 +5320,6 @@ void CIsoView::OnMButtonDown(UINT nFlags, CPoint point)
 
 void CIsoView::OnMButtonUp(UINT nFlags, CPoint point)
 {
-	// TODO: Fügen Sie hier Ihren Meldungshandlercode ein, und/oder benutzen Sie den Standard.
 	m_zooming = false;
 	CView::OnMButtonUp(nFlags, point);
 }
