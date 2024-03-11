@@ -606,8 +606,6 @@ public:
 	virtual ~CMapData();
 	void Pack(BOOL bCreatePreview = FALSE, BOOL bCompression = FALSE);
 	void Unpack();
-	void UpdateTreeInfo(LPCSTR lpTreeType = NULL);
-	void UpdateBuildingInfo(LPCSTR lpUnitType = NULL);
 	void CalcMapRect();
 
 	void InitTheater();
@@ -988,7 +986,6 @@ public:
 	void DeleteSmudge(DWORD dwIndex);
 	BOOL AddSmudge(SMUDGE* lpSmudge);
 	void GetSmudgeData(DWORD dwIndex, SMUDGE* lpData) const;
-	void UpdateSmudgeInfo(LPCSTR lpSmudgeType = NULL);
 #endif
 
 	BOOL IsYRMap();

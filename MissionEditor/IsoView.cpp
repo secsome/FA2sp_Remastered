@@ -3315,31 +3315,6 @@ void CIsoView::OnLButtonUp(UINT nFlags, CPoint point)
 	CView::OnLButtonUp(nFlags, point);
 }
 
-
-
-
-void CIsoView::TextOut(int x, int y, const char* text, COLORREF col)
-{
-	HDC hdc;
-	lpdsBack->GetDC(&hdc);
-
-	SetTextColor(hdc, col);
-	SetBkMode(hdc, TRANSPARENT);
-	::TextOut(hdc, x, y, text, strlen(text));
-
-
-	lpdsBack->ReleaseDC(hdc);
-}
-
-void CIsoView::TextOut(HDC hDC, int x, int y, const char* text, COLORREF col)
-{
-	SetTextColor(hDC, col);
-	SetBkMode(hDC, TRANSPARENT);
-	::TextOut(hDC, x, y, text, strlen(text));
-}
-
-
-
 void CIsoView::OnMove(int x, int y)
 {
 	CView::OnMove(x, y);
@@ -3430,7 +3405,6 @@ void CIsoView::OnDraw(CDC* pDC)
 	DrawMap();
 }
 
-
 void CIsoView::ReInitializeDDraw()
 {
 	b_IsLoading = TRUE;
@@ -3468,13 +3442,6 @@ void CIsoView::ReInitializeDDraw()
 	memset(ovrlpics, 0, max_ovrl_img * 0xFF * sizeof(LPDIRECTDRAWSURFACE4));
 	//UpdateOverlayPictures(-1);
 	//Map->UpdateIniFile(MAPDATA_UPDATE_FROM_INI);
-	Map->UpdateBuildingInfo();
-	Map->UpdateTreeInfo();
-#ifdef SMUDGE_SUPP
-	Map->UpdateSmudgeInfo();
-#endif
-
-
 
 	b_IsLoading = FALSE;
 
@@ -5232,8 +5199,6 @@ for(i=15;i>=0;i--)
 	*x = cx;//-1;
 	*y = cy;//-1;
 }
-
-
 
 void CIsoView::DrawMap()
 {

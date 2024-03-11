@@ -83,26 +83,6 @@ CFinalSunApp::CFinalSunApp()
 	strcpy_s(ExePath, utf16ToUtf8(AppPathUtf16).c_str());
 	*(strrchr(ExePath, '\\') + 1) = 0;
 
-	// Initialize AppData
-	//const std::wstring AppDataPathFolder = utf8ToUtf16(u8ExePath.substr(0, u8ExePath.size() - 1));
-	//auto create_dir_res = SHCreateDirectoryExW(NULL, AppDataPathFolder.c_str(), nullptr);
-	//if (ERROR_SUCCESS != create_dir_res && ERROR_ALREADY_EXISTS != create_dir_res)
-	//{
-	//	wchar_t err_msg[1025] = { 0 };
-	//	FormatMessageW(FORMAT_MESSAGE_FROM_SYSTEM, 0, create_dir_res, 0, err_msg, 1024, NULL);
-	//	MessageBoxW(NULL, err_msg, (std::wstring(L"Failed to open ") + AppDataPathFolder).c_str(), 0);
-	//	exit(1);
-	//}
-	//
-	//if ((GetFileAttributesW(AppDataPathFolder.c_str()) & FILE_ATTRIBUTE_DIRECTORY) != FILE_ATTRIBUTE_DIRECTORY)
-	//{
-	//	MessageBoxW(NULL, (AppDataPathFolder + L" must be a directory, not a file").c_str(), (std::wstring(L"Failed to open ") + AppDataPathFolder).c_str(), 0);
-	//	exit(1);
-	//}
-
-	/*memset(t_tilepics, 0, sizeof(TILEPICDATA)*10000);
-	memset(s_tilepics, 0, sizeof(TILEPICDATA)*10000);*/
-
 	m_Options.LanguageName = "English";
 	m_Options.bFlat = FALSE;
 	m_Options.bSupportMarbleMadness = FALSE;
@@ -249,6 +229,7 @@ BOOL CFinalSunApp::InitInstance()
 	opts.bShowCells = optini.sections["UserInterface"].values["ShowBuildingCells"] == "1";
 
 	optini["RA2"]["Exe"] = opts.TSExe;
+	optini[app]["Language"] = opts.LanguageName;
 	optini.SaveFile(iniFile);
 
 	// MW 07/20/01: Load file list

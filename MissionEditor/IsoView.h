@@ -37,25 +37,6 @@
 #include <memory>
 #include "Structs.h"
 
-
-
-struct TextToRender
-{
-	std::string text;
-	int drawx;
-	int drawy;
-	int color;
-	bool fixedScreenPos = false;	
-	bool useFont9 = false;
-	bool centered = false;
-};
-
-struct WaypointToRender
-{
-	int drawx;
-	int drawy;
-};
-
 class TextDrawer;
 class CTube;
 
@@ -89,11 +70,6 @@ private:
 	BOOL rscroll;
 	BOOL m_bAltCliff;
 	bool m_zooming;
-
-	std::vector<TextToRender> m_texts_to_render;
-	std::vector<WaypointToRender> m_waypoints_to_render;
-
-	
 
 // operations
 public:
@@ -260,79 +236,6 @@ public:
 	CWnd* owner;
 	void ReInitializeDDraw();
 	COLORREF GetColor(const char* house, const char* color=NULL);
-	void Blit(LPDIRECTDRAWSURFACE4 pic, int x, int y, int width=-1, int height=-1)
-	{
-		if(pic==NULL) return;
-
-		x+=1;
-		y+=1;
-		//y-=f_y;
-
-		RECT r;
-		GetDesktopWindow()->GetWindowRect(&r);
-		//GetWindowRect(&r);
-
-		if(width==-1 || height==-1)
-		{
-			DDSURFACEDESC2 ddsd;
-			memset(&ddsd, 0, sizeof(DDSURFACEDESC2));
-			ddsd.dwSize=sizeof(DDSURFACEDESC2);
-			ddsd.dwFlags=DDSD_WIDTH | DDSD_HEIGHT;
-			pic->GetSurfaceDesc(&ddsd);
-			width=ddsd.dwWidth;
-			height=ddsd.dwHeight;
-		}
-
-		if(x+width<0 || y+height<0) return;
-		if(x>r.right || y>r.bottom) return;
-
-		if(x<0 || y<0 || x+width>=r.right || y+height>=r.bottom)
-		{
-			
-
-			RECT blrect;
-			RECT srcRect;
-			srcRect.left=0;
-			srcRect.top=0;
-			srcRect.right=width;
-			srcRect.bottom=height;
-			blrect.left=x;
-			if(blrect.left<0) 
-			{
-				srcRect.left=r.left+1-blrect.left;
-				blrect.left=r.left+1;
-			}
-			blrect.top=y;
-			if(blrect.top<0) 
-			{
-				
-				//errstream << "BlRect.top=" << blrect.top << endl;
-				srcRect.top=(r.top+1)-blrect.top; //(r.top-blrect.top);
-				blrect.top=r.top+1;//r.top;
-				// errstream << blrect.top << " " << srcRect.top << endl;
-			}
-			blrect.right=(x+width);
-			if(x+width>r.right)
-			{
-				srcRect.right=width-((x+width)-r.right);// -(-blrect.right+r.right);
-				blrect.right=r.right;
-			}
-			blrect.bottom=(y+height);
-			if(y+height>r.bottom)
-			{
-				srcRect.bottom=height-((y+height)-r.bottom); // -(-blrect.bottom+r.bottom);
-				blrect.bottom=r.bottom;
-			}
-			DDBLTFX fx;
-			memset(&fx, 0, sizeof(DDBLTFX));
-			fx.dwSize=sizeof(DDBLTFX);
-			lpdsBack->Blt(&blrect, pic, &srcRect, DDBLT_KEYSRC, &fx);
-		}
-		else
-			lpdsBack->BltFast(x,y, pic, NULL, DDBLTFAST_SRCCOLORKEY);
-	}
-	void TextOut(int x, int y, const char* text, COLORREF col);
-	void TextOut(HDC hDC, int x, int y, const char* text, COLORREF col);
 	LPDIRECTDRAWSURFACE4 lpdsBack;
 	LPDIRECTDRAWSURFACE4 lpdsTemp; // used for saving the isoview when drawing current tile
 	LPDIRECTDRAWSURFACE4 lpdsBackHighRes; // used for rendering text and some lines in high-res
@@ -340,7 +243,6 @@ public:
 	DDPIXELFORMAT pf;	
 	LPDIRECTDRAW4 dd;
 	LPDIRECTDRAW dd_1;
-	HGLRC m_hglrc;
 	void HandleProperties(int n, int type);
 	void UpdateDialog(BOOL bRepos=TRUE);
 	CMenu m_menu;
