@@ -368,7 +368,7 @@ HRESULT GameScene::CompileShaderFromFile(const WCHAR* szFileName, LPCSTR szEntry
 	dwShaderFlags |= D3DCOMPILE_SKIP_OPTIMIZATION;
 #endif
 
-	std::wstring FullPath = u16ExePath + L"\\";
+	std::wstring FullPath = u16ExePath;
 	FullPath += szFileName;
 
 	CComPtr<ID3DBlob> pErrorBlob = nullptr;
