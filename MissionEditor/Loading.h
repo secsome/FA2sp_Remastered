@@ -47,7 +47,6 @@ public:
 	void LoadStrings();
 	void FreeAll();
 	void FreeTileSet();
-	BOOL InitDirectDraw();
 	void InitTMPs();
 	
 	~CLoading();

@@ -194,7 +194,7 @@ void CLoading::Load()
 	// ok now directdraw
 	m_cap.SetWindowText(GetLanguageStringACP("LoadInitDDraw"));
 	m_progress.SetPos(95); UpdateWindow();
-	InitDirectDraw();
+	theApp.GetMainWnd()->m_view.m_isoview->InitDXDevice();
 	m_progress.SetPos(100); UpdateWindow();
 	
 	/*errstream << "Now calling InitPics()\n";
@@ -449,11 +449,6 @@ void CLoading::Unload()
 void CLoading::OnDestroy() 
 {
 	CDialog::OnDestroy();
-}
-
-BOOL CLoading::InitDirectDraw()
-{
-	return true;
 }
 
 void CLoading::InitTMPs()

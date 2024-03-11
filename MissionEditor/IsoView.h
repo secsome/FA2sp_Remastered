@@ -37,7 +37,8 @@
 #include <memory>
 #include "Structs.h"
 
-class TextDrawer;
+#include <d3d11.h>
+
 class CTube;
 
 
@@ -45,6 +46,17 @@ class CIsoView : public CView
 {
 protected:
 	DECLARE_DYNCREATE(CIsoView)
+
+private:
+	D3D_DRIVER_TYPE m_driverType;
+	D3D_FEATURE_LEVEL m_featureLevel;
+	CComPtr<ID3D11Device> m_d3dDevice;
+	CComPtr<ID3D11DeviceContext> m_d3dDeviceContext;
+	CComPtr<IDXGISwapChain> m_dxSwapChain;
+	CComPtr<ID3D11RenderTargetView> m_d3dRenderTargetView;
+	CComPtr<ID3D11Texture2D> m_d3dDepthStencil;
+	CComPtr<ID3D11DepthStencilView> m_d3dDepthStencilView;
+
 
 // attributes
 public:
@@ -95,7 +107,6 @@ protected:
 	virtual void Dump(CDumpContext& dc) const;
 #endif
 
-
 	// generated message maps
 	//{{AFX_MSG(CIsoView)
 	afx_msg void OnSysCommand(UINT nID, LPARAM lParam);
@@ -115,9 +126,16 @@ protected:
 	afx_msg void OnTimer(UINT_PTR nIDEvent);
 	afx_msg void OnRButtonDown(UINT nFlags, CPoint point);
 	afx_msg void OnKillFocus(CWnd* pNewWnd);
+	// Zoom
+	afx_msg BOOL OnMouseWheel(UINT nFlags, short zDelta, CPoint pt);
+	afx_msg void OnMButtonDown(UINT nFlags, CPoint point);
+	afx_msg void OnMButtonUp(UINT nFlags, CPoint point);
 	//}}AFX_MSG
 	DECLARE_MESSAGE_MAP()
 public:
+	void Zoom(CPoint& pt, float f);
+
+
 	void FocusWaypoint(int index);
 	RECT m_funcRect;
 	Vec2<CSProjected, float> GetViewScale() const
@@ -230,23 +248,19 @@ public:
 	int GetOverlayDirection(int x, int y);
 	void SetError(const char* text);
 	CWnd* owner;
-	void ReInitializeDDraw();
+	HRESULT InitDXDevice();
+	void ReInitDXDevice();
 	COLORREF GetColor(const char* house, const char* color = nullptr);
 	void HandleProperties(int n, int type);
 	void UpdateDialog(BOOL bRepos=TRUE);
 	CMenu m_menu;
 	BOOL b_IsLoading;
-	int m_fontDefaultHeight;
-	int m_Font9Height;
-
+	
 private:
 	void UpdateScrollRanges();
 
 private:
 	RECT m_myRect;
-	
-	
-	// mapdata* _map;
 	COLORREF m_linecolor;
 	RECT line;
 	int m_type;
@@ -255,10 +269,7 @@ private:
 	BOOL m_moved;
 	MapCoords m_cellCursor;
 public:
-	afx_msg BOOL OnMouseWheel(UINT nFlags, short zDelta, CPoint pt);
-	void Zoom(CPoint& pt, float f);
-	afx_msg void OnMButtonDown(UINT nFlags, CPoint point);
-	afx_msg void OnMButtonUp(UINT nFlags, CPoint point);
+	
 };
 
 /////////////////////////////////////////////////////////////////////////////
