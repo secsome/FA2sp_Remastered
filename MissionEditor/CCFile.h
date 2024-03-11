@@ -200,6 +200,11 @@ public:
 	virtual void Error(int error, bool canretry = false, char const* filename = nullptr) override;
 
 	void* ReadWholeFile();
+	template<typename T>
+	bool Read(T&& item)
+	{
+        return Read(&item, sizeof(T)) == sizeof(T);
+    }
 
 	static void* ReadWholeFile(char const* filename, size_t* size = nullptr);
 

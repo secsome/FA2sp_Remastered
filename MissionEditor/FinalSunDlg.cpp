@@ -570,8 +570,6 @@ void CFinalSunDlg::UpdateDialogs(BOOL bOnlyMissionControl, BOOL bNoRepos)
 {
 	RepairRulesHouses();
 
-	OutputDebugString("Dialogs updated\n");
-
 	if(m_basic.m_hWnd) m_basic.UpdateDialog();
 	if(m_all.m_hWnd) m_all.UpdateDialog();
 	if(m_map.m_hWnd) m_map.UpdateDialog();

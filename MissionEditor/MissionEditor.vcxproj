@@ -204,6 +204,7 @@
     <ClCompile Include="ChangeSizeDlg.cpp" />
     <ClCompile Include="CliffModifier.cpp" />
     <ClCompile Include="ComboUInputDlg.cpp" />
+    <ClCompile Include="Convert.cpp" />
     <ClCompile Include="CRC.cpp" />
     <ClCompile Include="DynamicGraphDlg.cpp" />
     <ClCompile Include="FinalSun.cpp" />
@@ -211,6 +212,7 @@
     <ClCompile Include="FloatEdit.cpp" />
     <ClCompile Include="FrontCliffModifier.cpp" />
     <ClCompile Include="functions.cpp" />
+    <ClCompile Include="GameScene.cpp" />
     <ClCompile Include="GlobalsDlg.cpp" />
     <ClCompile Include="Houses.cpp" />
     <ClCompile Include="ImportINI.cpp" />
@@ -256,6 +258,7 @@
     <ClCompile Include="ScriptTypes.cpp" />
     <ClCompile Include="SearchWaypointDlg.cpp" />
     <ClCompile Include="SHA.cpp" />
+    <ClCompile Include="ShpFile.cpp" />
     <ClCompile Include="ShutDownDlg.cpp" />
     <ClCompile Include="SingleplayerSettings.cpp" />
     <ClCompile Include="SpecialFlags.cpp" />
@@ -316,9 +319,11 @@
     <ClInclude Include="ChangeSizeDlg.h" />
     <ClInclude Include="CliffModifier.h" />
     <ClInclude Include="ComboUInputDlg.h" />
+    <ClInclude Include="Convert.h" />
     <ClInclude Include="CRC.h" />
     <ClInclude Include="defines.h" />
     <ClInclude Include="FormatExtensions.h" />
+    <ClInclude Include="GameScene.h" />
     <ClInclude Include="Int.h" />
     <ClInclude Include="LCW.h" />
     <ClInclude Include="LineDrawer.h" />
@@ -377,6 +382,7 @@
     <ClInclude Include="ScriptTypes.h" />
     <ClInclude Include="SearchWaypointDlg.h" />
     <ClInclude Include="SHA.h" />
+    <ClInclude Include="ShpFile.h" />
     <ClInclude Include="ShutDownDlg.h" />
     <ClInclude Include="SingleplayerSettings.h" />
     <ClInclude Include="SpecialFlags.h" />

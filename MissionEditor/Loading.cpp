@@ -190,13 +190,12 @@ void CLoading::Load()
 	// load Command & Conquer Rules.ini section names
 	m_progress.SetPos(90); UpdateWindow();
 	LoadStrings();
-
 	// ok now directdraw
 	m_cap.SetWindowText(GetLanguageStringACP("LoadInitDDraw"));
 	m_progress.SetPos(95); UpdateWindow();
-	theApp.GetMainWnd()->m_view.m_isoview->InitDXDevice();
+	theApp.GetMainWnd()->m_view.m_isoview->InitializeGameScene();
 	m_progress.SetPos(100); UpdateWindow();
-	
+
 	/*errstream << "Now calling InitPics()\n";
 	errstream.flush();
 	m_cap.SetWindowText(GetLanguageStringACP("LoadInitPics"));

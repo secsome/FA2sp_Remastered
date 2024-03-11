@@ -90,7 +90,6 @@ BOOL CMyViewFrame::OnCreateClient(LPCREATESTRUCT lpcs, CCreateContext* pContext)
 	m_rightFrame=(CRightFrame*)m_Splitter.GetPane(0,1);
 	
 	m_isoview=(CIsoView*)m_rightFrame->m_Splitter.GetPane(0,0);
-	m_isoview->owner=this;
 	m_browser=(CTileSetBrowserFrame*)m_rightFrame->m_Splitter.GetPane(1,0);
 	m_objectview=(CViewObjects*)m_Splitter.GetPane(0,0);
 
@@ -107,7 +106,7 @@ BOOL CMyViewFrame::OnCreateClient(LPCREATESTRUCT lpcs, CCreateContext* pContext)
 
 void CMyViewFrame::OnSysCommand(UINT nID, LPARAM lParam) 
 {
-if(nID==SC_CLOSE)
+	if(nID==SC_CLOSE)
 	{
 		// ok now just hide the window
 		ShowWindow(SW_HIDE);

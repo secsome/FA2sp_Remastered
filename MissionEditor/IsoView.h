@@ -37,8 +37,7 @@
 #include <memory>
 #include "Structs.h"
 
-#include <d3d11.h>
-#include <d2d1.h>
+#include "GameScene.h"
 
 class CTube;
 
@@ -49,18 +48,9 @@ protected:
 	DECLARE_DYNCREATE(CIsoView)
 
 private:
-	D3D_DRIVER_TYPE m_driverType;
-	D3D_FEATURE_LEVEL m_featureLevel;
-	CComPtr<ID3D11Device> m_d3dDevice;
-	CComPtr<ID3D11DeviceContext> m_d3dDeviceContext;
-	CComPtr<IDXGISwapChain> m_dxSwapChain;
-	CComPtr<ID3D11RenderTargetView> m_d3dRenderTargetView;
-	CComPtr<ID3D11Texture2D> m_d3dDepthStencil;
-	CComPtr<ID3D11DepthStencilView> m_d3dDepthStencilView;
-	CComPtr<ID2D1Factory> m_d2dFactory;
-	CComPtr<ID2D1RenderTarget> m_d2dRenderTarget;
-	CComPtr<IDWriteFactory> m_dwriteFactory;
-	CComPtr<IDWriteTextFormat> m_dwriteTextFormat;
+	GameScene Scene;
+public:
+	void InitializeGameScene();
 
 // attributes
 public:
@@ -91,17 +81,13 @@ private:
 public:
 	CIsoView();           
 	virtual ~CIsoView();
-
-// overwriteables
-	//{{AFX_VIRTUAL(CIsoView)
-	public:
+public:
 	virtual BOOL Create(LPCTSTR lpszClassName, LPCTSTR lpszWindowName, DWORD dwStyle, const RECT& rect, CWnd* pParentWnd, UINT nID, CCreateContext* pContext = NULL);
-	protected:
-	virtual void OnDraw(CDC* pDC);      // Überschrieben zum Zeichnen dieser Ansicht
-	virtual void OnInitialUpdate();     // Zum ersten Mal nach der Konstruktion
+protected:
+	virtual void OnDraw(CDC* pDC);
+	virtual void OnInitialUpdate();
 	virtual BOOL PreCreateWindow(CREATESTRUCT& cs);
 	virtual BOOL OnCommand(WPARAM wParam, LPARAM lParam);
-	//}}AFX_VIRTUAL
 
 // implementation
 protected:
@@ -251,10 +237,6 @@ public:
 	void HandleTrail(int x, int y);
 	int GetOverlayDirection(int x, int y);
 	void SetError(const char* text);
-	CWnd* owner;
-	HRESULT InitDirect2D();
-	HRESULT InitDXDevice();
-	void ReInitDXDevice();
 	COLORREF GetColor(const char* house, const char* color = nullptr);
 	void HandleProperties(int n, int type);
 	void UpdateDialog(BOOL bRepos=TRUE);
