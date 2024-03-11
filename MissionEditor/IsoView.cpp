@@ -96,68 +96,6 @@ BOOL bDrawStats = TRUE;
 }
 */
 
-class SurfaceLocker
-{
-public:
-	SurfaceLocker(IDirectDrawSurface4* pDDS, LPRECT rect = nullptr) :
-		SurfaceLocker()
-	{
-		m_hasRect = rect != nullptr;
-		if (rect)
-			m_rect = *rect;
-		m_pDDS = pDDS;
-		m_ddsd.dwSize = sizeof(DDSURFACEDESC2);
-		m_ddsd.dwFlags = DDSD_WIDTH | DDSD_HEIGHT;
-	}
-
-	DDSURFACEDESC2* ensure_locked()
-	{
-		if (m_locked)
-			return &m_ddsd;
-
-		if (m_pDDS->GetSurfaceDesc(&m_ddsd) != DD_OK)
-			return nullptr;
-
-		if (m_pDDS->Lock(m_hasRect ? &m_rect : nullptr, &m_ddsd, DDLOCK_SURFACEMEMORYPTR | DDLOCK_WAIT | DDLOCK_NOSYSLOCK, NULL) != DD_OK)
-			return nullptr;
-
-		m_locked = true;
-
-		if (!m_ddsd.lpSurface)
-			return nullptr;  // probably does not happen in reality
-
-		return &m_ddsd;
-	}
-
-	void ensure_unlocked()
-	{
-		if (m_locked)
-		{
-			m_pDDS->Unlock(m_hasRect ? &m_rect : nullptr);
-		}
-		m_locked = false;
-	}
-
-	~SurfaceLocker()
-	{
-		ensure_unlocked();
-	}
-
-	SurfaceLocker(const SurfaceLocker& other) = delete;
-	SurfaceLocker& operator=(const SurfaceLocker& other) = delete;
-
-private:
-	SurfaceLocker() = default;
-
-private:
-	IDirectDrawSurface4* m_pDDS = nullptr;
-	DDSURFACEDESC2 m_ddsd = { 0 };
-	RECT m_rect = { 0 };
-	bool m_hasRect = false;
-	bool m_locked = false;
-};
-
-
 CIsoView::CIsoView()
 {
 	srand(GetTickCount());
@@ -165,13 +103,6 @@ CIsoView::CIsoView()
 	m_NoMove = FALSE;
 	b_IsLoading = FALSE;
 	m_viewOffset = ProjectedVec(0, 0);
-	dd = NULL;
-	dd_1 = NULL;
-	lpds = NULL;
-	lpdsBack = NULL;
-	lpdsBackHighRes = nullptr;
-	lpdsTemp = NULL;
-	pf = DDPIXELFORMAT{ 0 };
 	line.left = 0;
 	line.top = 0;
 	line.right = 0;
@@ -187,9 +118,6 @@ CIsoView::CIsoView()
 	bThreadPainting = TRUE;
 	m_viewScale = Vec2<CSProjected, float>(1.0f, 1.0f);
 	m_viewScaleControl = 1.0f;
-	//m_paintthread=new(CIsoPaintThread);
-	//m_paintthread->CreateThread();
-
 }
 
 CIsoView::~CIsoView()
@@ -910,7 +838,7 @@ void CIsoView::OnVScroll(UINT nSBCode, UINT nPos, CScrollBar* pScrollBar)
 
 	RedrawWindow(NULL, NULL, RDW_INVALIDATE | RDW_UPDATENOW);
 
-	CMyViewFrame& dlg = *(CMyViewFrame*)owner;
+	CMyViewFrame& dlg = theApp.GetMainWnd()->m_view;
 	dlg.m_minimap.RedrawWindow(NULL, NULL, RDW_INVALIDATE | RDW_UPDATENOW);
 }
 
@@ -930,7 +858,7 @@ void CIsoView::OnHScroll(UINT nSBCode, UINT nPos, CScrollBar* pScrollBar)
 
 	RedrawWindow(NULL, NULL, RDW_INVALIDATE | RDW_UPDATENOW);
 
-	CMyViewFrame& dlg = *(CMyViewFrame*)owner;
+	CMyViewFrame& dlg = theApp.GetMainWnd()->m_view;
 	dlg.m_minimap.RedrawWindow(NULL, NULL, RDW_INVALIDATE | RDW_UPDATENOW);
 }
 
@@ -1003,7 +931,7 @@ void CIsoView::OnMouseMove(UINT nFlags, CPoint point)
 			rscroll = FALSE;
 			ShowCursor(TRUE);
 
-			CMyViewFrame& dlg = *(CMyViewFrame*)owner;
+			CMyViewFrame& dlg = theApp.GetMainWnd()->m_view;
 			dlg.m_minimap.RedrawWindow(NULL, NULL, RDW_INVALIDATE | RDW_UPDATENOW);
 
 		}
@@ -1092,12 +1020,6 @@ void CIsoView::OnMouseMove(UINT nFlags, CPoint point)
 		}
 	}
 
-
-
-	if (lpdsBack)
-		// reset back buffer to last DrawMap()
-		lpdsBack->BltFast(0, 0, lpdsTemp, NULL, DDBLTFAST_WAIT);
-		//lpdsBack->Blt(NULL, lpdsTemp, NULL, 0, 0);
 
 	//int cell_x = x;
 	//int cell_y = y;
@@ -1275,15 +1197,6 @@ void CIsoView::OnMouseMove(UINT nFlags, CPoint point)
 				y2 = m_mapy;
 			}
 
-			DDSURFACEDESC2 ddsd;
-			ZeroMemory(&ddsd, sizeof(ddsd));
-			ddsd.dwSize = sizeof(DDSURFACEDESC2);
-			ddsd.dwFlags = DDSD_WIDTH | DDSD_HEIGHT;
-
-			lpdsBack->GetSurfaceDesc(&ddsd);
-
-
-			lpdsBack->Lock(NULL, &ddsd, DDLOCK_SURFACEMEMORYPTR | DDLOCK_WAIT | DDLOCK_NOSYSLOCK, NULL);
 
 			int i, e;
 			int isosize = Map->GetIsoSize();
@@ -1308,10 +1221,6 @@ void CIsoView::OnMouseMove(UINT nFlags, CPoint point)
 				}
 			}
 
-			lpdsBack->Unlock(NULL);
-
-			BlitBackbufferToHighRes();
-			FlipHighResBuffer();
 			last_succeeded_operation = 80304;
 		}
 		else if (AD.mode == ACTIONMODE_PASTE)
@@ -1875,21 +1784,6 @@ void CIsoView::OnMouseMove(UINT nFlags, CPoint point)
 			px2 += r.left;
 			py1 += r.top;
 			py2 += r.top;
-
-
-			HDC dc;
-			lpdsBack->GetDC(&dc);
-
-			POINT p;
-			MoveToEx(dc, px1, py1, &p);
-			LineTo(dc, px2, py2);
-
-			lpdsBack->ReleaseDC(dc);
-
-			BlitBackbufferToHighRes();
-			FlipHighResBuffer();
-			//lpds->Blt(NULL, lpdsBack, NULL, 0, 0);
-
 		}
 		else
 		{
@@ -1931,7 +1825,7 @@ void CIsoView::OnRButtonUp(UINT nFlags, CPoint point)
 		ReleaseCapture();
 		KillTimer(11);
 		ShowCursor(TRUE);
-		CMyViewFrame& dlg = *(CMyViewFrame*)owner;
+		CMyViewFrame& dlg = theApp.GetMainWnd()->m_view;
 		dlg.m_minimap.RedrawWindow(NULL, NULL, RDW_INVALIDATE | RDW_UPDATENOW);
 
 	}
@@ -3319,25 +3213,13 @@ void CIsoView::OnMove(int x, int y)
 {
 	CView::OnMove(x, y);
 
-	if (lpds == NULL) return;
-	LPDIRECTDRAWCLIPPER ddc;
-
-	lpds->GetClipper(&ddc);
-	ddc->SetHWnd(0, m_hWnd);
 	RedrawWindow();	
 }
 
 void CIsoView::OnSize(UINT nType, int cx, int cy)
 {
-	// CView::OnSize(nType, cx, cy);
-	if (lpds == NULL) return;
-
-	LPDIRECTDRAWCLIPPER ddc;
-
-	lpds->GetClipper(&ddc);
-	ddc->SetHWnd(0, m_hWnd);
-
-	CMyViewFrame& dlg = *(CMyViewFrame*)owner;
+	CMyViewFrame& dlg = theApp.GetMainWnd()->m_view;
+	
 	dlg.m_minimap.RedrawWindow(NULL, NULL, RDW_INVALIDATE | RDW_UPDATENOW);
 
 	UpdateScrollRanges();
@@ -3410,38 +3292,17 @@ void CIsoView::ReInitializeDDraw()
 	b_IsLoading = TRUE;
 	ReleaseCapture();
 	KillTimer(11);
-	// rscroll=FALSE;
-
-
-
-#ifdef NOSURFACES
-	while ((GetDeviceCaps(::GetDC(::GetDesktopWindow()), BITSPIXEL) <= 8))
-	{
-		if (MessageBox("You currently only have 8 bit color mode enabled. FinalAlert 2 does not work in 8 bit color mode. Please change the color mode and then click on OK. Click Cancel to quit (and save the map as backup.map).", "Error", MB_OKCANCEL) == IDCANCEL)
-		{
-			((CFinalSunDlg*)theApp.m_pMainWnd)->SaveMap((u8ExePath + "\\backup.map").c_str());
-			PostQuitMessage(0);
-			return;
-		}
-	}
-#endif
-
-
+	
 	CDynamicGraphDlg dlg;
 
 	dlg.ShowWindow(SW_SHOW);
 	dlg.UpdateWindow();
 
-	dd->RestoreAllSurfaces();
-
 	missingimages.clear();
 
-	theApp.m_loading->FreeAll();
 	theApp.m_loading->InitDirectDraw();
 
-	memset(ovrlpics, 0, max_ovrl_img * 0xFF * sizeof(LPDIRECTDRAWSURFACE4));
-	//UpdateOverlayPictures(-1);
-	//Map->UpdateIniFile(MAPDATA_UPDATE_FROM_INI);
+	memset(ovrlpics, 0, sizeof(ovrlpics));
 
 	b_IsLoading = FALSE;
 
@@ -3594,143 +3455,6 @@ void CIsoView::HandleTrail(int x, int y)
 		}
 	}
 
-}
-
-
-/*
-DrawCell(int x, int y, int w, int h, COLORREF col)
-
-Draws a frame around one or more cells.
-w is the width, h is the height (in cells).
-x and y are pixel coordinates.
-col specifies the color.
-*/
-void CIsoView::DrawCell(int x, int y, int w, int h, COLORREF col, BOOL dotted, HDC hDC_)
-{
-
-
-	// correct the y value:
-	//y -= f_y;
-
-	POINT p1, p2, p3, p4;
-	p1.x = x + f_x / 2;
-	p1.y = y;
-	p2.x = x + w * f_x / 2 + f_x / 2;
-	p2.y = y + w * f_y / 2;
-	p3.x = x + w * f_x / 2 - h * f_x / 2 + f_x / 2 - 1;
-	p3.y = y + h * f_y / 2 + w * f_y / 2 - 1;
-	p4.x = x - h * f_x / 2 + f_x / 2 - 1;
-	p4.y = y + h * f_y / 2 - 1;
-
-	HDC hDC = hDC_;
-	if (!hDC)
-		while (lpdsBack->GetDC(&hDC) == DDERR_WASSTILLDRAWING);
-
-	HPEN p;
-	int width = 2;
-	if (!dotted)	p = CreatePen(PS_SOLID, width, col);
-	else	p = CreatePen(PS_DOT, 0, col);
-
-	SelectObject(hDC, p);
-
-	if (dotted)
-	{
-		SetBkMode(hDC, TRANSPARENT);
-		MoveToEx(hDC, p1.x, p1.y - 1, NULL);
-		LineTo(hDC, p2.x + 1, p2.y);
-		LineTo(hDC, p3.x, p3.y + 1);
-		LineTo(hDC, p4.x - 1, p4.y);
-		LineTo(hDC, p1.x, p1.y - 1);
-	}
-
-	if (!dotted)
-	{
-		MoveToEx(hDC, p1.x, p1.y, NULL);
-		LineTo(hDC, p2.x, p2.y);
-		LineTo(hDC, p3.x, p3.y);
-		LineTo(hDC, p4.x, p4.y);
-		LineTo(hDC, p1.x, p1.y);
-	}
-
-
-
-
-
-	if (!hDC_)
-		lpdsBack->ReleaseDC(hDC);
-
-	DeleteObject(p);
-}
-
-void CIsoView::DrawCell(void* dest, int dest_width, int dest_height, int dest_pitch, int drawx, int drawy, int w, int h, int col, bool dotted, bool touchNeighbours, int colNeighbour) const
-{
-	if (colNeighbour == CLR_INVALID)
-		colNeighbour = col;
-
-	// correct the y value:
-	//y -= f_y;
-
-	POINT p1, p2, p3, p4;
-	p1.x = drawx + f_x / 2;
-	p1.y = drawy;
-	p2.x = drawx + w * f_x / 2 + f_x / 2;
-	p2.y = drawy + w * f_y / 2;
-	p3.x = drawx + w * f_x / 2 - h * f_x / 2 + f_x / 2;
-	p3.y = drawy + h * f_y / 2 + w * f_y / 2;
-	p4.x = drawx - h * f_x / 2 + f_x / 2;
-	p4.y = drawy + h * f_y / 2;
-
-	LineDrawer drawer(dest, bpp, dest_width, dest_height, dest_pitch);
-
-	const LineStyle style = dotted ? LineStyle::Dotted_4 : LineStyle::Standard;
-
-	for (int x = 0; x < 1; ++x)  // you could use this loop for more thickness
-	{
-		for (int y = 0; y < 1; ++y)
-		{
-			// inside the MM tile
-			drawer.MoveTo(p1.x + x + 1, p1.y + y + 1);
-			drawer.LineTo(p2.x + x - 2, p2.y + y - 1, col, style);
-			drawer.LineTo(p3.x + x + 1, p3.y + y - 3, col, style);
-			drawer.LineTo(p3.x + x, p3.y + y - 3, col, style);
-			drawer.LineTo(p4.x + x + 3, p4.y + y - 1, col, style);
-			drawer.LineTo(p4.x + x + 2, p4.y + y - 1, col, style);
-			drawer.MoveTo(p4.x + x + 3, p4.y + y - 1);
-			drawer.LineTo(p1.x + x, p1.y + y + 1, col, style);
-			drawer.LineTo(p1.x + x + 1, p1.y + y + 1, col, style);
-
-			// on inner pixels of MM tile boundary
-			drawer.MoveTo(p1.x + x + 1, p1.y + y);
-			drawer.LineTo(p2.x + x, p2.y + y - 1, col, style);
-			drawer.LineTo(p3.x + x + 1, p3.y + y - 2, col, style);
-			drawer.LineTo(p3.x + x, p3.y + y - 2, col, style);
-			drawer.LineTo(p4.x + x + 1, p4.y + y - 1, col, style);
-			drawer.LineTo(p1.x + x, p1.y + y, col, style);
-			drawer.LineTo(p1.x + x + 1, p1.y + y, col, style);
-		}
-	}
-
-	//  pixels of neighboured MM CIniFile::CurrentTheater boundary
-	if (touchNeighbours)
-	{
-		for (int x = 0; x < 1; ++x)  // you could use this loop for more thickness
-		{
-			for (int y = 0; y < 1; ++y)
-			{				
-				drawer.MoveTo(p1.x + x + 1, p1.y + y - 1);
-				drawer.LineTo(p2.x + x - 2, p2.y + y - 3, colNeighbour, style);
-				drawer.MoveTo(p2.x + x - 2, p2.y + y - 2);
-				drawer.LineTo(p2.x + x - 1, p2.y + y, colNeighbour, style);
-				drawer.LineTo(p2.x + x, p2.y + y, colNeighbour, style);
-				drawer.LineTo(p3.x + x + 1, p3.y + y - 1, colNeighbour, style);
-				drawer.LineTo(p3.x + x, p3.y + y - 1, colNeighbour, style);
-				drawer.LineTo(p4.x + x + 1, p4.y + y, colNeighbour, style);
-				drawer.LineTo(p4.x + x, p4.y + y - 1, colNeighbour, style);
-				drawer.LineTo(p1.x + x, p1.y + y - 1, colNeighbour, style);
-				drawer.LineTo(p1.x + x + 1, p1.y + y - 1, colNeighbour, style);
-			}
-		}
-	}
 }
 
 MapCoords CIsoView::GetMapCoordinates(const ProjectedCoords& projCoords, bool bAllowAccessBehindCliffs, bool ignoreHideFlagsAndOutside) const
@@ -3971,7 +3695,7 @@ void CIsoView::UpdateOverlayPictures(int id)
 {
 	if (id < 0)
 	{
-		memset(ovrlpics, 0, max_ovrl_img * 0xFF * sizeof(LPDIRECTDRAWSURFACE4));
+		memset(ovrlpics, 0, sizeof(ovrlpics));
 
 		int i, e;
 		for (i = 0;i < 0xFF;i++)
@@ -4344,53 +4068,6 @@ void CIsoView::HideTileSet(DWORD dwTileSet)
 	for (i = 0;i < *tiledata_count;i++)
 	{
 		if ((*tiledata)[i].wTileSet == dwTileSet) (*tiledata)[i].bHide = TRUE;
-	}
-}
-
-void CIsoView::BlitBackbufferToHighRes()
-{
-	// MW:
-	// the primary buffer and the (optional) high-res buffer cover the whole screen (Windows automatic high DPI scaling does not change this)
-	// the backbuffer also has the size of the whole screen, however we don't render to the whole screen
-	// we only render to the visible window rectangle (which IS affected by Windows' automatic DPI scaling features)
-	// Additionally, we have a user-controlled scale factor.
-	// If the user zooms in, we only render to a smaller part of the backbuffer and stretch it to the window rectangle (which may then again be stretched by Windows DPI if enabled in the Windows settings).
-	// the rectangle we render to has the same left/top border but a lower value for right/bottom.
-	//
-	// This is a simple scaling and also scales any text that has already been rendered to the backbuffer (which is why we're usually rendering text afterwards to the HighRes backbuffer).
-	// Altogether it'd probably be best to move from DirectDraw to Direct3D, support high DPI awareness and do the scaling right when initially drawing the map.
-
-	
-	if (m_viewScale != Vec2<CSProjected, float>(1.0f, 1.0f) && lpdsBackHighRes)
-	{
-		// copy scene backbuffer to the high-res buffer that will receive text rendering
-		RECT dr;
-		GetWindowRect(&dr);
-		auto cr = GetScaledDisplayRect();
-		lpdsBackHighRes->Blt(&dr, lpdsBack, &cr, DDBLT_WAIT, 0);
-	}
-	else
-	{
-		// do nothing, backbuffer will receive additional text rendering as text doesn't have to be scaled
-	}
-}
-
-void CIsoView::FlipHighResBuffer()
-{
-	if (m_viewScale != Vec2<CSProjected, float>(1.0f, 1.0f) && lpdsBackHighRes)
-	{
-		// This flip copies the high-res backbuffer to the front buffer
-		RECT dr;
-		GetWindowRect(&dr);
-		lpds->Blt(&dr, lpdsBackHighRes, &dr, DDBLT_WAIT, 0);
-	}
-	else
-	{
-		// copy scene backbuffer to the front buffer that will receive text/gdi rendering
-		RECT dr;
-		GetWindowRect(&dr);
-		auto cr = GetScaledDisplayRect();
-		lpds->Blt(&dr, lpdsBack, &cr, DDBLT_WAIT, 0);
 	}
 }
 
@@ -5303,7 +4980,7 @@ BOOL CIsoView::OnMouseWheel(UINT nFlags, short zDelta, CPoint ptScreen)
 	Zoom(pt, theApp.m_Options.viewScaleUseSteps ? fixedF : smoothF);
 
 	RedrawWindow(NULL, NULL, RDW_INVALIDATE | RDW_UPDATENOW);
-	CMyViewFrame& dlg = *(CMyViewFrame*)owner;
+	CMyViewFrame& dlg = theApp.GetMainWnd()->m_view;
 	dlg.m_minimap.RedrawWindow(NULL, NULL, RDW_INVALIDATE | RDW_UPDATENOW);
 	
 	return CView::OnMouseWheel(nFlags, zDelta, pt);

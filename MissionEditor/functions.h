@@ -156,7 +156,4 @@ public:
 std::unique_ptr<CBitmap> BitmapFromResource(int resource_id);
 std::unique_ptr<CBitmap> BitmapFromFile(const CString& filepath);
 
-CComPtr<IDirectDrawSurface4> BitmapToSurface(IDirectDraw4 * pDD, const CBitmap& bitmap);
-
-
 #endif

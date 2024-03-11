@@ -139,16 +139,12 @@ public:
 	void PlaceTile(const int x, const int y, const UINT nMouseFlags);
 	void ShowAllTileSets();
 	void HideTileSet(DWORD dwTileSet);
-	void FlipHighResBuffer();
-	void BlitBackbufferToHighRes();
 	int m_BrushSize_x;
 	int m_BrushSize_y;
 	BOOL ReachableFrom(DWORD dwStart, DWORD dwEnd);
 	void __fastcall ChangeTileHeight(DWORD dwPos, DWORD dwNewHeight, BOOL bNonMorphableMove, BOOL bOnlyThisTile=FALSE, BOOL bNoSlopes=FALSE);
 	void UpdateOverlayPictures(int id=-1);
 	void UpdateStatusBar(int x, int y);
-	void DrawCell(int x, int y, int w, int h, COLORREF col, BOOL dotted=FALSE, HDC hDC=nullptr);
-	void DrawCell(void* dest, int dest_width, int dest_height, int dest_pitch, int x, int y, int w, int h, int col, bool dotted=false, bool touchNeighbours=false, int colNeighbour=CLR_INVALID) const;
 	/// <summary>
 	/// Converts from (world) pixel coordinates to logical map coordinates
 	/// </summary>
@@ -235,14 +231,7 @@ public:
 	void SetError(const char* text);
 	CWnd* owner;
 	void ReInitializeDDraw();
-	COLORREF GetColor(const char* house, const char* color=NULL);
-	LPDIRECTDRAWSURFACE4 lpdsBack;
-	LPDIRECTDRAWSURFACE4 lpdsTemp; // used for saving the isoview when drawing current tile
-	LPDIRECTDRAWSURFACE4 lpdsBackHighRes; // used for rendering text and some lines in high-res
-	LPDIRECTDRAWSURFACE4 lpds;
-	DDPIXELFORMAT pf;	
-	LPDIRECTDRAW4 dd;
-	LPDIRECTDRAW dd_1;
+	COLORREF GetColor(const char* house, const char* color = nullptr);
 	void HandleProperties(int n, int type);
 	void UpdateDialog(BOOL bRepos=TRUE);
 	CMenu m_menu;

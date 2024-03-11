@@ -44,24 +44,12 @@ IMPLEMENT_DYNCREATE(CTileSetBrowserView, CScrollView)
 
 CTileSetBrowserView::CTileSetBrowserView()
 {
-	m_lpDDS = NULL;
 	m_bottom_needed = 1000;
 	m_CurrentMode = 0;
 }
 
 CTileSetBrowserView::~CTileSetBrowserView()
 {
-	if (m_lpDDS)
-	{
-		int i;
-		for (i = 0;i < m_tilecount;i++)
-		{
-			if (m_lpDDS[i]) m_lpDDS[i]->Release();
-		}
-		delete[] m_lpDDS;
-	}
-	m_lpDDS = NULL;
-
 }
 
 
@@ -91,11 +79,11 @@ void CTileSetBrowserView::OnDraw(CDC* pDC)
 {
 	//ReleaseDC(pDC);
 
-
-
-	if (((CFinalSunDlg*)theApp.m_pMainWnd)->m_view.m_isoview->b_IsLoading || ((CFinalSunDlg*)theApp.m_pMainWnd)->m_view.m_isoview->lpds == NULL || ((CFinalSunDlg*)theApp.m_pMainWnd)->m_view.m_isoview->lpds->IsLost() != DD_OK)
+	auto& isoview = theApp.GetMainWnd()->m_view.m_isoview;
+	if (isoview == nullptr)
+        return;
+	if (isoview->b_IsLoading)
 		return;
-
 
 	RECT r;
 	GetClientRect(&r);
@@ -137,31 +125,11 @@ void CTileSetBrowserView::OnDraw(CDC* pDC)
 				}
 			}
 
-			if (!m_lpDDS[i]) continue;
 
 			RECT r;
 			GetClientRect(&r);
 			if (cur_y + curheight + (m_tile_height - curheight) / 2 >= this->GetScrollPos(SB_VERT) && cur_y <= GetScrollPos(SB_VERT) + r.bottom)
 			{
-
-				HDC hDC = NULL;
-				m_lpDDS[i]->GetDC(&hDC);
-
-
-				HDC hTmpDC = CreateCompatibleDC(hDC);
-				HBITMAP hBitmap = CreateCompatibleBitmap(hDC, curwidth, curheight);
-				SelectObject(hTmpDC, hBitmap);
-
-				BitBlt(hTmpDC, 0, 0, curwidth, curheight, hDC, 0, 0, SRCCOPY);
-
-				m_lpDDS[i]->ReleaseDC(hDC);
-
-
-				BitBlt(pDC->GetSafeHdc(), cur_x + (m_tile_width - curwidth) / 2, cur_y + (m_tile_height - curheight) / 2, curwidth, curheight, hTmpDC, 0, 0, SRCCOPY);
-
-
-				DeleteDC(hTmpDC);
-				DeleteObject(hBitmap);
 
 				if (AD.mode == ACTIONMODE_SETTILE && AD.type == dwID)
 				{
@@ -485,24 +453,6 @@ void CTileSetBrowserView::SetTileSet(DWORD dwTileSet, BOOL bOnlyRedraw)
 	m_tile_width += 6;
 	m_tile_height += 6;
 
-	if (m_lpDDS)
-	{
-		int i;
-		for (i = 0;i < m_tilecount;i++)
-		{
-			if (m_lpDDS[i]) m_lpDDS[i]->Release();
-		}
-		delete[] m_lpDDS;
-	}
-
-	m_tilecount = max;
-
-	m_lpDDS = new(LPDIRECTDRAWSURFACE4[m_tilecount]);
-	for (i = 0;i < m_tilecount;i++)
-	{
-		m_lpDDS[i] = RenderTile(dwStartID + i);
-	}
-
 	RECT r;
 	GetClientRect(&r);
 	int max_r = r.right / m_tile_width;
@@ -633,90 +583,6 @@ __forceinline void BlitTerrainTSB(void* dst, int x, int y, int dleft, int dtop, 
 
 }
 #endif
-
-
-LPDIRECTDRAWSURFACE4 CTileSetBrowserView::RenderTile(DWORD dwID)
-{
-	if (theApp.m_Options.bMarbleMadness)
-	{
-		if ((*tiledata)[dwID].wMarbleGround != 0xFFFF)
-		{
-			dwID = (*tiledata)[dwID].wMarbleGround;
-		}
-	}
-
-	LPDIRECTDRAWSURFACE4 lpdds = NULL;
-	LPDIRECTDRAW4 lpdd = ((CFinalSunDlg*)theApp.m_pMainWnd)->m_view.m_isoview->dd;
-
-	DDSURFACEDESC2 ddsd;
-	memset(&ddsd, 0, sizeof(DDSURFACEDESC2));
-	ddsd.dwSize = sizeof(DDSURFACEDESC2);
-	ddsd.dwFlags = DDSD_CAPS | DDSD_HEIGHT | DDSD_WIDTH;
-	ddsd.ddsCaps.dwCaps = DDSCAPS_OFFSCREENPLAIN;
-	int added_height = GetAddedHeight(dwID);
-	ddsd.dwHeight = (*tiledata)[dwID].rect.bottom - (*tiledata)[dwID].rect.top + added_height;
-	ddsd.dwWidth = (*tiledata)[dwID].rect.right - (*tiledata)[dwID].rect.left;
-	if (lpdd->CreateSurface(&ddsd, &lpdds, NULL) != DD_OK)
-	{
-		return NULL;
-	}
-
-	DDBLTFX ddfx;
-	memset(&ddfx, 0, sizeof(DDBLTFX));
-	ddfx.dwSize = sizeof(DDBLTFX);
-	lpdds->Blt(NULL, NULL, NULL, DDBLT_COLORFILL, &ddfx);
-
-
-	int y_added = ddsd.dwHeight - ((*tiledata)[dwID].cx * f_y / 2 + (*tiledata)[dwID].cy * f_y / 2);
-
-	int i, e, p = 0;;
-	for (i = 0;i < (*tiledata)[dwID].cx;i++)
-	{
-		for (e = 0;e < (*tiledata)[dwID].cy;e++)
-		{
-			int drawx = e * f_x / 2 - i * f_x / 2 - (*tiledata)[dwID].rect.left;
-			int drawy = e * f_y / 2 + i * f_y / 2 - (*tiledata)[dwID].rect.top;
-
-			drawx += (*tiledata)[dwID].tiles[p].sX;
-			drawy += added_height + (*tiledata)[dwID].tiles[p].sY - (*tiledata)[dwID].tiles[p].bZHeight * f_y / 2;
-			//drawy+=y_added;
-
-			if ((*tiledata)[dwID].tiles[p].pic)
-			{
-				RECT dest;
-				dest.left = drawx;
-				dest.top = drawy;
-				dest.right = drawx + (*tiledata)[dwID].tiles[p].wWidth;
-				dest.bottom = drawy + (*tiledata)[dwID].tiles[p].wHeight;
-				DDBLTFX fx;
-				memset(&fx, 0, sizeof(DDBLTFX));
-				fx.dwSize = sizeof(DDBLTFX);
-
-#ifndef NOSURFACES
-				if (lpdds->Blt(&dest, (*tiledata)[dwID].tiles[p].pic, NULL, DDBLT_KEYSRC, &fx) != DD_OK)
-					TRACE("Blit failed\n");
-#else
-				DDSURFACEDESC2 ddsd;
-				ZeroMemory(&ddsd, sizeof(ddsd));
-				ddsd.dwSize = sizeof(DDSURFACEDESC2);
-				ddsd.dwFlags = DDSD_WIDTH | DDSD_HEIGHT;
-
-				lpdds->GetSurfaceDesc(&ddsd);
-
-				lpdds->Lock(NULL, &ddsd, DDLOCK_SURFACEMEMORYPTR | DDLOCK_WAIT | DDLOCK_NOSYSLOCK, NULL);
-
-				BlitTerrainTSB(ddsd.lpSurface, drawx, drawy, 0, 0, ddsd.lPitch, ddsd.dwWidth, ddsd.dwHeight, (*tiledata)[dwID].tiles[p]);
-				lpdds->Unlock(NULL);
-#endif
-
-			}
-
-			p++;
-		}
-	}
-
-	return lpdds;
-}
 
 void CTileSetBrowserView::DrawIt()
 {

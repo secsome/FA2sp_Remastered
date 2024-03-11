@@ -45,7 +45,6 @@
 #include "InputBox.h"
 #include "floatedit.h"
 #include "MyComboBox.h"
-#include <ddraw.h>
 #include "resource.h"
 #include "TipDlg.h"
 

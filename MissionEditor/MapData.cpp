@@ -588,49 +588,6 @@ void CMapData::LoadMap(const std::string& file)
 
 	theApp.m_loading->Unload();
 
-	map<CString, PICDATA>::iterator it = pics.begin();
-	for (int e = 0;e < pics.size();e++)
-	{
-		try
-		{
-#ifdef NOSURFACES_OBJECTS			
-			if (it->second.bType == PICDATA_TYPE_BMP)
-			{
-				if (it->second.pic != NULL)
-				{
-					((LPDIRECTDRAWSURFACE4)it->second.pic)->Release();
-				}
-			}
-			else
-			{
-				if (it->second.pic != NULL)
-				{
-					delete[] it->second.pic;
-				}
-				if (it->second.vborder) delete[] it->second.vborder;
-			}
-#else
-			if (it->second.pic != NULL) it->second.pic->Release();
-#endif
-
-			it->second.pic = NULL;
-		}
-		catch (...)
-		{
-			CString err;
-			err = "Access violation while trying to release surface ";
-			char c[6];
-			itoa(e, c, 10);
-			err += c;
-
-			err += "\n";
-			OutputDebugString(err);
-			continue;
-		}
-
-		it++;
-	}
-
 	pics.clear();
 	missingimages.clear();
 
@@ -2851,57 +2808,7 @@ void CMapData::CreateMap(DWORD dwWidth, DWORD dwHeight, LPCTSTR lpTerrainType, D
 
 	InitTheater();
 
-	map<CString, PICDATA>::iterator it = pics.begin();
-	for (int e = 0;e < pics.size();e++)
-	{
-		try
-		{
-#ifdef NOSURFACES_OBJECTS			
-			if (it->second.bType == PICDATA_TYPE_BMP)
-			{
-				if (it->second.pic != NULL)
-				{
-					((LPDIRECTDRAWSURFACE4)it->second.pic)->Release();
-				}
-			}
-			else
-			{
-				if (it->second.pic != NULL)
-				{
-					delete[] it->second.pic;
-				}
-				if (it->second.vborder) delete[] it->second.vborder;
-			}
-#else
-			if (it->second.pic != NULL) it->second.pic->Release();
-#endif
-
-			it->second.pic = NULL;
-		}
-		catch (...)
-		{
-			CString err;
-			err = "Access violation while trying to release surface ";
-			char c[6];
-			itoa(e, c, 10);
-			err += c;
-
-			err += "\n";
-			OutputDebugString(err);
-			continue;
-		}
-
-		it++;
-	}
-
-	std::unique_ptr<CDynamicGraphDlg> dlg;
-	if (theApp.m_pMainWnd)
-	{
-		dlg.reset(new CDynamicGraphDlg(theApp.m_pMainWnd));
-		dlg->ShowWindow(SW_SHOW);
-		dlg->UpdateWindow();
-	}
-
+	
 	pics.clear();
 	missingimages.clear();
 

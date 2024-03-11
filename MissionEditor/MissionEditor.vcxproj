@@ -121,6 +121,7 @@
     </Manifest>
     <Link>
       <LargeAddressAware>true</LargeAddressAware>
+      <AdditionalDependencies>winmm.lib;gdiplus.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='FinalAlertDebug YR|x64'">
@@ -140,6 +141,7 @@
     </Manifest>
     <Link>
       <LargeAddressAware>true</LargeAddressAware>
+      <AdditionalDependencies>winmm.lib;gdiplus.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='FinalAlertRelease YR|Win32'">
@@ -160,6 +162,7 @@
     </Manifest>
     <Link>
       <LargeAddressAware>true</LargeAddressAware>
+      <AdditionalDependencies>winmm.lib;gdiplus.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='FinalAlertRelease YR|x64'">
@@ -180,6 +183,7 @@
     </Manifest>
     <Link>
       <LargeAddressAware>true</LargeAddressAware>
+      <AdditionalDependencies>winmm.lib;gdiplus.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
