@@ -19,11 +19,11 @@ HRESULT GameScene::Initialize(HWND hwnd)
 
 	hr = InitDirect3D();
 	if (FAILED(hr))
-        return hr;
+		return hr;
 
 	hr = InitDirect2D();
 	if (FAILED(hr))
-        return hr;
+		return hr;
 
 	return S_OK;
 }
@@ -129,7 +129,7 @@ void GameScene::Render()
 	);
 
 	m_d2dRenderTarget->FillRectangle(&rect, pLightSlateGrayBrush);
-	
+
 	const auto str = utf8ToUtf16(Map->GetIniFile().GetString("Basic", "Name", "No name"));
 	m_d2dRenderTarget->DrawText(
 		str.c_str(),
@@ -280,9 +280,9 @@ HRESULT GameScene::InitDirect3D()
 	// Compile shaders
 	hr = InitializeSceneShaders();
 	if (FAILED(hr))
-        return hr;
+		return hr;
 
-	
+
 
 	return S_OK;
 }
@@ -314,7 +314,7 @@ HRESULT GameScene::InitDirect2D()
 	if (FAILED(hr))
 		return hr;
 
-	constexpr const wchar_t* TextFontFamily = L"Fira Code";
+	constexpr const wchar_t* TextFontFamily = L"Segoe UI";
 	constexpr const wchar_t* TextLocale = L"en-us";
 	hr = m_dwriteFactory->CreateTextFormat(
 		TextFontFamily,
@@ -339,7 +339,7 @@ HRESULT GameScene::InitDirect2D()
 
 	hr = CreateDirect2DResources();
 	if (FAILED(hr))
-        return hr;
+		return hr;
 
 	return S_OK;
 }
@@ -373,11 +373,11 @@ HRESULT GameScene::CompileShaderFromFile(const WCHAR* szFileName, LPCSTR szEntry
 
 	CComPtr<ID3DBlob> pErrorBlob = nullptr;
 	hr = D3DCompileFromFile(FullPath.c_str(), nullptr, nullptr, szEntryPoint, szShaderModel,
-		        dwShaderFlags, 0, ppBlobOut, &pErrorBlob);
+		dwShaderFlags, 0, ppBlobOut, &pErrorBlob);
 	if (FAILED(hr))
 	{
 		if (pErrorBlob)
-            OutputDebugStringA(reinterpret_cast<const char*>(pErrorBlob->GetBufferPointer()));
+			OutputDebugStringA(reinterpret_cast<const char*>(pErrorBlob->GetBufferPointer()));
 		return hr;
 	}
 
