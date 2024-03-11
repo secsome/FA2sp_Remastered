@@ -24,6 +24,11 @@ public:
 private:
 	HRESULT InitDirect3D();
 	HRESULT InitDirect2D(); // Requires InitDirect3D called
+	
+	// When we resizing the window, we need to recreate the direct2d target,
+	// So we have to recreate the resources when that's happening
+	HRESULT CreateDirect2DResources();
+	HRESULT ReleaseDirect2DResources();
 
 private:
 	HWND hWnd{};

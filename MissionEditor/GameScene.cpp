@@ -34,6 +34,11 @@ HRESULT GameScene::OnSize(int width, int height)
 		// Release
 		m_d3dDeviceContext->OMSetRenderTargets(0, nullptr, nullptr);
 		m_d3dRenderTargetView.Release();
+
+		hr = ReleaseDirect2DResources();
+		if (FAILED(hr))
+			return hr;
+
 		m_d2dRenderTarget.Release();
 
 		// Direct3D
@@ -76,6 +81,10 @@ HRESULT GameScene::OnSize(int width, int height)
 		hr = m_d2dFactory->CreateDxgiSurfaceRenderTarget(dxgiBackBuffer, &props, &m_d2dRenderTarget);
 		if (FAILED(hr))
 			return hr;
+
+		hr = CreateDirect2DResources();
+		if (FAILED(hr))
+			return hr;
 	}
 
 	return S_OK;
@@ -87,47 +96,47 @@ void GameScene::Render()
 
 	DXGI_SWAP_CHAIN_DESC desc;
 	HRESULT hr = m_dxSwapChain->GetDesc(&desc);
-	if (SUCCEEDED(hr))
+	if (FAILED(hr))
 	{
-		if (m_d2dRenderTarget)
-		{
-			D2D1_SIZE_F targetSize = m_d2dRenderTarget->GetSize();
-
-			m_d2dRenderTarget->BeginDraw();
-
-			CComPtr<ID2D1SolidColorBrush> pLightSlateGrayBrush;
-			hr = m_d2dRenderTarget->CreateSolidColorBrush(
-				D2D1::ColorF(D2D1::ColorF::LightSlateGray),
-				&pLightSlateGrayBrush
-			);
-
-			CComPtr<ID2D1SolidColorBrush> pBlackBrush;
-			hr = m_d2dRenderTarget->CreateSolidColorBrush(
-				D2D1::ColorF(D2D1::ColorF::Black),
-				&pBlackBrush
-			);
-
-			D2D1_RECT_F rect = D2D1::RectF(
-				100.0f,
-				100.0f,
-				targetSize.width - 100.0f,
-				targetSize.height - 100.0f
-			);
-
-			m_d2dRenderTarget->FillRectangle(&rect, pLightSlateGrayBrush);
-
-			const auto str = utf8ToUtf16(Map->GetIniFile().GetString("Basic", "Name", "No name"));
-			m_d2dRenderTarget->DrawText(
-				str.c_str(),
-				str.length(),
-				m_dwriteTextFormat,
-				rect,
-				pBlackBrush
-			);
-
-			hr = m_d2dRenderTarget->EndDraw();
-		}
+		m_dxSwapChain->Present(0, 0);
+		return;
 	}
+
+	D2D1_SIZE_F targetSize = m_d2dRenderTarget->GetSize();
+
+	m_d2dRenderTarget->BeginDraw();
+
+	CComPtr<ID2D1SolidColorBrush> pLightSlateGrayBrush;
+	hr = m_d2dRenderTarget->CreateSolidColorBrush(
+		D2D1::ColorF(D2D1::ColorF::LightSlateGray),
+		&pLightSlateGrayBrush
+	);
+
+	CComPtr<ID2D1SolidColorBrush> pBlackBrush;
+	hr = m_d2dRenderTarget->CreateSolidColorBrush(
+		D2D1::ColorF(D2D1::ColorF::Black),
+		&pBlackBrush
+	);
+
+	D2D1_RECT_F rect = D2D1::RectF(
+		100.0f,
+		100.0f,
+		targetSize.width - 100.0f,
+		targetSize.height - 100.0f
+	);
+
+	m_d2dRenderTarget->FillRectangle(&rect, pLightSlateGrayBrush);
+
+	const auto str = utf8ToUtf16(Map->GetIniFile().GetString("Basic", "Name", "No name"));
+	m_d2dRenderTarget->DrawText(
+		str.c_str(),
+		str.length(),
+		m_dwriteTextFormat,
+		rect,
+		pBlackBrush
+	);
+
+	hr = m_d2dRenderTarget->EndDraw();
 
 	m_dxSwapChain->Present(0, 0);
 }
@@ -265,10 +274,6 @@ HRESULT GameScene::InitDirect3D()
 	vp.TopLeftY = 0;
 	m_d3dDeviceContext->RSSetViewports(1, &vp);
 
-	hr = D2D1CreateFactory(D2D1_FACTORY_TYPE_SINGLE_THREADED, &m_d2dFactory);
-	if (FAILED(hr))
-		return hr;
-
 	// Compile shaders
 	// TODO
 
@@ -278,6 +283,10 @@ HRESULT GameScene::InitDirect3D()
 HRESULT GameScene::InitDirect2D()
 {
 	HRESULT hr = S_OK;
+
+	hr = D2D1CreateFactory(D2D1_FACTORY_TYPE_SINGLE_THREADED, &m_d2dFactory);
+	if (FAILED(hr))
+		return hr;
 
 	// Create a Direct2D render target
 	CComPtr<IDXGISurface> dxgiBackBuffer = nullptr;
@@ -298,14 +307,16 @@ HRESULT GameScene::InitDirect2D()
 	if (FAILED(hr))
 		return hr;
 
+	constexpr const wchar_t* TextFontFamily = L"Fira Code";
+	constexpr const wchar_t* TextLocale = L"en-us";
 	hr = m_dwriteFactory->CreateTextFormat(
-		L"Fira Code",
+		TextFontFamily,
 		nullptr,
 		DWRITE_FONT_WEIGHT_REGULAR,
 		DWRITE_FONT_STYLE_NORMAL,
 		DWRITE_FONT_STRETCH_NORMAL,
 		72.0f,
-		L"en-us",
+		TextLocale,
 		&m_dwriteTextFormat
 	);
 	if (FAILED(hr))
@@ -318,6 +329,24 @@ HRESULT GameScene::InitDirect2D()
 	hr = m_dwriteTextFormat->SetParagraphAlignment(DWRITE_PARAGRAPH_ALIGNMENT_CENTER);
 	if (FAILED(hr))
 		return hr;
+
+	hr = CreateDirect2DResources();
+	if (FAILED(hr))
+        return hr;
+
+	return S_OK;
+}
+
+HRESULT GameScene::CreateDirect2DResources()
+{
+	HRESULT hr = S_OK;
+
+	return S_OK;
+}
+
+HRESULT GameScene::ReleaseDirect2DResources()
+{
+	HRESULT hr = S_OK;
 
 	return S_OK;
 }
