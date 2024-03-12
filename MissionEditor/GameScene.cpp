@@ -11,6 +11,10 @@
 #include <DirectXColors.h>
 #include <DirectXMath.h>
 
+#ifdef _DEBUG
+#include "BitmapImage.h"
+#endif
+
 HRESULT GameScene::Initialize(HWND hwnd)
 {
     hWnd = hwnd;
@@ -140,9 +144,77 @@ void GameScene::Render()
     );
 
     hr = m_d2dRenderTarget->EndDraw();
-
+    
     m_dxSwapChain->Present(0, 0);
+
+#ifdef _DEBUG
+    ShpFile shp{ "gacnst.shp" };
+    shp.LoadTexture(m_d3dDevice, 0);
+    auto texture = shp.GetTexture(0);
+    ConvertClass conv{ "isotem.pal" };
+    DumpConvertImage(texture, conv, "gacnst.bmp");
+
+#endif
+
 }
+
+#ifdef _DEBUG
+HRESULT GameScene::DumpConvertImage(ID3D11Texture2D* texture, const ConvertClass& convert, const std::string& filename)
+{
+    HRESULT hr = S_OK;
+
+    D3D11_TEXTURE2D_DESC desc{};
+    texture->GetDesc(&desc);
+
+    if (desc.Width <= 0 || desc.Height <= 0)
+        return E_FAIL;
+
+    CComPtr<ID3D11Device> device;
+    texture->GetDevice(&device);
+
+    CComPtr<ID3D11DeviceContext> context;
+    device->GetImmediateContext(&context);
+
+    CComPtr<ID3D11Texture2D> staging;
+    desc.Usage = D3D11_USAGE_STAGING;
+    desc.BindFlags = 0;
+    desc.CPUAccessFlags = D3D11_CPU_ACCESS_READ;
+    desc.MiscFlags = 0;
+    hr = device->CreateTexture2D(&desc, nullptr, &staging);
+    if (FAILED(hr))
+        return hr;
+
+    context->CopyResource(staging, texture);
+
+    D3D11_MAPPED_SUBRESOURCE mapped;
+    hr = context->Map(staging, 0, D3D11_MAP_READ, 0, &mapped);
+    if (FAILED(hr))
+        return hr;
+
+    auto src = static_cast<const uint8_t*>(mapped.pData);
+
+    bitmap_image bmp{ desc.Width, desc.Height };
+
+    for (size_t y = 0; y < desc.Height; ++y)
+    {
+        for (size_t x = 0; x < desc.Width; ++x)
+        {
+            const auto index = *src++;
+            const auto& [r, g, b] = convert[index];
+            bmp.set_pixel(x, y, r, g, b);
+        }
+    }
+
+    context->Unmap(staging, 0);
+
+    std::string path = u8ExePath;
+    path += filename;
+
+    bmp.save_image(path.c_str());
+    
+    return S_OK;
+}
+#endif
 
 HRESULT GameScene::InitDirect3D()
 {

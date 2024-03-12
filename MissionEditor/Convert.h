@@ -30,6 +30,16 @@ public:
 
     void Remap(RGBStruct color);
 
+    const RGBStruct& operator[](size_t index) const
+    {
+        return Palette[index];
+    }
+
+    RGBStruct& operator[](size_t index)
+    {
+        return Palette[index];
+    }
+
 private:
     std::array<RGBStruct, 256> Palette;
     std::array<RGBStruct, 256> OriginalPalette;

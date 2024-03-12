@@ -6,6 +6,9 @@
 #include <dwrite.h>
 #include <atlbase.h>
 
+#include "ShpFile.h"
+#include "Convert.h"
+
 // The class really render the thing
 class GameScene
 {
@@ -21,6 +24,11 @@ public:
 	HRESULT OnSize(int width, int height);
 
 	void Render();
+
+
+#ifdef _DEBUG
+	HRESULT DumpConvertImage(ID3D11Texture2D* texture, const ConvertClass& convert, const std::string& filename);
+#endif
 
 private:
 	HRESULT InitDirect3D();

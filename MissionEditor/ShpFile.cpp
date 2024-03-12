@@ -63,9 +63,15 @@ bool ShpFile::LoadTexture(ID3D11Device* device, size_t index)
     desc.Height = frame.Height;
     desc.MipLevels = 1;
     desc.ArraySize = 1;
-    desc.Format = DXGI_FORMAT_A8_UNORM; // only 8-bit index is stored in the texture
+    desc.Format = DXGI_FORMAT_R8_UINT; // only 8-bit index is stored in the texture
     desc.SampleDesc.Count = 1;
+#ifdef _DEBUG
+    desc.CPUAccessFlags = D3D11_CPU_ACCESS_READ;
+    desc.Usage = D3D11_USAGE_DEFAULT;
+#else
+    desc.CPUAccessFlags = 0;
     desc.Usage = D3D11_USAGE_IMMUTABLE;
+#endif
     desc.BindFlags = D3D11_BIND_SHADER_RESOURCE;
     desc.CPUAccessFlags = 0;
     desc.MiscFlags = 0;
@@ -73,35 +79,28 @@ bool ShpFile::LoadTexture(ID3D11Device* device, size_t index)
     std::vector<uint8_t> pixels;
     pixels.resize(frame.Width * frame.Height);
 
-    auto src = data;
-    auto dst = pixels.data();
-
     if (frame.IsCompressed())
     {
+        auto src = data;
+        auto dst = pixels.data();
         for (size_t y = 0; y < frame.Height; ++y)
         {
-            const auto line_length = src[0] | (src[1] << 8);
+            const size_t line_length = src[0] | (src[1] << 8);
             const auto end = src + line_length;
-            const auto beg = dst;
+            const auto next_line = dst + frame.Width;
+            src += 2;
             while (src < end)
             {
                 if (const auto color = *src++)
                     *dst++ = color;
                 else
-                    dst += color;
+                    dst += *src++;
             }
-            dst = beg + frame.Width;
+            dst = next_line;
         }
     }
     else
-    {
-        for (size_t y = 0; y < frame.Height; ++y)
-        {
-            std::memcpy(dst, src, frame.Width);
-            src += frame.Width;
-            dst += frame.Width;
-        }
-    }
+        std::memcpy(pixels.data(), data, pixels.size());
 
     D3D11_SUBRESOURCE_DATA init{};
     init.pSysMem = pixels.data();

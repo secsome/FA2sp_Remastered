@@ -332,6 +332,7 @@
     <ClInclude Include="Base64.h" />
     <ClInclude Include="Basic.h" />
     <ClInclude Include="Bitmap2MapConverter.h" />
+    <ClInclude Include="BitmapImage.h" />
     <ClInclude Include="Blowfish.h" />
     <ClInclude Include="Buffer.h" />
     <ClInclude Include="Building.h" />
