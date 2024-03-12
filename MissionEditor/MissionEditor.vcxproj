@@ -234,7 +234,7 @@
     <ClCompile Include="FrontCliffModifier.cpp" />
     <ClCompile Include="functions.cpp" />
     <ClCompile Include="GameScene.cpp" />
-    <ClCompile Include="GameTexture.cpp" />
+    <ClCompile Include="RenderHelper.cpp" />
     <ClCompile Include="GlobalsDlg.cpp" />
     <ClCompile Include="Houses.cpp" />
     <ClCompile Include="ImportINI.cpp" />
@@ -351,7 +351,7 @@
     <ClInclude Include="defines.h" />
     <ClInclude Include="FormatExtensions.h" />
     <ClInclude Include="GameScene.h" />
-    <ClInclude Include="GameTexture.h" />
+    <ClInclude Include="RenderHelper.h" />
     <ClInclude Include="Int.h" />
     <ClInclude Include="LCW.h" />
     <ClInclude Include="LineDrawer.h" />

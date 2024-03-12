@@ -339,7 +339,7 @@
     <ClCompile Include="TmpFile.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="GameTexture.cpp">
+    <ClCompile Include="RenderHelper.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="VxlFile.cpp">
@@ -700,7 +700,7 @@
     <ClInclude Include="TmpFile.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="GameTexture.h">
+    <ClInclude Include="RenderHelper.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="VxlFile.h">

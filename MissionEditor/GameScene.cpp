@@ -11,6 +11,7 @@
 #include "VxlFile.h"
 #include "VplFile.h"
 #include "Convert.h"
+#include "RenderHelper.h"
 
 #include <DirectXColors.h>
 #include <DirectXMath.h>
@@ -151,17 +152,23 @@ void GameScene::Render()
         pBlackBrush
     );
 
-    hr = m_d2dRenderTarget->EndDraw();
-    
-    m_dxSwapChain->Present(0, 0);
-
 #ifdef _DEBUG
-    VxlFile vxl{ "mtnk" };
-
-    vxl.LoadTexture(m_d3dDevice);
+    ConvertClass convert{ "isotem.pal" };
+    TmpFile tmp{ "clear01.tem" };
+    tmp.LoadAllTexture(m_d3dDevice);
+    CComPtr<ID2D1Bitmap> bmp;
+    RenderHelper::MakeBitmap(m_d2dRenderTarget, tmp.GetTexture(0), convert, &bmp);
+    D2D1_RECT_F rc;
+    rc.left = rc.top = 0;
+    rc.right = 60 * 20;
+    rc.bottom = 30 * 20;
+    m_d2dRenderTarget->DrawBitmap(bmp, &rc, 0.8f);
 
 #endif
 
+    hr = m_d2dRenderTarget->EndDraw();
+    
+    m_dxSwapChain->Present(0, 0);
 }
 
 #ifdef _DEBUG

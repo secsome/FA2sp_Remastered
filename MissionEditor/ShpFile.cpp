@@ -4,7 +4,7 @@
 
 #include "CCFile.h"
 
-#include "GameTexture.h"
+#include "RenderHelper.h"
 
 ShpFile::ShpFile(const char* filename)
 {
@@ -86,7 +86,7 @@ bool ShpFile::LoadTexture(ID3D11Device* device, size_t index)
         std::memcpy(pixels.data(), data, pixels.size());
 
     CComPtr<ID3D11Texture2D> texture;
-    if (FAILED(GameTexture::MakeTexture(device, &texture, frame.Width, frame.Height, pixels.data())))
+    if (FAILED(RenderHelper::MakeConvertTexture(device, &texture, frame.Width, frame.Height, pixels.data())))
         return false;
     
     FrameTextures[index] = texture;

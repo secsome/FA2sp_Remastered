@@ -3,7 +3,7 @@
 #include "VxlFile.h"
 
 #include "CCFile.h"
-#include "GameTexture.h"
+#include "RenderHelper.h"
 
 #include <algorithm>
 

@@ -3,7 +3,7 @@
 #include "TmpFile.h"
 
 #include "CCFile.h"
-#include "GameTexture.h"
+#include "RenderHelper.h"
 
 #include <vector>
 
@@ -74,7 +74,7 @@ bool TmpFile::LoadAllTexture(ID3D11Device* device)
             }
 
             CComPtr<ID3D11Texture2D> texture;
-            if (FAILED(GameTexture::MakeTexture(device, &texture, Data->ImageWidth, Data->ImageHeight, pixels.data())))
+            if (FAILED(RenderHelper::MakeConvertTexture(device, &texture, Data->ImageWidth, Data->ImageHeight, pixels.data())))
                 return false;
 
             CellTextures[k] = texture;
@@ -100,7 +100,7 @@ bool TmpFile::LoadAllTexture(ID3D11Device* device)
             }
 
             CComPtr<ID3D11Texture2D> texture;
-            if (FAILED(GameTexture::MakeTexture(device, &texture, Data->ImageWidth, Data->ImageHeight, pixels.data())))
+            if (FAILED(RenderHelper::MakeConvertTexture(device, &texture, Data->ImageWidth, Data->ImageHeight, pixels.data())))
                 return false;
 
             CellZTextures[k] = texture;
@@ -115,7 +115,7 @@ bool TmpFile::LoadAllTexture(ID3D11Device* device)
                 Data->ImageWidth * Data->ImageHeight;
 
             CComPtr<ID3D11Texture2D> texture;
-            if (FAILED(GameTexture::MakeTexture(device, &texture, header->ExtraWidth, header->ExtraHeight, src)))
+            if (FAILED(RenderHelper::MakeConvertTexture(device, &texture, header->ExtraWidth, header->ExtraHeight, src)))
                 return false;
 
             CellExtraTextures[k] = texture;
@@ -129,7 +129,7 @@ bool TmpFile::LoadAllTexture(ID3D11Device* device)
                 header->ExtraWidth * header->ExtraHeight;
 
             CComPtr<ID3D11Texture2D> texture;
-            if (FAILED(GameTexture::MakeTexture(device, &texture, header->ExtraWidth, header->ExtraHeight, src)))
+            if (FAILED(RenderHelper::MakeConvertTexture(device, &texture, header->ExtraWidth, header->ExtraHeight, src)))
                 return false;
 
             CellExtraZTextures[k] = texture;
