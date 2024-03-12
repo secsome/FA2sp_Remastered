@@ -4,6 +4,8 @@
 
 #include "CCFile.h"
 
+#include "GameTexture.h"
+
 ShpFile::ShpFile(const char* filename)
 {
     CCFileClass file{ filename };
@@ -57,25 +59,6 @@ bool ShpFile::LoadTexture(ID3D11Device* device, size_t index)
     if (frame.Width <= 0 || frame.Height <= 0)
         return false;
 
-    CComPtr<ID3D11Texture2D> texture;
-    D3D11_TEXTURE2D_DESC desc{};
-    desc.Width = frame.Width;
-    desc.Height = frame.Height;
-    desc.MipLevels = 1;
-    desc.ArraySize = 1;
-    desc.Format = DXGI_FORMAT_R8_UINT; // only 8-bit index is stored in the texture
-    desc.SampleDesc.Count = 1;
-#ifdef _DEBUG
-    desc.CPUAccessFlags = D3D11_CPU_ACCESS_READ;
-    desc.Usage = D3D11_USAGE_DEFAULT;
-#else
-    desc.CPUAccessFlags = 0;
-    desc.Usage = D3D11_USAGE_IMMUTABLE;
-#endif
-    desc.BindFlags = D3D11_BIND_SHADER_RESOURCE;
-    desc.CPUAccessFlags = 0;
-    desc.MiscFlags = 0;
-
     std::vector<uint8_t> pixels;
     pixels.resize(frame.Width * frame.Height);
 
@@ -102,15 +85,24 @@ bool ShpFile::LoadTexture(ID3D11Device* device, size_t index)
     else
         std::memcpy(pixels.data(), data, pixels.size());
 
-    D3D11_SUBRESOURCE_DATA init{};
-    init.pSysMem = pixels.data();
-    init.SysMemPitch = frame.Width;
-    
-    if (FAILED(device->CreateTexture2D(&desc, &init, &texture)))
+    CComPtr<ID3D11Texture2D> texture;
+    if (FAILED(GameTexture::MakeTexture(device, &texture, frame.Width, frame.Height, pixels.data())))
         return false;
     
     FrameTextures[index] = texture;
     
+    return true;
+}
+
+bool ShpFile::CreateTextures(ID3D11Device* device)
+{
+    FrameTextures.clear();
+    FrameTextures.resize(Data->Count);
+    for (size_t i = 0; i < Data->Count; ++i)
+    {
+        if (!LoadTexture(device, i))
+            return false;
+    }
     return true;
 }
 

@@ -234,6 +234,7 @@
     <ClCompile Include="FrontCliffModifier.cpp" />
     <ClCompile Include="functions.cpp" />
     <ClCompile Include="GameScene.cpp" />
+    <ClCompile Include="GameTexture.cpp" />
     <ClCompile Include="GlobalsDlg.cpp" />
     <ClCompile Include="Houses.cpp" />
     <ClCompile Include="ImportINI.cpp" />
@@ -303,6 +304,7 @@
     <ClCompile Include="TileSetBrowserFrame.cpp" />
     <ClCompile Include="TileSetBrowserView.cpp" />
     <ClCompile Include="TipDlg.cpp" />
+    <ClCompile Include="TmpFile.cpp" />
     <ClCompile Include="ToolSettingsBar.cpp" />
     <ClCompile Include="TriggerActionsDlg.cpp" />
     <ClCompile Include="TriggerEditorDlg.cpp" />
@@ -347,6 +349,7 @@
     <ClInclude Include="defines.h" />
     <ClInclude Include="FormatExtensions.h" />
     <ClInclude Include="GameScene.h" />
+    <ClInclude Include="GameTexture.h" />
     <ClInclude Include="Int.h" />
     <ClInclude Include="LCW.h" />
     <ClInclude Include="LineDrawer.h" />
@@ -421,6 +424,7 @@
     <ClInclude Include="TileSetBrowserFrame.h" />
     <ClInclude Include="TileSetBrowserView.h" />
     <ClInclude Include="TipDlg.h" />
+    <ClInclude Include="TmpFile.h" />
     <ClInclude Include="ToolSettingsBar.h" />
     <ClInclude Include="TriggerActionsDlg.h" />
     <ClInclude Include="TriggerEditorDlg.h" />

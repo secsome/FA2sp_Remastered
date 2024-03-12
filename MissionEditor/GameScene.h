@@ -6,9 +6,6 @@
 #include <dwrite.h>
 #include <atlbase.h>
 
-#include "ShpFile.h"
-#include "Convert.h"
-
 // The class really render the thing
 class GameScene
 {
@@ -25,9 +22,10 @@ public:
 
 	void Render();
 
-
 #ifdef _DEBUG
-	HRESULT DumpConvertImage(ID3D11Texture2D* texture, const ConvertClass& convert, const std::string& filename);
+	HRESULT DumpConvertImage(ID3D11Texture2D* texture, const class ConvertClass& convert, const std::string& filename);
+	HRESULT DumpConvertShape(ID3D11Texture2D* texture, const std::string& filename);
+	HRESULT DumpDepthImage(ID3D11Texture2D* texture, const std::string& filename);
 #endif
 
 private:

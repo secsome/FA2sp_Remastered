@@ -1,6 +1,8 @@
 #pragma once
 
 #include <vector>
+#include <memory>
+#include <atlbase.h>
 #include <cstdint>
 
 #include <d3d11.h>
@@ -48,7 +50,7 @@ public:
 
     bool IsTextureLoaded() const;
     bool IsFrameTextureLoaded(size_t index) const;
-    bool LoadTexture(ID3D11Device* device, size_t index);
+    bool CreateTextures(ID3D11Device* device);
     void ClearTextures();
 
     size_t FrameCount() const
@@ -62,6 +64,10 @@ public:
     }
 
 private:
+    bool LoadTexture(ID3D11Device* device, size_t index);
+
+private:
+
     std::unique_ptr<ShpStruct> Data;
     std::vector<CComPtr<ID3D11Texture2D>> FrameTextures;
 };
