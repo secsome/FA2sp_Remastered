@@ -115,8 +115,8 @@ VxlFile::VxlFile(const void* vxlbuffer, size_t vxlsize, const void* hvabuffer, s
                 }
 
                 const auto end_sig = *p++;
-                // if (voxel_count != end_sig)
-                //     throw std::runtime_error("The VXL file seems corrupted");
+                if (voxel_count != end_sig)
+                    throw std::runtime_error("The VXL file seems corrupted");
             }
 
             std::for_each(voxels.begin(), voxels.end(), [&count](const auto& voxel) {if (voxel.Color != 0) ++count; });

@@ -318,6 +318,7 @@
     <ClCompile Include="UserScriptsDlg.cpp" />
     <ClCompile Include="variables.cpp" />
     <ClCompile Include="ViewObjects.cpp" />
+    <ClCompile Include="VplFile.cpp" />
     <ClCompile Include="VxlFile.cpp" />
     <ClCompile Include="WaypointID.cpp" />
     <ClCompile Include="MapCode.cpp" />
@@ -440,6 +441,7 @@
     <ClInclude Include="variables.h" />
     <ClInclude Include="Vec2.h" />
     <ClInclude Include="ViewObjects.h" />
+    <ClInclude Include="VplFile.h" />
     <ClInclude Include="VxlFile.h" />
     <ClInclude Include="WaypointID.h" />
     <ClInclude Include="MapCode.h" />

@@ -345,6 +345,9 @@
     <ClCompile Include="VxlFile.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="VplFile.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="MissionEditor.rc">
@@ -701,6 +704,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="VxlFile.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="VplFile.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

@@ -6,6 +6,8 @@
 #include <dwrite.h>
 #include <atlbase.h>
 
+#include "VplFile.h"
+
 // The class really render the thing
 class GameScene
 {
@@ -54,4 +56,5 @@ private:
 	CComPtr<ID2D1RenderTarget> m_d2dRenderTarget;
 	CComPtr<IDWriteFactory> m_dwriteFactory;
 	CComPtr<IDWriteTextFormat> m_dwriteTextFormat;
+	std::unique_ptr<VplFile> m_vpl;
 };

@@ -9,6 +9,7 @@
 #include "ShpFile.h"
 #include "TmpFile.h"
 #include "VxlFile.h"
+#include "VplFile.h"
 #include "Convert.h"
 
 #include <DirectXColors.h>
@@ -31,6 +32,10 @@ HRESULT GameScene::Initialize(HWND hwnd)
     hr = InitDirect2D();
     if (FAILED(hr))
         return hr;
+
+    m_vpl.reset(new VplFile("voxels.vpl"));
+    if (m_vpl == nullptr)
+        return HRESULT_FROM_WIN32(ERROR_FILE_NOT_FOUND);
 
     return S_OK;
 }

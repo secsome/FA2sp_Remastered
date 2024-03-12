@@ -36,6 +36,8 @@
 #include "MixFile.h"
 #include "Base64.h"
 
+#include "VplFile.h"
+
 #include <sstream>
 
 
@@ -194,6 +196,7 @@ void CLoading::Load()
 	m_cap.SetWindowText(GetLanguageStringACP("LoadInitDDraw"));
 	m_progress.SetPos(95); UpdateWindow();
 	theApp.GetMainWnd()->m_view.m_isoview->InitializeGameScene();
+
 	m_progress.SetPos(100); UpdateWindow();
 
 	/*errstream << "Now calling InitPics()\n";
