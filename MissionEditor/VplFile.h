@@ -29,6 +29,11 @@ public:
     explicit VplFile(const char* filename);
     explicit VplFile(const void* buffer, size_t size, bool copy);
 
+    uint8_t GetPaletteIndex(uint8_t page, uint8_t color) const
+    {
+        return Data->Section[page].Table[color];
+    }
+
 private:
     std::unique_ptr<VplStruct> Data;
 

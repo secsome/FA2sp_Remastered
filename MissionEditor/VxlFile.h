@@ -36,8 +36,19 @@ struct CCMatrix
         };
         float Data[3][4];
     };
+
+    operator DirectX::XMMATRIX() const
+    {
+        return DirectX::XMMATRIX(
+            _11, _21, _31, 0.0f,
+            _12, _22, _32, 0.0f,
+            _13, _23, _33, 0.0f,
+            _14, _24, _34, 1.0f);
+    }
 };
 static_assert(sizeof(CCMatrix) == 48);
+
+using NormalTableType = std::vector<DirectX::XMVECTOR>;
 
 class VxlFile
 {
@@ -109,15 +120,14 @@ public:
     explicit VxlFile(const void* vxlbuffer, size_t vxlsize,
         const void* hvabuffer, size_t hvasize);
 
-    bool IsTextureLoaded() const;
-    bool LoadTexture(ID3D11Device* device);
-    void ClearTextures();
+    size_t GetLayerCount() const { return LayerHeaders.size(); }
 
-private:
+    const NormalTableType& GetNormalTable(size_t index) const;
+    DirectX::XMMATRIX GetHvaMatrix(size_t section, size_t frame) const;
+
     VxlHeader Header;
     std::vector<VxlLayerHeader> LayerHeaders;
     std::vector<VxlLayerBody> LayerBodies;
     std::vector<VxlLayerInfo> LayerInfos;
     HvaStruct Hva;
-    CComPtr<ID3D11Texture3D> Texture;
 };

@@ -117,7 +117,7 @@ void GameScene::Render()
         m_dxSwapChain->Present(0, 0);
         return;
     }
-
+    
     D2D1_SIZE_F targetSize = m_d2dRenderTarget->GetSize();
 
     m_d2dRenderTarget->BeginDraw();
