@@ -197,12 +197,14 @@ HRESULT GameScene::DumpConvertImage(ID3D11Texture2D* texture, const ConvertClass
 
     for (size_t y = 0; y < desc.Height; ++y)
     {
+        auto line_ptr = src;
         for (size_t x = 0; x < desc.Width; ++x)
         {
-            const auto index = *src++;
+            const auto index = *line_ptr++;
             const auto& [r, g, b] = convert[index];
             bmp.set_pixel(x, y, r, g, b);
         }
+        src += mapped.RowPitch;
     }
 
     context->Unmap(staging, 0);
