@@ -8,6 +8,7 @@
 
 #include "ShpFile.h"
 #include "TmpFile.h"
+#include "VxlFile.h"
 #include "Convert.h"
 
 #include <DirectXColors.h>
@@ -150,11 +151,9 @@ void GameScene::Render()
     m_dxSwapChain->Present(0, 0);
 
 #ifdef _DEBUG
-    TmpFile tmp{ "clear01.tem" };
-    tmp.LoadAllTexture(m_d3dDevice);
-    ConvertClass conv{ "isotem.pal" };
-    DumpConvertImage(tmp.GetTexture(0), conv, "temclear01.bmp");
-    DumpDepthImage(tmp.GetZTexture(0), "temclear01z.bmp");
+    VxlFile vxl{ "mtnk" };
+
+    vxl.LoadTexture(m_d3dDevice);
 
 #endif
 
