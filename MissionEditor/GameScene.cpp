@@ -55,7 +55,7 @@ HRESULT GameScene::OnSize(int width, int height)
             return hr;
 
         CComPtr<ID3D11Texture2D> pBuffer = nullptr;
-        hr = m_dxSwapChain->GetBuffer(0, __uuidof(ID3D11Texture2D), reinterpret_cast<void**>(&pBuffer));
+        hr = m_dxSwapChain->GetBuffer(0, IID_PPV_ARGS(&pBuffer));
         if (FAILED(hr))
             return hr;
 
@@ -76,7 +76,7 @@ HRESULT GameScene::OnSize(int width, int height)
 
         // Direct2D
         CComPtr<IDXGISurface> dxgiBackBuffer = nullptr;
-        hr = m_dxSwapChain->GetBuffer(0, __uuidof(IDXGISurface), reinterpret_cast<void**>(&dxgiBackBuffer));
+        hr = m_dxSwapChain->GetBuffer(0, IID_PPV_ARGS(&dxgiBackBuffer));
         if (FAILED(hr))
             return hr;
 
@@ -262,7 +262,7 @@ HRESULT GameScene::InitDirect3D()
     CComPtr<IDXGIFactory1> dxgiFactory = nullptr;
     {
         CComPtr<IDXGIDevice> dxgiDevice = nullptr;
-        hr = m_d3dDevice->QueryInterface(__uuidof(IDXGIDevice), reinterpret_cast<void**>(&dxgiDevice));
+        hr = m_d3dDevice->QueryInterface(IID_PPV_ARGS(&dxgiDevice));
         if (FAILED(hr))
             return hr;
 
@@ -271,7 +271,7 @@ HRESULT GameScene::InitDirect3D()
         if (FAILED(hr))
             return hr;
 
-        hr = adapter->GetParent(__uuidof(IDXGIFactory1), reinterpret_cast<void**>(&dxgiFactory));
+        hr = adapter->GetParent(IID_PPV_ARGS(&dxgiFactory));
         if (FAILED(hr))
             return hr;
     }
@@ -300,7 +300,7 @@ HRESULT GameScene::InitDirect3D()
     // Create a render target view
     {
         CComPtr<ID3D11Texture2D> pBackBuffer = nullptr;
-        hr = m_dxSwapChain->GetBuffer(0, __uuidof(ID3D11Texture2D), reinterpret_cast<void**>(&pBackBuffer));
+        hr = m_dxSwapChain->GetBuffer(0, IID_PPV_ARGS(&pBackBuffer));
         if (FAILED(hr))
             return hr;
 
@@ -369,7 +369,7 @@ HRESULT GameScene::InitDirect2D()
 
     // Create a Direct2D render target
     CComPtr<IDXGISurface> dxgiBackBuffer = nullptr;
-    hr = m_dxSwapChain->GetBuffer(0, __uuidof(IDXGISurface), reinterpret_cast<void**>(&dxgiBackBuffer));
+    hr = m_dxSwapChain->GetBuffer(0, IID_PPV_ARGS(&dxgiBackBuffer));
     if (FAILED(hr))
         return hr;
 
