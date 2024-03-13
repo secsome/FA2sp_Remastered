@@ -6,6 +6,9 @@
 #include "RenderHelper.h"
 
 #include <algorithm>
+#include <numeric>
+#include <numbers>
+#include <cmath>
 
 VxlFile::VxlFile(const char* vxlname)
 {
@@ -131,7 +134,7 @@ VxlFile::VxlFile(const void* vxlbuffer, size_t vxlsize, const void* hvabuffer, s
     if (ptr >= ptr_end)
         throw std::runtime_error("Buffer overflow when loading HVA");
     Hva.Matrices.resize(Hva.FrameCount * Hva.SectionCount);
-    std::memcpy(Hva.Matrices.data(), ptr, Hva.FrameCount * Hva.SectionCount * sizeof(CCMatrix));
+    std::memcpy(Hva.Matrices.data(), ptr + Hva.SectionCount * sizeof(Hva.Signature), Hva.Matrices.size() * sizeof(CCMatrix));
     ptr += Hva.FrameCount * Hva.SectionCount * sizeof(CCMatrix);
     if (ptr >= ptr_end)
         throw std::runtime_error("Buffer overflow when loading HVA");
@@ -527,7 +530,218 @@ const NormalTableType& VxlFile::GetNormalTable(size_t index) const
     }
 }
 
-DirectX::XMMATRIX VxlFile::GetHvaMatrix(size_t section, size_t frame) const
+const CCMatrix& VxlFile::GetHvaMatrix(size_t section, size_t frame) const
 {
-    return Hva.Matrices[frame * (section - 1) + section];
+    return Hva.Matrices[frame * Hva.SectionCount + section];
+}
+
+constexpr DirectX::XMFLOAT3 FructumTransformation(const RECT& visual, const DirectX::XMFLOAT3& pos)
+{
+    constexpr auto SQRT2 = 1.4142135623730950488017f;
+    constexpr auto SQRT3 = 1.7320508075688772935274f;
+
+    const auto width = static_cast<float>(visual.right - visual.left);
+    const auto height = static_cast<float>(visual.bottom - visual.top);
+    constexpr float f = 5000.0f;
+
+    DirectX::XMFLOAT3 result;
+    result.x = width / 2.0f + (pos.x - pos.y) / SQRT2;
+    result.y = height / 2.0f + (pos.x + pos.y) / 2.0f / SQRT2 - pos.z * SQRT3 / 2.0f;
+    result.z = SQRT3 / 2.0f / f * (4000.0f * SQRT2 / 3.0f - (pos.x + pos.y) / SQRT2 - pos.z / SQRT3);
+    return result;
+}
+
+auto VxlFile::MakeTexture(ID3D11Device* device, bool ret_shadow, float angle, const VplFile& vpl, int F, int L, int H) const
+    -> std::pair<ID3D11Texture2D*, ID3D11Texture2D*>
+{
+    if (device == nullptr)
+        return { nullptr, nullptr };
+
+    static uint8_t pixels[256][256];
+    static uint8_t shadow[256][256];
+    static float zdata[256][256];
+
+    std::fill_n(&zdata[0][0], 256 * 256, std::numeric_limits<float>::max());
+    std::memset(pixels, 0, sizeof(pixels));
+
+    if (ret_shadow)
+        std::memset(shadow, 0, sizeof(shadow));
+
+    using namespace DirectX;
+
+    constexpr auto SQRT2 = 1.4142135623730950488017f;
+    XMVECTOR FLH = XMVectorSet(F, -L, H, 0.0f);
+    FLH *= 30.0f * SQRT2 / 256.0f;
+    XMMATRIX offset = XMMatrixTranslationFromVector(FLH);
+    XMMATRIX rotation = XMMatrixRotationZ(angle);
+
+    int32_t xl, xh, yl, yh;
+    int32_t sxl, sxh, syl, syh;
+
+    xl = sxl = yl = syl = 255;
+    xh = sxh = yh = syh = 0;
+
+    const_cast<VxlFile*>(this)->PrepareVertices();
+
+    for (size_t index = 0; index < LayerInfos.size(); ++index)
+    {
+        const auto& vertices = LayerVertices[index];
+        const auto& info = LayerInfos[index];
+
+        if (vertices.empty())
+            continue;
+
+        CCMatrix transform = GetHvaMatrix(index, 0);
+        XMFLOAT3 scales =
+        {
+            (info.MaxBounds[0] - info.MinBounds[0]) / info.SizeX,
+            (info.MaxBounds[1] - info.MinBounds[1]) / info.SizeY,
+            (info.MaxBounds[2] - info.MinBounds[2]) / info.SizeZ
+        };
+        XMMATRIX trans = transform.Scale(
+            scales.x * info.Scale,
+            scales.y * info.Scale,
+            scales.z * info.Scale
+        );
+        
+        XMMATRIX trans_center = XMMatrixTranslationFromVector(XMLoadFloat3((XMFLOAT3*)&info.MinBounds));
+        XMMATRIX scale = XMMatrixScaling(scales.x, scales.y, scales.z);
+        XMMATRIX result = trans_center * scale * transform * offset * rotation;
+
+        const auto& normals = GetNormalTable(index);
+
+        for (auto& vertex : vertices)
+        {
+            XMVECTOR normal = normals[vertex.Value.Normal];
+            XMVECTOR position = XMVector3Transform(vertex.Position, result);
+            normal = XMVector3TransformNormal(normal, result);
+            
+            XMFLOAT3 pos;
+            XMStoreFloat3(&pos, position);
+
+            RECT view{ 0, 0, 256, 256 };
+            XMFLOAT3 screen_pos = FructumTransformation(view, pos);
+            XMFLOAT3 shadow_pos;
+            if (ret_shadow)
+            {
+                pos.z = 0.0f;
+                shadow_pos = FructumTransformation(view, pos);
+            }
+
+            int32_t sx, sy;
+
+            int32_t x = static_cast<int>(screen_pos.x);
+            int32_t y = static_cast<int>(screen_pos.y);
+
+            if (ret_shadow)
+            {
+                sx = static_cast<int>(shadow_pos.x);
+                sy = static_cast<int>(shadow_pos.y);
+            }
+            
+            static const XMVECTOR ReversedLight = g_XMIdentityR1;
+
+            float light_angle = XMVectorACos(XMVector3Normalize(XMVector3Dot(ReversedLight, normal))).m128_f32[0];
+            
+            constexpr float HALF_PI = std::numbers::pi / 2;
+
+            uint8_t color = 0;
+            if (light_angle >= HALF_PI)
+                color = vpl.GetPaletteIndex(0, vertex.Value.Color);
+            else
+            {
+                int32_t idx = 31 - static_cast<int32_t>(light_angle / HALF_PI * 32.0f);
+                color = vpl.GetPaletteIndex(idx, vertex.Value.Color);
+            }
+
+            if (vertex.Value.Color && screen_pos.z < zdata[y][x] && screen_pos.z >= 0.0f)
+            {
+                zdata[y][x] = screen_pos.z;
+                pixels[y][x] = color;
+                if (x < xl) xl = x;
+                if (x > xh) xh = x;
+                if (y < yl) yl = y;
+                if (y > yh) yh = y;
+            }
+
+            if (ret_shadow)
+            {
+                shadow[sy][sx] = 1;
+                if (sx < sxl) sxl = sx;
+                if (sx > sxh) sxh = sx;
+                if (sy < syl) syl = sy;
+                if (sy > syh) syh = sy;
+            }
+        }
+    }
+
+    size_t width = xh - xl + 1, height = yh - yl + 1;
+    std::vector<uint8_t> clipped_pixels;
+    clipped_pixels.resize(width * height);
+
+    for (int32_t y = yl; y < yh; ++y)
+        std::memcpy(&clipped_pixels[(y - yl) * width], &pixels[y][xl], width);
+
+    CComPtr<ID3D11Texture2D> texture;
+    RenderHelper::MakeConvertTexture(device, &texture, static_cast<UINT>(width), static_cast<UINT>(height), clipped_pixels.data());
+
+    CComPtr<ID3D11Texture2D> shadowTexture;
+    if (ret_shadow)
+    {
+        std::vector<uint8_t> clipped_shadow;
+        size_t swidth = sxh - sxl + 1, sheight = syh - syl + 1;
+        clipped_shadow.resize(swidth* sheight);
+
+        for (int32_t sy = syl; sy < syh; ++sy)
+            std::memcpy(&clipped_shadow[(sy - syl) * swidth], &shadow[sy][sxl], swidth);
+
+        RenderHelper::MakeConvertTexture(device, &shadowTexture, static_cast<UINT>(swidth), static_cast<UINT>(sheight), clipped_pixels.data());
+    }
+
+    return std::make_pair(texture.Detach(), shadowTexture.Detach());
+}
+
+void VxlFile::PrepareVertices(size_t index)
+{
+    LayerVertices[index].clear();
+    const auto& info = LayerInfos[index];
+    for (uint32_t x = 0; x < info.SizeX; ++x)
+    {
+        for (uint32_t y = 0; y < info.SizeY; ++y)
+        {
+            for (uint32_t z = 0; z < info.SizeZ; ++z)
+            {
+                Voxel v = GetVoxelRH(index, x, y, z);
+                if (v.Color)
+                {
+                    VoxelVertex vertex;
+                    vertex.Position = DirectX::XMVectorSet(static_cast<float>(x), 
+                        static_cast<float>(y), static_cast<float>(z), 0.0f);
+                    vertex.Value = v;
+                    LayerVertices[index].push_back(vertex);
+                }
+            }
+        }
+    }
+}
+
+void VxlFile::PrepareVertices()
+{
+    if (LayerVertices.empty())
+        LayerVertices.resize(LayerInfos.size());
+
+    for (size_t i = 0; i < LayerVertices.size(); ++i)
+        PrepareVertices(i);
+}
+
+Voxel VxlFile::GetVoxelLH(size_t index, uint32_t x, uint32_t y, uint32_t z) const
+{
+    return GetVoxelRH(index, y, x, z);
+}
+
+Voxel VxlFile::GetVoxelRH(size_t index, uint32_t x, uint32_t y, uint32_t z) const
+{
+    const auto& info = LayerInfos[index];
+    const auto& body = LayerBodies[index];
+    return body.SpanData[y * info.SizeX + x].Voxels[z];
 }

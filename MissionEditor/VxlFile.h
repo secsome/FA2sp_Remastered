@@ -9,6 +9,8 @@
 #include <d3d11.h>
 #include <DirectXMath.h>
 
+#include "VplFile.h"
+
 // float has to obey IEEE 32-bit floating point rules
 static_assert(std::numeric_limits<float>::is_iec559 && std::numeric_limits<float>::digits == 24);
 
@@ -16,6 +18,12 @@ struct Voxel
 {
     uint8_t Color;
     uint8_t Normal;
+};
+
+struct VoxelVertex
+{
+    DirectX::XMVECTOR Position;
+    Voxel Value;
 };
 
 struct VoxelSpan
@@ -36,6 +44,14 @@ struct CCMatrix
         };
         float Data[3][4];
     };
+
+    CCMatrix& Scale(float scalex, float scaley, float scalez)
+    {
+        _14 *= scalex;
+        _24 *= scaley;
+        _34 *= scalez;
+        return *this;
+    }
 
     operator DirectX::XMMATRIX() const
     {
@@ -123,11 +139,23 @@ public:
     size_t GetLayerCount() const { return LayerHeaders.size(); }
 
     const NormalTableType& GetNormalTable(size_t index) const;
-    DirectX::XMMATRIX GetHvaMatrix(size_t section, size_t frame) const;
+    const CCMatrix& GetHvaMatrix(size_t section, size_t frame) const;
+
+    auto MakeTexture(ID3D11Device* device, bool shadow, float angle, 
+        const VplFile& vpl, int F, int L, int H) const->std::pair<ID3D11Texture2D*, ID3D11Texture2D*>;
+
+private:
+    void PrepareVertices(size_t index);
+    void PrepareVertices();
+
+    Voxel GetVoxelLH(size_t index, uint32_t x, uint32_t y, uint32_t z) const;
+    Voxel GetVoxelRH(size_t index, uint32_t x, uint32_t y, uint32_t z) const;
 
     VxlHeader Header;
     std::vector<VxlLayerHeader> LayerHeaders;
     std::vector<VxlLayerBody> LayerBodies;
     std::vector<VxlLayerInfo> LayerInfos;
     HvaStruct Hva;
+
+    std::vector<std::vector<VoxelVertex>> LayerVertices;
 };

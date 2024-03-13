@@ -153,17 +153,23 @@ void GameScene::Render()
     );
 
 #ifdef _DEBUG
-    ConvertClass convert{ "isotem.pal" };
-    TmpFile tmp{ "clear01.tem" };
-    tmp.LoadAllTexture(m_d3dDevice);
+    ConvertClass convert{ "unittem.pal" };
+    VxlFile vxl{ "mtnk" };
+    const auto& [texture, _] = vxl.MakeTexture(m_d3dDevice, false, 0.0f, *m_vpl, 0, 0, 0);
+
     CComPtr<ID2D1Bitmap> bmp;
-    RenderHelper::MakeBitmap(m_d2dRenderTarget, tmp.GetTexture(0), convert, &bmp);
+    RenderHelper::MakeBitmap(m_d2dRenderTarget, texture, convert, &bmp);
+
+    D3D11_TEXTURE2D_DESC dc;
+    texture->GetDesc(&dc);
+
     D2D1_RECT_F rc;
     rc.left = rc.top = 0;
-    rc.right = 60 * 20;
-    rc.bottom = 30 * 20;
-    m_d2dRenderTarget->DrawBitmap(bmp, &rc, 0.8f);
+    rc.right = dc.Width * 5;
+    rc.bottom = dc.Height * 5;
+    m_d2dRenderTarget->DrawBitmap(bmp, &rc, 1.0f);
 
+    texture->Release();
 #endif
 
     hr = m_d2dRenderTarget->EndDraw();
