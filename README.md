@@ -21,3 +21,13 @@ Also, I've tried to remove the 3rd party dependencies, so you can simply compile
         - [X] VxlFile
         - [X] HvaFile
         - [X] VplFile
+    - [ ] Scene rendering
+        - [ ] Background tmp drawing
+        - [ ] Infanty drawing
+        - [ ] Aircrafts drawing
+        - [ ] Units drawing
+        - [ ] Structures drawing
+        - [ ] Overlays drawing
+        - [ ] Smudges drawing
+        - [ ] Misc map elements drawing
+        - [ ] Other UI drawing
