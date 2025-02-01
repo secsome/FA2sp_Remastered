@@ -170,8 +170,8 @@ int Cmix_file::post_open()
 			m_is_encrypted = m_has_checksum = false;
 			int c_files = header.c_files;
 			int cb_index = c_files * sizeof(t_mix_index_entry);
-			if (header.c_files >> 12 || get_size() != 6 + cb_index + header.size)
-				test_fail(1);
+			// if (header.c_files >> 12 || get_size() != 6 + cb_index + header.size)
+			// 	test_fail(1);
 			m_index.resize(c_files);
 			test_fail(read(&m_index[0], cb_index));
 			for (int i = 0; i < c_files; i++)
@@ -198,8 +198,8 @@ int Cmix_file::post_open()
 				int c_files = header.c_files;
 				const int cb_index = c_files * sizeof(t_mix_index_entry);
 				const int cb_f = cb_index + 5 & ~7;
-				if (get_size() != 92 + cb_f + header.size + (m_has_checksum ? 20 : 0))
-					test_fail(1);
+				// if (get_size() != 92 + cb_f + header.size + (m_has_checksum ? 20 : 0))
+				// 	test_fail(1);
 				if (c_files)
 				{
 					Cvirtual_binary f;
@@ -221,8 +221,8 @@ int Cmix_file::post_open()
 				read(&header, sizeof(header));
 				int c_files = header.c_files;
 				const int cb_index = c_files * sizeof(t_mix_index_entry);
-				if (get_size() != 4 + sizeof(t_mix_header) + cb_index + header.size + (m_has_checksum ? 20 : 0))
-					test_fail(1);				
+				// if (get_size() != 4 + sizeof(t_mix_header) + cb_index + header.size + (m_has_checksum ? 20 : 0))
+				// 	test_fail(1);				
 				m_index.resize(c_files);
 				read(&m_index[0], cb_index);
 				for (int i = 0; i < c_files; i++)
