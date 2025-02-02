@@ -72,94 +72,27 @@ LANGUAGE LANG_ENGLISH, SUBLANG_ENGLISH_US
 // Cursor
 //
 
-#if defined(APSTUDIO_INVOKED) || defined(TS_MODE)
-#if defined(APSTUDIO_INVOKED)
-IDC_EDITOR_ARROW$(TS_MODE) CURSOR                  "res\\ts_arrow.cur"
-
-#else
-IDC_EDITOR_ARROW        CURSOR                  "res\\ts_arrow.cur"
-
-#endif
-#endif
-#if defined(APSTUDIO_INVOKED) || defined(RA2_MODE)
-#if defined(APSTUDIO_INVOKED)
-IDC_EDITOR_ARROW$(RA2_MODE) CURSOR                  "res\\ra2_arrow.cur"
-
-#else
 IDC_EDITOR_ARROW        CURSOR                  "res\\ra2_arrow.cur"
-
-#endif
-#endif
 
 /////////////////////////////////////////////////////////////////////////////
 //
 // Bitmap
 //
-
-#if defined(APSTUDIO_INVOKED) || defined(TS_MODE)
-#if defined(APSTUDIO_INVOKED)
-IDB_FLAG$(TS_MODE)      BITMAP                  "res\\wp_ts.bmp"
-
-#else
-IDB_FLAG                BITMAP                  "res\\wp_ts.bmp"
-
-#endif
-#endif
-#if defined(APSTUDIO_INVOKED) || defined(TS_MODE)
-#if defined(APSTUDIO_INVOKED)
-IDB_CELLTAG$(TS_MODE)   BITMAP                  "res\\celltag_ts.bmp"
-
-#else
-IDB_CELLTAG             BITMAP                  "res\\celltag_ts.bmp"
-
-#endif
-#endif
 IDB_LIGHTBULB           BITMAP                  "res\\litebulb.bmp"
 
 IDB_MV_ICONS            BITMAP                  "res\\bmp00005.bmp"
 
-#if defined(APSTUDIO_INVOKED) || defined(TS_MODE)
-#if defined(APSTUDIO_INVOKED)
-IDB_SCROLLCURSOR$(TS_MODE) BITMAP                  "res\\scrollcursor_ts.bmp"
-
-#else
-IDB_SCROLLCURSOR        BITMAP                  "res\\scrollcursor_ts.bmp"
-
-#endif
-#endif
 IDR_MAINFRAME           BITMAP                  "res\\Toolbar.bmp"
 
 IDR_TERRAINBAR          BITMAP                  "res\\terrainb.bmp"
 
 IDR_CLIFFBAR            BITMAP                  "res\\clifftoo.bmp"
 
-#if defined(APSTUDIO_INVOKED) || defined(RA2_MODE)
-#if defined(APSTUDIO_INVOKED)
-IDB_CELLTAG$(RA2_MODE)  BITMAP                  "res\\celltag_ra2.bmp"
-
-#else
 IDB_CELLTAG             BITMAP                  "res\\celltag_ra2.bmp"
 
-#endif
-#endif
-#if defined(APSTUDIO_INVOKED) || defined(RA2_MODE)
-#if defined(APSTUDIO_INVOKED)
-IDB_FLAG$(RA2_MODE)     BITMAP                  "res\\wp_ra2.bmp"
-
-#else
 IDB_FLAG                BITMAP                  "res\\wp_ra2.bmp"
 
-#endif
-#endif
-#if defined(APSTUDIO_INVOKED) || defined(RA2_MODE)
-#if defined(APSTUDIO_INVOKED)
-IDB_SCROLLCURSOR$(RA2_MODE) BITMAP                  "res\\scrollcursor_ra2.bmp"
-
-#else
 IDB_SCROLLCURSOR        BITMAP                  "res\\scrollcursor_ra2.bmp"
-
-#endif
-#endif
 
 /////////////////////////////////////////////////////////////////////////////
 //
@@ -176,34 +109,6 @@ BEGIN
     LTEXT           "Choose parent country:",IDC_STATIC,7,7,98,12
     COMBOBOX        IDC_COUNTRY,7,20,112,118,CBS_DROPDOWNLIST | WS_VSCROLL | WS_TABSTOP
 END
-
-#if defined(APSTUDIO_INVOKED) || defined(TS_MODE)
-#if defined(APSTUDIO_INVOKED)
-IDD_SAVEOPTIONS$(TS_MODE) DIALOG 0, 0, 233, 125
-#else
-IDD_SAVEOPTIONS DIALOG 0, 0, 233, 125
-#endif
-STYLE DS_SETFONT | DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
-CAPTION "Save options"
-FONT 8, "Tahoma"
-BEGIN
-    DEFPUSHBUTTON   "OK",IDOK,176,104,50,14
-    PUSHBUTTON      "Cancel",IDCANCEL,117,104,50,14
-    CONTROL         "Compress map",IDC_COMPRESS,"Button",BS_AUTORADIOBUTTON | NOT WS_VISIBLE | WS_GROUP,19,42,118,12
-    CONTROL         "Don't compress map (use this if any problems with the map occur in RA2/TS)",IDC_NOCOMPRESSION,
-                    "Button",BS_AUTORADIOBUTTON | BS_MULTILINE | NOT WS_VISIBLE,19,52,192,21
-    CONTROL         "Create new preview using minimap",IDC_PREVIEWMODE,
-                    "Button",BS_AUTORADIOBUTTON | WS_GROUP,19,40,150,13
-    CONTROL         "Use existing preview (if possible)",IDC_EXISTINGPREVIEW,
-                    "Button",BS_AUTORADIOBUTTON,19,53,141,12
-    CONTROL         "Don't save any preview",IDC_NOPREVIEW,"Button",BS_AUTORADIOBUTTON,19,66,141,12
-    GROUPBOX        "Compression",IDC_STATIC,7,28,219,52,NOT WS_VISIBLE
-    GROUPBOX        "Preview",IDC_STATIC,7,29,219,56
-    LTEXT           "If you want to play the map online, you should try to make the file size as low as possible. This includes turning off the preview. You should also try using compression.",IDC_STATIC,7,90,219,27,NOT WS_VISIBLE
-    LTEXT           "Map name:",IDC_STATIC,7,7,63,13
-    EDITTEXT        IDC_MAPNAME,73,7,153,12,ES_AUTOHSCROLL
-END
-#endif
 
 IDD_MULTISAVEOPT DIALOG 0, 0, 281, 105
 STYLE DS_SETFONT | DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
@@ -243,12 +148,7 @@ BEGIN
     COMBOBOX        IDC_MAXPLAYERS,221,61,40,104,CBS_DROPDOWNLIST | CBS_SORT | WS_VSCROLL | WS_TABSTOP
 END
 
-#if defined(APSTUDIO_INVOKED) || defined(RA2_MODE)
-#if defined(APSTUDIO_INVOKED)
-IDD_SAVEOPTIONS$(RA2_MODE) DIALOG 0, 0, 233, 186
-#else
 IDD_SAVEOPTIONS DIALOG 0, 0, 233, 186
-#endif
 STYLE DS_SETFONT | DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
 CAPTION "Save options"
 FONT 8, "Tahoma"
@@ -278,7 +178,6 @@ BEGIN
     CONTROL         "Cooperative",IDC_COOPERATIVE,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,83,121,70,14
     CONTROL         "Team Alliance",IDC_TEAMGAME,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,161,121,65,14
 END
-#endif
 
 IDD_CHANGESIZE DIALOG 0, 0, 212, 194
 STYLE DS_SETFONT | DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
@@ -344,12 +243,7 @@ BEGIN
     LTEXT           "As FinalAlert was dialog based in earlier versions, we need to have this.",IDC_STATIC,7,156,26,26
 END
 
-#if defined(APSTUDIO_INVOKED) || defined(RA2_MODE)
-#if defined(APSTUDIO_INVOKED)
-IDD_TSOPTIONS$(RA2_MODE) DIALOGEX 0, 0, 197, 183
-#else
 IDD_TSOPTIONS DIALOGEX 0, 0, 197, 183
-#endif
 STYLE DS_SETFONT | DS_MODALFRAME | DS_NOFAILCREATE | WS_POPUP | WS_VISIBLE | WS_CAPTION | WS_SYSMENU
 CAPTION "Options"
 FONT 8, "Tahoma", 0, 0, 0x0
@@ -369,7 +263,6 @@ BEGIN
     CONTROL         "Prefer FinalAlert 2 theater INI files",IDC_PREFER_LOCAL_THEATER_FILES,
                     "Button",BS_AUTOCHECKBOX | WS_TABSTOP,14,131,164,12
 END
-#endif
 
 IDD_ALL DIALOG 0, 0, 303, 204
 STYLE DS_SETFONT | DS_MODALFRAME | WS_CAPTION | WS_SYSMENU
@@ -468,23 +361,6 @@ BEGIN
     LTEXT           "Level:",IDC_LLEVEL2,15,140,50,10
     EDITTEXT        IDC_LEVEL2,65,140,75,12,ES_AUTOHSCROLL
 END
-
-#if defined(APSTUDIO_INVOKED) || defined(TS_MODE)
-#if defined(APSTUDIO_INVOKED)
-IDD_INFO$(TS_MODE) DIALOGEX 0, 0, 349, 250
-#else
-IDD_INFO DIALOGEX 0, 0, 349, 250
-#endif
-STYLE DS_SETFONT | DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
-CAPTION "Info"
-FONT 8, "Tahoma", 0, 0, 0x0
-BEGIN
-    DEFPUSHBUTTON   "OK",IDOK,292,8,50,14
-    LTEXT           "© 1999-2024 ELECTRONIC ARTS INC.   ALL RIGHTS RESERVED\nWestwood Studios(tm) is an Electronic Arts(tm) brand.",IDC_STATIC,7,189,334,18
-    LTEXT           "© 1999-2024 Electronic Arts Inc. Westwood Studios and Electronic Arts are trademarks or registered trademarks of Electronic Arts Inc. in the U.S. and/or other countries. All rights reserved.",IDC_STATIC,7,214,335,28
-    EDITTEXT        IDC_LICENSE_AND_COPYRIGHT,6,29,336,148,ES_MULTILINE | ES_AUTOVSCROLL | ES_AUTOHSCROLL | ES_READONLY | WS_VSCROLL
-END
-#endif
 
 IDD_SPECIALFLAGS DIALOG 0, 0, 303, 137
 STYLE DS_SETFONT | DS_MODALFRAME | WS_CAPTION | WS_SYSMENU
@@ -654,27 +530,6 @@ BEGIN
     COMBOBOX        IDC_P10,164,132,77,41,CBS_DROPDOWN | CBS_AUTOHSCROLL | CBS_SORT | WS_VSCROLL | WS_TABSTOP
 END
 
-#if defined(APSTUDIO_INVOKED) || defined(TS_MODE)
-#if defined(APSTUDIO_INVOKED)
-IDD_LOADING$(TS_MODE) DIALOGEX 0, 0, 235, 165
-#else
-IDD_LOADING DIALOGEX 0, 0, 235, 165
-#endif
-STYLE DS_SETFONT | DS_MODALFRAME | DS_CENTER | WS_POPUP
-FONT 8, "Tahoma", 0, 0, 0x1
-BEGIN
-    LTEXT           "Loading...",IDC_CAP,7,7,221,9
-    CONTROL         "",IDC_PROGRESS1,"msctls_progress32",PBS_SMOOTH,7,18,221,13,WS_EX_DLGMODALFRAME
-    LTEXT           "Homepage: http://www.ea.com",IDC_STATIC,7,78,221,11,WS_BORDER
-    CTEXT           "",IDC_VERSION,74,37,154,13,SS_CENTERIMAGE | SS_SUNKEN
-    LTEXT           "Version:",IDC_LVERSION,7,37,61,9
-    CTEXT           "",IDC_BUILTBY,74,52,154,13,SS_CENTERIMAGE | SS_SUNKEN
-    LTEXT           "Built by:",IDC_LBUILTBY,7,52,61,9
-    LTEXT           "© 1999-2024 ELECTRONIC ARTS INC.  ALL RIGHTS RESERVED\nAuthored by Matthias Wagner\nWestwood Studios(tm) is an Electronic Arts(tm) brand.",IDC_STATIC,7,97,221,33
-    LTEXT           "This software comes with ABSOLUTELY NO WARRANTY.\nThis is free software, and you are welcome to redistribute it.\nFor details open Help->Info",IDC_STATIC,6,129,221,26
-END
-#endif
-
 IDD_WAYPOINT DIALOG 0, 0, 186, 93
 STYLE DS_SETFONT | DS_MODALFRAME | WS_CAPTION | WS_SYSMENU
 CAPTION "Create waypoint"
@@ -699,74 +554,6 @@ BEGIN
     COMBOBOX        IDC_TAG,7,37,198,114,CBS_DROPDOWN | WS_VSCROLL | WS_TABSTOP
     LTEXT           "Associate a tag with a specific cell.",IDC_LDESC,7,7,198,19
 END
-
-#if defined(APSTUDIO_INVOKED) || defined(TS_MODE)
-#if defined(APSTUDIO_INVOKED)
-IDD_TEAMTYPES$(TS_MODE) DIALOG 0, 0, 303, 206
-#else
-IDD_TEAMTYPES DIALOG 0, 0, 303, 206
-#endif
-STYLE DS_SETFONT | DS_MODALFRAME | WS_CAPTION | WS_SYSMENU
-CAPTION "Teamtypes"
-FONT 8, "Tahoma"
-BEGIN
-    LTEXT           "Team types connect a trigger with task forces",IDC_STATIC,6,5,290,10
-    LTEXT           "Team types:",IDC_STATIC,5,20,50,10
-    COMBOBOX        IDC_TEAMTYPES,55,20,155,174,CBS_DROPDOWNLIST | CBS_SORT | WS_VSCROLL | WS_TABSTOP
-    PUSHBUTTON      "New",IDC_NEWTEAMTYPE,261,20,35,15
-    PUSHBUTTON      "Delete",IDC_DELETETEAMTYPE,220,20,35,15
-    LTEXT           "Name:",IDC_STATIC,10,51,30,10
-    EDITTEXT        IDC_NAME,56,51,90,12,ES_AUTOHSCROLL
-    LTEXT           "Veteran level:",IDC_STATIC,10,66,45,15
-    CONTROL         "Loadable",IDC_LOADABLE,"Button",BS_AUTOCHECKBOX | BS_LEFT | WS_TABSTOP,10,145,55,8
-    CONTROL         "Full",IDC_FULL,"Button",BS_AUTOCHECKBOX | BS_LEFT | WS_TABSTOP,10,155,55,8
-    CONTROL         "Annoyance",IDC_ANNOYANCE,"Button",BS_AUTOCHECKBOX | BS_LEFT | WS_TABSTOP,10,164,55,10
-    CONTROL         "Guard slower",IDC_GUARDSLOWER,"Button",BS_AUTOCHECKBOX | BS_LEFT | WS_TABSTOP,10,175,55,8
-    CONTROL         "Recruiter",IDC_RECRUITER,"Button",BS_AUTOCHECKBOX | BS_LEFT | WS_TABSTOP,10,185,55,8
-    LTEXT           "House:",IDC_STATIC,10,81,35,10
-    COMBOBOX        IDC_HOUSE,56,81,90,62,CBS_DROPDOWN | CBS_AUTOHSCROLL | CBS_SORT | WS_VSCROLL | WS_TABSTOP
-    CONTROL         "Autocreate",IDC_AUTOCREATE,"Button",BS_AUTOCHECKBOX | BS_LEFT | WS_TABSTOP,125,145,55,8
-    CONTROL         "Prebuild",IDC_PREBUILD,"Button",BS_AUTOCHECKBOX | BS_LEFT | WS_TABSTOP,125,155,55,8
-    CONTROL         "Reinforce",IDC_REINFORCE,"Button",BS_AUTOCHECKBOX | BS_LEFT | WS_TABSTOP,125,165,55,8
-    CONTROL         "Droppod",IDC_DROPPOD,"Button",BS_AUTOCHECKBOX | BS_LEFT | WS_TABSTOP,65,145,55,8
-    CONTROL         "Whiner",IDC_WHINER,"Button",BS_AUTOCHECKBOX | BS_LEFT | WS_TABSTOP,65,155,55,8
-    CONTROL         "Loose recruit",IDC_LOOSERECRUIT,"Button",BS_AUTOCHECKBOX | BS_LEFT | WS_TABSTOP,65,165,55,8
-    CONTROL         "Aggressive",IDC_AGGRESSIVE,"Button",BS_AUTOCHECKBOX | BS_LEFT | WS_TABSTOP,65,175,55,8
-    CONTROL         "Suicide",IDC_SUICIDE,"Button",BS_AUTOCHECKBOX | BS_LEFT | WS_TABSTOP,65,185,55,8
-    CONTROL         "OnTransOnly",IDC_ONTRANSONLY,"Button",BS_AUTOCHECKBOX | BS_LEFT | WS_TABSTOP,125,175,55,8
-    CONTROL         "AvoidThreats",IDC_AVOIDTHREATS,"Button",BS_AUTOCHECKBOX | BS_LEFT | WS_TABSTOP,125,185,55,8
-    CONTROL         "Ion immune",IDC_IONIMMUNE,"Button",BS_AUTOCHECKBOX | BS_LEFT | WS_TABSTOP,185,145,60,8
-    CONTROL         "TransportsReturnOnUnload",IDC_TRANSPORTRETURNSONUNLOAD,
-                    "Button",BS_AUTOCHECKBOX | BS_LEFT | WS_TABSTOP,185,155,100,8
-    CONTROL         "AreTeamMembersRecruitable",IDC_ARETEAMMEMBERSRECRUITABLE,
-                    "Button",BS_AUTOCHECKBOX | BS_LEFT | WS_TABSTOP,185,165,105,8
-    CONTROL         "IsBaseDefense",IDC_ISBASEDEFENSE,"Button",BS_AUTOCHECKBOX | BS_LEFT | WS_TABSTOP,185,175,80,8
-    CONTROL         "OnlyTargetHouseEnemy",IDC_ONLYTARGETHOUSEENEMY,"Button",BS_AUTOCHECKBOX | BS_LEFT | WS_TABSTOP,185,185,100,8
-    LTEXT           "Priority:",IDC_STATIC,10,96,40,10
-    EDITTEXT        IDC_PRIORITY,56,96,90,12,ES_AUTOHSCROLL | ES_NUMBER
-    LTEXT           "Max:",IDC_STATIC,10,111,30,10
-    EDITTEXT        IDC_MAX,56,111,90,12,ES_AUTOHSCROLL | ES_NUMBER
-    LTEXT           "Techlevel:",IDC_STATIC,10,125,40,10
-    COMBOBOX        IDC_TECHLEVEL,56,125,91,72,CBS_DROPDOWN | CBS_AUTOHSCROLL | CBS_SORT | WS_VSCROLL | WS_TABSTOP
-    LTEXT           "Group:",IDC_STATIC,156,51,30,10
-    GROUPBOX        "Selected team type",IDC_STATIC,6,37,290,161
-    COMBOBOX        IDC_GROUP,200,51,90,78,CBS_DROPDOWN | CBS_AUTOHSCROLL | CBS_SORT | WS_VSCROLL | WS_TABSTOP
-    LTEXT           "Waypoint:",IDC_STATIC,156,66,40,10
-    COMBOBOX        IDC_WAYPOINT,200,66,90,80,CBS_DROPDOWN | CBS_AUTOHSCROLL | WS_VSCROLL | WS_TABSTOP
-    LTEXT           "Script:",IDC_STATIC,156,81,40,10
-    COMBOBOX        IDC_SCRIPT,200,81,90,205,CBS_DROPDOWN | CBS_AUTOHSCROLL | CBS_SORT | WS_VSCROLL | WS_TABSTOP
-    LTEXT           "Task force:",IDC_STATIC,156,96,40,10
-    COMBOBOX        IDC_TASKFORCE,200,96,90,205,CBS_DROPDOWN | CBS_AUTOHSCROLL | CBS_SORT | WS_VSCROLL | WS_TABSTOP
-    COMBOBOX        IDC_VETERANLEVEL,56,66,90,60,CBS_DROPDOWN | CBS_AUTOHSCROLL | CBS_SORT | WS_VSCROLL | WS_TABSTOP
-    LTEXT           "Tag:",IDC_STATIC,156,111,40,13
-    COMBOBOX        IDC_TAG,200,111,90,186,CBS_DROPDOWN | WS_VSCROLL | WS_TABSTOP
-    LTEXT           "",IDC_LTRANSPORTWAYPOINT,156,126,40,17
-    COMBOBOX        IDC_TRANSPORTWAYPOINT,200,126,90,80,CBS_DROPDOWN | CBS_AUTOHSCROLL | WS_VSCROLL | WS_TABSTOP
-    LTEXT           "Mind Control Decision:",IDC_STATIC,164,4,43,16,NOT WS_VISIBLE
-    COMBOBOX        IDC_MINDCONTROLDECISION,209,6,92,205,CBS_DROPDOWN | CBS_AUTOHSCROLL | CBS_SORT | NOT WS_VISIBLE | WS_VSCROLL | WS_TABSTOP
-    LTEXT           "Mind Control Decision:",IDC_MCD_L,10,139,43,16,NOT WS_VISIBLE
-END
-#endif
 
 IDD_TASKFORCES DIALOG 0, 0, 303, 205
 STYLE DS_SETFONT | DS_MODALFRAME | WS_CAPTION | WS_SYSMENU
@@ -866,12 +653,7 @@ BEGIN
     COMBOBOX        IDC_TRIGGER2,221,42,76,152,CBS_DROPDOWN | WS_VSCROLL | WS_TABSTOP
 END
 
-#if defined(APSTUDIO_INVOKED) || defined(RA2_MODE)
-#if defined(APSTUDIO_INVOKED)
-IDD_AITRIGGERTYPES$(RA2_MODE) DIALOG 0, 0, 303, 234
-#else
 IDD_AITRIGGERTYPES DIALOG 0, 0, 303, 234
-#endif
 STYLE DS_SETFONT | DS_MODALFRAME | WS_CAPTION | WS_SYSMENU
 CAPTION "AI Trigger Types"
 FONT 8, "Tahoma"
@@ -918,7 +700,6 @@ BEGIN
     LTEXT           "Number (N):",IDC_STATIC,110,200,56,11
     LTEXT           "Additional parameters for the appropiate AI Trigger Types:",IDC_STATIC,6,188,295,12
 END
-#endif
 
 IDD_NEWMAP DIALOG 0, 0, 248, 226
 STYLE DS_SETFONT | DS_MODALFRAME | DS_CENTER | WS_POPUP | WS_CAPTION | WS_SYSMENU
@@ -1118,20 +899,6 @@ BEGIN
     CONTROL         "Progress4",IDC_PROGRESS,"msctls_progress32",PBS_SMOOTH | WS_BORDER,7,22,206,15
 END
 
-#if defined(APSTUDIO_INVOKED) || defined(TS_MODE)
-#if defined(APSTUDIO_INVOKED)
-IDD_SAVING$(TS_MODE) DIALOG 0, 0, 263, 46
-#else
-IDD_SAVING DIALOG 0, 0, 263, 46
-#endif
-STYLE DS_SETFONT | DS_CENTER | WS_POPUP | WS_CAPTION
-CAPTION "Saving"
-FONT 8, "MS Sans Serif"
-BEGIN
-    LTEXT           "Please wait a few seconds while FinalSun is saving. On very large maps this may even take some minutes, please do not cancel! More information is available in the status bar, most time will be needed for packing.",IDC_STATIC,7,7,249,32
-END
-#endif
-
 IDD_TRIGGEREDITOR DIALOGEX 0, 0, 389, 263
 STYLE DS_SETFONT | DS_MODALFRAME | WS_CAPTION | WS_SYSMENU
 EXSTYLE WS_EX_TOOLWINDOW
@@ -1217,39 +984,7 @@ BEGIN
     COMBOBOX        IDC_VALUE,57,59,122,55,CBS_DROPDOWN | CBS_SORT | WS_VSCROLL | WS_TABSTOP
 END
 
-#if defined(APSTUDIO_INVOKED) || defined(TS_MODE)
-#if defined(APSTUDIO_INVOKED)
-IDD_TSOPTIONS$(TS_MODE) DIALOGEX 0, 0, 197, 183
-#else
-IDD_TSOPTIONS DIALOGEX 0, 0, 197, 183
-#endif
-STYLE DS_SETFONT | DS_MODALFRAME | DS_NOFAILCREATE | WS_POPUP | WS_VISIBLE | WS_CAPTION | WS_SYSMENU
-CAPTION "Options"
-FONT 8, "Tahoma", 0, 0, 0x0
-BEGIN
-    DEFPUSHBUTTON   "OK",IDOK,140,160,50,14
-    PUSHBUTTON      "Cancel",IDCANCEL,85,160,50,14
-    LTEXT           "Tiberian Sun EXE (make sure its in the correct path)",IDC_STATIC,5,5,130,20
-    EDITTEXT        IDC_EDIT1,5,25,130,15,ES_AUTOHSCROLL
-    PUSHBUTTON      "Browse",IDC_CHOOSE,140,25,50,15
-    LTEXT           "Language / Sprache:",IDC_STATIC,7,51,128,11
-    COMBOBOX        IDC_LANGUAGE,7,63,183,94,CBS_DROPDOWN | CBS_SORT | WS_VSCROLL | WS_TABSTOP
-    GROUPBOX        "Rules, Art && AI ini files",IDC_STATIC,7,81,183,71
-    CONTROL         "Act like Tiberian Sun when searching for files (recommended)",IDC_RULESLIKETS,
-                    "Button",BS_AUTORADIOBUTTON | BS_MULTILINE | WS_GROUP,14,92,170,16
-    CONTROL         "Only use the files inside tibsun.mix (do not use Firestorm or any mods)",IDC_ONLYORIGINAL,
-                    "Button",BS_AUTORADIOBUTTON | BS_MULTILINE,14,110,168,16
-    CONTROL         "Prefer FinalSun theater INI files",IDC_PREFER_LOCAL_THEATER_FILES,
-                    "Button",BS_AUTOCHECKBOX | WS_TABSTOP,14,131,164,12
-END
-#endif
-
-#if defined(APSTUDIO_INVOKED) || defined(RA2_MODE)
-#if defined(APSTUDIO_INVOKED)
-IDD_INFO$(RA2_MODE) DIALOGEX 0, 0, 349, 250
-#else
 IDD_INFO DIALOGEX 0, 0, 349, 250
-#endif
 STYLE DS_SETFONT | DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
 CAPTION "Info"
 FONT 8, "Tahoma", 0, 0, 0x0
@@ -1259,14 +994,8 @@ BEGIN
     LTEXT           "© 1999-2024 Electronic Arts Inc. Westwood Studios and Electronic Arts are trademarks or registered trademarks of Electronic Arts Inc. in the U.S. and/or other countries. All rights reserved.",IDC_STATIC,7,214,335,28
     EDITTEXT        IDC_LICENSE_AND_COPYRIGHT,6,29,336,148,ES_MULTILINE | ES_AUTOVSCROLL | ES_AUTOHSCROLL | ES_READONLY | WS_VSCROLL
 END
-#endif
 
-#if defined(APSTUDIO_INVOKED) || defined(RA2_MODE)
-#if defined(APSTUDIO_INVOKED)
-IDD_LOADING$(RA2_MODE) DIALOGEX 0, 0, 235, 165
-#else
 IDD_LOADING DIALOGEX 0, 0, 235, 165
-#endif
 STYLE DS_SETFONT | DS_MODALFRAME | DS_CENTER | WS_POPUP
 FONT 8, "Tahoma", 0, 0, 0x1
 BEGIN
@@ -1280,14 +1009,8 @@ BEGIN
     LTEXT           "© 1999-2024 ELECTRONIC ARTS INC.  ALL RIGHTS RESERVED\nAuthored by Matthias Wagner\nWestwood Studios(tm) is an Electronic Arts(tm) brand.",IDC_STATIC,7,97,221,33
     LTEXT           "This software comes with ABSOLUTELY NO WARRANTY.\nThis is free software, and you are welcome to redistribute it.\nFor details open Help->Info",IDC_STATIC,6,129,221,26
 END
-#endif
 
-#if defined(APSTUDIO_INVOKED) || defined(RA2_MODE)
-#if defined(APSTUDIO_INVOKED)
-IDD_TEAMTYPES$(RA2_MODE) DIALOG 0, 0, 303, 215
-#else
 IDD_TEAMTYPES DIALOG 0, 0, 303, 215
-#endif
 STYLE DS_SETFONT | DS_MODALFRAME | WS_CAPTION | WS_SYSMENU
 CAPTION "Teams"
 FONT 8, "Tahoma"
@@ -1361,27 +1084,6 @@ BEGIN
                     "Button",BS_AUTORADIOBUTTON | BS_MULTILINE | WS_GROUP,7,55,208,20
     CONTROL         "Multiplayer map",IDC_MULTI,"Button",BS_AUTORADIOBUTTON,7,76,208,11
 END
-
-#if defined(APSTUDIO_INVOKED) || defined(TS_MODE)
-#if defined(APSTUDIO_INVOKED)
-IDD_NEWMAPCREATE$(TS_MODE) DIALOG 0, 0, 222, 129
-#else
-IDD_NEWMAPCREATE DIALOG 0, 0, 222, 129
-#endif
-STYLE DS_SETFONT | DS_MODALFRAME | DS_CENTER | WS_POPUP | WS_CAPTION | WS_SYSMENU
-CAPTION "Create new map - Step 2"
-FONT 8, "Tahoma"
-BEGIN
-    DEFPUSHBUTTON   "Next",IDOK,165,108,50,14
-    PUSHBUTTON      "Cancel",IDCANCEL,7,108,50,14
-    LTEXT           "Please select here if you want to create a completely new map from scratch or if you want to import an already existing map (Note: You cannot import maps created by the random map generator of RA2 or of TS version 1.15 or higher)",IDC_STATIC,7,7,208,37
-    CONTROL         "Create a completely new map",IDC_CREATE,"Button",BS_AUTORADIOBUTTON | WS_GROUP,7,55,208,11
-    CONTROL         "Import an existing map or bitmap (BMP)",IDC_IMPORT,
-                    "Button",BS_AUTORADIOBUTTON,7,67,208,11
-    CONTROL         "Activate AI Triggers (results in better AI)",IDC_AITRIGGERS,
-                    "Button",BS_AUTOCHECKBOX | WS_TABSTOP,7,83,208,14
-END
-#endif
 
 IDD_NEWMAPSPOPTIONS DIALOG 0, 0, 222, 129
 STYLE DS_SETFONT | DS_MODALFRAME | DS_CENTER | WS_POPUP | WS_CAPTION | WS_SYSMENU
@@ -1485,12 +1187,7 @@ BEGIN
     LISTBOX         IDC_DOWNLOADLIST,91,117,192,29,LBS_NOINTEGRALHEIGHT | WS_VSCROLL | WS_TABSTOP
 END
 
-#if defined(APSTUDIO_INVOKED) || defined(RA2_MODE)
-#if defined(APSTUDIO_INVOKED)
-IDD_NEWMAPCREATE$(RA2_MODE) DIALOG 0, 0, 222, 129
-#else
 IDD_NEWMAPCREATE DIALOG 0, 0, 222, 129
-#endif
 STYLE DS_SETFONT | DS_MODALFRAME | DS_CENTER | WS_POPUP | WS_CAPTION | WS_SYSMENU
 CAPTION "Create new map - Step 2"
 FONT 8, "Tahoma"
@@ -1504,21 +1201,14 @@ BEGIN
     CONTROL         "Activate AI Triggers (results in better AI)",IDC_AITRIGGERS,
                     "Button",BS_AUTOCHECKBOX | WS_TABSTOP,7,83,208,14
 END
-#endif
 
-#if defined(APSTUDIO_INVOKED) || defined(RA2_MODE)
-#if defined(APSTUDIO_INVOKED)
-IDD_SAVING$(RA2_MODE) DIALOG 0, 0, 263, 46
-#else
 IDD_SAVING DIALOG 0, 0, 263, 46
-#endif
 STYLE DS_SETFONT | DS_CENTER | WS_POPUP | WS_CAPTION
 CAPTION "Saving"
 FONT 8, "MS Sans Serif"
 BEGIN
     LTEXT           "Please wait a few seconds while FinalAlert 2 is saving. On very large maps this may even take some minutes, please do not cancel! More information is available in the status bar, most time will be needed for packing.",IDC_STATIC,7,7,249,32
 END
-#endif
 
 IDD_UNIT DIALOG 0, 0, 232, 145
 STYLE DS_SETFONT | DS_MODALFRAME | WS_CAPTION | WS_SYSMENU
@@ -1580,60 +1270,6 @@ BEGIN
     LISTBOX         IDC_WAYPOINTS,7,21,97,67,LBS_SORT | LBS_NOINTEGRALHEIGHT | WS_VSCROLL | WS_TABSTOP
 END
 
-#if defined(APSTUDIO_INVOKED) || defined(TS_MODE)
-#if defined(APSTUDIO_INVOKED)
-IDD_AITRIGGERTYPES$(TS_MODE) DIALOG 0, 0, 303, 234
-#else
-IDD_AITRIGGERTYPES DIALOG 0, 0, 303, 234
-#endif
-STYLE DS_SETFONT | DS_MODALFRAME | WS_CAPTION | WS_SYSMENU
-CAPTION "AI Trigger Types"
-FONT 8, "Tahoma"
-BEGIN
-    LTEXT           "AI Trigger:",IDC_STATIC,7,7,43,11
-    COMBOBOX        IDC_AITRIGGERTYPE,60,7,236,307,CBS_DROPDOWNLIST | WS_VSCROLL | WS_TABSTOP
-    LTEXT           "Name:",IDC_STATIC,7,63,43,11
-    EDITTEXT        IDC_NAME,60,64,94,13,ES_AUTOHSCROLL
-    LTEXT           "Teamtype #1:",IDC_STATIC,7,80,43,17
-    COMBOBOX        IDC_TEAMTYPE1,60,81,236,81,CBS_DROPDOWN | CBS_SORT | WS_VSCROLL | WS_TABSTOP
-    LTEXT           "House:",IDC_STATIC,165,64,50,16
-    COMBOBOX        IDC_OWNER,220,64,76,207,CBS_DROPDOWN | WS_VSCROLL | WS_TABSTOP
-    LTEXT           "Teamtype #2:",IDC_STATIC,7,98,43,17
-    COMBOBOX        IDC_TEAMTYPE2,60,98,235,81,CBS_DROPDOWN | CBS_SORT | WS_VSCROLL | WS_TABSTOP
-    LTEXT           "Techlevel:",IDC_STATIC,280,206,8,11,NOT WS_VISIBLE
-    COMBOBOX        IDC_FLAG1,288,222,16,56,CBS_DROPDOWN | NOT WS_VISIBLE | WS_VSCROLL | WS_TABSTOP
-    LTEXT           "Type:",IDC_STATIC,6,44,53,17
-    COMBOBOX        IDC_FLAG2,60,45,235,71,CBS_DROPDOWNLIST | WS_VSCROLL | WS_TABSTOP
-    LTEXT           "Data:",IDC_DATALABEL,265,204,8,13,NOT WS_VISIBLE
-    COMBOBOX        IDC_DATA,287,222,16,128,CBS_DROPDOWN | CBS_AUTOHSCROLL | NOT WS_VISIBLE | WS_VSCROLL | WS_TABSTOP
-    LTEXT           "Weight:",IDC_STATIC,6,150,33,11
-    EDITTEXT        IDC_FLOAT1,59,148,56,13,ES_AUTOHSCROLL
-    LTEXT           "MinWeight:",IDC_STATIC,6,165,38,11
-    EDITTEXT        IDC_FLOAT2,59,164,56,13,ES_AUTOHSCROLL
-    LTEXT           "MaxWeight:",IDC_STATIC,125,165,40,11
-    EDITTEXT        IDC_FLOAT3,180,164,54,13,ES_AUTOHSCROLL
-    LTEXT           "MinDiff:",IDC_STATIC,279,222,8,12,NOT WS_VISIBLE
-    EDITTEXT        IDC_FLAG4,291,222,8,12,ES_AUTOHSCROLL | NOT WS_VISIBLE
-    LTEXT           "Multi-Side:",IDC_STATIC,7,115,33,12
-    PUSHBUTTON      "Delete",IDC_DELETE,220,23,76,13
-    PUSHBUTTON      "Add",IDC_ADD,140,23,74,13
-    CONTROL         "Enabled",IDC_ENABLED,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,60,23,76,11
-    CONTROL         "Easy",IDC_EASY,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,59,133,42,13
-    CONTROL         "Medium",IDC_MEDIUM,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,124,132,42,13
-    CONTROL         "Hard",IDC_HARD,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,199,132,42,13
-    CONTROL         "Base defense",IDC_BASEDEFENSE,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,124,116,67,13
-    CONTROL         "Available in Skirmish",IDC_SKIRMISH,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,199,116,85,14
-    COMBOBOX        IDC_MULTISIDE,60,116,56,63,CBS_DROPDOWN | WS_VSCROLL | WS_TABSTOP
-    LTEXT           "Unittype (X):",IDC_STATIC,171,200,51,10
-    COMBOBOX        IDC_UNITTYPE,171,212,125,255,CBS_DROPDOWN | WS_VSCROLL | WS_TABSTOP
-    LTEXT           "Condition:",IDC_STATIC,8,200,50,11
-    COMBOBOX        IDC_CONDITION,8,212,95,82,CBS_DROPDOWNLIST | WS_VSCROLL | WS_TABSTOP
-    EDITTEXT        IDC_NUMBER,109,212,54,13,ES_AUTOHSCROLL
-    LTEXT           "Number (N):",IDC_STATIC,110,200,56,11
-    LTEXT           "Additional parameters for the appropiate AI Trigger Types:",IDC_STATIC,6,188,295,12
-END
-#endif
-
 IDD_USERSCRIPTS DIALOG 0, 0, 301, 193
 STYLE DS_SETFONT | DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
 CAPTION "Map Scripts"
@@ -1676,14 +1312,6 @@ BEGIN
         BOTTOMMARGIN, 45
     END
 
-    "IDD_SAVEOPTIONS$(TS_MODE)", DIALOG
-    BEGIN
-        LEFTMARGIN, 7
-        RIGHTMARGIN, 226
-        TOPMARGIN, 7
-        BOTTOMMARGIN, 118
-    END
-
     IDD_MULTISAVEOPT, DIALOG
     BEGIN
         LEFTMARGIN, 7
@@ -1700,7 +1328,7 @@ BEGIN
         BOTTOMMARGIN, 165
     END
 
-    "IDD_SAVEOPTIONS$(RA2_MODE)", DIALOG
+    IDD_SAVEOPTIONS, DIALOG
     BEGIN
         LEFTMARGIN, 7
         RIGHTMARGIN, 226
@@ -1737,7 +1365,7 @@ BEGIN
     BEGIN
     END
 
-    "IDD_TSOPTIONS$(RA2_MODE)", DIALOG
+    IDD_TSOPTIONS, DIALOG
     BEGIN
         BOTTOMMARGIN, 165
     END
@@ -1762,12 +1390,6 @@ BEGIN
     BEGIN
     END
 
-    "IDD_INFO$(TS_MODE)", DIALOG
-    BEGIN
-        RIGHTMARGIN, 343
-        BOTTOMMARGIN, 243
-    END
-
     IDD_SPECIALFLAGS, DIALOG
     BEGIN
     END
@@ -1788,20 +1410,11 @@ BEGIN
     BEGIN
     END
 
-    "IDD_LOADING$(TS_MODE)", DIALOG
-    BEGIN
-        BOTTOMMARGIN, 159
-    END
-
     IDD_WAYPOINT, DIALOG
     BEGIN
     END
 
     IDD_CELLTAG, DIALOG
-    BEGIN
-    END
-
-    "IDD_TEAMTYPES$(TS_MODE)", DIALOG
     BEGIN
     END
 
@@ -1817,7 +1430,7 @@ BEGIN
     BEGIN
     END
 
-    "IDD_AITRIGGERTYPES$(RA2_MODE)", DIALOG
+    IDD_AITRIGGERTYPES, DIALOG
     BEGIN
     END
 
@@ -1859,10 +1472,6 @@ BEGIN
     END
 
     IDD_DYNAMICLOAD, DIALOG
-    BEGIN
-    END
-
-    "IDD_SAVING$(TS_MODE)", DIALOG
     BEGIN
     END
 
@@ -1915,32 +1524,23 @@ BEGIN
         HORZGUIDE, 79
     END
 
-    "IDD_TSOPTIONS$(TS_MODE)", DIALOG
-    BEGIN
-        BOTTOMMARGIN, 165
-    END
-
-    "IDD_INFO$(RA2_MODE)", DIALOG
+    IDD_INFO, DIALOG
     BEGIN
         RIGHTMARGIN, 342
         TOPMARGIN, 8
         BOTTOMMARGIN, 242
     END
 
-    "IDD_LOADING$(RA2_MODE)", DIALOG
+    IDD_LOADING, DIALOG
     BEGIN
         BOTTOMMARGIN, 159
     END
 
-    "IDD_TEAMTYPES$(RA2_MODE)", DIALOG
+    IDD_TEAMTYPES, DIALOG
     BEGIN
     END
 
     IDD_NEWMAPTYPE, DIALOG
-    BEGIN
-    END
-
-    "IDD_NEWMAPCREATE$(TS_MODE)", DIALOG
     BEGIN
     END
 
@@ -1972,11 +1572,11 @@ BEGIN
     BEGIN
     END
 
-    "IDD_NEWMAPCREATE$(RA2_MODE)", DIALOG
+    IDD_NEWMAPCREATE, DIALOG
     BEGIN
     END
 
-    "IDD_SAVING$(RA2_MODE)", DIALOG
+    IDD_SAVING, DIALOG
     BEGIN
     END
 
@@ -1998,10 +1598,6 @@ BEGIN
         RIGHTMARGIN, 179
         TOPMARGIN, 7
         BOTTOMMARGIN, 88
-    END
-
-    "IDD_AITRIGGERTYPES$(TS_MODE)", DIALOG
-    BEGIN
     END
 
     IDD_USERSCRIPTS, DIALOG
@@ -2405,61 +2001,6 @@ BEGIN
     0
 END
 
-#if defined(APSTUDIO_INVOKED) || defined(TS_MODE)
-#if defined(APSTUDIO_INVOKED)
-IDD_TEAMTYPES$(TS_MODE) DLGINIT
-#else
-IDD_TEAMTYPES DLGINIT
-#endif
-BEGIN
-    IDC_TECHLEVEL, 0x403, 2, 0
-0x0030, 
-    IDC_TECHLEVEL, 0x403, 2, 0
-0x0031, 
-    IDC_TECHLEVEL, 0x403, 2, 0
-0x0032, 
-    IDC_TECHLEVEL, 0x403, 2, 0
-0x0033, 
-    IDC_TECHLEVEL, 0x403, 2, 0
-0x0034, 
-    IDC_TECHLEVEL, 0x403, 2, 0
-0x0035, 
-    IDC_TECHLEVEL, 0x403, 2, 0
-0x0036, 
-    IDC_TECHLEVEL, 0x403, 2, 0
-0x0037, 
-    IDC_TECHLEVEL, 0x403, 2, 0
-0x0038, 
-    IDC_TECHLEVEL, 0x403, 2, 0
-0x0039, 
-    IDC_TECHLEVEL, 0x403, 3, 0
-0x3031, "\000" 
-    IDC_GROUP, 0x403, 3, 0
-0x312d, "\000" 
-    IDC_VETERANLEVEL, 0x403, 2, 0
-0x0031, 
-    IDC_VETERANLEVEL, 0x403, 2, 0
-0x0032, 
-    IDC_VETERANLEVEL, 0x403, 2, 0
-0x0033, 
-    IDC_MINDCONTROLDECISION, 0x403, 17, 0
-0x2030, 0x202d, 0x443c, 0x6e6f, 0x7427, 0x6320, 0x7261, 0x3e65, "\000" 
-    IDC_MINDCONTROLDECISION, 0x403, 16, 0
-0x2031, 0x202d, 0x6441, 0x2064, 0x6f54, 0x5420, 0x6165, 0x006d, 
-    IDC_MINDCONTROLDECISION, 0x403, 19, 0
-0x2032, 0x202d, 0x7550, 0x2074, 0x6e69, 0x4720, 0x6972, 0x646e, 0x7265, 
-"\000" 
-    IDC_MINDCONTROLDECISION, 0x403, 23, 0
-0x2033, 0x202d, 0x7550, 0x2074, 0x6e69, 0x4220, 0x6f69, 0x5220, 0x6165, 
-0x7463, 0x726f, "\000" 
-    IDC_MINDCONTROLDECISION, 0x403, 15, 0
-0x2034, 0x202d, 0x6f47, 0x7420, 0x206f, 0x7548, 0x746e, "\000" 
-    IDC_MINDCONTROLDECISION, 0x403, 15, 0
-0x2035, 0x202d, 0x6f44, 0x4e20, 0x746f, 0x6968, 0x676e, "\000" 
-    0
-END
-#endif
-
 IDD_TAGS DLGINIT
 BEGIN
     IDC_REPEAT, 0x403, 36, 0
@@ -2481,12 +2022,7 @@ BEGIN
     0
 END
 
-#if defined(APSTUDIO_INVOKED) || defined(RA2_MODE)
-#if defined(APSTUDIO_INVOKED)
-IDD_AITRIGGERTYPES$(RA2_MODE) DLGINIT
-#else
 IDD_AITRIGGERTYPES DLGINIT
-#endif
 BEGIN
     IDC_FLAG2, 0x403, 8, 0
 0x312d, 0x4e20, 0x6e6f, 0x0065, 
@@ -2546,7 +2082,6 @@ BEGIN
 0x6f6e, 0x2074, 0x7165, 0x6175, 0x206c, 0x6f74, "\000" 
     0
 END
-#endif
 
 IDD_BASIC DLGINIT
 BEGIN
@@ -2776,12 +2311,7 @@ BEGIN
     0
 END
 
-#if defined(APSTUDIO_INVOKED) || defined(RA2_MODE)
-#if defined(APSTUDIO_INVOKED)
-IDD_TEAMTYPES$(RA2_MODE) DLGINIT
-#else
 IDD_TEAMTYPES DLGINIT
-#endif
 BEGIN
     IDC_TECHLEVEL, 0x403, 2, 0
 0x0030, 
@@ -2829,7 +2359,6 @@ BEGIN
 0x2035, 0x202d, 0x6f44, 0x4e20, 0x746f, 0x6968, 0x676e, "\000" 
     0
 END
-#endif
 
 IDD_NEWMAPCREATENEW DLGINIT
 BEGIN
@@ -2950,62 +2479,6 @@ BEGIN
     0
 END
 
-#if defined(APSTUDIO_INVOKED) || defined(TS_MODE)
-#if defined(APSTUDIO_INVOKED)
-IDD_AITRIGGERTYPES$(TS_MODE) DLGINIT
-#else
-IDD_AITRIGGERTYPES DLGINIT
-#endif
-BEGIN
-    IDC_FLAG2, 0x403, 8, 0
-0x312d, 0x4e20, 0x6e6f, 0x0065, 
-    IDC_FLAG2, 0x403, 37, 0
-0x2030, 0x6e45, 0x6d65, 0x2079, 0x776f, 0x736e, 0x2820, 0x4f43, 0x444e, 
-0x5449, 0x4f49, 0x294e, 0x4e20, 0x6f20, 0x2066, 0x7974, 0x6570, 0x5820, 
-"\000" 
-    IDC_FLAG2, 0x403, 37, 0
-0x2031, 0x6f48, 0x7375, 0x2065, 0x776f, 0x736e, 0x2820, 0x4f43, 0x444e, 
-0x5449, 0x4f49, 0x294e, 0x4e20, 0x6f20, 0x2066, 0x7974, 0x6570, 0x5820, 
-"\000" 
-    IDC_FLAG2, 0x403, 22, 0
-0x2032, 0x6e45, 0x6d65, 0x3a79, 0x5920, 0x6c65, 0x6f6c, 0x2077, 0x6f70, 
-0x6577, 0x0072, 
-    IDC_FLAG2, 0x403, 19, 0
-0x2033, 0x6e45, 0x6d65, 0x3a79, 0x5220, 0x6465, 0x7020, 0x776f, 0x7265, 
-"\000" 
-    IDC_FLAG2, 0x403, 33, 0
-0x2034, 0x6e45, 0x6d65, 0x2079, 0x776f, 0x736e, 0x2820, 0x4f43, 0x444e, 
-0x5449, 0x4f49, 0x294e, 0x4e20, 0x6d20, 0x6e6f, 0x7965, "\000" 
-    IDC_DATA, 0x403, 65, 0
-0x3030, 0x3030, 0x3030, 0x3030, 0x3030, 0x3030, 0x3030, 0x3030, 0x3030, 
-0x3030, 0x3030, 0x3030, 0x3030, 0x3030, 0x3030, 0x3030, 0x3030, 0x3030, 
-0x3030, 0x3030, 0x3030, 0x3030, 0x3030, 0x3030, 0x3030, 0x3030, 0x3030, 
-0x3030, 0x3030, 0x3030, 0x3030, 0x3030, "\000" 
-    IDC_MULTISIDE, 0x403, 7, 0
-0x2030, 0x6f4e, 0x656e, "\000" 
-    IDC_MULTISIDE, 0x403, 6, 0
-0x2031, 0x4447, 0x0049, 
-    IDC_MULTISIDE, 0x403, 6, 0
-0x2032, 0x6f4e, 0x0064, 
-    IDC_CONDITION, 0x403, 10, 0
-0x656c, 0x7373, 0x7420, 0x6168, 0x006e, 
-    IDC_CONDITION, 0x403, 22, 0
-0x656c, 0x7373, 0x7420, 0x6168, 0x206e, 0x726f, 0x6520, 0x7571, 0x6c61, 
-0x7420, 0x006f, 
-    IDC_CONDITION, 0x403, 9, 0
-0x7165, 0x6175, 0x206c, 0x6f74, "\000" 
-    IDC_CONDITION, 0x403, 25, 0
-0x7267, 0x6165, 0x6574, 0x2072, 0x6874, 0x6e61, 0x6f20, 0x2072, 0x7165, 
-0x6175, 0x206c, 0x6f74, "\000" 
-    IDC_CONDITION, 0x403, 13, 0
-0x7267, 0x6165, 0x6574, 0x2072, 0x6874, 0x6e61, "\000" 
-    IDC_CONDITION, 0x403, 13, 0
-0x6f6e, 0x2074, 0x7165, 0x6175, 0x206c, 0x6f74, "\000" 
-    0
-END
-#endif
-
-
 /////////////////////////////////////////////////////////////////////////////
 //
 // Icon
@@ -3013,33 +2486,7 @@ END
 
 // Icon with lowest ID value placed first to ensure application icon
 // remains consistent on all systems.
-#if defined(APSTUDIO_INVOKED) || defined(YR_MODE)
-#if defined(APSTUDIO_INVOKED)
-IDR_MAINFRAME$(YR_MODE) ICON                    "res\\FinalAlert2YR.ico"
-
-#else
 IDR_MAINFRAME           ICON                    "res\\FinalAlert2YR.ico"
-
-#endif
-#endif
-#if defined(APSTUDIO_INVOKED) || defined(RA2_MODE_ICON)
-#if defined(APSTUDIO_INVOKED)
-IDR_MAINFRAME$(RA2_MODE_ICON) ICON                    "res\\FinalAlert2.ico"
-
-#else
-IDR_MAINFRAME           ICON                    "res\\FinalAlert2.ico"
-
-#endif
-#endif
-#if defined(APSTUDIO_INVOKED) || defined(TS_MODE)
-#if defined(APSTUDIO_INVOKED)
-IDR_MAINFRAME$(TS_MODE) ICON                    "res\\FinalSun.ico"
-
-#else
-IDR_MAINFRAME           ICON                    "res\\FinalSun.ico"
-
-#endif
-#endif
 
 /////////////////////////////////////////////////////////////////////////////
 //
@@ -3060,12 +2507,7 @@ IDR_WAVE4               WAVE                    "RES\\uqeue.wav"
 // Version
 //
 
-#if defined(APSTUDIO_INVOKED) || defined(RA2_MODE)
-#if defined(APSTUDIO_INVOKED)
-VS_VERSION_INFO$(RA2_MODE) VERSIONINFO
-#else
 VS_VERSION_INFO VERSIONINFO
-#endif
  FILEVERSION 1,0,0,2
  PRODUCTVERSION 1,0,0,2
  FILEFLAGSMASK 0x3fL
@@ -3099,61 +2541,13 @@ BEGIN
         VALUE "Translation", 0x409, 1200
     END
 END
-#endif
-
-#if defined(APSTUDIO_INVOKED) || defined(TS_MODE)
-#if defined(APSTUDIO_INVOKED)
-VS_VERSION_INFO$(TS_MODE) VERSIONINFO
-#else
-VS_VERSION_INFO VERSIONINFO
-#endif
- FILEVERSION 1,0,0,1
- PRODUCTVERSION 1,0,0,1
- FILEFLAGSMASK 0x3fL
-#ifdef _DEBUG
- FILEFLAGS 0x23L
-#else
- FILEFLAGS 0x22L
-#endif
- FILEOS 0x4L
- FILETYPE 0x1L
- FILESUBTYPE 0x0L
-BEGIN
-    BLOCK "StringFileInfo"
-    BEGIN
-        BLOCK "040904b0"
-        BEGIN
-            VALUE "Comments", "FinalSun Mission Editor"
-            VALUE "CompanyName", "Electronic Arts, Inc."
-            VALUE "FileDescription", "FinalSun"
-            VALUE "FileVersion", "2.00"
-            VALUE "InternalName", "FinalSun Mission Editor"
-            VALUE "LegalCopyright", "Copyright (C) 1999-2024 Electronic Arts, Inc."
-            VALUE "LegalTrademarks", "FinalSun"
-            VALUE "OriginalFilename", "FinalSun.EXE"
-            VALUE "ProductName", "FinalSun"
-            VALUE "ProductVersion", "2.00"
-        END
-    END
-    BLOCK "VarFileInfo"
-    BEGIN
-        VALUE "Translation", 0x409, 1200
-    END
-END
-#endif
-
 
 /////////////////////////////////////////////////////////////////////////////
 //
 // Menu
 //
 
-#if defined(APSTUDIO_INVOKED) || defined(TS_MODE)
-#if defined(APSTUDIO_INVOKED)
-IDR_MAIN$(TS_MODE) MENU
-#else
 IDR_MAIN MENU
-#endif
 BEGIN
     POPUP "File"
     BEGIN
@@ -3253,114 +2647,6 @@ BEGIN
         MENUITEM "Show logs",                   ID_HELP_SHOWLOGS
     END
 END
-#endif
-
-#if defined(APSTUDIO_INVOKED) || defined(RA2_MODE)
-#if defined(APSTUDIO_INVOKED)
-IDR_MAIN$(RA2_MODE) MENU
-#else
-IDR_MAIN MENU
-#endif
-BEGIN
-    POPUP "File"
-    BEGIN
-        MENUITEM "New",                         ID_FILE_NEW
-        MENUITEM SEPARATOR
-        MENUITEM "Open",                        ID_FILE_OPENMAP
-        MENUITEM SEPARATOR
-        MENUITEM "Save",                        ID_FILE_SAVE
-        MENUITEM "Save as",                     ID_FILE_SAVEAS
-        MENUITEM SEPARATOR
-        MENUITEM "Check map",                   ID_FILE_VALIDATEMAP
-        MENUITEM SEPARATOR
-        MENUITEM "Quit",                        ID_FILE_QUIT
-    END
-    POPUP "Edit"
-    BEGIN
-        MENUITEM "Undo\tCtrl+Z",                ID_EDIT_UNDO
-        MENUITEM "Redo\tCtrl+Y",                ID_EDIT_REDO
-        MENUITEM SEPARATOR
-        MENUITEM "Copy\tCtrl+C",                ID_EDIT_COPY
-        MENUITEM "Copy whole map",              ID_EDIT_COPYWHOLEMAP
-        MENUITEM "Paste\tCtrl+V",               ID_EDIT_PASTE
-        MENUITEM "Paste centered",              ID_EDIT_PASTEWHOLEMAP
-        MENUITEM SEPARATOR
-        MENUITEM "Map",                         ID_EDIT_MAP
-        MENUITEM "Basic",                       ID_EDIT_BASICSETTINGS
-        MENUITEM "Special flags",               ID_EDIT_SPECIALFLAGS
-        MENUITEM "Lighting",                    ID_EDIT_LIGHTING
-        MENUITEM SEPARATOR
-        MENUITEM "Singleplayer settings",       ID_EDIT_SINGLEPLAYERSETTINGS
-        MENUITEM SEPARATOR
-        MENUITEM "Houses",                      ID_EDIT_HOUSES
-        MENUITEM SEPARATOR
-        MENUITEM "Local variables (Locals)",    ID_EDIT_GLOBALVARIABLES
-        MENUITEM SEPARATOR
-        MENUITEM "Trigger editor",              ID_EDIT_TRIGGEREDITOR
-        MENUITEM "Tag editor",                  ID_EDIT_TAGS
-        MENUITEM SEPARATOR
-        MENUITEM "Scripts",                     ID_EDIT_SCRIPTS
-        MENUITEM SEPARATOR
-        MENUITEM "Taskforces",                  ID_EDIT_TASKFORCES
-        MENUITEM "Teams",                       ID_EDIT_TEAMS
-        MENUITEM SEPARATOR
-        MENUITEM "AI Triggers",                 ID_EDIT_AITRIGGERS
-        MENUITEM "AI Trigger enabling",         ID_EDIT_AITRIGGERENABLING
-        MENUITEM SEPARATOR
-        MENUITEM "INI editing",                 ID_EDIT_INIEDITING
-    END
-    POPUP "Terrain"
-    BEGIN
-        MENUITEM "Raise ground",                ID_TERRAIN_HEIGHTENGROUND
-        MENUITEM "Lower ground",                ID_TERRAIN_LOWERGROUND
-        MENUITEM "Flatten ground",              ID_TERRAIN_FLATTEN
-        MENUITEM SEPARATOR
-        MENUITEM "Hide tileset",                ID_TERRAIN_CLOAK
-        MENUITEM "Show every tileset",          ID_TERRAIN_SHOWEVERYTILE
-        MENUITEM "Hide single field",           ID_TERRAIN_HIDEFIELD
-        MENUITEM "Show all fields",             ID_TERRAIN_SHOWALLFIELDS
-        MENUITEM SEPARATOR
-        MENUITEM "Raise single tile (Be careful!)", ID_TERRAIN_RAISETILE
-        MENUITEM "Lower single tile (Be careful!)", ID_TERRAIN_LOWERTILE
-    END
-    POPUP "Map tools"
-    BEGIN
-        MENUITEM "Change map height",           ID_MAPTOOLS_CHANGEMAPHEIGHT
-        MENUITEM SEPARATOR
-        MENUITEM "Autocreate shores",           ID_MAPTOOLS_AUTOCREATESHORES
-        MENUITEM "Auto level using cliffs",     ID_MAPTOOLS_AUTOLEVEL
-        MENUITEM SEPARATOR
-        MENUITEM "Paint cliff front",           ID_MAPTOOLS_FRONTCLIFF
-        MENUITEM "Paint cliff back",            ID_MAPTOOLS_BACKCLIFF
-        MENUITEM SEPARATOR
-        MENUITEM "Search Waypoint",             ID_MAPTOOLS_SEARCHWAYPOINT
-        MENUITEM SEPARATOR
-        MENUITEM "Tool Scripts",                ID_MAPTOOLS_TOOLSCRIPTS
-    END
-    POPUP "Options"
-    BEGIN
-        MENUITEM "Settings",                    ID_OPTIONS_TIBERIANSUNOPTIONS
-        MENUITEM "Show minimap",                ID_OPTIONS_SHOWMINIMAP
-        MENUITEM "Easy mode",                   ID_OPTIONS_SIMPLEVIEW
-        MENUITEM "Sounds",                      ID_OPTIONS_SOUNDS
-        MENUITEM "Show Building Outline",       ID_OPTIONS_SHOWBUILDINGOUTLINE
-        MENUITEM "Disable AutoShore\tCTRL-A",   ID_OPTIONS_DISABLEAUTOSHORE
-        MENUITEM "Disable AutoLat\tCTRL-L",     ID_OPTIONS_DISABLEAUTOLAT
-        MENUITEM "Disable Slope Correction",    ID_OPTIONS_DISABLESLOPECORRECTION
-        MENUITEM "Smooth zoom",                 ID_OPTIONS_SMOOTHZOOM
-        MENUITEM "Use default mouse cursor",    ID_OPTIONS_USEDEFAULTMOUSECURSOR
-    END
-    POPUP "Help"
-    BEGIN
-        MENUITEM "Manual\tF1",                  ID_HELP
-        MENUITEM SEPARATOR
-        MENUITEM "Info",                        ID_HELP_INFO
-        MENUITEM "Tip of the day",              ID_HELP_TIPOFTHEDAY
-        MENUITEM SEPARATOR
-        MENUITEM "Show logs",                   ID_HELP_SHOWLOGS
-    END
-END
-#endif
 
 
 /////////////////////////////////////////////////////////////////////////////
@@ -3422,49 +2708,15 @@ END
 // AFX_DIALOG_LAYOUT
 //
 
-#if defined(APSTUDIO_INVOKED) || defined(RA2_MODE)
-#if defined(APSTUDIO_INVOKED)
-IDD_INFO$(RA2_MODE) AFX_DIALOG_LAYOUT
-#else
 IDD_INFO AFX_DIALOG_LAYOUT
-#endif
 BEGIN
     0
 END
-#endif
 
-#if defined(APSTUDIO_INVOKED) || defined(TS_MODE)
-#if defined(APSTUDIO_INVOKED)
-IDD_INFO$(TS_MODE) AFX_DIALOG_LAYOUT
-#else
-IDD_INFO AFX_DIALOG_LAYOUT
-#endif
-BEGIN
-    0
-END
-#endif
-
-#if defined(APSTUDIO_INVOKED) || defined(RA2_MODE)
-#if defined(APSTUDIO_INVOKED)
-IDD_LOADING$(RA2_MODE) AFX_DIALOG_LAYOUT
-#else
 IDD_LOADING AFX_DIALOG_LAYOUT
-#endif
 BEGIN
     0
 END
-#endif
-
-#if defined(APSTUDIO_INVOKED) || defined(TS_MODE)
-#if defined(APSTUDIO_INVOKED)
-IDD_LOADING$(TS_MODE) AFX_DIALOG_LAYOUT
-#else
-IDD_LOADING AFX_DIALOG_LAYOUT
-#endif
-BEGIN
-    0
-END
-#endif
 
 IDD_FINALSUN_DIALOG AFX_DIALOG_LAYOUT
 BEGIN
@@ -3476,27 +2728,10 @@ BEGIN
     0
 END
 
-#if defined(APSTUDIO_INVOKED) || defined(TS_MODE)
-#if defined(APSTUDIO_INVOKED)
-IDD_TSOPTIONS$(TS_MODE) AFX_DIALOG_LAYOUT
-#else
 IDD_TSOPTIONS AFX_DIALOG_LAYOUT
-#endif
 BEGIN
     0
 END
-#endif
-
-#if defined(APSTUDIO_INVOKED) || defined(RA2_MODE)
-#if defined(APSTUDIO_INVOKED)
-IDD_TSOPTIONS$(RA2_MODE) AFX_DIALOG_LAYOUT
-#else
-IDD_TSOPTIONS AFX_DIALOG_LAYOUT
-#endif
-BEGIN
-    0
-END
-#endif
 
 IDD_TRIGGEREDITOR AFX_DIALOG_LAYOUT
 BEGIN
@@ -3585,7 +2820,6 @@ BEGIN
     ID_MARBLEMADNESS        "Switch Framework Mode"
 END
 
-#endif    // Englisch (USA) resources
 /////////////////////////////////////////////////////////////////////////////
 
 

@@ -871,17 +871,10 @@ protected:
 
 		if (isGreenTiberium(td.overlay))
 		{
-#ifndef RA2_MODE
-			col.rgbtBlue = 0;
-			col.rgbtGreen = 200;
-			col.rgbtRed = 0;
-			col_r = col;
-#else
 			col.rgbtBlue = 0;
 			col.rgbtGreen = 250;
 			col.rgbtRed = 250;
 			col_r = col;
-#endif
 		}
 		else if (td.overlay == OVRL_VEINS)
 		{

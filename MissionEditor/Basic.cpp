@@ -312,10 +312,6 @@ void CBasic::UpdateStrings()
 	SetDlgItemText(IDC_LFREERADAR, GetLanguageStringACP("BasicFreeRadar"));
 	SetDlgItemText(IDC_LINITIME, GetLanguageStringACP("BasicInitTime"));
 	SetDlgItemText(IDC_LADDONNEEDED, GetLanguageStringACP("BasicAddOnNeeded"));
-
-
-
-#ifdef RA2_MODE
 	GetDlgItem(IDC_LVEINGROWTHENABLED)->ShowWindow(SW_HIDE);
 	GetDlgItem(IDC_VEINGROWTHENABLED)->ShowWindow(SW_HIDE);
 	GetDlgItem(IDC_LTRAINCRATE)->ShowWindow(SW_HIDE);
@@ -324,9 +320,6 @@ void CBasic::UpdateStrings()
 	GetDlgItem(IDC_LICEGROWTHENABLED)->ShowWindow(SW_HIDE);
 	GetDlgItem(IDC_TIBERIUMDEATHTOVISCEROID)->ShowWindow(SW_HIDE);
 	GetDlgItem(IDC_LTIBERIUMDEATHTOVISCEROID)->ShowWindow(SW_HIDE);
-
-
-#endif
 
 	SetWindowText(TranslateStringACP("Basic"));
 }

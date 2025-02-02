@@ -274,11 +274,7 @@ inline BOOL isTrack(int type)
 
 inline BOOL isBigBridge(int type)
 {
-#ifndef RA2_MODE
-	return((type >= 0x18 && type <= 0x19) || (type >= 0x3b && type <= 0x3c));
-#else
 	return((type >= 0x18 && type <= 0x19) || (type >= 0x3b && type <= 0x3c) || (type >= 0xed && type <= 0xee));
-#endif
 }
 
 

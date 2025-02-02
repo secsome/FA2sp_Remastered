@@ -3303,9 +3303,7 @@ void CIsoView::OnLButtonUp(UINT nFlags, CPoint point)
 							{
 
 								Map->SetOverlayAt(i + m_mapy * Map->GetIsoSize(), 0x3c);
-#ifdef RA2_MODE
 								Map->SetOverlayAt(i + m_mapy * Map->GetIsoSize(), 0xee);
-#endif
 								Map->SetOverlayDataAt(i + m_mapy * Map->GetIsoSize(), 0x9);
 							}
 						}
@@ -3317,9 +3315,7 @@ void CIsoView::OnLButtonUp(UINT nFlags, CPoint point)
 							if (Map->GetFielddataAt(m_mapx + i * Map->GetIsoSize())->bHeight == startheight)
 							{
 								Map->SetOverlayAt(m_mapx + i * Map->GetIsoSize(), 0x3b);
-#ifdef RA2_MODE
 								Map->SetOverlayAt(m_mapx + i * Map->GetIsoSize(), 0xed);
-#endif
 								Map->SetOverlayDataAt(m_mapx + i * Map->GetIsoSize(), 0x0);
 							}
 						}
@@ -3530,39 +3526,6 @@ COLORREF CIsoView::GetColor(const char* house, const char* vcolor)
 			return RGB(rgb[0], rgb[1], rgb[2]);
 		}
 	}
-
-#ifndef RA2_MODE
-	if (strstr(house, houses[0].name) != NULL)
-	{
-		return GDI;
-	}
-	else if (strstr(house, houses[1].name) != NULL)
-	{
-		return Nod;
-	}
-	else if (strstr(house, houses[2].name) != NULL)
-	{
-		return neutral;
-	}
-	else
-	{
-		if (isIncluded(color, "darkred") != NULL)
-		{
-			return Nod;
-		}
-		if (isIncluded(color, "grey") != NULL)
-		{
-			return RGB(120, 120, 120);
-		}
-		if (isIncluded(color, "gold") != NULL)
-		{
-			return GDI;
-		}
-
-
-		return other;
-	}
-#else
 	if (isIncluded(color, "darkred") != NULL)
 	{
 		return RGB(130, 20, 20);
@@ -3615,10 +3578,6 @@ COLORREF CIsoView::GetColor(const char* house, const char* vcolor)
 	{
 		return other;
 	}
-
-#endif
-
-
 }
 
 
@@ -3971,10 +3930,7 @@ void CIsoView::DrawCell(int x, int y, int w, int h, COLORREF col, BOOL dotted, H
 		while (lpdsBack->GetDC(&hDC) == DDERR_WASSTILLDRAWING);
 
 	HPEN p;
-	int width = 1;
-#ifdef RA2_MODE
-	width = 2;
-#endif
+	int width = 2;
 	if (!dotted)	p = CreatePen(PS_SOLID, width, col);
 	else	p = CreatePen(PS_DOT, 0, col);
 
@@ -4999,10 +4955,7 @@ void CIsoView::PlaceCurrentObjectAt(int x, int y)
 		}
 		else if (AD.data == 3) // blue tiberium mode
 		{
-			int o = 0x7f;
-#ifdef RA2_MODE 
-			o = 0x1e;
-#endif
+			int o = 0x1e;
 			//if((*tiledata)[m.wGround].bAllowTiberium)
 			{
 				if (AD.data2 == 0)
@@ -5964,25 +5917,7 @@ void CIsoView::DrawMap()
 #ifndef NOSURFACES
 					Blit(pic.pic, drawCoordsOvrl.x, drawCoordsOvrl.y);
 #else
-
-#ifdef RA2_MODE
 					BlitPic(ddsd.lpSurface, drawCoordsOvrl.x, drawCoordsOvrl.y, r.left, r.top, ddsd.lPitch, r.right, r.bottom, pic);
-#endif
-#ifdef TS_MODE 
-					if (!isGreenTiberium(m.overlay) && !(m.overlay == 0x7f)) // no tib
-						BlitPic(ddsd.lpSurface, drawCoordsOvrl.x, drawCoordsOvrl.y, r.left, r.top, ddsd.lPitch, r.right, r.bottom, pic);
-					else if (m.overlay == 0x7f) // blue tib
-					{
-						int n = RGB(200, 0, 0);
-						BlitPic(ddsd.lpSurface, drawCoordsOvrl.x, drawCoordsOvrl.y, r.left, r.top, ddsd.lPitch, r.right, r.bottom, pic, &n);
-					}
-					else
-					{
-						int n = RGB(0, 200, 0);
-						BlitPic(ddsd.lpSurface, drawCoordsOvrl.x, drawCoordsOvrl.y, r.left, r.top, ddsd.lPitch, r.right, r.bottom, pic, &n);
-					}
-#endif
-
 #endif
 
 				}
@@ -6481,25 +6416,14 @@ void CIsoView::DrawMap()
 #endif
 
 				// move the graphic and text into place
-#ifdef RA2_MODE
 				int image_fudge_x = 4;
 				int image_fudge_y = -20;
 				int text_fudge_x = 12;
 				int text_fudge_y = -24;
-#else
-				int image_fudge_x = 4;
-				int image_fudge_y = -15;
-				int text_fudge_x = 9;
-				int text_fudge_y = -17;
-#endif
 
 				const ProjectedVec waypointImageOffset(image_fudge_x, image_fudge_y);
 				const ProjectedVec waypointTextOffset((f_x / 2) + text_fudge_x, (f_y / 2) + text_fudge_y);
-#ifdef RA2_MODE
 				bool useFont9 = false;
-#else
-				bool useFont9 = true;
-#endif
 				const auto waypointImageCoords = ProjectedCoords({ drawCoords.x, drawCoords.y }) + waypointImageOffset;
 				const auto waypointTextCoords = ProjectedCoords({ drawCoords.x, drawCoords.y }) + waypointTextOffset;
 				m_waypoints_to_render.push_back({ waypointImageCoords.x, waypointImageCoords.y });

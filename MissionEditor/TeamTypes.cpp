@@ -468,10 +468,6 @@ void CTeamTypes::UpdateDialog()
 			wayp->SetItemData(wayp->AddString(*ini.sections["Waypoints"].GetValueName(i)),1);		
 		}
 	}
-	
-#ifdef TS_MODE
-	wayp->ShowWindow(SW_HIDE);
-#endif
 
 	m_TeamTypes.SetCurSel(0);
 	if(sel>=0) m_TeamTypes.SetCurSel(sel);
@@ -551,7 +547,6 @@ void CTeamTypes::OnSelchangeTeamtypes()
 	else
 	m_Waypoint="";
 
-#ifdef RA2_MODE
 	if(isTrue(sec.values["UseTransportOrigin"]))
 	{
 		int w=GetWaypoint(sec.values["TransportWaypoint"]);
@@ -565,7 +560,6 @@ void CTeamTypes::OnSelchangeTeamtypes()
 	}
 	else
 		m_TransportWaypoint=TranslateStringACP("None");
-#endif
 
 	m_Whiner=stob(sec.values["Whiner"]);
 
@@ -817,10 +811,8 @@ void CTeamTypes::OnShowWindow(BOOL bShow, UINT nStatus)
 		OnKillfocusVeteranlevel();
 		OnKillfocusWaypoint();
 		OnKillfocusTag();
-#ifdef RA2_MODE
 		OnKillfocusTransportwaypoint();
 		if(yuri_mode) OnKillfocusMindcontroldecision();
-#endif
 	}
 }
 
@@ -1165,12 +1157,8 @@ void CTeamTypes::OnNewteamtype()
 	s.values["AreTeamMembersRecruitable"]="no";
 	s.values["IsBaseDefense"]="no";
 	s.values["OnlyTargetHouseEnemy"]="no";
-
-#ifdef RA2_MODE
 	s.values["UseTransportOrigin"]="no";
 	if(yuri_mode) s.values["MindControlDecision"]="0";
-	
-#endif
 		
 	
 	//UpdateDialog();
@@ -1233,10 +1221,6 @@ void CTeamTypes::OnKillfocusTag()
 
 void CTeamTypes::OnEditchangeTransportwaypoint() 
 {
-#ifndef RA2_MODE
-	return;
-#endif
-
 	CIniFile& ini=Map->GetIniFile();
 
 	UpdateData(TRUE);

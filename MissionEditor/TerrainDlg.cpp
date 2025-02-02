@@ -205,11 +205,9 @@ void CTerrainDlg::Update()
 					if (ovrlpics[i][p] != NULL && ovrlpics[i][p]->pic != NULL)
 						bListIt = TRUE;
 
-#ifdef RA2_MODE
 				if ((i >= 39 && i <= 60) || (i >= 180 && i <= 201) || i == 239 || i == 178 || i == 167 || i == 126
 					|| (i >= 122 && i <= 125))
 					bListIt = FALSE;
-#endif
 
 				if (bListIt)
 				{

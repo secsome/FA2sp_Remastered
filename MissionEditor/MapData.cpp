@@ -362,10 +362,6 @@ void CMapData::CalcMapRect()
 
 WORD CMapData::GetHousesCount(BOOL bCountries)
 {
-#ifndef RA2_MODE
-	bCountries = FALSE;
-#endif
-
 	CString sSection = MAPHOUSES;
 	if (bCountries) sSection = HOUSES;
 
@@ -379,10 +375,6 @@ CString CMapData::GetHouseID(WORD wHouse, BOOL bCountry)
 {
 	if (wHouse >= GetHousesCount())
 		return CString("");
-
-#ifndef RA2_MODE
-	bCountry = FALSE;
-#endif
 
 	CString sSection = MAPHOUSES;
 	if (bCountry) sSection = HOUSES;
@@ -4068,12 +4060,7 @@ void CMapData::CreateMap(DWORD dwWidth, DWORD dwHeight, LPCTSTR lpTerrainType, D
 
 	CString stdMap;
 	stdMap = AppPath;
-#ifdef TS_MODE
-	stdMap += "\\StdMapTS.ini";
-#endif
-#ifdef RA2_MODE
 	stdMap += "\\StdMapRA2.ini";
-#endif
 
 	m_mapfile.InsertFile(stdMap, NULL);
 
@@ -5985,7 +5972,6 @@ void CMapData::CreateShore(int left, int top, int right, int bottom, BOOL bRemov
 
 	// now make LAT (RA2 only)
 
-#ifdef RA2_MODE
 	int x, y;
 	for (x = left;x < right;x++)
 	{
@@ -6068,8 +6054,6 @@ void CMapData::CreateShore(int left, int top, int right, int bottom, BOOL bRemov
 			}
 		}
 	}
-#endif
-
 
 
 	//delete[] replaced;
@@ -6119,7 +6103,7 @@ void CMapData::Copy(int left, int top, int right, int bottom)
 	cd.iHeight = bottom - top;
 	cd.dwVersion = 0;
 	cd.dwReserved = 0;
-	if (editor_mode == ra2_mode) cd.bGame = 1; else cd.bGame = 0;
+	cd.bGame = 1;
 
 	HGLOBAL hGlob = GlobalAlloc(GMEM_MOVEABLE | GMEM_DDESHARE, sizeof(CLIPBOARD_DATA) + cd.iWidth * cd.iHeight * sizeof(CLIPBOARD_MAPCOPY_ENTRY));
 
@@ -6513,10 +6497,6 @@ void CMapData::SmoothTiberium(DWORD dwPos)
 
 void CMapData::ResizeMap(int iLeft, int iTop, DWORD dwNewWidth, DWORD dwNewHeight)
 {
-#ifndef RA2_MODE
-	if (MessageBox(0, "Tunnels may be damaged after changing the map size. Continue?", "Warning", MB_YESNO) == IDNO) return;
-#endif
-
 	// MW: New object replacing code to fix crashes
 	INFANTRY* inf = new(INFANTRY[GetInfantryCount()]);
 	int inf_count = GetInfantryCount();
@@ -7018,11 +6998,6 @@ int GetEventParamStart(CString& EventData, int param);
 
 BOOL CMapData::IsYRMap()
 {
-#ifdef TS_MODE
-	return FALSE;
-#else
-
-	//if(yuri_mode) // always check for this
 	{
 		if (Map->GetTheater() == THEATER3 || Map->GetTheater() == THEATER4 || Map->GetTheater() == THEATER5)
 			return TRUE;
@@ -7171,7 +7146,6 @@ BOOL CMapData::IsYRMap()
 	}
 
 	return FALSE;
-#endif
 }
 
 #ifdef SMUDGE_SUPP

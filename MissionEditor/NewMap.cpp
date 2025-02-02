@@ -128,9 +128,7 @@ BOOL CNewMap::OnInitDialog()
 	CComboBox& theater=*((CComboBox*)GetDlgItem(IDC_THEATER));
 	theater.AddString(THEATER0);
 	theater.AddString(THEATER1);
-#ifdef RA2_MODE
 	theater.AddString(THEATER2);
-#endif
 
 	m_Theater=0;
 

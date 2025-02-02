@@ -250,11 +250,7 @@ BOOL CFinalSunDlg::OnInitDialog()
 	SetIcon(m_hIcon, FALSE);		// use small symbol
 	
 	CString cap;
-#ifndef RA2_MODE
-	cap= GetLanguageStringACP("MainDialogCaption");
-#else
 	cap=GetLanguageStringACP("MainDialogCaptionRA2");
-#endif
 
 	cap+=" (";
 	cap+=GetLanguageStringACP("NoMapLoaded");
@@ -403,20 +399,6 @@ BOOL CFinalSunDlg::OnInitDialog()
 	}
 
 	UpdateDialogs();
-
-#ifndef RA2_MODE	
-	CTime t=t.GetCurrentTime();
-	
-	if(t.GetDay()>=24 && t.GetDay()<=26 && t.GetMonth()==12)
-	{
-		CString str;
-		GetWindowText(str);
-
-		SetWindowText(str+" Merry Christmas! Fröhliche Weihnachten!");
-
-	}
-#endif
-	
 
 	return TRUE;  
 }
@@ -885,7 +867,6 @@ void CFinalSunDlg::SaveMap(CString FileName_)
 	
 
 	
-#ifdef RA2_MODE
 	if(Map->IsMultiplayer())
 	{
 		if(FileName_.Find(".mmx")>=0) bSaveAsMMX=TRUE; else bSaveAsMMX=FALSE;
@@ -989,7 +970,6 @@ void CFinalSunDlg::SaveMap(CString FileName_)
 			bSaveAsMMX=FALSE;
 		}*/
 	}
-#endif
 
 	CString MMXFileName=CoreName;
 	MMXFileName+=".mmx";
@@ -1205,19 +1185,11 @@ void CFinalSunDlg::SaveMap(CString FileName_)
 
 		DWORD bwr;
 		
-#ifdef TS_MODE
-		fi= "; Map created with FinalSun Mission Editor";
-		fi+="\n";
-		fi+= "; note that all comments were truncated" ;
-		fi+= "\n";
-		fi+="\n";
-#else
-		fi= "; Map created with FinalAlert 2 Mission Editor";
-		fi+="\n";
-		fi+= "; note that all comments were truncated" ;
-		fi+= "\n";
-		fi+="\n";
-#endif
+		fi = "; Map created with FinalAlert 2 Mission Editor";
+		fi += "\n";
+		fi += "; note that all comments were truncated";
+		fi += "\n";
+		fi += "\n";
 
 		WriteFile(hFile, fi, fi.GetLength(), &bwr, NULL);
 
@@ -1483,11 +1455,7 @@ void CFinalSunDlg::SaveMap(CString FileName_)
 				files[0]=(LPCSTR)PKTFileName;
 				files[1]=(LPCSTR)MAPFileName;
 
-#ifdef RA2_MODE
 				auto game = yuri_mode ? FSunPackLib::Game::RA2_YR : FSunPackLib::Game::RA2;
-#else
-				auto game = FSunPackLib::Game::TS;
-#endif
 				FSunPackLib::WriteMixFile(MMXFileName, files, 2, game);
 
 				DeleteFile(PKTFileName);
@@ -1885,11 +1853,9 @@ void CFinalSunDlg::OnFileNew()
 			int i;
 			for (i=0;i<rules.sections[HOUSES].values.size();i++)
 			{
-#ifdef RA2_MODE
 				CString j=*rules.sections[HOUSES].GetValue(i);
 				j.MakeLower();
 				if(j=="nod" || j=="gdi") continue;
-#endif	
 
 				char c[50];
 				int k=i;
@@ -1897,9 +1863,7 @@ void CFinalSunDlg::OnFileNew()
 				CString country=*rules.sections[HOUSES].GetValue(i);
 				CString house=GetHouseSectionName(country);
 				ini.sections[MAPHOUSES].values[c]=house;
-#ifdef RA2_MODE
 				ini.sections[HOUSES].values[c]=country;
-#endif
 
 				// is it a player house or a ai house?
 				if(house!=(LPCTSTR)plhouse)
@@ -1916,10 +1880,6 @@ void CFinalSunDlg::OnFileNew()
 						char c[50];
 						k=i;
 						itoa(i,c,10);
-#ifdef RA2_MODE
-						//k=i+rules.sections[HOUSES].values.size();
-						//itoa(k,c,10);
-#endif
 						
 						ini.sections["Triggers"].values[id]=country;
 						ini.sections["Triggers"].values[id]+=",<none>,AI Auto Production ";
@@ -1953,12 +1913,7 @@ void CFinalSunDlg::OnFileNew()
 					ini.sections[house].values["PlayerControl"]="yes";
 				}
 
-#ifndef RA2_MODE
-				ini.sections[house].values["ActsLike"]=c;
-				ini.sections[house].values["Side"]=house;
-#else
 				ini.sections[house].values["Country"]=*rules.sections[HOUSES].GetValue(i);
-#endif
 				ini.sections[house].values["Edge"]="North";
 				
 				ini.sections[house].values["Color"]=rules.sections[*rules.sections[HOUSES].GetValue(i)].values["Color"];
@@ -1967,8 +1922,6 @@ void CFinalSunDlg::OnFileNew()
 				ini.sections[house].values["NodeCount"]="0";
 				ini.sections[house].values["TechLevel"]="10";
 				ini.sections[house].values["PercentBuilt"]="100";
-
-#ifdef RA2_MODE
 				ini.sections[country].values["ParentCountry"]=country;
 				ini.sections[country].values["Name"]=country;
 				ini.sections[country].values["Suffix"]=rules.sections[country].values["Suffix"];
@@ -1977,9 +1930,6 @@ void CFinalSunDlg::OnFileNew()
 				ini.sections[country].values["Side"]=rules.sections[country].values["Side"];
 				ini.sections[country].values["SmartAI"]=rules.sections[country].values["SmartAI"];
 				ini.sections[country].values["CostUnitsMult"]="1";
-#endif
-
-
 			}
 		}
 
@@ -1987,7 +1937,6 @@ void CFinalSunDlg::OnFileNew()
 	else
 	{
 		// for RA2, we create standard houses
-#ifdef RA2_MODE
 		int i;
 		for (i=0;i<rules.sections[HOUSES].values.size();i++)
 		{
@@ -2013,7 +1962,6 @@ void CFinalSunDlg::OnFileNew()
 			ini.sections[country].values["PlayerControl"]="no";
 
 		}
-#endif
 
 	}
 
@@ -2128,11 +2076,6 @@ void CFinalSunDlg::UpdateStrings()
 			my_menu->GetSubMenu(0)->InsertMenu(10+prev_maps_count, MF_BYPOSITION | MF_STRING, id, str);
 		}
 	}
-
-
-#ifdef RA2_MODE
-	// my_menu->DeleteMenu(4, MF_BYPOSITION);
-#endif
 
 	if(theApp.m_Options.bEasy) my_menu->GetSubMenu(3)->DeleteMenu(0, MF_BYPOSITION);
 
@@ -2261,9 +2204,7 @@ void CFinalSunDlg::OnOptionsSimpleview()
 {
 	CIniFile Options;
 	Options.LoadFile(u8AppDataPath+"\\FinalSun.ini");
-#ifdef RA2_MODE
 	Options.LoadFile(u8AppDataPath+"\\FinalAlert.ini");
-#endif
 
 	if(GetMenu()->GetMenuState(ID_OPTIONS_SIMPLEVIEW, MF_BYCOMMAND) & MF_CHECKED)
 	{
@@ -2282,12 +2223,7 @@ void CFinalSunDlg::OnOptionsSimpleview()
 	}
 
 	UpdateStrings();
-
-#ifndef RA2_MODE
-	Options.SaveFile(u8AppDataPath+"\\FinalSun.ini");
-#else
 	Options.SaveFile(u8AppDataPath+"\\FinalAlert.ini");
-#endif
 
 	UpdateDialogs();
 }
@@ -3171,11 +3107,7 @@ LONG __stdcall ExceptionHandler(
 	}
 
 	CString s3;
-#ifdef TS_MODE
-	s3="INTERNAL APPLICATION ERROR\n\nApplication will now try to free memory, save the current map as \"fcrash_backup.map\" in the FinalSun directory and quit.\n\n\n";
-#else // RA2_MODE
-	s3="INTERNAL APPLICATION ERROR\n\nApplication will now try to free memory, save the current map as \"fcrash_backup.map\" in the FinalAlert 2 directory and quit.\n\n\n";
-#endif
+	s3 = "INTERNAL APPLICATION ERROR\n\nApplication will now try to free memory, save the current map as \"fcrash_backup.map\" in the FinalAlert 2 directory and quit.\n\n\n";
 
 	s3+="Important: If this error has occured while loading graphics, it can very often be fixed by using another system color resolution (16, 24 or 32 bit).";
 
@@ -3526,10 +3458,7 @@ void CFinalSunDlg::OnOptionsDisableautoshore()
 {
 
 	CIniFile Options;
-	Options.LoadFile(u8AppDataPath+"\\FinalSun.ini");
-#ifdef RA2_MODE
 	Options.LoadFile(u8AppDataPath+"\\FinalAlert.ini");
-#endif
 
 	if(GetMenu()->GetMenuState(ID_OPTIONS_DISABLEAUTOSHORE, MF_BYCOMMAND) & MF_CHECKED)
 	{
@@ -3544,12 +3473,7 @@ void CFinalSunDlg::OnOptionsDisableautoshore()
 		Options.sections["UserInterface"].values["DisableAutoShore"]="1";
 	}
 
-	
-#ifndef RA2_MODE
-	Options.SaveFile(u8AppDataPath+"\\FinalSun.ini");
-#else
 	Options.SaveFile(u8AppDataPath+"\\FinalAlert.ini");
-#endif
 
 }
 
@@ -3615,10 +3539,7 @@ void CFinalSunDlg::OnOptionsDisableautoshore()
 void CFinalSunDlg::OnOptionsDisableautolat() 
 {
 	CIniFile Options;
-	Options.LoadFile(u8AppDataPath+"\\FinalSun.ini");
-#ifdef RA2_MODE
 	Options.LoadFile(u8AppDataPath+"\\FinalAlert.ini");
-#endif
 
 	if(GetMenu()->GetMenuState(ID_OPTIONS_DISABLEAUTOLAT, MF_BYCOMMAND) & MF_CHECKED)
 	{
@@ -3633,12 +3554,7 @@ void CFinalSunDlg::OnOptionsDisableautolat()
 		Options.sections["UserInterface"].values["DisableAutoLat"]="1";
 	}
 
-	
-#ifndef RA2_MODE
-	Options.SaveFile(u8AppDataPath+"\\FinalSun.ini");
-#else
 	Options.SaveFile(u8AppDataPath+"\\FinalAlert.ini");
-#endif
 }
 
 void CFinalSunDlg::OnEditPaste() 
@@ -3709,10 +3625,7 @@ void CFinalSunDlg::CheckAvail(CCmdUI *pCmdUI)
 void CFinalSunDlg::OnOptionsSounds() 
 {
 	CIniFile Options;
-	Options.LoadFile(u8AppDataPath+"\\FinalSun.ini");
-#ifdef RA2_MODE
 	Options.LoadFile(u8AppDataPath+"\\FinalAlert.ini");
-#endif
 
 	if(GetMenu()->GetMenuState(ID_OPTIONS_SOUNDS, MF_BYCOMMAND) & MF_CHECKED)
 	{
@@ -3727,12 +3640,7 @@ void CFinalSunDlg::OnOptionsSounds()
 		Options.sections["UserInterface"].values["Sounds"]="1";
 	}
 
-	
-#ifndef RA2_MODE
-	Options.SaveFile(u8AppDataPath+"\\FinalSun.ini");
-#else
 	Options.SaveFile(u8AppDataPath+"\\FinalAlert.ini");
-#endif	
 }
 
 void CFinalSunDlg::OnUpdateOptionsSounds(CCmdUI* pCmdUI) 
@@ -3743,10 +3651,7 @@ void CFinalSunDlg::OnUpdateOptionsSounds(CCmdUI* pCmdUI)
 void CFinalSunDlg::OnOptionsDisableslopecorrection() 
 {
 	CIniFile Options;
-	Options.LoadFile(u8AppDataPath +"\\FinalSun.ini");
-#ifdef RA2_MODE
 	Options.LoadFile(u8AppDataPath +"\\FinalAlert.ini");
-#endif
 
 	if(GetMenu()->GetMenuState(ID_OPTIONS_DISABLESLOPECORRECTION, MF_BYCOMMAND) & MF_CHECKED)
 	{
@@ -3760,23 +3665,13 @@ void CFinalSunDlg::OnOptionsDisableslopecorrection()
 		theApp.m_Options.bDisableSlopeCorrection=TRUE;
 		Options.sections["UserInterface"].values["DisableSlopeCorrection"]="1";
 	}
-
-#ifndef RA2_MODE
-	Options.SaveFile(u8AppDataPath+"\\FinalSun.ini");
-#else
 	Options.SaveFile(u8AppDataPath+"\\FinalAlert.ini");
-#endif	
 }
 
 void CFinalSunDlg::OnOptionsShowbuildingoutline() 
-{
-			
-
+{	
 	CIniFile Options;
-	Options.LoadFile(u8AppDataPath+"\\FinalSun.ini");
-#ifdef RA2_MODE
 	Options.LoadFile(u8AppDataPath+"\\FinalAlert.ini");
-#endif
 
 	if(GetMenu()->GetMenuState(ID_OPTIONS_SHOWBUILDINGOUTLINE, MF_BYCOMMAND) & MF_CHECKED)
 	{
@@ -3792,12 +3687,7 @@ void CFinalSunDlg::OnOptionsShowbuildingoutline()
 	}
 
 	m_view.m_isoview->RedrawWindow(NULL, NULL, RDW_INVALIDATE | RDW_UPDATENOW);
-
-#ifndef RA2_MODE
-	Options.SaveFile(u8AppDataPath +"\\FinalSun.ini");
-#else
 	Options.SaveFile(u8AppDataPath +"\\FinalAlert.ini");
-#endif	
 }
 
 
@@ -3853,15 +3743,7 @@ void CFinalSunDlg::InsertPrevFile(CString lpFilename)
 	}
 
 	CIniFile Options;
-	Options.LoadFile(u8AppDataPath +"\\FinalSun.ini");
-#ifdef RA2_MODE
 	Options.LoadFile(u8AppDataPath +"\\FinalAlert.ini");
-#endif
-
-	
-
-
-
 
 	for(i=3;i>0;i--)
 	{
@@ -3874,14 +3756,7 @@ void CFinalSunDlg::InsertPrevFile(CString lpFilename)
 
 	theApp.m_Options.prev_maps[0]=lpFilename;
 	Options.sections["Files"].values["0"]=theApp.m_Options.prev_maps[0];
-
-
-
-#ifndef RA2_MODE
-	Options.SaveFile(u8AppDataPath +"\\FinalSun.ini");
-#else
 	Options.SaveFile(u8AppDataPath +"\\FinalAlert.ini");
-#endif	
 
 	UpdateStrings(); 
 }
@@ -4069,10 +3944,7 @@ void CFinalSunDlg::OnHelpShowlogs()
 void CFinalSunDlg::OnOptionsSmoothzoom()
 {
 	CIniFile Options;
-	Options.LoadFile(u8AppDataPath + "\\FinalSun.ini");
-#ifdef RA2_MODE
 	Options.LoadFile(u8AppDataPath + "\\FinalAlert.ini");
-#endif
 
 	if (GetMenu()->GetMenuState(ID_OPTIONS_SMOOTHZOOM, MF_BYCOMMAND) & MF_CHECKED)
 	{
@@ -4086,12 +3958,7 @@ void CFinalSunDlg::OnOptionsSmoothzoom()
 	} 
 
 	Options.sections["UserInterface"].values["ViewScaleUseSteps"] = theApp.m_Options.viewScaleUseSteps ? "1" : "0";
-
-#ifndef RA2_MODE
-	Options.SaveFile(u8AppDataPath + "\\FinalSun.ini");
-#else
 	Options.SaveFile(u8AppDataPath + "\\FinalAlert.ini");
-#endif
 }
 
 
@@ -4107,10 +3974,7 @@ BOOL CFinalSunDlg::OnSetCursor(CWnd* pWnd, UINT nHitTest, UINT message)
 void CFinalSunDlg::OnOptionsUsedefaultmousecursor()
 {
 	CIniFile Options;
-	Options.LoadFile(u8AppDataPath + "\\FinalSun.ini");
-#ifdef RA2_MODE
 	Options.LoadFile(u8AppDataPath + "\\FinalAlert.ini");
-#endif
 
 	if (GetMenu()->GetMenuState(ID_OPTIONS_USEDEFAULTMOUSECURSOR, MF_BYCOMMAND) & MF_CHECKED)
 	{
@@ -4126,10 +3990,5 @@ void CFinalSunDlg::OnOptionsUsedefaultmousecursor()
 	}
 
 	Options.sections["UserInterface"].values["UseDefaultMouseCursor"] = theApp.m_Options.useDefaultMouseCursor ? "1" : "0";
-
-#ifndef RA2_MODE
-	Options.SaveFile(u8AppDataPath + "\\FinalSun.ini");
-#else
 	Options.SaveFile(u8AppDataPath + "\\FinalAlert.ini");
-#endif
 }

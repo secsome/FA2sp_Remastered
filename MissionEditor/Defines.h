@@ -37,7 +37,6 @@
 #define SMUDGE_SUPP
 
 // tiberium / ore
-#ifdef RA2_MODE
 #define RIPARIUS_BEGIN 102
 #define RIPARIUS_END 121
 #define CRUENTUS_BEGIN 27
@@ -46,16 +45,6 @@
 #define VINIFERA_END 146
 #define ABOREUS_BEGIN 147
 #define ABOREUS_END 166
-#else
-#define RIPARIUS_BEGIN 102
-#define RIPARIUS_END 121
-#define CRUENTUS_BEGIN 27
-#define CRUENTUS_END 38
-#define VINIFERA_BEGIN 127
-#define VINIFERA_END 146
-#define ABOREUS_BEGIN 147
-#define ABOREUS_END 166
-#endif
 
 // picdata type
 #define PICDATA_TYPE_BMP 0
@@ -126,35 +115,6 @@
 #define THEATER4 "LUNAR"
 #define THEATER5 "DESERT"
 
-
-#define ra2_mode 1
-#define ts_mode 0
-
-
-#ifndef RA2_MODE
-
-#define NO_URBAN
-#define MAXHEIGHT 14
-
-#define f_y 24
-#define f_x 48
-
-#define TERRAINTYPE_GROUND 0x0d
-#define TERRAINTYPE_WATER 0x09
-#define TERRAINTYPE_IMPASSABLE 0x0f
-#define TERRAINTYPE_ROUGH 0x0e
-#define TERRAINTYPE_PAVED 0x0b
-#define TERRAINTYPE_BUILDING 0x07
-#define TERRAINTYPE_DIRT_ROAD 0x0c
-#define TERRAINTYPE_ICE 0x01
-
-#define MAINMIX "TIBSUN.MIX"
-#define HOUSES "Houses"
-#define MAPHOUSES "Houses"
-
-#endif
-#ifdef RA2_MODE
-
 #define MAINMIX "RA2.MIX"
 #define HOUSES "Countries"
 #define MAPHOUSES "Houses"
@@ -172,8 +132,6 @@
 #define TERRAINTYPE_BUILDING 0x07
 #define TERRAINTYPE_DIRT_ROAD 0x0c
 #define TERRAINTYPE_ICE 0x01
-
-#endif
 
 #define SLOPE_UP_RIGHT 1
 #define SLOPE_UP_BOTTOM 2

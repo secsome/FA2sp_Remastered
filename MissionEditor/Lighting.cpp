@@ -105,13 +105,8 @@ void CLighting::UpdateDialog()
 BOOL CLighting::OnInitDialog() 
 {
 	CDialog::OnInitDialog();
-	
-#ifdef RA2_MODE
 	SetDlgItemText(IDC_LIONSTORM, "Weather Storm Settings");
-#endif
-	
 	return TRUE;  // return TRUE unless you set the focus to a control
-	              // EXCEPTION: OCX-Eigenschaftenseiten sollten FALSE zurückgeben
 }
 
 

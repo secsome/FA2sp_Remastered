@@ -113,12 +113,9 @@ void CHouses::UpdateDialog()
 	int i;
 	for(i=0;i<rules.sections[HOUSES].values.size();i++)
 	{
-#ifdef RA2_MODE
-		CString j=*rules.sections[HOUSES].GetValue(i);
+		CString j = *rules.sections[HOUSES].GetValue(i);
 		j.MakeLower();
-		if(j=="nod" || j=="gdi") continue;
-#endif
-				
+		if (j == "nod" || j == "gdi") continue;
 		char house_id[5];
 		CString houseCString;
 		itoa(i,house_id,10);
@@ -140,11 +137,9 @@ void CHouses::UpdateDialog()
 		m_HumanPlayer.SetCurSel(0);
 		for(i=0;i<ini.sections[MAPHOUSES].values.size();i++)
 		{
-#ifdef RA2_MODE
-			CString j=*ini.sections[MAPHOUSES].GetValue(i);
+			CString j = *ini.sections[MAPHOUSES].GetValue(i);
 			j.MakeLower();
-			if(j=="nod" || j=="gdi") continue;
-#endif	
+			if (j == "nod" || j == "gdi") continue;
 			m_houses.AddString(TranslateHouse(*ini.sections[MAPHOUSES].GetValue(i), TRUE));
 			m_HumanPlayer.AddString(TranslateHouse(*ini.sections[MAPHOUSES].GetValue(i), TRUE));
 			
@@ -199,11 +194,8 @@ BOOL CHouses::OnInitDialog()
 	
 	UpdateStrings();
 	UpdateDialog();
-
-#ifdef RA2_MODE
 	m_ActsLike.ShowWindow(SW_HIDE);
 	//m_Edge.ShowWindow(SW_HIDE);
-#endif
 	
 	return TRUE;  // return TRUE unless you set the focus to a control
 	              // EXCEPTION: OCX-Eigenschaftenseiten sollten FALSE zurückgeben
@@ -225,10 +217,6 @@ void CHouses::OnSelchangeHouses()
 	CIniFileSection& s=ini.sections[(LPCTSTR)name];
 
 	// ListHouses(m_ActsLike, TRUE);
-
-#ifndef RA2_MODE
-	m_ActsLike.SetWindowText(s.values["ActsLike"]);
-#endif
 	m_Allies.SetWindowText(TranslateHouse(s.values["Allies"], TRUE));
 	m_Color.SetWindowText(s.values["Color"]);
 	m_Credits.SetWindowText(s.values["Credits"]);
@@ -237,11 +225,7 @@ void CHouses::OnSelchangeHouses()
 	m_Nodecount.SetWindowText(s.values["NodeCount"]);
 	m_PercentBuilt.SetWindowText(s.values["PercentBuilt"]);
 	m_PlayerControl.SetWindowText(s.values["PlayerControl"]);
-#ifndef RA2_MODE
-	m_Side.SetWindowText(s.values["Side"]);
-#else
 	m_Side.SetWindowText(TranslateHouse(s.values["Country"], TRUE));
-#endif
 	m_TechLevel.SetWindowText(s.values["TechLevel"]);
 
 }
@@ -250,39 +234,37 @@ void CHouses::OnPreparehouses()
 {
 	CIniFile& ini=Map->GetIniFile();
 
-#ifdef RA2_MODE
-	if(Map->IsMultiplayer())
+	if (Map->IsMultiplayer())
 	{
-		ini.sections["Basic"].values["MultiplayerOnly"]="1";
+		ini.sections["Basic"].values["MultiplayerOnly"] = "1";
 
 		int i;
-		for (i=0;i<rules.sections[HOUSES].values.size();i++)
+		for (i = 0; i < rules.sections[HOUSES].values.size(); i++)
 		{
 			char c[50];
-			int k=i;
-			itoa(k,c,10);
-			CString country=*rules.sections[HOUSES].GetValue(i);
+			int k = i;
+			itoa(k, c, 10);
+			CString country = *rules.sections[HOUSES].GetValue(i);
 
 			// we now create a MAPHOUSE with the same name as the current rules house
-			ini.sections[MAPHOUSES].values[c]=country;
-			
-			ini.sections[country].values["IQ"]="0";
-			ini.sections[country].values["Edge"]="North";
-			ini.sections[country].values["Color"]=rules.sections[country].values["Color"];
-			ini.sections[country].values["Allies"]=country;
-			ini.sections[country].values["Country"]=country;
-			ini.sections[country].values["Credits"]="0";
-			ini.sections[country].values["NodeCount"]="0";
-			ini.sections[country].values["TechLevel"]="1";
-			ini.sections[country].values["PercentBuilt"]="0";
-			ini.sections[country].values["PlayerControl"]="no";
+			ini.sections[MAPHOUSES].values[c] = country;
+
+			ini.sections[country].values["IQ"] = "0";
+			ini.sections[country].values["Edge"] = "North";
+			ini.sections[country].values["Color"] = rules.sections[country].values["Color"];
+			ini.sections[country].values["Allies"] = country;
+			ini.sections[country].values["Country"] = country;
+			ini.sections[country].values["Credits"] = "0";
+			ini.sections[country].values["NodeCount"] = "0";
+			ini.sections[country].values["TechLevel"] = "1";
+			ini.sections[country].values["PercentBuilt"] = "0";
+			ini.sections[country].values["PlayerControl"] = "no";
 
 		}
-		
+
 		UpdateDialog();
 		return;
 	}
-#endif
 
 	// import the rules.ini houses
 	if(ini.sections.find(MAPHOUSES)!=ini.sections.end())
@@ -315,18 +297,14 @@ void CHouses::AddHouse(const char *name)
 		MessageBox(((CString)"Sorry this name is not available. " + name + (CString)" is already used in the map file. You need to use another name."));
 		return;
 	}
-#ifdef RA2_MODE
 	CNewRA2HouseDlg dlg;
-	if(dlg.DoModal()==IDCANCEL) return;
-#endif
+	if (dlg.DoModal() == IDCANCEL) return;
 
 	int c;
 	
 	//okay, get a free slot
 	int pos=-1;
-#ifdef RA2_MODE
-	int pos2=-1;
-#endif
+	int pos2 = -1;
 	for(c=0;c>-1;c++)
 	{
 		char k[50];
@@ -335,16 +313,14 @@ void CHouses::AddHouse(const char *name)
 			pos=c;
 		if(pos!=-1) break;
 	}
-#ifdef RA2_MODE
-	for(c=0;c>-1;c++)
+	for (c = 0; c > -1; c++)
 	{
 		char k[50];
-		itoa(c,k,10);
-		if(ini.sections[HOUSES].values.find(k)==ini.sections[HOUSES].values.end())
-			pos2=c;
-		if(pos2!=-1) break;
+		itoa(c, k, 10);
+		if (ini.sections[HOUSES].values.find(k) == ini.sections[HOUSES].values.end())
+			pos2 = c;
+		if (pos2 != -1) break;
 	}
-#endif
 	
 	char k[50];
 	itoa(pos,k,10);
@@ -357,48 +333,32 @@ void CHouses::AddHouse(const char *name)
 	country.Replace("House","");
 	if(country.Find(" ")>=0) country.Replace(" ", "_"); //=country.Left(country.Find(" "));
 
-#ifdef RA2_MODE
 	itoa(pos2, k, 10);
-	ini.sections[HOUSES].values[k]=country;
-#endif
+	ini.sections[HOUSES].values[k] = country;
 	
 	ini.sections[TranslateHouse(name)].values["IQ"]="0";
 	ini.sections[TranslateHouse(name)].values["Edge"]="West";
 	ini.sections[TranslateHouse(name)].values["Allies"]=TranslateHouse(name);
 
 	CString side=name;
-#ifdef RA2_MODE
-	side=rules.sections[TranslateHouse(dlg.m_Country)].values["Side"];
-#endif
+	side = rules.sections[TranslateHouse(dlg.m_Country)].values["Side"];
 
 	if(strstr(name, "Nod")!=NULL)
 	{
-#ifndef RA2_MODE
-		ini.sections[TranslateHouse(name)].values["Side"]="Nod";
-#endif
 		ini.sections[TranslateHouse(name)].values["Color"]="DarkRed";
 		if(name!="Nod") ini.sections[name].values["Allies"]+=",Nod";
 	}
 	else
 	{
-#ifndef RA2_MODE
-		ini.sections[TranslateHouse(name)].values["Side"]="GDI";
-#endif
 		ini.sections[TranslateHouse(name)].values["Color"]="Gold";
 		if(name!="GDI") ini.sections[TranslateHouse(name)].values["Allies"]+=",GDI";
 	}
 	ini.sections[TranslateHouse(name)].values["Credits"]="0";
-#ifndef RA2_MODE
-	ini.sections[TranslateHouse(name)].values["ActsLike"]="0";
-#else
 	ini.sections[TranslateHouse(name)].values["Country"]=TranslateHouse(country);
-#endif
 	ini.sections[TranslateHouse(name)].values["NodeCount"]="0";
 	ini.sections[TranslateHouse(name)].values["TechLevel"]="10";
 	ini.sections[TranslateHouse(name)].values["PercentBuilt"]="100";
 	ini.sections[TranslateHouse(name)].values["PlayerControl"]="no";
-
-#ifdef RA2_MODE
 	dlg.m_Country=TranslateHouse(dlg.m_Country); // just to make sure...
 	country=TranslateHouse(country);
     ini.sections[country].values["ParentCountry"]=dlg.m_Country;
@@ -409,7 +369,6 @@ void CHouses::AddHouse(const char *name)
 	ini.sections[country].values["Side"]=rules.sections[dlg.m_Country].values["Side"];
 	ini.sections[country].values["SmartAI"]=rules.sections[dlg.m_Country].values["SmartAI"];
 	ini.sections[country].values["CostUnitsMult"]="1";
-#endif
 
 	int cusel=m_houses.GetCurSel();
 	UpdateDialog();
@@ -427,12 +386,7 @@ void CHouses::OnShowWindow(BOOL bShow, UINT nStatus)
 	{
 		if(ini.sections.find(MAPHOUSES)==ini.sections.end() && ini.sections.size()>0)
 		{
-#ifndef RA2_MODE
-			 MessageBox("No houses do exist, if you want to use houses, you should use ""Prepare houses"" before doing anything else. Note that in a multiplayer map independent computer players cannot be created by using the names GDI and Nod for the house. Just use something like GDI_AI.");
-#else
 			 MessageBox("No houses do exist, if you want to use houses, you should use ""Prepare houses"" before doing anything else.");
-
-#endif
 		}
 	}
 		else
@@ -561,11 +515,7 @@ void CHouses::OnKillfocusSide()
 	CString t;
 	m_Side.GetWindowText(t);
 	t=TranslateHouse(t);
-#ifndef RA2_MODE
-	s.values["Side"]=t;	
-#else
 	s.values["Country"]=t;
-#endif
 }
 
 void CHouses::OnKillfocusColor() 

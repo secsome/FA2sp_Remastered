@@ -593,7 +593,7 @@ void CViewObjects::UpdateDialog()
 		}
 
 		// no tunnels in ra2 mode
-		if(editor_mode==ra2_mode && i==9 && !isTrue(g_data.sections["Debug"].values["AllowTunnels"])) bAllow=FALSE;
+		if(i==9 && !isTrue(g_data.sections["Debug"].values["AllowTunnels"])) bAllow=FALSE;
 
 		if(bAllow)
 		rootitems[i]=tree.InsertItem(TVIF_PARAM | TVIF_TEXT,
@@ -616,7 +616,6 @@ void CViewObjects::UpdateDialog()
 
 
 	HTREEITEM structhouses[64];
-#ifdef RA2_MODE
 	HTREEITEM hAllied=tree.InsertItem(TVIF_PARAM | TVIF_TEXT, GetLanguageStringACP("Allied"), 0, 0,0,0,-1,rootitems[3], TVI_LAST);
 	HTREEITEM hSoviet=tree.InsertItem(TVIF_PARAM | TVIF_TEXT, GetLanguageStringACP("Soviet"), 0, 0,0,0,-1,rootitems[3], TVI_LAST);
 	HTREEITEM hYuri=NULL;
@@ -637,13 +636,6 @@ void CViewObjects::UpdateDialog()
 	}
 	
 	structhouses[sides.size()]=tree.InsertItem(TVIF_PARAM | TVIF_TEXT, GetLanguageStringACP("Other"), 0, 0,0,0,-1,rootitems[3], TVI_LAST);
-#else
-	for(i=0;i<sides.size();i++)
-	{
-		structhouses[i]=tree.InsertItem(TVIF_PARAM | TVIF_TEXT, sides[i].name, 0,0,0,0, -1, rootitems[3], TVI_LAST );
-	}
-	structhouses[sides.size()]=tree.InsertItem(TVIF_PARAM | TVIF_TEXT, "Other", 0,0,0,0, -1, rootitems[3], TVI_LAST );
-#endif
 
 
 	if(!theApp.m_Options.bEasy)
@@ -681,10 +673,8 @@ void CViewObjects::UpdateDialog()
 	tree.InsertItem(TVIF_PARAM | TVIF_TEXT, GetTheaterLanguageString("GroundGreenObList"),0,0,0,0,65,rootitems[13], TVI_LAST);
 	tree.InsertItem(TVIF_PARAM | TVIF_TEXT, GetTheaterLanguageString("GroundPaveObList"),0,0,0,0,66,rootitems[13], TVI_LAST);
 	tree.InsertItem(TVIF_PARAM | TVIF_TEXT, GetTheaterLanguageString("GroundWaterObList"),0,0,0,0,64,rootitems[13], TVI_LAST);
-#ifdef RA2_MODE
 	if(Map->GetTheater()==THEATER3)
 		tree.InsertItem(TVIF_PARAM | TVIF_TEXT, GetTheaterLanguageString("GroundPave2ObList"),0,0,0,0,67,rootitems[13], TVI_LAST);
-#endif
 
 	if(!theApp.m_Options.bEasy)
 	{
@@ -704,9 +694,6 @@ void CViewObjects::UpdateDialog()
 	HTREEITEM deleteoverlay=tree.InsertItem(TVIF_PARAM | TVIF_TEXT, GetLanguageStringACP("DelOvrlObList"), 0,0,0,0, -1, rootitems[5], TVI_LAST );
 	HTREEITEM tiberium=tree.InsertItem(TVIF_PARAM | TVIF_TEXT, GetLanguageStringACP("GrTibObList"), 0,0,0,0, -1, rootitems[5], TVI_LAST );
 	//HTREEITEM bluetiberium=tree.InsertItem(TVIF_PARAM | TVIF_TEXT, GetLanguageStringACP("BlTibObList"), 0,0,0,0, -1, rootitems[5], TVI_LAST );
-#ifndef RA2_MODE
-	HTREEITEM veinhole=tree.InsertItem(TVIF_PARAM | TVIF_TEXT, GetLanguageStringACP("VeinholeObList"), 0,0,0,0, -1, rootitems[5], TVI_LAST );
-#endif
 	HTREEITEM bridges=tree.InsertItem(TVIF_PARAM | TVIF_TEXT, GetLanguageStringACP("BridgesObList"), 0,0,0,0, -1, rootitems[5], TVI_LAST );
 	HTREEITEM alloverlay=tree.InsertItem(TVIF_PARAM | TVIF_TEXT, GetLanguageStringACP("OthObList"), 0,0,0,0, -1, rootitems[5], TVI_LAST );
 	HTREEITEM everyoverlay=NULL;
@@ -737,45 +724,24 @@ void CViewObjects::UpdateDialog()
 	tree.InsertItem(TVIF_PARAM | TVIF_TEXT, GetLanguageStringACP("DrawTib2ObList"), 0,0,0,0, valadded*6+300+10, tiberium, TVI_LAST );
 	//tree.InsertItem(TVIF_PARAM | TVIF_TEXT, GetLanguageStringACP("IncTibSizeObList"), 0,0,0,0, valadded*6+300+20, bluetiberium, TVI_LAST );
 	//tree.InsertItem(TVIF_PARAM | TVIF_TEXT, GetLanguageStringACP("DecTibSizeObList"), 0,0,0,0, valadded*6+300+21, bluetiberium, TVI_LAST );
-#ifndef RA2_MODE
-	tree.InsertItem(TVIF_PARAM | TVIF_TEXT, GetLanguageStringACP("VeinholeObList"), 0,0,0,0, valadded*6+400+0, veinhole, TVI_LAST );
-	tree.InsertItem(TVIF_PARAM | TVIF_TEXT, GetLanguageStringACP("VeinsObList"), 0,0,0,0, valadded*6+400+1, veinhole, TVI_LAST );
-#endif
 
 	if(Map->GetTheater()!=THEATER4 && Map->GetTheater()!=THEATER5)
 	{
 		tree.InsertItem(TVIF_PARAM | TVIF_TEXT, GetLanguageStringACP("SmallBridgeObList"), 0,0,0,0, valadded*6+500+1, bridges, TVI_LAST );
 		tree.InsertItem(TVIF_PARAM | TVIF_TEXT, GetLanguageStringACP("BigBridgeObList"), 0,0,0,0, valadded*6+500+0, bridges, TVI_LAST );
 		tree.InsertItem(TVIF_PARAM | TVIF_TEXT, GetLanguageStringACP("BigTrackBridgeObList"), 0,0,0,0, valadded*6+500+2, bridges, TVI_LAST );
-#ifdef RA2_MODE
 		tree.InsertItem(TVIF_PARAM | TVIF_TEXT, GetLanguageStringACP("SmallConcreteBridgeObList"), 0,0,0,0, valadded*6+500+3, bridges, TVI_LAST );
-#endif
 	}
 	else
 	{
 		if(Map->GetTheater()==THEATER5)
 		{
 		tree.InsertItem(TVIF_PARAM | TVIF_TEXT, GetLanguageStringACP("SmallBridgeObList"), 0,0,0,0, valadded*6+500+1, bridges, TVI_LAST );
-#ifdef RA2_MODE
 		tree.InsertItem(TVIF_PARAM | TVIF_TEXT, GetLanguageStringACP("SmallConcreteBridgeObList"), 0,0,0,0, valadded*6+500+3, bridges, TVI_LAST );
-#endif
 		}
 
 	}
 
-#ifndef RA2_MODE
-	if (!theApp.m_Options.bEasy && isTrue(g_data.sections["Debug"].values["AllowTunnels"]))
-	{
-		tree.InsertItem(TVIF_PARAM | TVIF_TEXT, GetLanguageStringACP("NewTunnelObList"), 0, 0, 0, 0, 50, rootitems[9], TVI_LAST);
-		tree.InsertItem(TVIF_PARAM | TVIF_TEXT, GetLanguageStringACP("ModifyTunnelObList"), 0, 0, 0, 0, 51, rootitems[9], TVI_LAST);
-		if (isTrue(g_data.sections["Debug"].values["AllowUnidirectionalTunnels"]))
-		{
-			tree.InsertItem(TVIF_PARAM | TVIF_TEXT, GetLanguageStringACP("NewTunnelSingleObList"), 0, 0, 0, 0, 52, rootitems[9], TVI_LAST);
-			tree.InsertItem(TVIF_PARAM | TVIF_TEXT, GetLanguageStringACP("ModifyTunnelSingleObList"), 0, 0, 0, 0, 53, rootitems[9], TVI_LAST);
-		}
-		tree.InsertItem(TVIF_PARAM | TVIF_TEXT, GetLanguageStringACP("DelTunnelObList"), 0, 0, 0, 0, 54, rootitems[9], TVI_LAST);
-	}
-#else
 	if (!theApp.m_Options.bEasy && isTrue(g_data.sections["Debug"].values["AllowTunnels"]))
 	{
 		tree.InsertItem(TVIF_PARAM | TVIF_TEXT, GetLanguageStringACP("NewTunnelObList"), 0, 0, 0, 0, 50, rootitems[9], TVI_LAST);
@@ -787,7 +753,6 @@ void CViewObjects::UpdateDialog()
 		}
 		tree.InsertItem(TVIF_PARAM | TVIF_TEXT, GetLanguageStringACP("DelTunnelObList"), 0,0,0,0, 54, rootitems[9], TVI_LAST );
 	}
-#endif
 
 
 	int lv=1;
@@ -798,11 +763,9 @@ void CViewObjects::UpdateDialog()
 		{
 			for(i=0;i<ini.sections[MAPHOUSES].values.size();i++)
 			{
-#ifdef RA2_MODE
 				CString j=*ini.sections[MAPHOUSES].GetValue(i);
 				j.MakeLower();
 				if(j=="nod" || j=="gdi") continue;
-#endif	
 
 				tree.InsertItem(TVIF_PARAM | TVIF_TEXT, TranslateHouse(*ini.sections[MAPHOUSES].GetValue(i), TRUE), 0,0,0,0, valadded*7+i, rootitems[11], TVI_LAST );
 			}
@@ -815,11 +778,9 @@ void CViewObjects::UpdateDialog()
 				if(rules.sections[HOUSES].GetValueOrigPos(i)<0) continue;
 				//tree.InsertItem(TVIF_PARAM | TVIF_TEXT, CCStrings[*rules.sections[HOUSES].GetValue(i)].cString, 
 				//0,0,0,0, valadded*7+i, rootitems[11], TVI_LAST );
-#ifdef RA2_MODE
 				CString j=*rules.sections[HOUSES].GetValue(i);
 				j.MakeLower();
 				if(j=="nod" || j=="gdi") continue;
-#endif	
 				TV_InsertItemW(tree.m_hWnd, CCStrings[*rules.sections[HOUSES].GetValue(i)].wString, CCStrings[*rules.sections[HOUSES].GetValue(i)].len, TVI_LAST, rootitems[11],valadded*7+i);
 			}
 		}
@@ -863,20 +824,13 @@ void CViewObjects::UpdateDialog()
 			{
 				
 				CString unitname=*rules.sections["OverlayTypes"].GetValue(i);
-
-#ifdef RA2_MODE
 				if (Map->GetTheater()==THEATER0 && g_data.sections["IgnoreTemperateRA2"].FindValue(unitname) >= 0) continue;
 				if (Map->GetTheater()==THEATER1 && g_data.sections["IgnoreSnowRA2"].FindValue(unitname) >= 0) continue;
 				if (Map->GetTheater()==THEATER2 && g_data.sections["IgnoreUrbanRA2"].FindValue(unitname) >= 0) continue;
 				if (Map->GetTheater()==THEATER3 && g_data.sections["IgnoreNewUrbanRA2"].FindValue(unitname) >= 0) continue;
 				if (Map->GetTheater()==THEATER4 && g_data.sections["IgnoreLunarRA2"].FindValue(unitname) >= 0) continue;
 				if (Map->GetTheater()==THEATER5 && g_data.sections["IgnoreDesertRA2"].FindValue(unitname) >= 0) continue;
-#else
-				if (Map->GetTheater()==THEATER0 && g_data.sections["IgnoreTemperateTS"].FindValue(unitname) >= 0) continue;
-				if (Map->GetTheater()==THEATER1 && g_data.sections["IgnoreSnowTS"].FindValue(unitname) >= 0) continue;
-#endif
 
-#ifdef RA2_MODE
 				if((i>=39 && i<=60) || (i>=180 && i<=201) || i==239 || i==178 || i==167 || i==126
 					|| (i>=122 && i<=125) || i==1 || (i>=0x03 && i<=0x17) || (i>=0x3d && i<=0x43)
 					|| (i>=0x4a && i<=0x65) || (i>=0xcd && i<=0xec))
@@ -888,13 +842,8 @@ void CViewObjects::UpdateDialog()
 					}
 				}
 
-
-#endif
-
 				CString val=*rules.sections["OverlayTypes"].GetValue(i);
-#ifdef RA2_MODE
 				val.Replace("TIB", "ORE");
-#endif
 
 				tree.InsertItem(TVIF_PARAM | TVIF_TEXT, val , 0,0,0,0, valadded*6+3000+e, everyoverlay, TVI_LAST );
 				e++;
@@ -909,23 +858,13 @@ void CViewObjects::UpdateDialog()
 
 		if(unitname.GetLength()==0) continue;
 
-#ifdef RA2_MODE
 		if (Map->GetTheater()==THEATER0 && g_data.sections["IgnoreTemperateRA2"].FindValue(unitname) >= 0) continue;
 		if (Map->GetTheater()==THEATER1 && g_data.sections["IgnoreSnowRA2"].FindValue(unitname) >= 0) continue;
 		if (Map->GetTheater()==THEATER2 && g_data.sections["IgnoreUrbanRA2"].FindValue(unitname) >= 0) continue;
 		if (Map->GetTheater()==THEATER3 && g_data.sections["IgnoreNewUrbanRA2"].FindValue(unitname) >= 0) continue;
 		if (Map->GetTheater()==THEATER4 && g_data.sections["IgnoreLunarRA2"].FindValue(unitname) >= 0) continue;
 		if (Map->GetTheater()==THEATER5 && g_data.sections["IgnoreDesertRA2"].FindValue(unitname) >= 0) continue;
-#else
-		if (Map->GetTheater()==THEATER0 && g_data.sections["IgnoreTemperateTS"].FindValue(unitname) >= 0) continue;
-		if (Map->GetTheater()==THEATER1 && g_data.sections["IgnoreSnowTS"].FindValue(unitname) >= 0) continue;
-#endif
-
-#ifdef RA2_MODE
 		if(g_data.sections["IgnoreRA2"].FindValue(unitname)>=0) continue;
-#else
-		if(g_data.sections["IgnoreTS"].FindValue(unitname) >= 0) continue;
-#endif
 
 		WCHAR* addedString=Map->GetUnitName(unitname);
 		if(!addedString) continue;
@@ -968,23 +907,13 @@ void CViewObjects::UpdateDialog()
 
 		if(unitname.GetLength()==0) continue;
 		
-#ifdef RA2_MODE
 		if (Map->GetTheater()==THEATER0 && g_data.sections["IgnoreTemperateRA2"].FindValue(unitname) >= 0) continue;
 		if (Map->GetTheater()==THEATER1 && g_data.sections["IgnoreSnowRA2"].FindValue(unitname) >= 0) continue;
 		if (Map->GetTheater()==THEATER2 && g_data.sections["IgnoreUrbanRA2"].FindValue(unitname) >= 0) continue;
 		if (Map->GetTheater()==THEATER3 && g_data.sections["IgnoreNewUrbanRA2"].FindValue(unitname) >= 0) continue;
 		if (Map->GetTheater()==THEATER4 && g_data.sections["IgnoreLunarRA2"].FindValue(unitname) >= 0) continue;
 		if (Map->GetTheater()==THEATER5 && g_data.sections["IgnoreDesertRA2"].FindValue(unitname) >= 0) continue;
-#else
-		if (Map->GetTheater()==THEATER0 && g_data.sections["IgnoreTemperateTS"].FindValue(unitname) >= 0) continue;
-		if (Map->GetTheater()==THEATER1 && g_data.sections["IgnoreSnowTS"].FindValue(unitname) >= 0) continue;
-#endif
-
-#ifdef RA2_MODE
 		if (g_data.sections["IgnoreRA2"].FindValue(unitname) >= 0) continue;
-#else
-		if (g_data.sections["IgnoreTS"].FindValue(unitname) >= 0) continue;
-#endif
 		if (!isTrue(g_data.sections["Debug"].GetValueByName("ShowBuildingsWithToTile", "0")) && !rules.sections[unitname].GetValueByName("ToTile").IsEmpty())
 			continue;
 
@@ -996,9 +925,6 @@ void CViewObjects::UpdateDialog()
 
 		CString owner=rules.sections[unitname].values["Owner"];
 		int baseplanningside=-1;
-#ifdef RA2_MODE
-		baseplanningside=-1;
-#endif
 		if(rules.sections[unitname].values.find("AIBasePlanningSide")!=rules.sections[unitname].values.end())
 		{
 			baseplanningside=atoi(rules.sections[unitname].values["AIBasePlanningSide"]);
@@ -1041,9 +967,7 @@ void CViewObjects::UpdateDialog()
 			if(isIncluded(owner,sides[e].name))
 			{
 
-#ifdef RA2_MODE
 				if(!addedfor[sides[e].orig_n])
-#endif
 				if(baseplanningside==-1 || baseplanningside==sides[e].orig_n)
 				{
 					
@@ -1106,9 +1030,7 @@ void CViewObjects::UpdateDialog()
 			int e;
 			for(e=0;e<sides.size();e++)
 			{
-#ifdef RA2_MODE
 				if(!addedfor[sides[e].orig_n])
-#endif
 				if(isIncluded(owner, sides[e].name) || (yuri_mode && e==2 && owner=="YuriCountry"))
 				{
 					tree.InsertItem(TVIF_PARAM | TVIF_TEXT, addedString, 0,0,0,0, valadded*2+i, structhouses[e], TVI_LAST );
@@ -1131,24 +1053,13 @@ void CViewObjects::UpdateDialog()
 	{
 		CString unitname=*rules.sections["AircraftTypes"].GetValue(i);
 		if(unitname.GetLength()==0) continue;
-
-#ifdef RA2_MODE
 		if (Map->GetTheater()==THEATER0 && g_data.sections["IgnoreTemperateRA2"].FindValue(unitname) >= 0) continue;
 		if (Map->GetTheater()==THEATER1 && g_data.sections["IgnoreSnowRA2"].FindValue(unitname) >= 0) continue;
 		if (Map->GetTheater()==THEATER2 && g_data.sections["IgnoreUrbanRA2"].FindValue(unitname) >= 0) continue;
 		if (Map->GetTheater()==THEATER3 && g_data.sections["IgnoreNewUrbanRA2"].FindValue(unitname) >= 0) continue;
 		if (Map->GetTheater()==THEATER4 && g_data.sections["IgnoreLunarRA2"].FindValue(unitname) >= 0) continue;
 		if (Map->GetTheater()==THEATER5 && g_data.sections["IgnoreDesertRA2"].FindValue(unitname) >= 0) continue;
-#else
-		if (Map->GetTheater()==THEATER0 && g_data.sections["IgnoreTemperateTS"].FindValue(unitname) >= 0) continue;
-		if (Map->GetTheater()==THEATER1 && g_data.sections["IgnoreSnowTS"].FindValue(unitname) >= 0) continue;
-#endif
-
-#ifdef RA2_MODE
 		if (g_data.sections["IgnoreRA2"].FindValue(unitname) >= 0) continue;
-#else
-		if (g_data.sections["IgnoreTS"].FindValue(unitname) >= 0) continue;
-#endif
 
 		WCHAR* addedString=Map->GetUnitName(unitname);
 		if(!addedString) continue;
@@ -1182,24 +1093,14 @@ void CViewObjects::UpdateDialog()
 	{
 		CString unitname=*rules.sections["VehicleTypes"].GetValue(i);
 		if(unitname.GetLength()==0) continue;
-
-#ifdef RA2_MODE
 		if (Map->GetTheater()==THEATER0 && g_data.sections["IgnoreTemperateRA2"].FindValue(unitname) >= 0) continue;
 		if (Map->GetTheater()==THEATER1 && g_data.sections["IgnoreSnowRA2"].FindValue(unitname) >= 0) continue;
 		if (Map->GetTheater()==THEATER2 && g_data.sections["IgnoreUrbanRA2"].FindValue(unitname) >= 0) continue;
 		if (Map->GetTheater()==THEATER3 && g_data.sections["IgnoreNewUrbanRA2"].FindValue(unitname) >= 0) continue;
 		if (Map->GetTheater()==THEATER4 && g_data.sections["IgnoreLunarRA2"].FindValue(unitname) >= 0) continue;
 		if (Map->GetTheater()==THEATER5 && g_data.sections["IgnoreDesertRA2"].FindValue(unitname) >= 0) continue;
-#else
-		if (Map->GetTheater()==THEATER0 && g_data.sections["IgnoreTemperateTS"].FindValue(unitname) >= 0) continue;
-		if (Map->GetTheater()==THEATER1 && g_data.sections["IgnoreSnowTS"].FindValue(unitname) >= 0) continue;
-#endif
 		
-#ifdef RA2_MODE
 		if (g_data.sections["IgnoreRA2"].FindValue(unitname) >= 0) continue;
-#else
-		if (g_data.sections["IgnoreTS"].FindValue(unitname) >= 0) continue;
-#endif
 
 		WCHAR* addedString=Map->GetUnitName(unitname);
 		if(!addedString) continue;
@@ -1229,47 +1130,26 @@ void CViewObjects::UpdateDialog()
 	}
 
 
-	#ifdef RA2_MODE
 	HTREEITEM hTrees=tree.InsertItem(GetLanguageStringACP("TreesObList"), rootitems[4], TVI_LAST);
 	HTREEITEM hTL=tree.InsertItem(GetLanguageStringACP("TrafficLightsObList"), rootitems[4], TVI_LAST);
 	HTREEITEM hSigns=tree.InsertItem(GetLanguageStringACP("SignsObList"), rootitems[4], TVI_LAST);
 	HTREEITEM hLightPosts=tree.InsertItem(GetLanguageStringACP("LightPostsObList"), rootitems[4], TVI_LAST);
-	#endif
-	
-	// random tree placer
-#ifdef RA2_MODE
+
 	tree.InsertItem(TVIF_PARAM | TVIF_TEXT,  GetLanguageStringACP("RndTreeObList"), 0,0,0,0, valadded*5+999, hTrees, TVI_LAST);
-#else
-	tree.InsertItem(TVIF_PARAM | TVIF_TEXT, GetLanguageStringACP("RndTreeObList"), 0,0,0,0, valadded*5+999, rootitems[4], TVI_LAST);
-#endif
 
 	for(i=0;i<rules.sections["TerrainTypes"].values.size();i++)
 	{
 		CString unitname=*rules.sections["TerrainTypes"].GetValue(i);
 		CString addedString=Map->GetUnitName(unitname);
 
-#ifdef RA2_MODE
 		if (Map->GetTheater()==THEATER0 && g_data.sections["IgnoreTemperateRA2"].FindValue(unitname) >= 0) continue;
 		if (Map->GetTheater()==THEATER1 && g_data.sections["IgnoreSnowRA2"].FindValue(unitname) >= 0) continue;
 		if (Map->GetTheater()==THEATER2 && g_data.sections["IgnoreUrbanRA2"].FindValue(unitname) >= 0) continue;
 		if (Map->GetTheater()==THEATER3 && g_data.sections["IgnoreNewUrbanRA2"].FindValue(unitname) >= 0) continue;
 		if (Map->GetTheater()==THEATER4 && g_data.sections["IgnoreLunarRA2"].FindValue(unitname) >= 0) continue;
 		if (Map->GetTheater()==THEATER5 && g_data.sections["IgnoreDesertRA2"].FindValue(unitname) >= 0) continue;
-#else
-		if (Map->GetTheater()==THEATER0 && g_data.sections["IgnoreTemperateTS"].FindValue(unitname) >= 0) continue;
-		if (Map->GetTheater()==THEATER1 && g_data.sections["IgnoreSnowTS"].FindValue(unitname) >= 0) continue;
-#endif
-
-#ifdef RA2_MODE
 		if (g_data.sections["IgnoreRA2"].FindValue(unitname) >= 0) continue;
-#else
-		if (g_data.sections["IgnoreTS"].FindValue(unitname) >= 0) continue;
-#endif
-#ifdef RA2_MODE
 		if (g_data.sections["IgnoreTerrainRA2"].FindValue(unitname) >= 0) continue;
-#else
-		if (g_data.sections["IgnoreTerrainTS"].FindValue(unitname) >= 0) continue;
-#endif
 	
 		addedString=TranslateStringACP(addedString);
 			
@@ -1277,14 +1157,11 @@ void CViewObjects::UpdateDialog()
 		
 		HTREEITEM howner=rootitems[4];
 
-		#ifdef RA2_MODE
 		if(unitname.Find("SIGN")>=0) howner=hSigns;
 		if(unitname.Find("TRFF")>=0) howner=hTL;
 		if(unitname.Find("TREE")>=0) howner=hTrees;
 		if(unitname.Find("LT")>=0) howner=hLightPosts;		
-		#endif
 		
-#ifdef RA2_MODE
 		if(howner==hTrees)
 		{
 			int TreeMin=atoi(g_data.sections[Map->GetTheater()+"Limits"].values["TreeMin"]);
@@ -1296,7 +1173,6 @@ void CViewObjects::UpdateDialog()
 
 			if(n<TreeMin || n>TreeMax) continue;
 		}
-#endif
 
 		if(unitname.GetLength()>0 && unitname!="VEINTREE" && unitname.Find("ICE")<0 && unitname.Find("BOXES")<0 && unitname.Find("SPKR")<0) // out with it :-)
 		tree.InsertItem(TVIF_PARAM | TVIF_TEXT,  (addedString+ " (" + unitname +")"), 0,0,0,0, valadded*5+i, howner, TVI_LAST );
@@ -1310,23 +1186,13 @@ void CViewObjects::UpdateDialog()
 		CString unitname=*rules.sections["SmudgeTypes"].GetValue(i);
 		CString addedString=unitname;
 
-#ifdef RA2_MODE
 		if (Map->GetTheater()==THEATER0 && g_data.sections["IgnoreTemperateRA2"].FindValue(unitname) >= 0) continue;
 		if (Map->GetTheater()==THEATER1 && g_data.sections["IgnoreSnowRA2"].FindValue(unitname) >= 0) continue;
 		if (Map->GetTheater()==THEATER2 && g_data.sections["IgnoreUrbanRA2"].FindValue(unitname) >= 0) continue;
 		if (Map->GetTheater()==THEATER3 && g_data.sections["IgnoreNewUrbanRA2"].FindValue(unitname) >= 0) continue;
 		if (Map->GetTheater()==THEATER4 && g_data.sections["IgnoreLunarRA2"].FindValue(unitname) >= 0) continue;
 		if (Map->GetTheater()==THEATER5 && g_data.sections["IgnoreDesertRA2"].FindValue(unitname) >= 0) continue;
-#else
-		if (Map->GetTheater()==THEATER0 && g_data.sections["IgnoreTemperateTS"].FindValue(unitname) >= 0) continue;
-		if (Map->GetTheater()==THEATER1 && g_data.sections["IgnoreSnowTS"].FindValue(unitname) >= 0) continue;
-#endif
-
-#ifdef RA2_MODE
 		if (g_data.sections["IgnoreRA2"].FindValue(unitname) >= 0) continue;
-#else
-		if (g_data.sections["IgnoreTS"].FindValue(unitname) >= 0) continue;
-#endif
 	
 		addedString=TranslateStringACP(addedString);
 			

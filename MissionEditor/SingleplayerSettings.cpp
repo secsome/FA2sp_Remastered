@@ -213,11 +213,8 @@ void CSingleplayerSettings::UpdateStrings()
 	SetDlgItemText(IDC_DESC, GetLanguageStringACP("SingleplayerDesc"));
 
 	SetWindowText(TranslateStringACP("Singleplayer settings"));
-
-#ifdef RA2_MODE
 	GetDlgItem(IDC_LSTARTINGDROPSHIPS)->ShowWindow(SW_HIDE);
 	GetDlgItem(IDC_STARTINGDROPSHIPS)->ShowWindow(SW_HIDE);
-#endif
 }
 
 void CSingleplayerSettings::PostNcDestroy() 
