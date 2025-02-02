@@ -1,0 +1,9 @@
+{
+  "$schema": "https://raw.githubusercontent.com/microsoft/vcpkg-tool/main/docs/vcpkg-configuration.schema.json",
+  "overlay-triplets": [
+    "./cmake/vcpkg/triplets"
+  ],
+  "overlay-ports": [
+    "./cmake/vcpkg/port"
+  ]
+}

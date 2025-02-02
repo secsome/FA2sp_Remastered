@@ -1,1 +1,0 @@
-start notepad "%LOCALAPPDATA%/FinalSun/finalsunlog.txt"
