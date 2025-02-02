@@ -31,6 +31,7 @@
 #include "functions.h"
 #include "inlines.h"
 #include <ShlObj.h>
+#include <filesystem>
 
 
 #ifdef _DEBUG
@@ -319,14 +320,7 @@ BOOL CFinalSunApp::InitInstance()
 	}
 	if (EasyView != 0) theApp.m_Options.bEasy = TRUE;
 
-
-
-
-	CString cTSPath = theApp.m_Options.TSExe;
-	auto lastSlash = cTSPath.ReverseFind('\\');
-	if (lastSlash >= 0)
-		cTSPath.SetAt(lastSlash + 1, 0);
-	strcpy(TSPath, cTSPath);
+	strcpy(TSPath, std::filesystem::path{ theApp.m_Options.TSExe.GetString() }.remove_filename().string().c_str());
 
 	// MW 01/23/2013: changed the global CMapData Map to a global CMapData* to get rid of static initialization/shutdown problems
 	{
