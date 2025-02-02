@@ -44,10 +44,8 @@ CString InputBox(const char* Sentence, const char* Caption)
 	CInputBox inp;
 	inp.SetCaption(Caption);
 	inp.SetSentence(Sentence);
-	char* res=(char*) inp.DoModal();
-	CString cstr=res;
-	
-	return cstr;
+	inp.DoModal();
+	return inp.GetResult();
 }
 
 CInputBox::CInputBox(CWnd* pParent /*=NULL*/)
@@ -81,11 +79,8 @@ void CInputBox::OnOK()
 	GetDlgItem(IDC_VAL)->GetWindowText(text);
 
 	if(text.GetLength()==0){EndDialog(NULL);};
-
-	char* str;
-	str=new(char[text.GetLength()]);
-	strcpy(str, (LPCTSTR)text);
-	EndDialog((int)str);
+    m_Result = text;
+	EndDialog(IDOK);
 }
 
 void CInputBox::OnCancel() 
@@ -96,6 +91,11 @@ void CInputBox::OnCancel()
 void CInputBox::SetCaption(CString Caption)
 {
 	m_Caption=Caption;
+}
+
+CString& CInputBox::GetResult()
+{
+    return m_Result;
 }
 
 void CInputBox::SetSentence(CString Sentence)

@@ -121,7 +121,7 @@ namespace FSunPackLib
 
 		// unterminatedCountWChars will be the count of WChars NOT including the terminating zero (due to passing in utf8.size() instead of -1)
 		auto utf8Count = utf8.size();
-		auto unterminatedCountWChars = MultiByteToWideChar(CP_UTF8, MB_PRECOMPOSED | MB_ERR_INVALID_CHARS, utf8.data(), utf8Count, nullptr, 0);
+		auto unterminatedCountWChars = MultiByteToWideChar(CP_UTF8, MB_PRECOMPOSED | MB_ERR_INVALID_CHARS, utf8.data(), static_cast<int>(utf8Count), nullptr, 0);
 		if (unterminatedCountWChars == 0)
 		{
 			throw std::runtime_error("UTF8 -> UTF16 conversion failed");
@@ -129,7 +129,7 @@ namespace FSunPackLib
 
 		std::wstring utf16;
 		utf16.resize(unterminatedCountWChars);
-		if (MultiByteToWideChar(CP_UTF8, MB_PRECOMPOSED | MB_ERR_INVALID_CHARS, utf8.data(), utf8Count, utf16.data(), unterminatedCountWChars) == 0)
+		if (MultiByteToWideChar(CP_UTF8, MB_PRECOMPOSED | MB_ERR_INVALID_CHARS, utf8.data(), static_cast<int>(utf8Count), utf16.data(), unterminatedCountWChars) == 0)
 		{
 			throw std::runtime_error("UTF8 -> UTF16 conversion failed");
 		}
@@ -199,91 +199,24 @@ namespace FSunPackLib
 
 	INT EncodeF80(BYTE* sp, UINT len, UINT nSections, BYTE** dest)
 	{
-		*dest = new(BYTE[len * 4]); // as large as sp, to make sure it works
+		// TODO
 
-		BYTE* data = *dest;
-
-		int length = len / nSections;
-		// each section has this length
-
-#ifdef DBG2
-		int sections = 0;
-		AllocConsole();
-		HANDLE hOut = GetStdHandle(STD_OUTPUT_HANDLE);
-		HANDLE hIn = GetStdHandle(STD_INPUT_HANDLE);
-		char tmp[50];
-		string out;
-		out = "PackData() called\n------------\n\n";
-		DWORD dw;
-		WriteFile(hOut, out.data(), out.size(), &dw, NULL);
-#endif
-
-		UINT i;
-		UINT DP = 0;
-		UINT SP = 0;
-		for (i = 0;i < nSections;i++)
-		{
-			UINT packLen = encode80(&sp[SP], &data[DP + 4], length); //ConvertToF80(&sp[SP], length, &data[DP+4]);
-
-			memcpy(&data[DP], &packLen, 3);
-			DP += 3;
-			data[DP] = 0x20;
-			DP++;
-			SP += length;
-			DP += packLen;
-
-#ifdef DBG2
-			itoa(i, tmp, 10);
-			out = "\nHandled section ";
-			out += tmp;
-			out += ", packed length: ";
-			itoa(packLen, tmp, 10);
-			out += tmp;
-			out += " bytes, DP=";
-			itoa(DP, tmp, 10);
-			out += tmp;
-			out += "\n";
-			WriteFile(hOut, out.data(), out.size(), &dw, NULL);
-
-			ReadFile(hIn, tmp, 2, &dw, NULL);
-#endif
-
-		}
-
-
-
-		return DP;
+		return 0;
 	}
 
 	UINT EncodeIsoMapPack5(BYTE* sp, UINT SourceLength, BYTE** dp)
 	{
-		*dp = new(BYTE[SourceLength * 2]); // as big as source, makes sure it works!
+		// TODO
 
-		UINT DP = encode5(sp, *dp, SourceLength, 5);
-
-		return DP;
+		return 0;
 	}
 
 	bool DecodeF80(const BYTE* const sp, const UINT SourceLength, std::vector<BYTE>& dp, const std::size_t max_size)
 	{
 		static_assert(4 == sizeof(t_pack_section_header));
 
-		const auto spEnd = sp + SourceLength;
-		const t_pack_section_header* secHeader = nullptr;
-		size_t totalSize = 0;
-		for (auto curSP = sp; curSP < sp + SourceLength;)
-		{
-			secHeader = (reinterpret_cast<const t_pack_section_header*>(curSP));
-			curSP += secHeader->size_in + sizeof(t_pack_section_header);
-			totalSize += secHeader->size_out;
-		}
-		if (totalSize > max_size)
-		{
-			return false;
-		}
+		// TODO
 
-		dp.resize(totalSize);
-		decode5(sp, dp.data(), SourceLength, 80);
 		return true;
 	}
 
@@ -292,39 +225,13 @@ namespace FSunPackLib
 		auto len = strlen(reinterpret_cast<const char*>(sp));
 		auto res = decode64(data_ref(sp, len));
 		dest.assign(res.data(), res.data() + res.size());
-		return res.size();
+		return static_cast<int>(res.size());
 	}
 
 	UINT DecodeIsoMapPack5(BYTE* sp, UINT SourceLength, BYTE* dp, HWND hProgressBar, BOOL bDebugMode)
 	{
-
-		//if(bDebugMode) k.open("c:\\decode.txt", ios_base::out | ios_base::trunc);
-
-		//if(hProgressBar) SendMessage(hProgressBar, PBM_SETRANGE, 0, MAKELPARAM(0, SourceLength));
-		//if(hProgressBar) UpdateWindow(hProgressBar);
-
-		UINT SP = 0;
-		UINT DP = 0;
-
-		while (SP < SourceLength)
-		{
-			WORD wSrcSize;
-			WORD wExtrSize;
-			memcpy(&wSrcSize, sp + SP, 2);
-			SP += 2;
-			memcpy(&wExtrSize, sp + SP, 2);
-			SP += 2;
-
-			decode5s(sp + SP, dp + DP, wSrcSize);
-
-			SP += wSrcSize;
-			DP += wExtrSize;
-
-			//if(hProgressBar) SendMessage(hProgressBar, PBM_SETPOS, (WPARAM) SP, 0);
-			//if(hProgressBar) UpdateWindow(hProgressBar);
-		}
-
-		return DP;
+		// TODO
+		return 0;
 	}
 
 	std::int32_t GetFirstPixelColor(IDirectDrawSurface4* pDDS)
@@ -1768,7 +1675,7 @@ namespace FSunPackLib
 			auto volume = extent.x() * extent.y() * extent.z();
 			if (volume >= iLargestVolume)
 			{
-				iLargestVolume = volume;
+				iLargestVolume = static_cast<int>(volume);
 				iLargestSection = i;
 			}
 			if (strstr(header->id, "BODY") == 0)
@@ -1785,8 +1692,8 @@ namespace FSunPackLib
 
 
 		const auto extents = (maxCoords - minCoords);
-		int rtWidth = ceil(extents.x());
-		int rtHeight = ceil(extents.y());
+		int rtWidth = static_cast<int>(ceil(extents.x()));
+		int rtHeight = static_cast<int>(ceil(extents.y()));
 		const int c_pixels = rtWidth * rtHeight;
 
 		// MYASSERT(c_pixels,1);
@@ -2003,7 +1910,7 @@ namespace FSunPackLib
 			auto volume = extent.x() * extent.y() * extent.z();
 			if (volume >= iLargestVolume)
 			{
-				iLargestVolume = volume;
+				iLargestVolume = static_cast<int>(volume);
 				iLargestSection = i;
 			}
 			if (strcmp(header->id, "BODY") == 0)
@@ -2021,8 +1928,8 @@ namespace FSunPackLib
 
 
 		const auto extents = (maxCoords - minCoords);
-		int rtWidth = ceil(extents.x()) + 1;
-		int rtHeight = ceil(extents.y()) + 1;
+		int rtWidth = static_cast<int>(ceil(extents.x())) + 1;
+		int rtHeight = static_cast<int>(ceil(extents.y())) + 1;
 		const int c_pixels = rtWidth * rtHeight;
 
 		MYASSERT(c_pixels, 1);

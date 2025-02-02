@@ -40,6 +40,7 @@ class CInputBox : public CDialog
 public:
 	void SetSentence(CString Sentence);
 	void SetCaption(CString Caption);
+    CString& GetResult();
 	CInputBox(CWnd* pParent = NULL);   // Standardkonstruktor
 
 // Dialogfelddaten
@@ -68,6 +69,7 @@ protected:
 private:
 	CString m_Text;
 	CString m_Caption;
+	CString m_Result;
 };
 
 //{{AFX_INSERT_LOCATION}}

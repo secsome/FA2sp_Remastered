@@ -21,6 +21,8 @@
 
 #include <memory.h>
 
+#include <bit>
+
 const Cblowfish::t_bf_p g_p = 
 {
 	0x243f6a88, 0x85a308d3, 0x13198a2e, 0x03707344,
@@ -385,15 +387,7 @@ void Cblowfish::decipher(uint32_t& xl, uint32_t& xr) const
 
 static uint32_t reverse(uint32_t v)
 {
-	_asm
-	{
-		mov		eax, v
-		xchg	al, ah
-		rol		eax, 16
-		xchg	al, ah
-		mov		v, eax
-	}
-	return v;
+	return std::byteswap(v);
 }
 
 void Cblowfish::encipher(const void* s, void* d, int size) const

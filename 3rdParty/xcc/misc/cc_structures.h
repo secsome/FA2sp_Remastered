@@ -20,6 +20,8 @@
 
 #include "palet.h"
 
+#include <cstdlib>
+
 enum t_game
 {
 	game_td,
@@ -42,19 +44,6 @@ enum t_game
 };
 
 const char* game_name[];
-
-inline __int32 reverse(__int32 v)
-{
-	_asm
-	{
-		mov		eax, v
-		xchg	al, ah
-		rol		eax, 16
-		xchg	al, ah
-		mov		v, eax
-	}
-	return v;
-}
 
 #pragma pack(push, 1)
 
@@ -104,12 +93,12 @@ struct t_big_header
 
 	int c_files() const
 	{
-		return reverse(mc_files);
+		return _byteswap_ulong(mc_files);
 	}
 
 	int cb_header() const
 	{
-		return reverse(mcb_header);
+		return _byteswap_ulong(mcb_header);
 	}
 };
 

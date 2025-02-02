@@ -50,7 +50,7 @@ public:
 
 	int get_c_files() const
 	{
-		return m_index.size();
+		return static_cast<int>(m_index.size());
 	}
 
 	t_game get_game() const

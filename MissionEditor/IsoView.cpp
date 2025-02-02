@@ -2173,7 +2173,7 @@ void CIsoView::HandleProperties(int n, int type)
 			(LPCTSTR)data.direction, (LPCTSTR)data.tag, (LPCTSTR)data.flag1,
 			(LPCTSTR)data.flag2, (LPCTSTR)data.flag3, (LPCTSTR)data.flag4, (LPCTSTR)data.flag5);
 
-		int res = dlg.DoModal();
+		INT_PTR res = dlg.DoModal();
 		if (res == IDCANCEL) return;
 
 		data.action = dlg.m_action;
@@ -2210,7 +2210,7 @@ void CIsoView::HandleProperties(int n, int type)
 			(LPCTSTR)data.upgrade3, (LPCTSTR)data.flag3, (LPCTSTR)data.flag4);
 		dlg.m_type = data.type;
 
-		int res = dlg.DoModal();
+		INT_PTR res = dlg.DoModal();
 		if (res == IDCANCEL) return;
 
 		data.strength = dlg.m_strength;
@@ -2250,7 +2250,7 @@ void CIsoView::HandleProperties(int n, int type)
 		dlg.Init(data.house, data.strength, data.direction, data.action,
 			data.tag, data.flag1, data.flag2, data.flag3, data.flag4);
 
-		int res = dlg.DoModal();
+		INT_PTR res = dlg.DoModal();
 		if (res == IDCANCEL) return;
 
 		data.action = dlg.m_action;
@@ -2283,7 +2283,7 @@ void CIsoView::HandleProperties(int n, int type)
 		dlg.Init(data.house, data.strength, data.direction, data.action,
 			data.tag, data.flag1, data.flag2, data.flag3, data.flag4, data.flag5, data.flag6);
 
-		int res = dlg.DoModal();
+		INT_PTR res = dlg.DoModal();
 		if (res == IDCANCEL) return;
 
 		data.action = dlg.m_action;
@@ -5175,7 +5175,7 @@ void CIsoView::PlaceCurrentObjectAt(int x, int y)
 
 }
 
-void CIsoView::OnTimer(UINT nIDEvent)
+void CIsoView::OnTimer(UINT_PTR nIDEvent)
 {
 	// theApp.m_loading->FreeAll();
 	// theApp.m_loading->InitPics();

@@ -34,7 +34,7 @@ private:
 
 	int size() const
 	{
-		return m_data.size();
+		return static_cast<int>(m_data.size());
 	}
 public:
 	string read_line();

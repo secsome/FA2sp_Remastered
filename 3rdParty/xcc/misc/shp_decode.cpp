@@ -379,7 +379,7 @@ static void write_v80(byte v, int count, byte*& d)
 
 void get_same(const byte* s, const byte* r, const byte* s_end, byte*& p, int& cb_p)
 {
-	_asm
+	/*_asm
 	{
 		push	esi
 		push	edi
@@ -415,7 +415,7 @@ end0:
 		mov		[edi], ecx
 		pop		edi
 		pop		esi
-	}
+	}*/
 }
 
 static void write80_c0(byte*& w, int count, int p)
@@ -615,164 +615,6 @@ int decode80c(const byte image_in[], byte image_out[], int cb_in)
 	}
 	assert(cb_in == r - image_in);
 	return (w - image_out);
-}
-
-int decode80(const byte image_in[], byte image_out[])
-{
-	int cb_out;
-	/*
-	0 copy 0cccpppp p
-	1 copy 10cccccc
-	2 copy 11cccccc p p
-	3 fill 11111110 c c v
-	4 copy 11111111 c c p p
-	*/
-	
-	_asm
-	{
-		push	esi
-		push	edi
-		mov		ax, ds
-		mov		es, ax
-		mov		esi, image_in
-		mov		edi, image_out
-next0:
-		xor		eax, eax
-		lodsb
-		mov		ecx, eax
-		test	eax, 0x80
-		jnz		c1c
-		shr		ecx, 4
-		add		ecx, 3
-		and		eax, 0xf
-		shl		eax, 8
-		lodsb
-		mov		edx, esi
-		mov		esi, edi
-		sub		esi, eax
-		jmp		copy_from_destination
-c1c:
-		and		ecx, 0x3f
-		test	eax, 0x40
-		jnz		c2c
-		or		ecx, ecx
-		jz		end0
-		jmp		copy_from_source
-c2c:
-		xor		eax, eax
-		lodsw
-		cmp		ecx, 0x3e
-		je		c3
-		ja		c4
-		mov		edx, esi
-		mov		esi, image_out
-		add		esi, eax
-		add		ecx, 3
-		jmp		copy_from_destination
-c3:
-		mov		ecx, eax
-		lodsb
-		rep		stosb
-		jmp		next0
-c4:
-		mov		ecx, eax
-		lodsw
-		mov		edx, esi
-		mov		esi, image_out
-		add		esi, eax
-copy_from_destination:
-		rep		movsb
-		mov		esi, edx
-		jmp		next0
-copy_from_source:
-		rep		movsb
-		jmp		next0
-end0:
-		sub		edi, image_out
-		mov		cb_out, edi
-		pop		edi
-		pop		esi
-	}
-	return cb_out;
-}
-
-int decode80r(const byte image_in[], byte image_out[])
-{
-	int cb_out;
-	/*
-	0 copy 0cccpppp p
-	1 copy 10cccccc
-	2 copy 11cccccc p p
-	3 fill 11111110 c c v
-	4 copy 11111111 c c p p
-	*/
-	
-	_asm
-	{
-		push	esi
-		push	edi
-		mov		ax, ds
-		mov		es, ax
-		mov		esi, image_in
-		mov		edi, image_out
-next0:
-		xor		eax, eax
-		lodsb
-		mov		ecx, eax
-		test	eax, 0x80
-		jnz		c1c
-		shr		ecx, 4
-		add		ecx, 3
-		and		eax, 0xf
-		shl		eax, 8
-		lodsb
-		mov		edx, esi
-		mov		esi, edi
-		sub		esi, eax
-		jmp		copy_from_destination
-c1c:
-		and		ecx, 0x3f
-		test	eax, 0x40
-		jnz		c2c
-		or		ecx, ecx
-		jz		end0
-		jmp		copy_from_source
-c2c:
-		xor		eax, eax
-		lodsw
-		cmp		ecx, 0x3e
-		je		c3
-		ja		c4
-		mov		edx, esi
-		mov		esi, edi
-		sub		esi, eax
-		add		ecx, 3
-		jmp		copy_from_destination
-c3:
-		mov		ecx, eax
-		lodsb
-		rep		stosb
-		jmp		next0
-c4:
-		mov		ecx, eax
-		lodsw
-		mov		edx, esi
-		mov		esi, edi
-		sub		esi, eax
-copy_from_destination:
-		rep		movsb
-		mov		esi, edx
-		jmp		next0
-copy_from_source:
-		rep		movsb
-		jmp		next0
-end0:
-		sub		edi, image_out
-		mov		cb_out, edi
-		pop		edi
-		pop		esi
-	}
-	return cb_out;
 }
 
 int decode2(const byte* s, byte* d, int cb_s, const byte* reference_palet)
@@ -1047,16 +889,6 @@ static void flush_c0(byte*& w, const byte* r, const byte*& copy_from, byte* smal
 	}
 }
 
-int encode5s(const byte* s, byte* d, int cb_s)
-{
-	lzo_init();
-	static Cvirtual_binary t;
-	lzo_uint cb_d;
-	if (LZO_E_OK != lzo1x_1_compress(s, cb_s, d, &cb_d, t.write_start(LZO1X_1_MEM_COMPRESS)))
-		cb_d = 0;
-	return cb_d;
-}
-
 int encode5s_z(const byte* s, byte* d, int cb_s)
 {
 	// no compression
@@ -1067,130 +899,5 @@ int encode5s_z(const byte* s, byte* d, int cb_s)
 	r += cb_s;
 	write5_c1(w, 3, 0);
 	assert(cb_s == r - s);
-	return w - d;
-}
-
-int decode5s(const byte* s, byte* d, int cb_s)
-{
-	lzo_init();
-	lzo_uint cb_d;
-	if (LZO_E_OK != lzo1x_decompress(s, cb_s, d, &cb_d, NULL))
-		return 0;
-	return cb_d;
-	/*
-	0 copy 0000cccc
-	1 copy 0001pccc ppppppzz p
-	2 copy 001ccccc ppppppzz p
-	3 copy cccpppzz p
-	*/
-	
-	const byte* c;
-	const byte* r = s;
-	byte* w = d;
-	int code;
-	int count;
-	code = *r;
-	if (code > 17)
-	{
-		r++;
-		count = code - 17;
-		while (count--)
-			*w++ = *r++;
-	}
-	while (1)
-	{
-		code = *r++;
-		if (code & 0xf0)
-		{
-			if (code & 0xc0)
-			{
-				count = (code >> 5) - 1;
-				c = w - (code >> 2 & 7);
-				c -= *r++ << 3;
-				c--;
-			}
-			else if (code & 0x20)
-			{
-				count = code & 0x1f;
-				if (!count)
-					count = get_count(r) + 31;
-				c = w - (read_w(r) >> 2);
-				c--;
-			}
-			else
-			{
-				c = w - ((code & 8) << 11);
-				count = code & 7;
-				if (!count)
-					count = get_count(r) + 7;
-				c -= read_w(r) >> 2;
-				if (c == w)
-					break;
-			}
-			count += 2;
-			while (count--)
-			{
-				if (*w != *c)
-					*w = *c;
-				w++;
-				c++;
-			}
-			count = *(r - 2) & 3;
-			while (count--)
-			{
-				if (*w != *r)
-					*w = *r;
-				w++;
-				r++;
-			}
-		}
-		else
-		{
-			count = code ? code + 3: get_count(r) + 18;
-			while (count--)
-			{
-				if (*w != *r)
-					*w = *r;
-				w++;
-				r++;
-			}
-		}
-	}
-	assert(cb_s == r - s);
-	return w - d;
-}
-
-int encode5(const byte* s, byte* d, int cb_s, int format)
-{
-	const byte* r = s;
-	const byte* r_end = s + cb_s;
-	byte* w = d;
-	while (r < r_end)
-	{
-		int cb_section = min(r_end - r, 8192);
-		t_pack_section_header& header = *reinterpret_cast<t_pack_section_header*>(w);
-		w += sizeof(t_pack_section_header);
-		w += header.size_in = format == 80 ? encode80(r, w, cb_section) : encode5s(r, w, cb_section);
-		r += header.size_out = cb_section;
-	}
-	return w - d;
-}
-
-int decode5(const byte* s, byte* d, int cb_s, int format)
-{
-	const byte* r = s;
-	const byte* r_end = s + cb_s;
-	byte* w = d;
-	while (r < r_end)
-	{
-		const t_pack_section_header& header = *reinterpret_cast<const t_pack_section_header*>(r);
-		r += sizeof(t_pack_section_header);
-		if (format == 80)
-			decode80(r, w);
-		else
-			decode5s(r, w, header.size_in);
-		r += header.size_in;
-		w += header.size_out;
-	}
 	return w - d;
 }

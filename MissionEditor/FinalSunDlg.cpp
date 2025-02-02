@@ -684,7 +684,7 @@ void CFinalSunDlg::OnFileSaveas()
 	}
 
 	CMapValidator validator;
-	int iCancel=validator.DoModal();
+	INT_PTR iCancel=validator.DoModal();
 	if(iCancel==IDCANCEL) return;
 	CString r=GetLanguageStringACP("SAVEDLG_FILETYPES");
 	if(yuri_mode)
@@ -820,7 +820,7 @@ void CFinalSunDlg::OnFileSave()
 	if(strlen(currentMapFile)==0) { OnFileSaveas(); return; }
 	
 	CMapValidator validator;
-	int iCancel=validator.DoModal();
+	INT_PTR iCancel=validator.DoModal();
 	if(iCancel==IDCANCEL) return;
 
 	SaveMap(currentMapFile);		
@@ -2270,7 +2270,7 @@ void CFinalSunDlg::HideAllDialogs()
 void CFinalSunDlg::OnFileValidatemap() 
 {
 	CMapValidator validator;
-	int iCancel=validator.DoModal();
+	INT_PTR iCancel=validator.DoModal();
 	if(iCancel==IDCANCEL) return;	
 }
 
@@ -2624,7 +2624,7 @@ BOOL CFinalSunDlg::OnNotify(WPARAM wParam, LPARAM lParam, LRESULT* pResult)
 	if(pHead->code==TTN_NEEDTEXT)
 	{
 		TOOLTIPTEXT *pTTT = (TOOLTIPTEXT *)pHead;
-		UINT nID =pHead->idFrom;
+		UINT_PTR nID =pHead->idFrom;
 		if (pTTT->uFlags & TTF_IDISHWND)
 		{
 			// idFrom ist der HWND des Tools
@@ -3009,7 +3009,7 @@ LONG __stdcall ExceptionHandler(
 	CString s_add;	
 	char adress[50];
 	char c[50];
-	itoa((int)ExceptionInfo->ExceptionRecord->ExceptionAddress, adress, 16);
+    sprintf(adress, "%p", ExceptionInfo->ExceptionRecord->ExceptionAddress);
 	s="Unknown exception";
 	switch(ExceptionInfo->ExceptionRecord->ExceptionCode)
 	{
@@ -3167,9 +3167,9 @@ LONG __stdcall ExceptionHandler(
 	return EXCEPTION_EXECUTE_HANDLER;//EXCEPTION_CONTINUE_SEARCH;//EXCEPTION_EXECUTE_HANDLER;
 }
 
-int CFinalSunDlg::DoModal() 
+INT_PTR CFinalSunDlg::DoModal() 
 {
-	int res=0;
+	INT_PTR res=0;
 	SetUnhandledExceptionFilter(ExceptionHandler);
 
 	res=CDialog::DoModal();
