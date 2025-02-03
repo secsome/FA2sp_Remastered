@@ -22,26 +22,19 @@
 //
 //////////////////////////////////////////////////////////////////////
 
-#include "stdafx.h"
-#include "stdafx.h"
 #include "TerrainModifier.h"
+#include "stdafx.h"
 
 #ifdef _DEBUG
-#undef THIS_FILE
-static char THIS_FILE[]=__FILE__;
-#define new DEBUG_NEW
+#  undef THIS_FILE
+static char THIS_FILE[] = __FILE__;
+#  define new DEBUG_NEW
 #endif
 
 //////////////////////////////////////////////////////////////////////
 // Konstruktion/Destruktion
 //////////////////////////////////////////////////////////////////////
 
-CTerrainModifier::CTerrainModifier()
-{
+CTerrainModifier::CTerrainModifier() {}
 
-}
-
-CTerrainModifier::~CTerrainModifier()
-{
-
-}
+CTerrainModifier::~CTerrainModifier() {}

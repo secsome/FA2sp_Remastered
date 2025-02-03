@@ -21,14 +21,14 @@
 // IsoPaintThread.cpp: Implementierungsdatei
 //
 
-#include "stdafx.h"
-#include "finalsun.h"
 #include "IsoPaintThread.h"
+#include "finalsun.h"
+#include "stdafx.h"
 #include "variables.h"
 
 #ifdef _DEBUG
-#define new DEBUG_NEW
-#undef THIS_FILE
+#  define new DEBUG_NEW
+#  undef THIS_FILE
 static char THIS_FILE[] = __FILE__;
 #endif
 
@@ -37,38 +37,31 @@ static char THIS_FILE[] = __FILE__;
 
 IMPLEMENT_DYNCREATE(CIsoPaintThread, CWinThread)
 
-CIsoPaintThread::CIsoPaintThread()
-{
+CIsoPaintThread::CIsoPaintThread() {}
+
+CIsoPaintThread::~CIsoPaintThread() {}
+
+BOOL CIsoPaintThread::InitInstance() {
+  // ZU ERLEDIGEN:  Initialisierungen für jeden Thread hier durchführen
+
+  while (TRUE) {
+    // this worker thread just updates the main window
+    ((CFinalSunDlg*)theApp.GetMainWnd())->m_view.m_isoview->UpdateWindow();
+  }
+
+  return TRUE;
 }
 
-CIsoPaintThread::~CIsoPaintThread()
-{
-}
-
-BOOL CIsoPaintThread::InitInstance()
-{
-	// ZU ERLEDIGEN:  Initialisierungen für jeden Thread hier durchführen
-
-	while(TRUE)
-	{
-		// this worker thread just updates the main window
-		((CFinalSunDlg*)theApp.GetMainWnd())->m_view.m_isoview->UpdateWindow();
-	}
-
-	return TRUE;
-}
-
-int CIsoPaintThread::ExitInstance()
-{
-	// ZU ERLEDIGEN:  Bereinigungen für jeden Thread hier durchführen
-	return CWinThread::ExitInstance();
+int CIsoPaintThread::ExitInstance() {
+  // ZU ERLEDIGEN:  Bereinigungen für jeden Thread hier durchführen
+  return CWinThread::ExitInstance();
 }
 
 BEGIN_MESSAGE_MAP(CIsoPaintThread, CWinThread)
-	//{{AFX_MSG_MAP(CIsoPaintThread)
-		// HINWEIS - Der Klassen-Assistent fügt hier Zuordnungsmakros ein und entfernt diese.
-	//}}AFX_MSG_MAP
+//{{AFX_MSG_MAP(CIsoPaintThread)
+// HINWEIS - Der Klassen-Assistent fügt hier Zuordnungsmakros ein und entfernt diese.
+//}}AFX_MSG_MAP
 END_MESSAGE_MAP()
 
 /////////////////////////////////////////////////////////////////////////////
-// Behandlungsroutinen für Nachrichten CIsoPaintThread 
+// Behandlungsroutinen für Nachrichten CIsoPaintThread

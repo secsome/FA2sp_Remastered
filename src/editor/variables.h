@@ -19,15 +19,15 @@
 */
 
 /*******************************************
-	Declare the global variables here
+        Declare the global variables here
 *******************************************/
 
 #ifndef VARIABLES_H_INCLUDED
 #define VARIABLES_H_INCLUDED
 
-#include "structs.h"
 #include "FinalSun.h"
 #include "MapData.h"
+#include "structs.h"
 
 // the map
 extern CMapData* Map;
@@ -45,9 +45,9 @@ extern CIniFile language;
 extern CIniFile tiles_t;
 extern CIniFile tiles_s;
 extern CIniFile tiles_u;
-extern CIniFile tiles_un; // new urbannmd.ini
-extern CIniFile tiles_l; // new lunarmd.ini
-extern CIniFile tiles_d; // new desertmd.ini
+extern CIniFile tiles_un;  // new urbannmd.ini
+extern CIniFile tiles_l;   // new lunarmd.ini
+extern CIniFile tiles_d;   // new desertmd.ini
 extern CIniFile* tiles;
 
 // first time options are shown (at startup)
@@ -123,13 +123,12 @@ extern char TSPath[MAX_PATH + 1];
 extern bool bAllowAccessBehindCliffs;
 
 // overlay types (the ones with additional information like name etc.)
-extern int overlay_count; // number of overlay ids that have additional information
-extern int overlay_number[]; // what overlay id?
-extern CString overlay_name[]; // what name?
-extern BOOL overlay_trail[]; // is it handled as trail?
+extern int overlay_count;       // number of overlay ids that have additional information
+extern int overlay_number[];    // what overlay id?
+extern CString overlay_name[];  // what name?
+extern BOOL overlay_trail[];    // is it handled as trail?
 extern BOOL overlay_trdebug[];
 extern BOOL yr_only[];
-
 
 extern CString currentOwner;
 extern map<CString, XCString> CCStrings;
@@ -150,7 +149,6 @@ extern int rampset_start;
 extern int cliff2set;
 extern int cliff2set_start;
 extern int cliffwater2set;
-
 
 // ra2 or TS mode?
 extern int editor_mode;

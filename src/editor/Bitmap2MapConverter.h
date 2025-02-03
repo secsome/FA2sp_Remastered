@@ -25,19 +25,17 @@
 #include "mapdata.h"
 
 #if !defined(AFX_BITMAP2MAPCONVERTER_H__42E61B61_E18A_11D4_9C88_816E6DEF4C47__INCLUDED_)
-#define AFX_BITMAP2MAPCONVERTER_H__42E61B61_E18A_11D4_9C88_816E6DEF4C47__INCLUDED_
+#  define AFX_BITMAP2MAPCONVERTER_H__42E61B61_E18A_11D4_9C88_816E6DEF4C47__INCLUDED_
 
-#if _MSC_VER > 1000
-#pragma once
-#endif // _MSC_VER > 1000
+#  if _MSC_VER > 1000
+#    pragma once
+#  endif  // _MSC_VER > 1000
 
-class CBitmap2MapConverter  
-{
-public:
-	BOOL Convert(HBITMAP hBitmap, CMapData& mapdata);
-	CBitmap2MapConverter();
-	virtual ~CBitmap2MapConverter();
-
+class CBitmap2MapConverter {
+ public:
+  BOOL Convert(HBITMAP hBitmap, CMapData& mapdata);
+  CBitmap2MapConverter();
+  virtual ~CBitmap2MapConverter();
 };
 
-#endif // !defined(AFX_BITMAP2MAPCONVERTER_H__42E61B61_E18A_11D4_9C88_816E6DEF4C47__INCLUDED_)
+#endif  // !defined(AFX_BITMAP2MAPCONVERTER_H__42E61B61_E18A_11D4_9C88_816E6DEF4C47__INCLUDED_)

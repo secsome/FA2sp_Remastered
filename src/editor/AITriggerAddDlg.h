@@ -19,48 +19,45 @@
 */
 
 #if !defined(AFX_AITRIGGERADDDLG_H__19C60CA1_25D1_11D5_89B2_444553540000__INCLUDED_)
-#define AFX_AITRIGGERADDDLG_H__19C60CA1_25D1_11D5_89B2_444553540000__INCLUDED_
+#  define AFX_AITRIGGERADDDLG_H__19C60CA1_25D1_11D5_89B2_444553540000__INCLUDED_
 
-#if _MSC_VER > 1000
-#pragma once
-#endif // _MSC_VER > 1000
+#  if _MSC_VER > 1000
+#    pragma once
+#  endif  // _MSC_VER > 1000
 // AITriggerAddDlg.h : Header-Datei
 //
 
 /////////////////////////////////////////////////////////////////////////////
-// Dialogfeld CAITriggerAddDlg 
+// Dialogfeld CAITriggerAddDlg
 
-class CAITriggerAddDlg : public CDialog
-{
-// Konstruktion
-public:
-	CAITriggerAddDlg(CWnd* pParent = NULL);   // Standardkonstruktor
+class CAITriggerAddDlg : public CDialog {
+  // Konstruktion
+ public:
+  CAITriggerAddDlg(CWnd* pParent = NULL);  // Standardkonstruktor
 
-// Dialogfelddaten
-	//{{AFX_DATA(CAITriggerAddDlg)
-	enum { IDD = IDD_AITRIGGERADD };
-	CString	m_AITrigger;
-	//}}AFX_DATA
+  // Dialogfelddaten
+  //{{AFX_DATA(CAITriggerAddDlg)
+  enum { IDD = IDD_AITRIGGERADD };
+  CString m_AITrigger;
+  //}}AFX_DATA
 
+  // Überschreibungen
+  // Vom Klassen-Assistenten generierte virtuelle Funktionsüberschreibungen
+  //{{AFX_VIRTUAL(CAITriggerAddDlg)
+ protected:
+  virtual void DoDataExchange(CDataExchange* pDX);  // DDX/DDV-Unterstützung
+                                                    //}}AFX_VIRTUAL
 
-// Überschreibungen
-	// Vom Klassen-Assistenten generierte virtuelle Funktionsüberschreibungen
-	//{{AFX_VIRTUAL(CAITriggerAddDlg)
-	protected:
-	virtual void DoDataExchange(CDataExchange* pDX);    // DDX/DDV-Unterstützung
-	//}}AFX_VIRTUAL
-
-// Implementierung
-protected:
-
-	// Generierte Nachrichtenzuordnungsfunktionen
-	//{{AFX_MSG(CAITriggerAddDlg)
-	virtual BOOL OnInitDialog();
-	//}}AFX_MSG
-	DECLARE_MESSAGE_MAP()
+  // Implementierung
+ protected:
+  // Generierte Nachrichtenzuordnungsfunktionen
+  //{{AFX_MSG(CAITriggerAddDlg)
+  virtual BOOL OnInitDialog();
+  //}}AFX_MSG
+  DECLARE_MESSAGE_MAP()
 };
 
 //{{AFX_INSERT_LOCATION}}
 // Microsoft Visual C++ fügt unmittelbar vor der vorhergehenden Zeile zusätzliche Deklarationen ein.
 
-#endif // AFX_AITRIGGERADDDLG_H__19C60CA1_25D1_11D5_89B2_444553540000__INCLUDED_
+#endif  // AFX_AITRIGGERADDDLG_H__19C60CA1_25D1_11D5_89B2_444553540000__INCLUDED_

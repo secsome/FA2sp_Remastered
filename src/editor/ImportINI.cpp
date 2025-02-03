@@ -21,119 +21,106 @@
 // ImportINI.cpp: Implementierungsdatei
 //
 
-#include "stdafx.h"
-#include "FinalSun.h"
 #include "ImportINI.h"
+#include "FinalSun.h"
 #include "mapdata.h"
+#include "stdafx.h"
 #include "variables.h"
 
 #ifdef _DEBUG
-#define new DEBUG_NEW
-#undef THIS_FILE
+#  define new DEBUG_NEW
+#  undef THIS_FILE
 static char THIS_FILE[] = __FILE__;
 #endif
 
 /////////////////////////////////////////////////////////////////////////////
-// Dialogfeld CImportINI 
+// Dialogfeld CImportINI
 
-
-CImportINI::CImportINI(CWnd* pParent /*=NULL*/)
-	: CDialog(CImportINI::IDD, pParent)
-{
-	//{{AFX_DATA_INIT(CImportINI)
-	//}}AFX_DATA_INIT
-	m_inicount=0;
+CImportINI::CImportINI(CWnd* pParent /*=NULL*/) : CDialog(CImportINI::IDD, pParent) {
+  //{{AFX_DATA_INIT(CImportINI)
+  //}}AFX_DATA_INIT
+  m_inicount = 0;
 }
 
-
-void CImportINI::DoDataExchange(CDataExchange* pDX)
-{
-	CDialog::DoDataExchange(pDX);
-	//{{AFX_DATA_MAP(CImportINI)
-	DDX_Control(pDX, IDC_AVAILABLE, m_Available);
-	//}}AFX_DATA_MAP
+void CImportINI::DoDataExchange(CDataExchange* pDX) {
+  CDialog::DoDataExchange(pDX);
+  //{{AFX_DATA_MAP(CImportINI)
+  DDX_Control(pDX, IDC_AVAILABLE, m_Available);
+  //}}AFX_DATA_MAP
 }
-
 
 BEGIN_MESSAGE_MAP(CImportINI, CDialog)
-	//{{AFX_MSG_MAP(CImportINI)
-	ON_BN_CLICKED(IDC_ALLSECTIONS, OnAllsections)
-	ON_BN_CLICKED(IDC_SPECIFYSECTIONS, OnSpecifysections)
-	//}}AFX_MSG_MAP
+//{{AFX_MSG_MAP(CImportINI)
+ON_BN_CLICKED(IDC_ALLSECTIONS, OnAllsections)
+ON_BN_CLICKED(IDC_SPECIFYSECTIONS, OnSpecifysections)
+//}}AFX_MSG_MAP
 END_MESSAGE_MAP()
 
 /////////////////////////////////////////////////////////////////////////////
-// Behandlungsroutinen für Nachrichten CImportINI 
+// Behandlungsroutinen für Nachrichten CImportINI
 
-void CImportINI::OnAllsections() 
-{
-	this->m_Available.EnableWindow(FALSE);
-	//this->m_Sections.EnableWindow(FALSE);
+void CImportINI::OnAllsections() {
+  this->m_Available.EnableWindow(FALSE);
+  // this->m_Sections.EnableWindow(FALSE);
 }
 
-void CImportINI::OnSpecifysections() 
-{
-	this->m_Available.EnableWindow();
-	//this->m_Sections.EnableWindow();	
+void CImportINI::OnSpecifysections() {
+  this->m_Available.EnableWindow();
+  // this->m_Sections.EnableWindow();
 }
 
-BOOL CImportINI::OnInitDialog() 
-{
-	CDialog::OnInitDialog();
-	
-	CButton* all;
-	all=(CButton*)GetDlgItem(IDC_ALLSECTIONS);
-	all->SetCheck(1);
+BOOL CImportINI::OnInitDialog() {
+  CDialog::OnInitDialog();
 
-	this->OnAllsections();
+  CButton* all;
+  all = (CButton*)GetDlgItem(IDC_ALLSECTIONS);
+  all->SetCheck(1);
 
-	CIniFile inifile;
-	inifile.LoadFile(this->m_FileName);
-	
-	if(inifile.sections.size()<1){MessageBox("File does not have any ini content, abort.","Error");EndDialog(IDCANCEL);return TRUE;}
-	
-	m_inicount=inifile.sections.size();
+  this->OnAllsections();
 
-	int i;
-	for(i=0;i<inifile.sections.size();i++)
-	{
-		if(!Map->IsMapSection(*inifile.GetSectionName(i)))
-		m_Available.InsertString(-1, *inifile.GetSectionName(i));
-	}
+  CIniFile inifile;
+  inifile.LoadFile(this->m_FileName);
 
-	return TRUE;  // return TRUE unless you set the focus to a control
-	              // EXCEPTION: OCX-Eigenschaftenseiten sollten FALSE zurückgeben
+  if (inifile.sections.size() < 1) {
+    MessageBox("File does not have any ini content, abort.", "Error");
+    EndDialog(IDCANCEL);
+    return TRUE;
+  }
+
+  m_inicount = inifile.sections.size();
+
+  int i;
+  for (i = 0; i < inifile.sections.size(); i++) {
+    if (!Map->IsMapSection(*inifile.GetSectionName(i))) m_Available.InsertString(-1, *inifile.GetSectionName(i));
+  }
+
+  return TRUE;  // return TRUE unless you set the focus to a control
+                // EXCEPTION: OCX-Eigenschaftenseiten sollten FALSE zurückgeben
 }
 
-void CImportINI::OnOK() 
-{
-	CIniFile& ini=Map->GetIniFile();
+void CImportINI::OnOK() {
+  CIniFile& ini = Map->GetIniFile();
 
-	CButton* all;
-	all=(CButton*)GetDlgItem(IDC_ALLSECTIONS);
-	
-	if(all->GetCheck())
-	{
-		// all...
-		ini.InsertFile(m_FileName, NULL);
-	}
-	else
-	{
-		// only the chosen sections
+  CButton* all;
+  all = (CButton*)GetDlgItem(IDC_ALLSECTIONS);
 
-		int i;
-		for(i=0;i<m_Available.GetCount();i++)
-		{
-			if(m_Available.GetSel(i)>0)
-			{
-				// ok the user wants to add that section!
-				CString name;
-				m_Available.GetText(i, name);
+  if (all->GetCheck()) {
+    // all...
+    ini.InsertFile(m_FileName, NULL);
+  } else {
+    // only the chosen sections
 
-				ini.InsertFile(m_FileName, (char*)(LPCTSTR)name);
-			}
-		}
-	}
-	
-	CDialog::OnOK();
+    int i;
+    for (i = 0; i < m_Available.GetCount(); i++) {
+      if (m_Available.GetSel(i) > 0) {
+        // ok the user wants to add that section!
+        CString name;
+        m_Available.GetText(i, name);
+
+        ini.InsertFile(m_FileName, (char*)(LPCTSTR)name);
+      }
+    }
+  }
+
+  CDialog::OnOK();
 }

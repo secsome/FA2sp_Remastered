@@ -26,11 +26,4 @@
 
 #include "structs.h"
 
-
-
-TILEDATA::~TILEDATA()
-{
-	memset(this,0, sizeof(TILEDATA));
-}
-
-
+TILEDATA::~TILEDATA() { memset(this, 0, sizeof(TILEDATA)); }

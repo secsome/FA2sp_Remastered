@@ -19,68 +19,65 @@
 */
 
 #if !defined(AFX_TRIGGEREDITORDLG_H__E9CA56E1_93E6_11D4_9C87_F3E3AC59A04A__INCLUDED_)
-#define AFX_TRIGGEREDITORDLG_H__E9CA56E1_93E6_11D4_9C87_F3E3AC59A04A__INCLUDED_
+#  define AFX_TRIGGEREDITORDLG_H__E9CA56E1_93E6_11D4_9C87_F3E3AC59A04A__INCLUDED_
 
-#include "TriggerOptionsDlg.h"	// Hinzugefügt von der Klassenansicht
-#if _MSC_VER > 1000
-#pragma once
-#endif // _MSC_VER > 1000
+#  include "TriggerOptionsDlg.h"  // Hinzugefügt von der Klassenansicht
+#  if _MSC_VER > 1000
+#    pragma once
+#  endif  // _MSC_VER > 1000
 // TriggerEditorDlg.h : Header-Datei
 //
 
-#include "MyComboBox.h"
-#include "TriggerEventsDlg.h"	// Hinzugefügt von der Klassenansicht
-#include "TriggerActionsDlg.h"	// Hinzugefügt von der Klassenansicht
+#  include "MyComboBox.h"
+#  include "TriggerActionsDlg.h"  // Hinzugefügt von der Klassenansicht
+#  include "TriggerEventsDlg.h"   // Hinzugefügt von der Klassenansicht
 
 /////////////////////////////////////////////////////////////////////////////
-// Dialogfeld CTriggerEditorDlg 
+// Dialogfeld CTriggerEditorDlg
 
-class CTriggerEditorDlg : public CDialog
-{
-// Konstruktion
-public:
-	void Clear();
-	CTriggerActionsDlg m_TriggerActions;
-	CTriggerEventsDlg m_TriggerEvents;
-	CTriggerOptionsDlg m_TriggerOptions;
-	void UpdateDialog();
-	CTriggerEditorDlg(CWnd* pParent = NULL);   // Standardkonstruktor
+class CTriggerEditorDlg : public CDialog {
+  // Konstruktion
+ public:
+  void Clear();
+  CTriggerActionsDlg m_TriggerActions;
+  CTriggerEventsDlg m_TriggerEvents;
+  CTriggerOptionsDlg m_TriggerOptions;
+  void UpdateDialog();
+  CTriggerEditorDlg(CWnd* pParent = NULL);  // Standardkonstruktor
 
-// Dialogfelddaten
-	//{{AFX_DATA(CTriggerEditorDlg)
-	enum { IDD = IDD_TRIGGEREDITOR };
-	CMyComboBox	m_Trigger;
-	CTabCtrl	m_tab;
-	//}}AFX_DATA
+  // Dialogfelddaten
+  //{{AFX_DATA(CTriggerEditorDlg)
+  enum { IDD = IDD_TRIGGEREDITOR };
+  CMyComboBox m_Trigger;
+  CTabCtrl m_tab;
+  //}}AFX_DATA
 
+  // Überschreibungen
+  // Vom Klassen-Assistenten generierte virtuelle Funktionsüberschreibungen
+  //{{AFX_VIRTUAL(CTriggerEditorDlg)
+ protected:
+  virtual void DoDataExchange(CDataExchange* pDX);  // DDX/DDV-Unterstützung
+                                                    //}}AFX_VIRTUAL
 
-// Überschreibungen
-	// Vom Klassen-Assistenten generierte virtuelle Funktionsüberschreibungen
-	//{{AFX_VIRTUAL(CTriggerEditorDlg)
-	protected:
-	virtual void DoDataExchange(CDataExchange* pDX);    // DDX/DDV-Unterstützung
-	//}}AFX_VIRTUAL
-
-// Implementierung
-protected:
-
-	// Generierte Nachrichtenzuordnungsfunktionen
-	//{{AFX_MSG(CTriggerEditorDlg)
-	virtual void OnOK();
-	virtual void OnCancel();
-	virtual BOOL OnInitDialog();
-	afx_msg void OnNewtrigger();
-	afx_msg void OnDeletetrigger();
-	afx_msg void OnSelchangeTrigger();
-	afx_msg void OnEditchangeTrigger();
-	afx_msg void OnSelchangeTriggertab(NMHDR* pNMHDR, LRESULT* pResult);
-	afx_msg void OnPlaceonmap();
-	afx_msg void OnClone();
-	//}}AFX_MSG
-	DECLARE_MESSAGE_MAP()
+  // Implementierung
+ protected:
+  // Generierte Nachrichtenzuordnungsfunktionen
+  //{{AFX_MSG(CTriggerEditorDlg)
+  virtual void OnOK();
+  virtual void OnCancel();
+  virtual BOOL OnInitDialog();
+  afx_msg void OnNewtrigger();
+  afx_msg void OnDeletetrigger();
+  afx_msg void OnSelchangeTrigger();
+  afx_msg void OnEditchangeTrigger();
+  afx_msg void OnSelchangeTriggertab(NMHDR* pNMHDR, LRESULT* pResult);
+  afx_msg void OnPlaceonmap();
+  afx_msg void OnClone();
+  //}}AFX_MSG
+  DECLARE_MESSAGE_MAP()
 };
 
 //{{AFX_INSERT_LOCATION}}
 // Microsoft Visual C++ fügt unmittelbar vor der vorhergehenden Zeile zusätzliche Deklarationen ein.
 
-#endif // AFX_TRIGGEREDITORDLG_H__E9CA56E1_93E6_11D4_9C87_F3E3AC59A04A__INCLUDED_
+#endif  // AFX_TRIGGEREDITORDLG_H__E9CA56E1_93E6_11D4_9C87_F3E3AC59A04A__INCLUDED_

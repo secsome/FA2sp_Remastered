@@ -21,55 +21,48 @@
 // NewMapCreateDlg.cpp: Implementierungsdatei
 //
 
-#include "stdafx.h"
-#include "finalsun.h"
 #include "NewMapCreateDlg.h"
+#include "finalsun.h"
+#include "stdafx.h"
 
 #ifdef _DEBUG
-#define new DEBUG_NEW
-#undef THIS_FILE
+#  define new DEBUG_NEW
+#  undef THIS_FILE
 static char THIS_FILE[] = __FILE__;
 #endif
 
 /////////////////////////////////////////////////////////////////////////////
-// Dialogfeld CNewMapCreateDlg 
+// Dialogfeld CNewMapCreateDlg
 
-
-CNewMapCreateDlg::CNewMapCreateDlg(CWnd* pParent /*=NULL*/)
-	: CDialog(CNewMapCreateDlg::IDD, pParent)
-{
-	//{{AFX_DATA_INIT(CNewMapCreateDlg)
-	m_CreateType = -1;
-	m_AITriggers = TRUE;
-	//}}AFX_DATA_INIT
+CNewMapCreateDlg::CNewMapCreateDlg(CWnd* pParent /*=NULL*/) : CDialog(CNewMapCreateDlg::IDD, pParent) {
+  //{{AFX_DATA_INIT(CNewMapCreateDlg)
+  m_CreateType = -1;
+  m_AITriggers = TRUE;
+  //}}AFX_DATA_INIT
 }
 
-
-void CNewMapCreateDlg::DoDataExchange(CDataExchange* pDX)
-{
-	CDialog::DoDataExchange(pDX);
-	//{{AFX_DATA_MAP(CNewMapCreateDlg)
-	DDX_Radio(pDX, IDC_CREATE, m_CreateType);
-	DDX_Check(pDX, IDC_AITRIGGERS, m_AITriggers);
-	//}}AFX_DATA_MAP
+void CNewMapCreateDlg::DoDataExchange(CDataExchange* pDX) {
+  CDialog::DoDataExchange(pDX);
+  //{{AFX_DATA_MAP(CNewMapCreateDlg)
+  DDX_Radio(pDX, IDC_CREATE, m_CreateType);
+  DDX_Check(pDX, IDC_AITRIGGERS, m_AITriggers);
+  //}}AFX_DATA_MAP
 }
-
 
 BEGIN_MESSAGE_MAP(CNewMapCreateDlg, CDialog)
-	//{{AFX_MSG_MAP(CNewMapCreateDlg)
-	//}}AFX_MSG_MAP
+//{{AFX_MSG_MAP(CNewMapCreateDlg)
+//}}AFX_MSG_MAP
 END_MESSAGE_MAP()
 
 /////////////////////////////////////////////////////////////////////////////
-// Behandlungsroutinen für Nachrichten CNewMapCreateDlg 
+// Behandlungsroutinen für Nachrichten CNewMapCreateDlg
 
-BOOL CNewMapCreateDlg::OnInitDialog() 
-{
-	CDialog::OnInitDialog();
+BOOL CNewMapCreateDlg::OnInitDialog() {
+  CDialog::OnInitDialog();
 
-	m_CreateType=0;
-	UpdateData(FALSE);
-	
-	return TRUE;  // return TRUE unless you set the focus to a control
-	              // EXCEPTION: OCX-Eigenschaftenseiten sollten FALSE zurückgeben
+  m_CreateType = 0;
+  UpdateData(FALSE);
+
+  return TRUE;  // return TRUE unless you set the focus to a control
+                // EXCEPTION: OCX-Eigenschaftenseiten sollten FALSE zurückgeben
 }

@@ -25,15 +25,15 @@ INCLUDES ALL FINAL SUN CONSTANTS AND
 VARIABLES USED
 *************************************/
 
-#include "stdafx.h"
-#include "mapdata.h"
-#include "structs.h"
-#include "FinalSun.h"
 #include <Shlobj.h>
+#include <codecvt>
+#include <string>
+#include "FinalSun.h"
 #include "MapTool.h"
 #include "inlines.h"
-#include <string>
-#include <codecvt>
+#include "mapdata.h"
+#include "stdafx.h"
+#include "structs.h"
 
 /**INI Files**/
 CIniFile rules;
@@ -41,17 +41,17 @@ CIniFile art;
 CIniFile ai;
 CIniFile sound;
 CIniFile tutorial;
-CIniFile eva; 
+CIniFile eva;
 CIniFile theme;
 CIniFile g_data;
 CIniFile language;
-CIniFile tiles_t; // temperat.ini shouldn´t be used except in CMapData::UpdateIniFile() and CLoading
-CIniFile tiles_s; // snow.ini shouldn´t be used except in CMapData::UpdateIniFile() and CLoading
-CIniFile tiles_u; // urban.ini ...
-CIniFile tiles_un; // new urbannmd.ini
-CIniFile tiles_l; // lunarmd.ini
-CIniFile tiles_d; // desertmd.ini
-CIniFile* tiles=NULL; // this should be used by every class/function except CMapData::UpdateIniFile();
+CIniFile tiles_t;        // temperat.ini shouldn´t be used except in CMapData::UpdateIniFile() and CLoading
+CIniFile tiles_s;        // snow.ini shouldn´t be used except in CMapData::UpdateIniFile() and CLoading
+CIniFile tiles_u;        // urban.ini ...
+CIniFile tiles_un;       // new urbannmd.ini
+CIniFile tiles_l;        // lunarmd.ini
+CIniFile tiles_d;        // desertmd.ini
+CIniFile* tiles = NULL;  // this should be used by every class/function except CMapData::UpdateIniFile();
 /*************/
 
 /* the mapdata! */
@@ -62,24 +62,24 @@ ACTIONDATA AD;
 
 /* A map with all the pictures in the pics directory, and some special pics */
 map<CString, PICDATA> pics;
-TILEDATA* t_tiledata=NULL;
-DWORD t_tiledata_count=0;
-TILEDATA* s_tiledata=NULL;
-DWORD s_tiledata_count=0;
-TILEDATA* u_tiledata=NULL;
-DWORD u_tiledata_count=0;
+TILEDATA* t_tiledata = NULL;
+DWORD t_tiledata_count = 0;
+TILEDATA* s_tiledata = NULL;
+DWORD s_tiledata_count = 0;
+TILEDATA* u_tiledata = NULL;
+DWORD u_tiledata_count = 0;
 
 // MW new tilesets
-TILEDATA* un_tiledata=NULL;
-DWORD un_tiledata_count=0;
-TILEDATA* l_tiledata=NULL;
-DWORD l_tiledata_count=0;
-TILEDATA* d_tiledata=NULL;
-DWORD d_tiledata_count=0;
+TILEDATA* un_tiledata = NULL;
+DWORD un_tiledata_count = 0;
+TILEDATA* l_tiledata = NULL;
+DWORD l_tiledata_count = 0;
+TILEDATA* d_tiledata = NULL;
+DWORD d_tiledata_count = 0;
 
-TILEDATA** tiledata=NULL;
+TILEDATA** tiledata = NULL;
 
-DWORD* tiledata_count=NULL;
+DWORD* tiledata_count = NULL;
 
 map<int, int> tilesets_start;
 
@@ -110,59 +110,56 @@ vector<CString> rndterrainsrc;
 
 /* Overlay tile data */
 
-int overlay_number[]={0x0,0x2, 0x1a, 0xcb, 0xf1, 0xcc,0xf3,0xf0, 0x27};
-BOOL overlay_trdebug[]={FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, TRUE};
-CString overlay_name[]={"Sandbags","Allied Wall", "Soviet Wall", "Black fence", "Prison camp fence", "White fence", "Yuri Wall", "Kremlin Wall", "Tracks"};
-BOOL overlay_visible[]={TRUE,TRUE,TRUE,TRUE,TRUE,TRUE, TRUE, TRUE, TRUE};
-BOOL overlay_trail[]={TRUE,TRUE,TRUE,TRUE,TRUE,TRUE, TRUE, TRUE, TRUE};
-BOOL yr_only[]={FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, TRUE, FALSE, FALSE};
-int overlay_count=9;
+int overlay_number[] = {0x0, 0x2, 0x1a, 0xcb, 0xf1, 0xcc, 0xf3, 0xf0, 0x27};
+BOOL overlay_trdebug[] = {FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, TRUE};
+CString overlay_name[] = {"Sandbags",    "Allied Wall", "Soviet Wall",  "Black fence", "Prison camp fence",
+                          "White fence", "Yuri Wall",   "Kremlin Wall", "Tracks"};
+BOOL overlay_visible[] = {TRUE, TRUE, TRUE, TRUE, TRUE, TRUE, TRUE, TRUE, TRUE};
+BOOL overlay_trail[] = {TRUE, TRUE, TRUE, TRUE, TRUE, TRUE, TRUE, TRUE, TRUE};
+BOOL yr_only[] = {FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, TRUE, FALSE, FALSE};
+int overlay_count = 9;
 const std::string editor_name = "FinalAlert 2";
 
-static const std::string GetAppDataPath()
-{
-    _setmbcp(CP_UTF8);
-    setlocale(LC_ALL, "C");
-    if (!setlocale(LC_CTYPE, ".65001"))
-        setlocale(LC_CTYPE, "");
-    CoInitializeEx(NULL, COINIT_MULTITHREADED);
-    CComPtr<IKnownFolderManager> manager;
-    CComPtr<IKnownFolder> local_app_data;
-    CComHeapPtr<WCHAR> local_app_data_folder;
-    HRESULT hr = CoCreateInstance(CLSID_KnownFolderManager, NULL, CLSCTX_INPROC_SERVER, IID_PPV_ARGS(&manager));
-    if (SUCCEEDED(hr)) {
-        //std::shared_ptr<LPWSTR> x()
-        
-        if (SUCCEEDED(manager->GetFolder(FOLDERID_LocalAppData, &local_app_data))) {
-            LPWSTR b;
-            local_app_data->GetPath(KF_FLAG_CREATE, &b);
-            local_app_data_folder.Attach(b);
-            int a = 0;
-            std::string AppFolder = utf16ToUtf8(std::wstring(local_app_data_folder));
-            //return CString(CW2A(CStringW(local_app_data_folder), CP_ACP)) + "\\" + editor_name + "\\";
-            return AppFolder + "\\" + editor_name + "\\";
-        }
-    }
+static const std::string GetAppDataPath() {
+  _setmbcp(CP_UTF8);
+  setlocale(LC_ALL, "C");
+  if (!setlocale(LC_CTYPE, ".65001")) setlocale(LC_CTYPE, "");
+  CoInitializeEx(NULL, COINIT_MULTITHREADED);
+  CComPtr<IKnownFolderManager> manager;
+  CComPtr<IKnownFolder> local_app_data;
+  CComHeapPtr<WCHAR> local_app_data_folder;
+  HRESULT hr = CoCreateInstance(CLSID_KnownFolderManager, NULL, CLSCTX_INPROC_SERVER, IID_PPV_ARGS(&manager));
+  if (SUCCEEDED(hr)) {
+    // std::shared_ptr<LPWSTR> x()
 
-    // fallback: use app directory
-    wchar_t app_path[MAX_PATH] = { 0 };
-    GetModuleFileNameW(NULL, app_path, MAX_PATH);
-    std::wstring appPath = app_path;
-    std::size_t end = appPath.rfind(L'\\');
-    if (end != std::wstring::npos)
-        appPath.resize(end + 1);
-    return utf16ToUtf8(appPath);
+    if (SUCCEEDED(manager->GetFolder(FOLDERID_LocalAppData, &local_app_data))) {
+      LPWSTR b;
+      local_app_data->GetPath(KF_FLAG_CREATE, &b);
+      local_app_data_folder.Attach(b);
+      int a = 0;
+      std::string AppFolder = utf16ToUtf8(std::wstring(local_app_data_folder));
+      // return CString(CW2A(CStringW(local_app_data_folder), CP_ACP)) + "\\" + editor_name + "\\";
+      return AppFolder + "\\" + editor_name + "\\";
+    }
+  }
+
+  // fallback: use app directory
+  wchar_t app_path[MAX_PATH] = {0};
+  GetModuleFileNameW(NULL, app_path, MAX_PATH);
+  std::wstring appPath = app_path;
+  std::size_t end = appPath.rfind(L'\\');
+  if (end != std::wstring::npos) appPath.resize(end + 1);
+  return utf16ToUtf8(appPath);
 }
 
 /* Application specific global variables */
-char AppPath[MAX_PATH + 1] = { 0 };
+char AppPath[MAX_PATH + 1] = {0};
 const std::string u8AppDataPath = GetAppDataPath();
 const std::wstring u16AppDataPath = utf8ToUtf16(u8AppDataPath);
-char TSPath[MAX_PATH + 1] = { 0 };
-char currentMapFile[MAX_PATH + 1] = { 0 };
-BOOL bOptionsStartup=FALSE;
-bool bAllowAccessBehindCliffs=false;
-
+char TSPath[MAX_PATH + 1] = {0};
+char currentMapFile[MAX_PATH + 1] = {0};
+BOOL bOptionsStartup = FALSE;
+bool bAllowAccessBehindCliffs = false;
 
 // infos for buildings and trees (should be extended to infantry, units, and aircraft)
 // they are initialized in CIsoView, should be changed to CMapData
@@ -178,7 +175,7 @@ ofstream errstream;
 /* the finalsun app object */
 CFinalSunApp theApp;
 
-CString currentOwner="Neutral";
+CString currentOwner = "Neutral";
 
 map<CString, XCString> CCStrings;
 map<CString, XCString> AllStrings;
@@ -205,7 +202,7 @@ int cliff2set_start;
 int cliffwater2set;
 
 // debug information
-int last_succeeded_operation=0;
+int last_succeeded_operation = 0;
 
-int editor_mode=1;
-int yuri_mode=1;
+int editor_mode = 1;
+int yuri_mode = 1;

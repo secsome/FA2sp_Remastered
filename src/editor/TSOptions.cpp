@@ -21,104 +21,91 @@
 // TSOptions.cpp: implementation
 //
 
-#include "stdafx.h"
-#include "FinalSun.h"
 #include "TSOptions.h"
-#include "resource.h"
-#include "mapdata.h"
-#include "variables.h"
+#include "FinalSun.h"
 #include "functions.h"
+#include "mapdata.h"
+#include "resource.h"
+#include "stdafx.h"
+#include "variables.h"
 
 extern CFinalSunApp theApp;
 
 #ifdef _DEBUG
-#define new DEBUG_NEW
-#undef THIS_FILE
+#  define new DEBUG_NEW
+#  undef THIS_FILE
 static char THIS_FILE[] = __FILE__;
 #endif
 
 /////////////////////////////////////////////////////////////////////////////
-// Dialogfeld CTSOptions 
+// Dialogfeld CTSOptions
 
-
-CTSOptions::CTSOptions(CWnd* pParent /*=NULL*/)
-	: CDialog(CTSOptions::IDD, pParent)
-	, m_PreferLocalTheaterFiles(FALSE)
-{
-	//{{AFX_DATA_INIT(CTSOptions)
-	m_LikeTS = -1;
-	//}}AFX_DATA_INIT
+CTSOptions::CTSOptions(CWnd* pParent /*=NULL*/) : CDialog(CTSOptions::IDD, pParent), m_PreferLocalTheaterFiles(FALSE) {
+  //{{AFX_DATA_INIT(CTSOptions)
+  m_LikeTS = -1;
+  //}}AFX_DATA_INIT
 }
 
-
-void CTSOptions::DoDataExchange(CDataExchange* pDX)
-{
-	CDialog::DoDataExchange(pDX);
-	//{{AFX_DATA_MAP(CTSOptions)
-	DDX_Control(pDX, IDC_LANGUAGE, m_Language);
-	DDX_Control(pDX, IDC_EDIT1, m_TSExe);
-	DDX_Radio(pDX, IDC_RULESLIKETS, m_LikeTS);
-	DDX_Check(pDX, IDC_PREFER_LOCAL_THEATER_FILES, m_PreferLocalTheaterFiles);
-	//}}AFX_DATA_MAP	
+void CTSOptions::DoDataExchange(CDataExchange* pDX) {
+  CDialog::DoDataExchange(pDX);
+  //{{AFX_DATA_MAP(CTSOptions)
+  DDX_Control(pDX, IDC_LANGUAGE, m_Language);
+  DDX_Control(pDX, IDC_EDIT1, m_TSExe);
+  DDX_Radio(pDX, IDC_RULESLIKETS, m_LikeTS);
+  DDX_Check(pDX, IDC_PREFER_LOCAL_THEATER_FILES, m_PreferLocalTheaterFiles);
+  //}}AFX_DATA_MAP
 }
-
 
 BEGIN_MESSAGE_MAP(CTSOptions, CDialog)
-	//{{AFX_MSG_MAP(CTSOptions)
-	ON_BN_CLICKED(IDC_CHOOSE, OnChoose)
-	//}}AFX_MSG_MAP
+//{{AFX_MSG_MAP(CTSOptions)
+ON_BN_CLICKED(IDC_CHOOSE, OnChoose)
+//}}AFX_MSG_MAP
 END_MESSAGE_MAP()
 
 /////////////////////////////////////////////////////////////////////////////
-// Behandlungsroutinen für Nachrichten CTSOptions 
+// Behandlungsroutinen für Nachrichten CTSOptions
 
-void CTSOptions::OnChoose() 
-{
-	CFileDialog fd(TRUE, NULL, "ra2.exe", OFN_FILEMUSTEXIST, "Red Alert 2 EXE|ra2.exe|");
+void CTSOptions::OnChoose() {
+  CFileDialog fd(TRUE, NULL, "ra2.exe", OFN_FILEMUSTEXIST, "Red Alert 2 EXE|ra2.exe|");
 
-	fd.DoModal();
+  fd.DoModal();
 
-	this->GetDlgItem(IDC_EDIT1)->SetWindowText((LPCTSTR)fd.GetPathName());
+  this->GetDlgItem(IDC_EDIT1)->SetWindowText((LPCTSTR)fd.GetPathName());
 
-	delete fd;
+  delete fd;
 }
 
-void CTSOptions::OnOK() 
-{
-	this->GetDlgItem(IDC_EDIT1)->GetWindowText(m_TSEXE);
-	int n=m_Language.GetItemData(m_Language.GetCurSel()); 
-	
-	m_LanguageName=*language.sections["Languages"].GetValue(n);
+void CTSOptions::OnOK() {
+  this->GetDlgItem(IDC_EDIT1)->GetWindowText(m_TSEXE);
+  int n = m_Language.GetItemData(m_Language.GetCurSel());
 
-	CDialog::OnOK();
+  m_LanguageName = *language.sections["Languages"].GetValue(n);
+
+  CDialog::OnOK();
 }
 
-BOOL CTSOptions::OnInitDialog() 
-{
-	CDialog::OnInitDialog();
-	
-	m_TSExe.SetWindowText((LPCTSTR)theApp.m_Options.TSExe);
-	
-	if(theApp.m_Options.bSearchLikeTS) m_LikeTS=0;
-	else m_LikeTS=1;
+BOOL CTSOptions::OnInitDialog() {
+  CDialog::OnInitDialog();
 
-	m_PreferLocalTheaterFiles = theApp.m_Options.bPreferLocalTheaterFiles ? TRUE : FALSE;
+  m_TSExe.SetWindowText((LPCTSTR)theApp.m_Options.TSExe);
 
-	UpdateData(FALSE);
+  if (theApp.m_Options.bSearchLikeTS)
+    m_LikeTS = 0;
+  else
+    m_LikeTS = 1;
 
-	int i;
-	for(i=0;i<language.sections["Languages"].values.size();i++)
-	{
-		CString lang=*language.sections["Languages"].GetValue(i);
-		lang=language.sections[lang+"Header"].values["Name"];
+  m_PreferLocalTheaterFiles = theApp.m_Options.bPreferLocalTheaterFiles ? TRUE : FALSE;
 
-		
+  UpdateData(FALSE);
 
-		m_Language.SetItemData(m_Language.AddString(lang),i);
-		if (lang=="English")
-			m_Language.SetCurSel(i);
-	}
+  int i;
+  for (i = 0; i < language.sections["Languages"].values.size(); i++) {
+    CString lang = *language.sections["Languages"].GetValue(i);
+    lang = language.sections[lang + "Header"].values["Name"];
 
-	
-	return TRUE;  
+    m_Language.SetItemData(m_Language.AddString(lang), i);
+    if (lang == "English") m_Language.SetCurSel(i);
+  }
+
+  return TRUE;
 }

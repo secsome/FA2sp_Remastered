@@ -19,60 +19,57 @@
 */
 
 #if !defined(AFX_TRIGGERACTIONSDLG_H__234BEB21_96D7_11D4_9C87_E6A6DF12E04A__INCLUDED_)
-#define AFX_TRIGGERACTIONSDLG_H__234BEB21_96D7_11D4_9C87_E6A6DF12E04A__INCLUDED_
+#  define AFX_TRIGGERACTIONSDLG_H__234BEB21_96D7_11D4_9C87_E6A6DF12E04A__INCLUDED_
 
-#if _MSC_VER > 1000
-#pragma once
-#endif // _MSC_VER > 1000
+#  if _MSC_VER > 1000
+#    pragma once
+#  endif  // _MSC_VER > 1000
 // TriggerActionsDlg.h : Header-Datei
 //
 
 /////////////////////////////////////////////////////////////////////////////
-// Dialogfeld CTriggerActionsDlg 
+// Dialogfeld CTriggerActionsDlg
 
-class CTriggerActionsDlg : public CDialog
-{
-// Konstruktion
-public:
-	void Clear();
-	void UpdateDialog();
-	CString m_currentTrigger;
-	CTriggerActionsDlg(CWnd* pParent = NULL);   // Standardkonstruktor
+class CTriggerActionsDlg : public CDialog {
+  // Konstruktion
+ public:
+  void Clear();
+  void UpdateDialog();
+  CString m_currentTrigger;
+  CTriggerActionsDlg(CWnd* pParent = NULL);  // Standardkonstruktor
 
-// Dialogfelddaten
-	//{{AFX_DATA(CTriggerActionsDlg)
-	enum { IDD = IDD_TRIGGERACTIONS };
-	CMyComboBox	m_ParamValue;
-	CListBox	m_Parameter;
-	CMyComboBox	m_ActionType;
-	CEdit	m_ActionDescription;
-	CComboBox	m_Action;
-	//}}AFX_DATA
+  // Dialogfelddaten
+  //{{AFX_DATA(CTriggerActionsDlg)
+  enum { IDD = IDD_TRIGGERACTIONS };
+  CMyComboBox m_ParamValue;
+  CListBox m_Parameter;
+  CMyComboBox m_ActionType;
+  CEdit m_ActionDescription;
+  CComboBox m_Action;
+  //}}AFX_DATA
 
+  // Überschreibungen
+  // Vom Klassen-Assistenten generierte virtuelle Funktionsüberschreibungen
+  //{{AFX_VIRTUAL(CTriggerActionsDlg)
+ protected:
+  virtual void DoDataExchange(CDataExchange* pDX);  // DDX/DDV-Unterstützung
+                                                    //}}AFX_VIRTUAL
 
-// Überschreibungen
-	// Vom Klassen-Assistenten generierte virtuelle Funktionsüberschreibungen
-	//{{AFX_VIRTUAL(CTriggerActionsDlg)
-	protected:
-	virtual void DoDataExchange(CDataExchange* pDX);    // DDX/DDV-Unterstützung
-	//}}AFX_VIRTUAL
-
-// Implementierung
-protected:
-
-	// Generierte Nachrichtenzuordnungsfunktionen
-	//{{AFX_MSG(CTriggerActionsDlg)
-	afx_msg void OnSelchangeAction();
-	afx_msg void OnEditchangeActiontype();
-	afx_msg void OnSelchangeParameter();
-	afx_msg void OnEditchangeParamvalue();
-	afx_msg void OnNewaction();
-	afx_msg void OnDeleteaction();
-	//}}AFX_MSG
-	DECLARE_MESSAGE_MAP()
+  // Implementierung
+ protected:
+  // Generierte Nachrichtenzuordnungsfunktionen
+  //{{AFX_MSG(CTriggerActionsDlg)
+  afx_msg void OnSelchangeAction();
+  afx_msg void OnEditchangeActiontype();
+  afx_msg void OnSelchangeParameter();
+  afx_msg void OnEditchangeParamvalue();
+  afx_msg void OnNewaction();
+  afx_msg void OnDeleteaction();
+  //}}AFX_MSG
+  DECLARE_MESSAGE_MAP()
 };
 
 //{{AFX_INSERT_LOCATION}}
 // Microsoft Visual C++ fügt unmittelbar vor der vorhergehenden Zeile zusätzliche Deklarationen ein.
 
-#endif // AFX_TRIGGERACTIONSDLG_H__234BEB21_96D7_11D4_9C87_E6A6DF12E04A__INCLUDED_
+#endif  // AFX_TRIGGERACTIONSDLG_H__234BEB21_96D7_11D4_9C87_E6A6DF12E04A__INCLUDED_

@@ -18,39 +18,35 @@
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-#include "StdAfx.h"
 #include "Structs.h"
+#include "StdAfx.h"
 #include "functions.h"
 
 #include "MapTool.h"
 
-ACTIONDATA::~ACTIONDATA()
-{
-}
+ACTIONDATA::~ACTIONDATA() {}
 
 void ACTIONDATA::reset() {
-    mode = 0;
-    type = 0;
-    data = 0;
-    data2 = 0;
-    data3 = 0;
-    z_data = 0;
-    data_s = "";
-    tool.reset();
+  mode = 0;
+  type = 0;
+  data = 0;
+  data2 = 0;
+  data3 = 0;
+  z_data = 0;
+  data_s = "";
+  tool.reset();
 }
 
-void PICDATA::createVBorder()
-{
-    ASSERT(!vborder);
-    ASSERT(pic && bType != PICDATA_TYPE_BMP);
-    _vBorder = std::make_shared<std::vector<VBORDER>>(wMaxHeight);
-    vborder = _vBorder->data();
-    int k;
-    for (k = 0;k < wMaxHeight;k++)
-    {
-        int l, r;
-        GetDrawBorder(static_cast<BYTE*>(pic), wMaxWidth, k, l, r, 0);
-        vborder[k].left = l;
-        vborder[k].right = r;
-    }
+void PICDATA::createVBorder() {
+  ASSERT(!vborder);
+  ASSERT(pic && bType != PICDATA_TYPE_BMP);
+  _vBorder = std::make_shared<std::vector<VBORDER>>(wMaxHeight);
+  vborder = _vBorder->data();
+  int k;
+  for (k = 0; k < wMaxHeight; k++) {
+    int l, r;
+    GetDrawBorder(static_cast<BYTE*>(pic), wMaxWidth, k, l, r, 0);
+    vborder[k].left = l;
+    vborder[k].right = r;
+  }
 }

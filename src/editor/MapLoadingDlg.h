@@ -19,48 +19,45 @@
 */
 
 #if !defined(AFX_MAPLOADINGDLG_H__19690341_CE13_11D4_9C87_444553540000__INCLUDED_)
-#define AFX_MAPLOADINGDLG_H__19690341_CE13_11D4_9C87_444553540000__INCLUDED_
+#  define AFX_MAPLOADINGDLG_H__19690341_CE13_11D4_9C87_444553540000__INCLUDED_
 
-#if _MSC_VER > 1000
-#pragma once
-#endif // _MSC_VER > 1000
+#  if _MSC_VER > 1000
+#    pragma once
+#  endif  // _MSC_VER > 1000
 // MapLoadingDlg.h : Header-Datei
 //
 
 /////////////////////////////////////////////////////////////////////////////
-// Dialogfeld CMapLoadingDlg 
+// Dialogfeld CMapLoadingDlg
 
-class CMapLoadingDlg : public CDialog
-{
-// Konstruktion
-public:
-	CMapLoadingDlg(CWnd* pParent = NULL);   // Standardkonstruktor
+class CMapLoadingDlg : public CDialog {
+  // Konstruktion
+ public:
+  CMapLoadingDlg(CWnd* pParent = NULL);  // Standardkonstruktor
 
-// Dialogfelddaten
-	//{{AFX_DATA(CMapLoadingDlg)
-	enum { IDD = IDD_MAPLOAD };
-	CProgressCtrl	m_Progress;
-	//}}AFX_DATA
+  // Dialogfelddaten
+  //{{AFX_DATA(CMapLoadingDlg)
+  enum { IDD = IDD_MAPLOAD };
+  CProgressCtrl m_Progress;
+  //}}AFX_DATA
 
+  // Überschreibungen
+  // Vom Klassen-Assistenten generierte virtuelle Funktionsüberschreibungen
+  //{{AFX_VIRTUAL(CMapLoadingDlg)
+ protected:
+  virtual void DoDataExchange(CDataExchange* pDX);  // DDX/DDV-Unterstützung
+                                                    //}}AFX_VIRTUAL
 
-// Überschreibungen
-	// Vom Klassen-Assistenten generierte virtuelle Funktionsüberschreibungen
-	//{{AFX_VIRTUAL(CMapLoadingDlg)
-	protected:
-	virtual void DoDataExchange(CDataExchange* pDX);    // DDX/DDV-Unterstützung
-	//}}AFX_VIRTUAL
-
-// Implementierung
-protected:
-
-	// Generierte Nachrichtenzuordnungsfunktionen
-	//{{AFX_MSG(CMapLoadingDlg)
-		// HINWEIS: Der Klassen-Assistent fügt hier Member-Funktionen ein
-	//}}AFX_MSG
-	DECLARE_MESSAGE_MAP()
+  // Implementierung
+ protected:
+  // Generierte Nachrichtenzuordnungsfunktionen
+  //{{AFX_MSG(CMapLoadingDlg)
+  // HINWEIS: Der Klassen-Assistent fügt hier Member-Funktionen ein
+  //}}AFX_MSG
+  DECLARE_MESSAGE_MAP()
 };
 
 //{{AFX_INSERT_LOCATION}}
 // Microsoft Visual C++ fügt unmittelbar vor der vorhergehenden Zeile zusätzliche Deklarationen ein.
 
-#endif // AFX_MAPLOADINGDLG_H__19690341_CE13_11D4_9C87_444553540000__INCLUDED_
+#endif  // AFX_MAPLOADINGDLG_H__19690341_CE13_11D4_9C87_444553540000__INCLUDED_

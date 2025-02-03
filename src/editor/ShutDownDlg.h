@@ -19,51 +19,48 @@
 */
 
 #if !defined(AFX_SHUTDOWNDLG_H__28D9E061_8340_11D4_9C87_A1B9E12BB04A__INCLUDED_)
-#define AFX_SHUTDOWNDLG_H__28D9E061_8340_11D4_9C87_A1B9E12BB04A__INCLUDED_
+#  define AFX_SHUTDOWNDLG_H__28D9E061_8340_11D4_9C87_A1B9E12BB04A__INCLUDED_
 
-#include "resource.h"
+#  include "resource.h"
 
-#if _MSC_VER > 1000
-#pragma once
-#endif // _MSC_VER > 1000
+#  if _MSC_VER > 1000
+#    pragma once
+#  endif  // _MSC_VER > 1000
 // ShutDownDlg.h : Header-Datei
 //
 
 /////////////////////////////////////////////////////////////////////////////
-// Dialogfeld CShutDownDlg 
+// Dialogfeld CShutDownDlg
 
-class CShutDownDlg : public CDialog
-{
-// Konstruktion
-public:
-	CShutDownDlg(CWnd* pParent = NULL);   // Standardkonstruktor
+class CShutDownDlg : public CDialog {
+  // Konstruktion
+ public:
+  CShutDownDlg(CWnd* pParent = NULL);  // Standardkonstruktor
 
-// Dialogfelddaten
-	//{{AFX_DATA(CShutDownDlg)
-	enum { IDD = IDD_SHUTDOWN };
-		// HINWEIS: Der Klassen-Assistent fügt hier Datenelemente ein
-	//}}AFX_DATA
+  // Dialogfelddaten
+  //{{AFX_DATA(CShutDownDlg)
+  enum { IDD = IDD_SHUTDOWN };
+  // HINWEIS: Der Klassen-Assistent fügt hier Datenelemente ein
+  //}}AFX_DATA
 
+  // Überschreibungen
+  // Vom Klassen-Assistenten generierte virtuelle Funktionsüberschreibungen
+  //{{AFX_VIRTUAL(CShutDownDlg)
+ protected:
+  virtual void DoDataExchange(CDataExchange* pDX);  // DDX/DDV-Unterstützung
+  virtual void PostNcDestroy();
+  //}}AFX_VIRTUAL
 
-// Überschreibungen
-	// Vom Klassen-Assistenten generierte virtuelle Funktionsüberschreibungen
-	//{{AFX_VIRTUAL(CShutDownDlg)
-	protected:
-	virtual void DoDataExchange(CDataExchange* pDX);    // DDX/DDV-Unterstützung
-	virtual void PostNcDestroy();
-	//}}AFX_VIRTUAL
-
-// Implementierung
-protected:
-
-	// Generierte Nachrichtenzuordnungsfunktionen
-	//{{AFX_MSG(CShutDownDlg)
-		// HINWEIS: Der Klassen-Assistent fügt hier Member-Funktionen ein
-	//}}AFX_MSG
-	DECLARE_MESSAGE_MAP()
+  // Implementierung
+ protected:
+  // Generierte Nachrichtenzuordnungsfunktionen
+  //{{AFX_MSG(CShutDownDlg)
+  // HINWEIS: Der Klassen-Assistent fügt hier Member-Funktionen ein
+  //}}AFX_MSG
+  DECLARE_MESSAGE_MAP()
 };
 
 //{{AFX_INSERT_LOCATION}}
 // Microsoft Visual C++ fügt unmittelbar vor der vorhergehenden Zeile zusätzliche Deklarationen ein.
 
-#endif // AFX_SHUTDOWNDLG_H__28D9E061_8340_11D4_9C87_A1B9E12BB04A__INCLUDED_
+#endif  // AFX_SHUTDOWNDLG_H__28D9E061_8340_11D4_9C87_A1B9E12BB04A__INCLUDED_

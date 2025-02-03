@@ -21,53 +21,46 @@
 // NewMapTypeDlg.cpp: Implementierungsdatei
 //
 
-#include "stdafx.h"
-#include "finalsun.h"
 #include "NewMapTypeDlg.h"
+#include "finalsun.h"
+#include "stdafx.h"
 
 #ifdef _DEBUG
-#define new DEBUG_NEW
-#undef THIS_FILE
+#  define new DEBUG_NEW
+#  undef THIS_FILE
 static char THIS_FILE[] = __FILE__;
 #endif
 
 /////////////////////////////////////////////////////////////////////////////
-// Dialogfeld CNewMapTypeDlg 
+// Dialogfeld CNewMapTypeDlg
 
-
-CNewMapTypeDlg::CNewMapTypeDlg(CWnd* pParent /*=NULL*/)
-	: CDialog(CNewMapTypeDlg::IDD, pParent)
-{
-	//{{AFX_DATA_INIT(CNewMapTypeDlg)
-	m_Singleplayer = -1;
-	//}}AFX_DATA_INIT
+CNewMapTypeDlg::CNewMapTypeDlg(CWnd* pParent /*=NULL*/) : CDialog(CNewMapTypeDlg::IDD, pParent) {
+  //{{AFX_DATA_INIT(CNewMapTypeDlg)
+  m_Singleplayer = -1;
+  //}}AFX_DATA_INIT
 }
 
-
-void CNewMapTypeDlg::DoDataExchange(CDataExchange* pDX)
-{
-	CDialog::DoDataExchange(pDX);
-	//{{AFX_DATA_MAP(CNewMapTypeDlg)
-	DDX_Radio(pDX, IDC_SINGLE, m_Singleplayer);
-	//}}AFX_DATA_MAP
+void CNewMapTypeDlg::DoDataExchange(CDataExchange* pDX) {
+  CDialog::DoDataExchange(pDX);
+  //{{AFX_DATA_MAP(CNewMapTypeDlg)
+  DDX_Radio(pDX, IDC_SINGLE, m_Singleplayer);
+  //}}AFX_DATA_MAP
 }
-
 
 BEGIN_MESSAGE_MAP(CNewMapTypeDlg, CDialog)
-	//{{AFX_MSG_MAP(CNewMapTypeDlg)
-	//}}AFX_MSG_MAP
+//{{AFX_MSG_MAP(CNewMapTypeDlg)
+//}}AFX_MSG_MAP
 END_MESSAGE_MAP()
 
 /////////////////////////////////////////////////////////////////////////////
-// Behandlungsroutinen für Nachrichten CNewMapTypeDlg 
+// Behandlungsroutinen für Nachrichten CNewMapTypeDlg
 
-BOOL CNewMapTypeDlg::OnInitDialog() 
-{
-	CDialog::OnInitDialog();
+BOOL CNewMapTypeDlg::OnInitDialog() {
+  CDialog::OnInitDialog();
 
-	m_Singleplayer=1;
-	UpdateData(FALSE);
-	
-	return TRUE;  // return TRUE unless you set the focus to a control
-	              // EXCEPTION: OCX-Eigenschaftenseiten sollten FALSE zurückgeben
+  m_Singleplayer = 1;
+  UpdateData(FALSE);
+
+  return TRUE;  // return TRUE unless you set the focus to a control
+                // EXCEPTION: OCX-Eigenschaftenseiten sollten FALSE zurückgeben
 }

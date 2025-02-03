@@ -19,45 +19,42 @@
 */
 
 #if !defined(AFX_MYCOMBOBOX_H__6B1D6F02_A9A7_11D3_B63B_B4DF98412640__INCLUDED_)
-#define AFX_MYCOMBOBOX_H__6B1D6F02_A9A7_11D3_B63B_B4DF98412640__INCLUDED_
+#  define AFX_MYCOMBOBOX_H__6B1D6F02_A9A7_11D3_B63B_B4DF98412640__INCLUDED_
 
-#if _MSC_VER > 1000
-#pragma once
-#endif // _MSC_VER > 1000
+#  if _MSC_VER > 1000
+#    pragma once
+#  endif  // _MSC_VER > 1000
 // MyComboBox.h : Header-Datei
 //
 
 /////////////////////////////////////////////////////////////////////////////
-// Fenster CMyComboBox 
+// Fenster CMyComboBox
 
-class CMyComboBox : public CComboBox
-{
-// Konstruktion
-public:
-	CMyComboBox();
+class CMyComboBox : public CComboBox {
+  // Konstruktion
+ public:
+  CMyComboBox();
 
-// Attribute
-public:
+  // Attribute
+ public:
+  // Operationen
+ public:
+  // Überschreibungen
+  // Vom Klassen-Assistenten generierte virtuelle Funktionsüberschreibungen
+  //{{AFX_VIRTUAL(CMyComboBox)
+  //}}AFX_VIRTUAL
 
-// Operationen
-public:
+  // Implementierung
+ public:
+  virtual ~CMyComboBox();
 
-// Überschreibungen
-	// Vom Klassen-Assistenten generierte virtuelle Funktionsüberschreibungen
-	//{{AFX_VIRTUAL(CMyComboBox)
-	//}}AFX_VIRTUAL
+  // Generierte Nachrichtenzuordnungsfunktionen
+ protected:
+  //{{AFX_MSG(CMyComboBox)
+  afx_msg void OnSelchange();
+  //}}AFX_MSG
 
-// Implementierung
-public:
-	virtual ~CMyComboBox();
-
-	// Generierte Nachrichtenzuordnungsfunktionen
-protected:
-	//{{AFX_MSG(CMyComboBox)
-	afx_msg void OnSelchange();
-	//}}AFX_MSG
-
-	DECLARE_MESSAGE_MAP()
+  DECLARE_MESSAGE_MAP()
 };
 
 /////////////////////////////////////////////////////////////////////////////
@@ -65,4 +62,4 @@ protected:
 //{{AFX_INSERT_LOCATION}}
 // Microsoft Visual C++ fügt unmittelbar vor der vorhergehenden Zeile zusätzliche Deklarationen ein.
 
-#endif // AFX_MYCOMBOBOX_H__6B1D6F02_A9A7_11D3_B63B_B4DF98412640__INCLUDED_
+#endif  // AFX_MYCOMBOBOX_H__6B1D6F02_A9A7_11D3_B63B_B4DF98412640__INCLUDED_

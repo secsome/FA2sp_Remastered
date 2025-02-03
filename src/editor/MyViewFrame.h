@@ -19,72 +19,68 @@
 */
 
 #if !defined(AFX_MYVIEWFRAME_H__98929AE1_9B75_11D3_B63B_D046A7216340__INCLUDED_)
-#define AFX_MYVIEWFRAME_H__98929AE1_9B75_11D3_B63B_D046A7216340__INCLUDED_
+#  define AFX_MYVIEWFRAME_H__98929AE1_9B75_11D3_B63B_D046A7216340__INCLUDED_
 
-#include "IsoView.h"
-	
-#if _MSC_VER > 1000
-#pragma once
-#endif 
+#  include "IsoView.h"
+
+#  if _MSC_VER > 1000
+#    pragma once
+#  endif
 
 // MyViewFrame.h : Header file
 //
 
-#include "isoview.h"
-#include "viewobjects.h"
-#include "MiniMap.h"
-#include "RightFrame.h"	
-#include "TileSetBrowserFrame.h"
+#  include "MiniMap.h"
+#  include "RightFrame.h"
+#  include "TileSetBrowserFrame.h"
+#  include "isoview.h"
+#  include "viewobjects.h"
 
 /////////////////////////////////////////////////////////////////////////////
-// Frame CMyViewFrame 
+// Frame CMyViewFrame
 
-class CMyViewFrame : public CFrameWnd
-{
-	DECLARE_DYNCREATE(CMyViewFrame)
-protected:
-	
+class CMyViewFrame : public CFrameWnd {
+  DECLARE_DYNCREATE(CMyViewFrame)
+ protected:
+  // attributes
+ public:
+  CMiniMap m_minimap;
+  CStatusBar m_statbar;
+  CViewObjects* m_objectview;
+  CIsoView* m_isoview;
+  CSplitterWnd m_Splitter;
 
-// attributes
-public:
-	CMiniMap m_minimap;
-	CStatusBar m_statbar;
-	CViewObjects* m_objectview;
-	CIsoView* m_isoview;
-	CSplitterWnd m_Splitter;
+  // operations
+ public:
+  CTileSetBrowserFrame* m_browser;
+  CRightFrame* m_rightFrame;
+  CMyViewFrame();
+  ~CMyViewFrame();
 
-// operations
-public:
-	CTileSetBrowserFrame* m_browser;
-	CRightFrame* m_rightFrame;
-	CMyViewFrame();           
-	~CMyViewFrame();
+  // overwriteables
 
-// overwriteables
-	
-	//{{AFX_VIRTUAL(CMyViewFrame)
-	protected:
-	virtual BOOL OnCreateClient(LPCREATESTRUCT lpcs, CCreateContext* pContext);
-	virtual void PostNcDestroy();
-	//}}AFX_VIRTUAL
+  //{{AFX_VIRTUAL(CMyViewFrame)
+ protected:
+  virtual BOOL OnCreateClient(LPCREATESTRUCT lpcs, CCreateContext* pContext);
+  virtual void PostNcDestroy();
+  //}}AFX_VIRTUAL
 
-// implementation
-protected:
-	
-	// generated message maps
-	//{{AFX_MSG(CMyViewFrame)
-	afx_msg void OnSysCommand(UINT nID, LPARAM lParam);
-	afx_msg void OnSize(UINT nType, int cx, int cy);
-	afx_msg void OnGetMinMaxInfo(MINMAXINFO FAR* lpMMI);
-	afx_msg void OnKeyDown(UINT nChar, UINT nRepCnt, UINT nFlags);
-	afx_msg void OnKeyUp(UINT nChar, UINT nRepCnt, UINT nFlags);
-	afx_msg void OnChar(UINT nChar, UINT nRepCnt, UINT nFlags);
-	//}}AFX_MSG
-	DECLARE_MESSAGE_MAP()
+  // implementation
+ protected:
+  // generated message maps
+  //{{AFX_MSG(CMyViewFrame)
+  afx_msg void OnSysCommand(UINT nID, LPARAM lParam);
+  afx_msg void OnSize(UINT nType, int cx, int cy);
+  afx_msg void OnGetMinMaxInfo(MINMAXINFO FAR* lpMMI);
+  afx_msg void OnKeyDown(UINT nChar, UINT nRepCnt, UINT nFlags);
+  afx_msg void OnKeyUp(UINT nChar, UINT nRepCnt, UINT nFlags);
+  afx_msg void OnChar(UINT nChar, UINT nRepCnt, UINT nFlags);
+  //}}AFX_MSG
+  DECLARE_MESSAGE_MAP()
 };
 
 /////////////////////////////////////////////////////////////////////////////
 
 //{{AFX_INSERT_LOCATION}}
 
-#endif // AFX_MYVIEWFRAME_H__98929AE1_9B75_11D3_B63B_D046A7216340__INCLUDED_
+#endif  // AFX_MYVIEWFRAME_H__98929AE1_9B75_11D3_B63B_D046A7216340__INCLUDED_

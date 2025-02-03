@@ -19,74 +19,71 @@
 */
 
 #if !defined(AFX_SINGLEPLAYERSETTINGS_H__082D6780_CA89_11D3_B63B_00485453E8BA__INCLUDED_)
-#define AFX_SINGLEPLAYERSETTINGS_H__082D6780_CA89_11D3_B63B_00485453E8BA__INCLUDED_
+#  define AFX_SINGLEPLAYERSETTINGS_H__082D6780_CA89_11D3_B63B_00485453E8BA__INCLUDED_
 
-#if _MSC_VER > 1000
-#pragma once
-#endif // _MSC_VER > 1000
+#  if _MSC_VER > 1000
+#    pragma once
+#  endif  // _MSC_VER > 1000
 // SingleplayerSettings.h : Header file
 //
 
-#include "resource.h"
+#  include "resource.h"
 
 /////////////////////////////////////////////////////////////////////////////
-// dialog field CSingleplayerSettings 
+// dialog field CSingleplayerSettings
 
-class CSingleplayerSettings : public CDialog
-{
-	DECLARE_DYNCREATE(CSingleplayerSettings)
+class CSingleplayerSettings : public CDialog {
+  DECLARE_DYNCREATE(CSingleplayerSettings)
 
-// construction
-public:
-	void UpdateStrings();
-	void UpdateDialog();
-	CSingleplayerSettings();
-	~CSingleplayerSettings();
+  // construction
+ public:
+  void UpdateStrings();
+  void UpdateDialog();
+  CSingleplayerSettings();
+  ~CSingleplayerSettings();
 
-// dialog field data
-	//{{AFX_DATA(CSingleplayerSettings)
-	enum { IDD = IDD_SINGLEPLAYER };
-	CMyComboBox	m_TimerInherit;
-	CMyComboBox	m_StartingDropships;
-	CMyComboBox	m_FillSilos;
-	CFloatEdit	m_CarryOverMoney;
-	CMyComboBox	m_Win;
-	CMyComboBox	m_PreMapSelect;
-	CMyComboBox	m_PostScore;
-	CMyComboBox	m_Lose;
-	CMyComboBox	m_Intro;
-	CMyComboBox	m_Brief;
-	CMyComboBox	m_Action;
-	//}}AFX_DATA
+  // dialog field data
+  //{{AFX_DATA(CSingleplayerSettings)
+  enum { IDD = IDD_SINGLEPLAYER };
+  CMyComboBox m_TimerInherit;
+  CMyComboBox m_StartingDropships;
+  CMyComboBox m_FillSilos;
+  CFloatEdit m_CarryOverMoney;
+  CMyComboBox m_Win;
+  CMyComboBox m_PreMapSelect;
+  CMyComboBox m_PostScore;
+  CMyComboBox m_Lose;
+  CMyComboBox m_Intro;
+  CMyComboBox m_Brief;
+  CMyComboBox m_Action;
+  //}}AFX_DATA
 
+  // overwriteables
+  //{{AFX_VIRTUAL(CSingleplayerSettings)
+ protected:
+  virtual void DoDataExchange(CDataExchange* pDX);  // ddx/ddv support
+  virtual void PostNcDestroy();
+  //}}AFX_VIRTUAL
 
-// overwriteables
-	//{{AFX_VIRTUAL(CSingleplayerSettings)
-	protected:
-	virtual void DoDataExchange(CDataExchange* pDX);    // ddx/ddv support
-	virtual void PostNcDestroy();
-	//}}AFX_VIRTUAL
-
-// implementation
-protected:
-	// generated message maps
-	//{{AFX_MSG(CSingleplayerSettings)
-	afx_msg void OnEditchangeIntro();
-	afx_msg void OnEditchangeBrief();
-	afx_msg void OnEditchangeWin();
-	afx_msg void OnEditchangeLose();
-	afx_msg void OnEditchangeAction();
-	afx_msg void OnEditchangePostscore();
-	afx_msg void OnEditchangePremapselect();
-	afx_msg void OnEditchangeStartingdropships();
-	afx_msg void OnChangeCarryovermoney();
-	afx_msg void OnEditchangeTimerinherit();
-	afx_msg void OnEditchangeFillsilos();
-	//}}AFX_MSG
-	DECLARE_MESSAGE_MAP()
-
+  // implementation
+ protected:
+  // generated message maps
+  //{{AFX_MSG(CSingleplayerSettings)
+  afx_msg void OnEditchangeIntro();
+  afx_msg void OnEditchangeBrief();
+  afx_msg void OnEditchangeWin();
+  afx_msg void OnEditchangeLose();
+  afx_msg void OnEditchangeAction();
+  afx_msg void OnEditchangePostscore();
+  afx_msg void OnEditchangePremapselect();
+  afx_msg void OnEditchangeStartingdropships();
+  afx_msg void OnChangeCarryovermoney();
+  afx_msg void OnEditchangeTimerinherit();
+  afx_msg void OnEditchangeFillsilos();
+  //}}AFX_MSG
+  DECLARE_MESSAGE_MAP()
 };
 
 //{{AFX_INSERT_LOCATION}}
 
-#endif // AFX_SINGLEPLAYERSETTINGS_H__082D6780_CA89_11D3_B63B_00485453E8BA__INCLUDED_
+#endif  // AFX_SINGLEPLAYERSETTINGS_H__082D6780_CA89_11D3_B63B_00485453E8BA__INCLUDED_

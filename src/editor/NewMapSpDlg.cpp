@@ -21,85 +21,74 @@
 // NewMapSpDlg.cpp: Implementierungsdatei
 //
 
-#include "stdafx.h"
-#include "finalsun.h"
 #include "NewMapSpDlg.h"
-#include "variables.h"
+#include "finalsun.h"
 #include "functions.h"
+#include "stdafx.h"
+#include "variables.h"
 
 #ifdef _DEBUG
-#define new DEBUG_NEW
-#undef THIS_FILE
+#  define new DEBUG_NEW
+#  undef THIS_FILE
 static char THIS_FILE[] = __FILE__;
 #endif
 
 /////////////////////////////////////////////////////////////////////////////
-// Dialogfeld CNewMapSpDlg 
+// Dialogfeld CNewMapSpDlg
 
-
-CNewMapSpDlg::CNewMapSpDlg(CWnd* pParent /*=NULL*/)
-	: CDialog(CNewMapSpDlg::IDD, pParent)
-{
-	//{{AFX_DATA_INIT(CNewMapSpDlg)
-	m_AutoProd = FALSE;
-	m_House = -1;
-	m_PrepareHouses = FALSE;
-	//}}AFX_DATA_INIT
+CNewMapSpDlg::CNewMapSpDlg(CWnd* pParent /*=NULL*/) : CDialog(CNewMapSpDlg::IDD, pParent) {
+  //{{AFX_DATA_INIT(CNewMapSpDlg)
+  m_AutoProd = FALSE;
+  m_House = -1;
+  m_PrepareHouses = FALSE;
+  //}}AFX_DATA_INIT
 }
 
-
-void CNewMapSpDlg::DoDataExchange(CDataExchange* pDX)
-{
-	CDialog::DoDataExchange(pDX);
-	//{{AFX_DATA_MAP(CNewMapSpDlg)
-	DDX_Check(pDX, IDC_AUTOPROD, m_AutoProd);
-	DDX_CBIndex(pDX, IDC_HOUSE, m_House);
-	DDX_Check(pDX, IDC_PREPAREHOUSES, m_PrepareHouses);
-	//}}AFX_DATA_MAP
+void CNewMapSpDlg::DoDataExchange(CDataExchange* pDX) {
+  CDialog::DoDataExchange(pDX);
+  //{{AFX_DATA_MAP(CNewMapSpDlg)
+  DDX_Check(pDX, IDC_AUTOPROD, m_AutoProd);
+  DDX_CBIndex(pDX, IDC_HOUSE, m_House);
+  DDX_Check(pDX, IDC_PREPAREHOUSES, m_PrepareHouses);
+  //}}AFX_DATA_MAP
 }
-
 
 BEGIN_MESSAGE_MAP(CNewMapSpDlg, CDialog)
-	//{{AFX_MSG_MAP(CNewMapSpDlg)
-	ON_BN_CLICKED(IDC_PREPAREHOUSES, OnPreparehouses)
-	//}}AFX_MSG_MAP
+//{{AFX_MSG_MAP(CNewMapSpDlg)
+ON_BN_CLICKED(IDC_PREPAREHOUSES, OnPreparehouses)
+//}}AFX_MSG_MAP
 END_MESSAGE_MAP()
 
 /////////////////////////////////////////////////////////////////////////////
-// Behandlungsroutinen für Nachrichten CNewMapSpDlg 
+// Behandlungsroutinen für Nachrichten CNewMapSpDlg
 
-void CNewMapSpDlg::OnPreparehouses() 
-{
-	UpdateData(TRUE);
-	BOOL bEnable=m_PrepareHouses;
+void CNewMapSpDlg::OnPreparehouses() {
+  UpdateData(TRUE);
+  BOOL bEnable = m_PrepareHouses;
 
-	GetDlgItem(IDC_AUTOPROD)->EnableWindow(bEnable);
-	GetDlgItem(IDC_HOUSE)->EnableWindow(bEnable);
-	
+  GetDlgItem(IDC_AUTOPROD)->EnableWindow(bEnable);
+  GetDlgItem(IDC_HOUSE)->EnableWindow(bEnable);
 }
 
-BOOL CNewMapSpDlg::OnInitDialog() 
-{
-	CDialog::OnInitDialog();
-	
-	CComboBox& house=*((CComboBox*)(GetDlgItem(IDC_HOUSE)));
-	int i;
-	for(i=0;i<rules.sections[HOUSES].values.size();i++)
-	{
-		house.AddString(TranslateHouse(*rules.sections[HOUSES].GetValue(i), TRUE));
-	}
+BOOL CNewMapSpDlg::OnInitDialog() {
+  CDialog::OnInitDialog();
 
-	m_PrepareHouses=TRUE;
-	m_AutoProd=TRUE;
-	m_House=0;
-	UpdateData(FALSE);
+  CComboBox& house = *((CComboBox*)(GetDlgItem(IDC_HOUSE)));
+  int i;
+  for (i = 0; i < rules.sections[HOUSES].values.size(); i++) {
+    house.AddString(TranslateHouse(*rules.sections[HOUSES].GetValue(i), TRUE));
+  }
 
-	return TRUE;  // return TRUE unless you set the focus to a control
-	              // EXCEPTION: OCX-Eigenschaftenseiten sollten FALSE zurückgeben
+  m_PrepareHouses = TRUE;
+  m_AutoProd = TRUE;
+  m_House = 0;
+  UpdateData(FALSE);
+
+  return TRUE;  // return TRUE unless you set the focus to a control
+                // EXCEPTION: OCX-Eigenschaftenseiten sollten FALSE zurückgeben
 }
 
-void CNewMapSpDlg::OnOK() 
-{	
-	CDialog::OnOK();
-	//m_House=TranslateHouse(m_House);
+void CNewMapSpDlg::OnOK() {
+  CDialog::OnOK();
+  // m_House=TranslateHouse(m_House);
 }

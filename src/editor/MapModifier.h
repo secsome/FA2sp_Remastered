@@ -23,18 +23,16 @@
 //////////////////////////////////////////////////////////////////////
 
 #if !defined(AFX_MAPMODIFIER_H__3853D321_CD37_11D4_9C87_F2DC6A2E6849__INCLUDED_)
-#define AFX_MAPMODIFIER_H__3853D321_CD37_11D4_9C87_F2DC6A2E6849__INCLUDED_
+#  define AFX_MAPMODIFIER_H__3853D321_CD37_11D4_9C87_F2DC6A2E6849__INCLUDED_
 
-#if _MSC_VER > 1000
-#pragma once
-#endif // _MSC_VER > 1000
+#  if _MSC_VER > 1000
+#    pragma once
+#  endif  // _MSC_VER > 1000
 
-class CMapModifier  
-{
-public:
-	CMapModifier();
-	virtual ~CMapModifier();
-
+class CMapModifier {
+ public:
+  CMapModifier();
+  virtual ~CMapModifier();
 };
 
-#endif // !defined(AFX_MAPMODIFIER_H__3853D321_CD37_11D4_9C87_F2DC6A2E6849__INCLUDED_)
+#endif  // !defined(AFX_MAPMODIFIER_H__3853D321_CD37_11D4_9C87_F2DC6A2E6849__INCLUDED_)

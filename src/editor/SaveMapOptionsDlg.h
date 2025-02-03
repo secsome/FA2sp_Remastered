@@ -19,59 +19,56 @@
 */
 
 #if !defined(AFX_SAVEMAPOPTIONSDLG_H__DD7874E1_CED2_11D4_9C87_444553540000__INCLUDED_)
-#define AFX_SAVEMAPOPTIONSDLG_H__DD7874E1_CED2_11D4_9C87_444553540000__INCLUDED_
+#  define AFX_SAVEMAPOPTIONSDLG_H__DD7874E1_CED2_11D4_9C87_444553540000__INCLUDED_
 
-#if _MSC_VER > 1000
-#pragma once
-#endif // _MSC_VER > 1000
+#  if _MSC_VER > 1000
+#    pragma once
+#  endif  // _MSC_VER > 1000
 // SaveMapOptionsDlg.h : Header-Datei
 //
 
 /////////////////////////////////////////////////////////////////////////////
-// Dialogfeld CSaveMapOptionsDlg 
+// Dialogfeld CSaveMapOptionsDlg
 
-class CSaveMapOptionsDlg : public CDialog
-{
-// Konstruktion
-public:
-	CSaveMapOptionsDlg(CWnd* pParent = NULL);   // Standardkonstruktor
+class CSaveMapOptionsDlg : public CDialog {
+  // Konstruktion
+ public:
+  CSaveMapOptionsDlg(CWnd* pParent = NULL);  // Standardkonstruktor
 
-// Dialogfelddaten
-	//{{AFX_DATA(CSaveMapOptionsDlg)
-	enum { IDD = IDD_SAVEOPTIONS };
-	int		m_Compress;
-	int		m_PreviewMode;
-	CString	m_MapName;
-	BOOL	m_AirWar;
-	BOOL	m_Cooperative;
-	BOOL	m_Duel;
-	BOOL	m_Meatgrind;
-	BOOL	m_Megawealth;
-	BOOL	m_Navalwar;
-	BOOL	m_Nukewar;
-	BOOL	m_Standard;
-	BOOL	m_TeamGame;
-	//}}AFX_DATA
+  // Dialogfelddaten
+  //{{AFX_DATA(CSaveMapOptionsDlg)
+  enum { IDD = IDD_SAVEOPTIONS };
+  int m_Compress;
+  int m_PreviewMode;
+  CString m_MapName;
+  BOOL m_AirWar;
+  BOOL m_Cooperative;
+  BOOL m_Duel;
+  BOOL m_Meatgrind;
+  BOOL m_Megawealth;
+  BOOL m_Navalwar;
+  BOOL m_Nukewar;
+  BOOL m_Standard;
+  BOOL m_TeamGame;
+  //}}AFX_DATA
 
+  // Überschreibungen
+  // Vom Klassen-Assistenten generierte virtuelle Funktionsüberschreibungen
+  //{{AFX_VIRTUAL(CSaveMapOptionsDlg)
+ protected:
+  virtual void DoDataExchange(CDataExchange* pDX);  // DDX/DDV-Unterstützung
+                                                    //}}AFX_VIRTUAL
 
-// Überschreibungen
-	// Vom Klassen-Assistenten generierte virtuelle Funktionsüberschreibungen
-	//{{AFX_VIRTUAL(CSaveMapOptionsDlg)
-	protected:
-	virtual void DoDataExchange(CDataExchange* pDX);    // DDX/DDV-Unterstützung
-	//}}AFX_VIRTUAL
-
-// Implementierung
-protected:
-
-	// Generierte Nachrichtenzuordnungsfunktionen
-	//{{AFX_MSG(CSaveMapOptionsDlg)
-	virtual BOOL OnInitDialog();
-	//}}AFX_MSG
-	DECLARE_MESSAGE_MAP()
+  // Implementierung
+ protected:
+  // Generierte Nachrichtenzuordnungsfunktionen
+  //{{AFX_MSG(CSaveMapOptionsDlg)
+  virtual BOOL OnInitDialog();
+  //}}AFX_MSG
+  DECLARE_MESSAGE_MAP()
 };
 
 //{{AFX_INSERT_LOCATION}}
 // Microsoft Visual C++ fügt unmittelbar vor der vorhergehenden Zeile zusätzliche Deklarationen ein.
 
-#endif // AFX_SAVEMAPOPTIONSDLG_H__DD7874E1_CED2_11D4_9C87_444553540000__INCLUDED_
+#endif  // AFX_SAVEMAPOPTIONSDLG_H__DD7874E1_CED2_11D4_9C87_444553540000__INCLUDED_

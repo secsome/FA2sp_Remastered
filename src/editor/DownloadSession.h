@@ -21,20 +21,20 @@
 #include <afxinet.h>
 
 #if !defined(AFX_DOWNLOADSESSION_H__944482A1_E98F_11D4_9C88_82B0A7E03C49__INCLUDED_)
-#define AFX_DOWNLOADSESSION_H__944482A1_E98F_11D4_9C88_82B0A7E03C49__INCLUDED_
+#  define AFX_DOWNLOADSESSION_H__944482A1_E98F_11D4_9C88_82B0A7E03C49__INCLUDED_
 
-#if _MSC_VER > 1000
-#pragma once
-#endif // _MSC_VER > 1000
+#  if _MSC_VER > 1000
+#    pragma once
+#  endif  // _MSC_VER > 1000
 
-class CDownloadSession : public CInternetSession  
-{
-public:
-	CDownloadSession();
-	virtual ~CDownloadSession();
-protected:
-	virtual void OnStatusCallback( DWORD dwContext, DWORD dwInternetStatus, LPVOID lpvStatusInformation, DWORD dwStatusInformationLength );
+class CDownloadSession : public CInternetSession {
+ public:
+  CDownloadSession();
+  virtual ~CDownloadSession();
 
+ protected:
+  virtual void OnStatusCallback(DWORD dwContext, DWORD dwInternetStatus, LPVOID lpvStatusInformation,
+                                DWORD dwStatusInformationLength);
 };
 
-#endif // !defined(AFX_DOWNLOADSESSION_H__944482A1_E98F_11D4_9C88_82B0A7E03C49__INCLUDED_)
+#endif  // !defined(AFX_DOWNLOADSESSION_H__944482A1_E98F_11D4_9C88_82B0A7E03C49__INCLUDED_)

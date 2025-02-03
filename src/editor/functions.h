@@ -22,8 +22,8 @@
 #define FUNC_INCLUDED
 
 #include <afx.h>
-#include <memory>
 #include <array>
+#include <memory>
 
 bool deleteFile(const std::string& u8FilePath);
 
@@ -36,7 +36,7 @@ void SetMainStatusBarReady();
 CString TranslateStringVariables(int n, const char* originaltext, const char* inserttext);
 
 // Alliance->Korea etc...
-CString TranslateHouse(CString original, BOOL bToUI=FALSE);
+CString TranslateHouse(CString original, BOOL bToUI = FALSE);
 
 // show options dialog
 void ShowOptionsDialog();
@@ -52,7 +52,8 @@ void HSVToRGB(const unsigned char hsv[3], unsigned char rgb[3]);
 std::array<unsigned char, 3> HSVToRGB(float h, float s, float v);
 std::array<unsigned char, 3> HSVToRGB(const unsigned char hsv[3]);
 
-void GetDrawBorder(const BYTE* data, int width, int line, int& left, int& right, unsigned int flags, BOOL* TranspInside = NULL);
+void GetDrawBorder(const BYTE* data, int width, int line, int& left, int& right, unsigned int flags,
+                   BOOL* TranspInside = NULL);
 
 // String conversion
 std::wstring utf8ToUtf16(const char* utf8);
@@ -66,8 +67,7 @@ int SetNodeAt(string owner, string type, int x, int y);
 void ClearNode(int n, string owner);
 CString GetFreeID();
 
-
-void HandleParamList(CComboBox &cb, int type);
+void HandleParamList(CComboBox& cb, int type);
 
 // sets 0 if there is a space in the string, so truncates it at the first space occupation
 void TruncSpace(string& str);
@@ -76,15 +76,14 @@ void TruncSpace(CString& str);
 // checks if a file exists
 BOOL DoesFileExist(LPCSTR szFile);
 
-
 // Lists some things
-void ListHouses(CComboBox &cb, BOOL bNumbers=FALSE, BOOL bCountries=FALSE, BOOL bPlayers=FALSE);
-void ListTeamTypes(CComboBox &cb, BOOL bListNone=FALSE);
-void ListWaypoints(CComboBox &cb);
+void ListHouses(CComboBox& cb, BOOL bNumbers = FALSE, BOOL bCountries = FALSE, BOOL bPlayers = FALSE);
+void ListTeamTypes(CComboBox& cb, BOOL bListNone = FALSE);
+void ListWaypoints(CComboBox& cb);
 void ListTargets(CComboBox& cb);
 void ListTags(CComboBox& cb, BOOL bListNone);
-void ListMovies(CComboBox& cb, BOOL bListNone, BOOL bListParam=FALSE);
-void ListBuildings(CComboBox& cb, BOOL bININame=FALSE);
+void ListMovies(CComboBox& cb, BOOL bListNone, BOOL bListParam = FALSE);
+void ListBuildings(CComboBox& cb, BOOL bININame = FALSE);
 void ListUnits(CComboBox& cb);
 void ListAircraft(CComboBox& cb);
 void ListInfantry(CComboBox& cb);
@@ -103,7 +102,6 @@ void ListGlobals(CComboBox& cb);
 void ListRulesGlobals(CComboBox& cb);
 void ListTechtypes(CComboBox& cb);
 
-
 // some easy-to-use functions
 CString GetText(CWnd* wnd);
 CString GetText(CComboBox* wnd);
@@ -115,7 +113,7 @@ CString GetHouseSectionName(CString lpHouse);
 int RepairRulesHouses();
 
 // strcpy_safe allows overlapping of source & destination. strcpy may be faster though!
-char *strcpy_safe( char *strDestination, const char *strSource );
+char* strcpy_safe(char* strDestination, const char* strSource);
 
 /****************************************
  language support functions [12/18/1999]
@@ -140,17 +138,14 @@ CString TranslateStringACP(WCHAR* u16EnglishString);
 // general play sound function. uses parameter in defines.h. Does only play if user has not deactivated sounds
 void Sound(int ID);
 
-
-class BitmapNotFound : std::runtime_error
-{
-public:
-    BitmapNotFound(): std::runtime_error("Bitmap not found") {}
+class BitmapNotFound : std::runtime_error {
+ public:
+  BitmapNotFound() : std::runtime_error("Bitmap not found") {}
 };
 
 std::unique_ptr<CBitmap> BitmapFromResource(int resource_id);
 std::unique_ptr<CBitmap> BitmapFromFile(const CString& filepath);
 
-CComPtr<IDirectDrawSurface4> BitmapToSurface(IDirectDraw4 * pDD, const CBitmap& bitmap);
-
+CComPtr<IDirectDrawSurface4> BitmapToSurface(IDirectDraw4* pDD, const CBitmap& bitmap);
 
 #endif

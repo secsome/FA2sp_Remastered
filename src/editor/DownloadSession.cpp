@@ -18,32 +18,24 @@
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-#include "stdafx.h"
-#include "stdafx.h"
 #include "DownloadSession.h"
+#include "stdafx.h"
 
 #ifdef _DEBUG
-#undef THIS_FILE
-static char THIS_FILE[]=__FILE__;
-#define new DEBUG_NEW
+#  undef THIS_FILE
+static char THIS_FILE[] = __FILE__;
+#  define new DEBUG_NEW
 #endif
 
 //////////////////////////////////////////////////////////////////////
 // Konstruktion/Destruktion
 //////////////////////////////////////////////////////////////////////
 
-CDownloadSession::CDownloadSession():CInternetSession("FinalAlert Download", 1, INTERNET_OPEN_TYPE_PRECONFIG, NULL, NULL, INTERNET_FLAG_ASYNC | INTERNET_FLAG_DONT_CACHE)
-{
+CDownloadSession::CDownloadSession()
+    : CInternetSession("FinalAlert Download", 1, INTERNET_OPEN_TYPE_PRECONFIG, NULL, NULL,
+                       INTERNET_FLAG_ASYNC | INTERNET_FLAG_DONT_CACHE) {}
 
-}
+CDownloadSession::~CDownloadSession() {}
 
-CDownloadSession::~CDownloadSession()
-{
-
-}
-
-
-void CDownloadSession::OnStatusCallback(DWORD dwContext, DWORD dwInternetStatus, LPVOID lpvStatusInformation, DWORD dwStatusInformationLength )
-{
-
-}
+void CDownloadSession::OnStatusCallback(DWORD dwContext, DWORD dwInternetStatus, LPVOID lpvStatusInformation,
+                                        DWORD dwStatusInformationLength) {}

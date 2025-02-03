@@ -19,51 +19,48 @@
 */
 
 #if !defined(AFX_USERSCRIPTSDLG_H__6A37EE40_9653_11D5_89B3_00E07D97C331__INCLUDED_)
-#define AFX_USERSCRIPTSDLG_H__6A37EE40_9653_11D5_89B3_00E07D97C331__INCLUDED_
+#  define AFX_USERSCRIPTSDLG_H__6A37EE40_9653_11D5_89B3_00E07D97C331__INCLUDED_
 
-#if _MSC_VER > 1000
-#pragma once
-#endif // _MSC_VER > 1000
+#  if _MSC_VER > 1000
+#    pragma once
+#  endif  // _MSC_VER > 1000
 // UserScriptsDlg.h : Header-Datei
 //
 
 /////////////////////////////////////////////////////////////////////////////
-// Dialogfeld CUserScriptsDlg 
+// Dialogfeld CUserScriptsDlg
 
-class CUserScriptsDlg : public CDialog
-{
-// Konstruktion
-public:
-	void ReportScriptError(int line);
-	CUserScriptsDlg(CWnd* pParent = NULL);   // Standardkonstruktor
+class CUserScriptsDlg : public CDialog {
+  // Konstruktion
+ public:
+  void ReportScriptError(int line);
+  CUserScriptsDlg(CWnd* pParent = NULL);  // Standardkonstruktor
 
-// Dialogfelddaten
-	//{{AFX_DATA(CUserScriptsDlg)
-	enum { IDD = IDD_USERSCRIPTS };
-	CString	m_Script;
-	CString	m_Report;
-	//}}AFX_DATA
+  // Dialogfelddaten
+  //{{AFX_DATA(CUserScriptsDlg)
+  enum { IDD = IDD_USERSCRIPTS };
+  CString m_Script;
+  CString m_Report;
+  //}}AFX_DATA
 
+  // Überschreibungen
+  // Vom Klassen-Assistenten generierte virtuelle Funktionsüberschreibungen
+  //{{AFX_VIRTUAL(CUserScriptsDlg)
+ protected:
+  virtual void DoDataExchange(CDataExchange* pDX);  // DDX/DDV-Unterstützung
+                                                    //}}AFX_VIRTUAL
 
-// Überschreibungen
-	// Vom Klassen-Assistenten generierte virtuelle Funktionsüberschreibungen
-	//{{AFX_VIRTUAL(CUserScriptsDlg)
-	protected:
-	virtual void DoDataExchange(CDataExchange* pDX);    // DDX/DDV-Unterstützung
-	//}}AFX_VIRTUAL
-
-// Implementierung
-protected:
-
-	// Generierte Nachrichtenzuordnungsfunktionen
-	//{{AFX_MSG(CUserScriptsDlg)
-	virtual void OnOK();
-	virtual BOOL OnInitDialog();
-	//}}AFX_MSG
-	DECLARE_MESSAGE_MAP()
+  // Implementierung
+ protected:
+  // Generierte Nachrichtenzuordnungsfunktionen
+  //{{AFX_MSG(CUserScriptsDlg)
+  virtual void OnOK();
+  virtual BOOL OnInitDialog();
+  //}}AFX_MSG
+  DECLARE_MESSAGE_MAP()
 };
 
 //{{AFX_INSERT_LOCATION}}
 // Microsoft Visual C++ fügt unmittelbar vor der vorhergehenden Zeile zusätzliche Deklarationen ein.
 
-#endif // AFX_USERSCRIPTSDLG_H__6A37EE40_9653_11D5_89B3_00E07D97C331__INCLUDED_
+#endif  // AFX_USERSCRIPTSDLG_H__6A37EE40_9653_11D5_89B3_00E07D97C331__INCLUDED_

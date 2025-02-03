@@ -19,66 +19,64 @@
 */
 
 #if !defined(AFX_MINIMAP_H__43F7CCE0_CC11_11D3_B63B_00485453E8BA__INCLUDED_)
-#define AFX_MINIMAP_H__43F7CCE0_CC11_11D3_B63B_00485453E8BA__INCLUDED_
+#  define AFX_MINIMAP_H__43F7CCE0_CC11_11D3_B63B_00485453E8BA__INCLUDED_
 
-#if _MSC_VER > 1000
-#pragma once
-#endif // _MSC_VER > 1000
+#  if _MSC_VER > 1000
+#    pragma once
+#  endif  // _MSC_VER > 1000
 // MiniMap.h : Header file
 //
 
 /////////////////////////////////////////////////////////////////////////////
-// View CMiniMap 
+// View CMiniMap
 
-class CMiniMap : public CView
-{
-public:
-	CMiniMap();  
-	virtual ~CMiniMap();
-	DECLARE_DYNCREATE(CMiniMap)
+class CMiniMap : public CView {
+ public:
+  CMiniMap();
+  virtual ~CMiniMap();
+  DECLARE_DYNCREATE(CMiniMap)
 
-// attributes
-public:
+  // attributes
+ public:
+  // operations
+ public:
+  void DrawMinimap(BYTE** lpData, BITMAPINFO& biinfo, int& Pitch);
 
-// operations
-public:
-	void DrawMinimap(BYTE** lpData, BITMAPINFO& biinfo, int& Pitch);
-	
-	void UpdateView();
+  void UpdateView();
 
-// overwriteables
-	//{{AFX_VIRTUAL(CMiniMap)
-	protected:
-	virtual void OnDraw(CDC* pDC);      
-	virtual BOOL PreCreateWindow(CREATESTRUCT& cs);
-	//}}AFX_VIRTUAL
+  // overwriteables
+  //{{AFX_VIRTUAL(CMiniMap)
+ protected:
+  virtual void OnDraw(CDC* pDC);
+  virtual BOOL PreCreateWindow(CREATESTRUCT& cs);
+  //}}AFX_VIRTUAL
 
-// Implementierung
-protected:
-#ifdef _DEBUG
-	virtual void AssertValid() const;
-	virtual void Dump(CDumpContext& dc) const;
-#endif
-	
-	
-	// generated message maps
-protected:
-	//{{AFX_MSG(CMiniMap)
-	afx_msg void OnSysCommand(UINT nID, LPARAM lParam);
-	afx_msg void OnMouseMove(UINT nFlags, CPoint point);
-	afx_msg void OnLButtonDown(UINT nFlags, CPoint point);
-	//}}AFX_MSG
-	DECLARE_MESSAGE_MAP()
+  // Implementierung
+ protected:
+#  ifdef _DEBUG
+  virtual void AssertValid() const;
+  virtual void Dump(CDumpContext& dc) const;
+#  endif
 
-private:
-	float m_scale;
-public:
-	afx_msg void OnSizing(UINT fwSide, LPRECT pRect);
-	afx_msg BOOL OnSetCursor(CWnd* pWnd, UINT nHitTest, UINT message);
+  // generated message maps
+ protected:
+  //{{AFX_MSG(CMiniMap)
+  afx_msg void OnSysCommand(UINT nID, LPARAM lParam);
+  afx_msg void OnMouseMove(UINT nFlags, CPoint point);
+  afx_msg void OnLButtonDown(UINT nFlags, CPoint point);
+  //}}AFX_MSG
+  DECLARE_MESSAGE_MAP()
+
+ private:
+  float m_scale;
+
+ public:
+  afx_msg void OnSizing(UINT fwSide, LPRECT pRect);
+  afx_msg BOOL OnSetCursor(CWnd* pWnd, UINT nHitTest, UINT message);
 };
 
 /////////////////////////////////////////////////////////////////////////////
 
 //{{AFX_INSERT_LOCATION}}
 
-#endif // AFX_MINIMAP_H__43F7CCE0_CC11_11D3_B63B_00485453E8BA__INCLUDED_
+#endif  // AFX_MINIMAP_H__43F7CCE0_CC11_11D3_B63B_00485453E8BA__INCLUDED_

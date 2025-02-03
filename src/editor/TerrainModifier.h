@@ -23,20 +23,18 @@
 //////////////////////////////////////////////////////////////////////
 
 #if !defined(AFX_TERRAINMODIFIER_H__3853D322_CD37_11D4_9C87_F2DC6A2E6849__INCLUDED_)
-#define AFX_TERRAINMODIFIER_H__3853D322_CD37_11D4_9C87_F2DC6A2E6849__INCLUDED_
+#  define AFX_TERRAINMODIFIER_H__3853D322_CD37_11D4_9C87_F2DC6A2E6849__INCLUDED_
 
-#if _MSC_VER > 1000
-#pragma once
-#endif // _MSC_VER > 1000
+#  if _MSC_VER > 1000
+#    pragma once
+#  endif  // _MSC_VER > 1000
 
-#include "MapModifier.h"
+#  include "MapModifier.h"
 
-class CTerrainModifier : public CMapModifier  
-{
-public:
-	CTerrainModifier();
-	virtual ~CTerrainModifier();
-
+class CTerrainModifier : public CMapModifier {
+ public:
+  CTerrainModifier();
+  virtual ~CTerrainModifier();
 };
 
-#endif // !defined(AFX_TERRAINMODIFIER_H__3853D322_CD37_11D4_9C87_F2DC6A2E6849__INCLUDED_)
+#endif  // !defined(AFX_TERRAINMODIFIER_H__3853D322_CD37_11D4_9C87_F2DC6A2E6849__INCLUDED_)

@@ -19,60 +19,57 @@
 */
 
 #if !defined(AFX_MAPD_H__B5D522E9_69CE_11D3_99E1_C138647F2A00__INCLUDED_)
-#define AFX_MAPD_H__B5D522E9_69CE_11D3_99E1_C138647F2A00__INCLUDED_
+#  define AFX_MAPD_H__B5D522E9_69CE_11D3_99E1_C138647F2A00__INCLUDED_
 
-#if _MSC_VER > 1000
-#pragma once
-#endif // _MSC_VER > 1000
+#  if _MSC_VER > 1000
+#    pragma once
+#  endif  // _MSC_VER > 1000
 // MapD.h : Header-Datei
 //
 
 /////////////////////////////////////////////////////////////////////////////
-// Dialogfeld CMapD 
+// Dialogfeld CMapD
 
-class CMapD : public CDialog
-{
-	DECLARE_DYNCREATE(CMapD)
+class CMapD : public CDialog {
+  DECLARE_DYNCREATE(CMapD)
 
-// Konstruktion
-public:
-	void UpdateStrings();
-	void UpdateData();
-	void UpdateDialog();
-	CMapD();
-	~CMapD();
+  // Konstruktion
+ public:
+  void UpdateStrings();
+  void UpdateData();
+  void UpdateDialog();
+  CMapD();
+  ~CMapD();
 
-// Dialogfelddaten
-	//{{AFX_DATA(CMapD)
-	enum { IDD = IDD_MAP };
-	CEdit	m_LocalSize;
-	CComboBox	m_Theater;
-	CString	m_Width;
-	CString	m_Height;
-	//}}AFX_DATA
+  // Dialogfelddaten
+  //{{AFX_DATA(CMapD)
+  enum { IDD = IDD_MAP };
+  CEdit m_LocalSize;
+  CComboBox m_Theater;
+  CString m_Width;
+  CString m_Height;
+  //}}AFX_DATA
 
+  // Überschreibungen
+  // Der Klassen-Assistent generiert virtuelle Funktionsüberschreibungen
+  //{{AFX_VIRTUAL(CMapD)
+ protected:
+  virtual void DoDataExchange(CDataExchange* pDX);  // DDX/DDV-Unterstützung
+                                                    //}}AFX_VIRTUAL
 
-// Überschreibungen
-	// Der Klassen-Assistent generiert virtuelle Funktionsüberschreibungen
-	//{{AFX_VIRTUAL(CMapD)
-	protected:
-	virtual void DoDataExchange(CDataExchange* pDX);    // DDX/DDV-Unterstützung
-	//}}AFX_VIRTUAL
-
-// Implementierung
-protected:
-	// Generierte Nachrichtenzuordnungsfunktionen
-	//{{AFX_MSG(CMapD)
-	afx_msg void OnChangeUsesize();
-	afx_msg void OnEditchangeTheater();
-	afx_msg void OnChangelocal();
-	afx_msg void OnChange();
-	//}}AFX_MSG
-	DECLARE_MESSAGE_MAP()
-
+  // Implementierung
+ protected:
+  // Generierte Nachrichtenzuordnungsfunktionen
+  //{{AFX_MSG(CMapD)
+  afx_msg void OnChangeUsesize();
+  afx_msg void OnEditchangeTheater();
+  afx_msg void OnChangelocal();
+  afx_msg void OnChange();
+  //}}AFX_MSG
+  DECLARE_MESSAGE_MAP()
 };
 
 //{{AFX_INSERT_LOCATION}}
 // Microsoft Visual C++ fügt unmittelbar vor der vorhergehenden Zeile zusätzliche Deklarationen ein.
 
-#endif // AFX_MAPD_H__B5D522E9_69CE_11D3_99E1_C138647F2A00__INCLUDED_
+#endif  // AFX_MAPD_H__B5D522E9_69CE_11D3_99E1_C138647F2A00__INCLUDED_

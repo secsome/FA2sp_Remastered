@@ -21,45 +21,39 @@
 // MapLoadingDlg.cpp: Implementierungsdatei
 //
 
-#include "stdafx.h"
-#include "finalsun.h"
 #include "MapLoadingDlg.h"
+#include "finalsun.h"
+#include "stdafx.h"
 
 #ifdef _DEBUG
-#define new DEBUG_NEW
-#undef THIS_FILE
+#  define new DEBUG_NEW
+#  undef THIS_FILE
 static char THIS_FILE[] = __FILE__;
 #endif
 
 /////////////////////////////////////////////////////////////////////////////
-// Dialogfeld CMapLoadingDlg 
+// Dialogfeld CMapLoadingDlg
 
+CMapLoadingDlg::CMapLoadingDlg(CWnd* pParent /*=NULL*/) : CDialog(CMapLoadingDlg::IDD, pParent) {
+  //{{AFX_DATA_INIT(CMapLoadingDlg)
+  // HINWEIS: Der Klassen-Assistent fügt hier Elementinitialisierung ein
+  //}}AFX_DATA_INIT
 
-CMapLoadingDlg::CMapLoadingDlg(CWnd* pParent /*=NULL*/)
-	: CDialog(CMapLoadingDlg::IDD, pParent)
-{
-	//{{AFX_DATA_INIT(CMapLoadingDlg)
-		// HINWEIS: Der Klassen-Assistent fügt hier Elementinitialisierung ein
-	//}}AFX_DATA_INIT
-
-	Create(CMapLoadingDlg::IDD);
+  Create(CMapLoadingDlg::IDD);
 }
 
-
-void CMapLoadingDlg::DoDataExchange(CDataExchange* pDX)
-{
-	CDialog::DoDataExchange(pDX);
-	//{{AFX_DATA_MAP(CMapLoadingDlg)
-	DDX_Control(pDX, IDC_PROGRESS, m_Progress);
-	//}}AFX_DATA_MAP
+void CMapLoadingDlg::DoDataExchange(CDataExchange* pDX) {
+  CDialog::DoDataExchange(pDX);
+  //{{AFX_DATA_MAP(CMapLoadingDlg)
+  DDX_Control(pDX, IDC_PROGRESS, m_Progress);
+  //}}AFX_DATA_MAP
 }
-
 
 BEGIN_MESSAGE_MAP(CMapLoadingDlg, CDialog)
-	//{{AFX_MSG_MAP(CMapLoadingDlg)
-		// HINWEIS: Der Klassen-Assistent fügt hier Zuordnungsmakros für Nachrichten ein
-	//}}AFX_MSG_MAP
+//{{AFX_MSG_MAP(CMapLoadingDlg)
+// HINWEIS: Der Klassen-Assistent fügt hier Zuordnungsmakros für Nachrichten ein
+//}}AFX_MSG_MAP
 END_MESSAGE_MAP()
 
 /////////////////////////////////////////////////////////////////////////////
-// Behandlungsroutinen für Nachrichten CMapLoadingDlg 
+// Behandlungsroutinen für Nachrichten CMapLoadingDlg

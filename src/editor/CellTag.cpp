@@ -21,88 +21,75 @@
 // CellTag.cpp: Implementierungsdatei
 //
 
-#include "stdafx.h"
-#include "FinalSun.h"
 #include "CellTag.h"
-#include "mapdata.h"
-#include "variables.h"
+#include "FinalSun.h"
 #include "functions.h"
+#include "mapdata.h"
+#include "stdafx.h"
+#include "variables.h"
 
 #ifdef _DEBUG
-#define new DEBUG_NEW
-#undef THIS_FILE
+#  define new DEBUG_NEW
+#  undef THIS_FILE
 static char THIS_FILE[] = __FILE__;
 #endif
 
 /////////////////////////////////////////////////////////////////////////////
-// Dialogfeld CCellTag 
+// Dialogfeld CCellTag
 
-
-CCellTag::CCellTag(CWnd* pParent /*=NULL*/)
-	: CDialog(CCellTag::IDD, pParent)
-{
-	//{{AFX_DATA_INIT(CCellTag)
-	m_tag = _T("");
-	//}}AFX_DATA_INIT
+CCellTag::CCellTag(CWnd* pParent /*=NULL*/) : CDialog(CCellTag::IDD, pParent) {
+  //{{AFX_DATA_INIT(CCellTag)
+  m_tag = _T("");
+  //}}AFX_DATA_INIT
 }
 
-
-void CCellTag::DoDataExchange(CDataExchange* pDX)
-{
-	CDialog::DoDataExchange(pDX);
-	//{{AFX_DATA_MAP(CCellTag)
-	DDX_CBString(pDX, IDC_TAG, m_tag);
-	//}}AFX_DATA_MAP
+void CCellTag::DoDataExchange(CDataExchange* pDX) {
+  CDialog::DoDataExchange(pDX);
+  //{{AFX_DATA_MAP(CCellTag)
+  DDX_CBString(pDX, IDC_TAG, m_tag);
+  //}}AFX_DATA_MAP
 }
-
 
 BEGIN_MESSAGE_MAP(CCellTag, CDialog)
-	//{{AFX_MSG_MAP(CCellTag)
-	//}}AFX_MSG_MAP
+//{{AFX_MSG_MAP(CCellTag)
+//}}AFX_MSG_MAP
 END_MESSAGE_MAP()
 
 /////////////////////////////////////////////////////////////////////////////
-// Behandlungsroutinen für Nachrichten CCellTag 
+// Behandlungsroutinen für Nachrichten CCellTag
 
 string GetParam(string data, int pos);
 
-BOOL CCellTag::OnInitDialog() 
-{
-	CDialog::OnInitDialog();
+BOOL CCellTag::OnInitDialog() {
+  CDialog::OnInitDialog();
 
-	CIniFile& ini=Map->GetIniFile();
-	
-	CComboBox& m_Tag=*((CComboBox*)GetDlgItem(IDC_TAG));
+  CIniFile& ini = Map->GetIniFile();
 
-	if(ini.sections.find("Tags")==ini.sections.end())
-	{
-		MessageBox("No tags are specified.");
-		OnCancel();
-	}
-	else
-	{
-		ListTags(m_Tag, FALSE);
-		if(m_tag=="") m_Tag.SetCurSel(0);
-	}
-	
-	UpdateStrings();
+  CComboBox& m_Tag = *((CComboBox*)GetDlgItem(IDC_TAG));
 
-	return TRUE;  
+  if (ini.sections.find("Tags") == ini.sections.end()) {
+    MessageBox("No tags are specified.");
+    OnCancel();
+  } else {
+    ListTags(m_Tag, FALSE);
+    if (m_tag == "") m_Tag.SetCurSel(0);
+  }
+
+  UpdateStrings();
+
+  return TRUE;
 }
 
-void CCellTag::OnOK() 
-{
-	UpdateData();
-	
-	CDialog::OnOK();
-	
-	TruncSpace(m_tag);
+void CCellTag::OnOK() {
+  UpdateData();
+
+  CDialog::OnOK();
+
+  TruncSpace(m_tag);
 }
 
-void CCellTag::UpdateStrings()
-{
-	SetWindowText(GetLanguageStringACP("CellTagCap"));
-	GetDlgItem(IDC_LTAG)->SetWindowText(GetLanguageStringACP("CellTagTag"));
-	GetDlgItem(IDC_LDESC)->SetWindowText(GetLanguageStringACP("CellTagDesc"));
-	
+void CCellTag::UpdateStrings() {
+  SetWindowText(GetLanguageStringACP("CellTagCap"));
+  GetDlgItem(IDC_LTAG)->SetWindowText(GetLanguageStringACP("CellTagTag"));
+  GetDlgItem(IDC_LDESC)->SetWindowText(GetLanguageStringACP("CellTagDesc"));
 }

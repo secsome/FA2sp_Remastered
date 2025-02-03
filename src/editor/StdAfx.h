@@ -22,42 +22,39 @@
 //
 
 #if !defined(AFX_STDAFX_H__9F773426_63BB_11D3_99E0_C30F10710B17__INCLUDED_)
-#define AFX_STDAFX_H__9F773426_63BB_11D3_99E0_C30F10710B17__INCLUDED_
+#  define AFX_STDAFX_H__9F773426_63BB_11D3_99E0_C30F10710B17__INCLUDED_
 
-#if _MSC_VER > 1000
-#pragma once
-#endif 
+#  if _MSC_VER > 1000
+#    pragma once
+#  endif
 
-#define VC_EXTRALEAN	
+#  define VC_EXTRALEAN
 
-#pragma warning(disable: 4503)
-#pragma warning(disable: 4786)
-#pragma warning(disable: 4800)
+#  pragma warning(disable : 4503)
+#  pragma warning(disable : 4786)
+#  pragma warning(disable : 4800)
 
+#  include <afxext.h>
+#  include <afxwin.h>
+#  ifndef _AFX_NO_AFXCMN_SUPPORT
+#    include <afxcmn.h>
+#  endif
 
-#include <afxwin.h> 
-#include <afxext.h>         
-#ifndef _AFX_NO_AFXCMN_SUPPORT
-#include <afxcmn.h>			
-#endif
-
-#include "defines.h"
-#include "IniFile.h"
-#include "InputBox.h"
-#include "floatedit.h"
-#include "MyComboBox.h"
-#include <ddraw.h>
+#  include <ddraw.h>
+#  include "IniFile.h"
+#  include "InputBox.h"
+#  include "MyComboBox.h"
+#  include "defines.h"
+#  include "floatedit.h"
 // #include "structs.h"
 // #include "variables.h"
 // #include "functions.h"
 // #include "inlines.h"
 // #include "MapData.h"
-#include "resource.h"
-#include "TipDlg.h"
-
+#  include "TipDlg.h"
+#  include "resource.h"
 
 //{{AFX_INSERT_LOCATION}}
 // Microsoft Visual C++ inserts additional declarations exactly above this line.
 
-#endif // !defined(AFX_STDAFX_H__9F773426_63BB_11D3_99E0_C30F10710B17__INCLUDED_)
-
+#endif  // !defined(AFX_STDAFX_H__9F773426_63BB_11D3_99E0_C30F10710B17__INCLUDED_)

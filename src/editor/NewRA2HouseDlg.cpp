@@ -21,63 +21,55 @@
 // NewRA2HouseDlg.cpp: Implementierungsdatei
 //
 
-#include "stdafx.h"
-#include "finalsun.h"
 #include "NewRA2HouseDlg.h"
+#include "finalsun.h"
+#include "stdafx.h"
 #include "variables.h"
 
 #ifdef _DEBUG
-#define new DEBUG_NEW
-#undef THIS_FILE
+#  define new DEBUG_NEW
+#  undef THIS_FILE
 static char THIS_FILE[] = __FILE__;
 #endif
 
 /////////////////////////////////////////////////////////////////////////////
-// Dialogfeld CNewRA2HouseDlg 
+// Dialogfeld CNewRA2HouseDlg
 
-
-CNewRA2HouseDlg::CNewRA2HouseDlg(CWnd* pParent /*=NULL*/)
-	: CDialog(CNewRA2HouseDlg::IDD, pParent)
-{
-	//{{AFX_DATA_INIT(CNewRA2HouseDlg)
-	m_Country = _T("");
-	//}}AFX_DATA_INIT
+CNewRA2HouseDlg::CNewRA2HouseDlg(CWnd* pParent /*=NULL*/) : CDialog(CNewRA2HouseDlg::IDD, pParent) {
+  //{{AFX_DATA_INIT(CNewRA2HouseDlg)
+  m_Country = _T("");
+  //}}AFX_DATA_INIT
 }
 
-
-void CNewRA2HouseDlg::DoDataExchange(CDataExchange* pDX)
-{
-	CDialog::DoDataExchange(pDX);
-	//{{AFX_DATA_MAP(CNewRA2HouseDlg)
-	DDX_CBString(pDX, IDC_COUNTRY, m_Country);
-	//}}AFX_DATA_MAP
+void CNewRA2HouseDlg::DoDataExchange(CDataExchange* pDX) {
+  CDialog::DoDataExchange(pDX);
+  //{{AFX_DATA_MAP(CNewRA2HouseDlg)
+  DDX_CBString(pDX, IDC_COUNTRY, m_Country);
+  //}}AFX_DATA_MAP
 }
-
 
 BEGIN_MESSAGE_MAP(CNewRA2HouseDlg, CDialog)
-	//{{AFX_MSG_MAP(CNewRA2HouseDlg)
-	//}}AFX_MSG_MAP
+//{{AFX_MSG_MAP(CNewRA2HouseDlg)
+//}}AFX_MSG_MAP
 END_MESSAGE_MAP()
 
 /////////////////////////////////////////////////////////////////////////////
-// Behandlungsroutinen für Nachrichten CNewRA2HouseDlg 
+// Behandlungsroutinen für Nachrichten CNewRA2HouseDlg
 
 #include "functions.h"
 
-BOOL CNewRA2HouseDlg::OnInitDialog() 
-{
-	CDialog::OnInitDialog();
+BOOL CNewRA2HouseDlg::OnInitDialog() {
+  CDialog::OnInitDialog();
 
-	CComboBox* country=(CComboBox*)GetDlgItem(IDC_COUNTRY);
-	
-	int i;
-	for(i=0;i<rules.sections[HOUSES].values.size();i++)
-	{
-		country->AddString(TranslateHouse(*rules.sections[HOUSES].GetValue(i), TRUE));
-	}
+  CComboBox* country = (CComboBox*)GetDlgItem(IDC_COUNTRY);
 
-	country->SetCurSel(0);
-	
-	return TRUE;  // return TRUE unless you set the focus to a control
-	              // EXCEPTION: OCX-Eigenschaftenseiten sollten FALSE zurückgeben
+  int i;
+  for (i = 0; i < rules.sections[HOUSES].values.size(); i++) {
+    country->AddString(TranslateHouse(*rules.sections[HOUSES].GetValue(i), TRUE));
+  }
+
+  country->SetCurSel(0);
+
+  return TRUE;  // return TRUE unless you set the focus to a control
+                // EXCEPTION: OCX-Eigenschaftenseiten sollten FALSE zurückgeben
 }

@@ -21,61 +21,53 @@
 // AITriggerAddDlg.cpp: Implementierungsdatei
 //
 
-#include "stdafx.h"
-#include "finalsun.h"
 #include "AITriggerAddDlg.h"
 #include "Variables.h"
+#include "finalsun.h"
 #include "inlines.h"
-
+#include "stdafx.h"
 
 #ifdef _DEBUG
-#define new DEBUG_NEW
-#undef THIS_FILE
+#  define new DEBUG_NEW
+#  undef THIS_FILE
 static char THIS_FILE[] = __FILE__;
 #endif
 
 /////////////////////////////////////////////////////////////////////////////
-// Dialogfeld CAITriggerAddDlg 
+// Dialogfeld CAITriggerAddDlg
 
-
-CAITriggerAddDlg::CAITriggerAddDlg(CWnd* pParent /*=NULL*/)
-	: CDialog(CAITriggerAddDlg::IDD, pParent)
-{
-	//{{AFX_DATA_INIT(CAITriggerAddDlg)
-	m_AITrigger = _T("");
-	//}}AFX_DATA_INIT
+CAITriggerAddDlg::CAITriggerAddDlg(CWnd* pParent /*=NULL*/) : CDialog(CAITriggerAddDlg::IDD, pParent) {
+  //{{AFX_DATA_INIT(CAITriggerAddDlg)
+  m_AITrigger = _T("");
+  //}}AFX_DATA_INIT
 }
 
-
-void CAITriggerAddDlg::DoDataExchange(CDataExchange* pDX)
-{
-	CDialog::DoDataExchange(pDX);
-	//{{AFX_DATA_MAP(CAITriggerAddDlg)
-	DDX_LBString(pDX, IDC_AITRIGGERS, m_AITrigger);
-	//}}AFX_DATA_MAP
+void CAITriggerAddDlg::DoDataExchange(CDataExchange* pDX) {
+  CDialog::DoDataExchange(pDX);
+  //{{AFX_DATA_MAP(CAITriggerAddDlg)
+  DDX_LBString(pDX, IDC_AITRIGGERS, m_AITrigger);
+  //}}AFX_DATA_MAP
 }
-
 
 BEGIN_MESSAGE_MAP(CAITriggerAddDlg, CDialog)
-	//{{AFX_MSG_MAP(CAITriggerAddDlg)
-	//}}AFX_MSG_MAP
+//{{AFX_MSG_MAP(CAITriggerAddDlg)
+//}}AFX_MSG_MAP
 END_MESSAGE_MAP()
 
 /////////////////////////////////////////////////////////////////////////////
-// Behandlungsroutinen für Nachrichten CAITriggerAddDlg 
+// Behandlungsroutinen für Nachrichten CAITriggerAddDlg
 
-BOOL CAITriggerAddDlg::OnInitDialog() 
-{
-	CDialog::OnInitDialog();
+BOOL CAITriggerAddDlg::OnInitDialog() {
+  CDialog::OnInitDialog();
 
-	CListBox* lb=(CListBox*)GetDlgItem(IDC_AITRIGGERS);
+  CListBox* lb = (CListBox*)GetDlgItem(IDC_AITRIGGERS);
 
-	int i;
-	for(i=0;i<ai.sections["AITriggerTypes"].values.size();i++)
-	{
-		lb->AddString(*ai.sections["AITriggerTypes"].GetValueName(i)+ (CString)" " +GetParam(*ai.sections["AITriggerTypes"].GetValue(i), 0));
-	}
-	
-	return TRUE;  // return TRUE unless you set the focus to a control
-	              // EXCEPTION: OCX-Eigenschaftenseiten sollten FALSE zurückgeben
+  int i;
+  for (i = 0; i < ai.sections["AITriggerTypes"].values.size(); i++) {
+    lb->AddString(*ai.sections["AITriggerTypes"].GetValueName(i) + (CString) " " +
+                  GetParam(*ai.sections["AITriggerTypes"].GetValue(i), 0));
+  }
+
+  return TRUE;  // return TRUE unless you set the focus to a control
+                // EXCEPTION: OCX-Eigenschaftenseiten sollten FALSE zurückgeben
 }

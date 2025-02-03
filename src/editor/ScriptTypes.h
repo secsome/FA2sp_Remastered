@@ -19,71 +19,68 @@
 */
 
 #if !defined(AFX_SCRIPTTYPES_H__981EF700_951E_11D3_B63B_BCCF9C98B341__INCLUDED_)
-#define AFX_SCRIPTTYPES_H__981EF700_951E_11D3_B63B_BCCF9C98B341__INCLUDED_
+#  define AFX_SCRIPTTYPES_H__981EF700_951E_11D3_B63B_BCCF9C98B341__INCLUDED_
 
-#if _MSC_VER > 1000
-#pragma once
-#endif // _MSC_VER > 1000
+#  if _MSC_VER > 1000
+#    pragma once
+#  endif  // _MSC_VER > 1000
 // ScriptTypes.h : Header-Datei
 //
 
 /////////////////////////////////////////////////////////////////////////////
-// Dialogfeld CScriptTypes 
+// Dialogfeld CScriptTypes
 
-class CScriptTypes : public CDialog
-{
-	DECLARE_DYNCREATE(CScriptTypes)
+class CScriptTypes : public CDialog {
+  DECLARE_DYNCREATE(CScriptTypes)
 
-// Konstruktion
-public:
-	void UpdateDialog();
-	CScriptTypes();
-	~CScriptTypes();
+  // Konstruktion
+ public:
+  void UpdateDialog();
+  CScriptTypes();
+  ~CScriptTypes();
 
-// Dialogfelddaten
-	//{{AFX_DATA(CScriptTypes)
-	enum { IDD = IDD_SCRIPTTYPES };
-	CEdit	m_DescriptionEx;
-	CStatic	m_Desc;
-	CComboBox	m_Type;
-	CComboBox	m_ScriptType;
-	CComboBox	m_Param;
-	CListBox	m_Action;
-	CString	m_Name;
-	//}}AFX_DATA
+  // Dialogfelddaten
+  //{{AFX_DATA(CScriptTypes)
+  enum { IDD = IDD_SCRIPTTYPES };
+  CEdit m_DescriptionEx;
+  CStatic m_Desc;
+  CComboBox m_Type;
+  CComboBox m_ScriptType;
+  CComboBox m_Param;
+  CListBox m_Action;
+  CString m_Name;
+  //}}AFX_DATA
 
+  // Überschreibungen
+  // Der Klassen-Assistent generiert virtuelle Funktionsüberschreibungen
+  //{{AFX_VIRTUAL(CScriptTypes)
+ protected:
+  virtual void DoDataExchange(CDataExchange* pDX);  // DDX/DDV-Unterstützung
+                                                    //}}AFX_VIRTUAL
 
-// Überschreibungen
-	// Der Klassen-Assistent generiert virtuelle Funktionsüberschreibungen
-	//{{AFX_VIRTUAL(CScriptTypes)
-	protected:
-	virtual void DoDataExchange(CDataExchange* pDX);    // DDX/DDV-Unterstützung
-	//}}AFX_VIRTUAL
-
-// Implementierung
-protected:
-	void ListBehaviours(CComboBox& cb);
-	// Generierte Nachrichtenzuordnungsfunktionen
-	//{{AFX_MSG(CScriptTypes)
-	afx_msg void OnEditchangeScripttype();
-	afx_msg void OnSelchangeScripttype();
-	afx_msg void OnSelchangeAction();
-	afx_msg void OnChangeName();
-	afx_msg void OnEditchangeType();
-	afx_msg void OnSelchangeType();
-	afx_msg void OnEditchangeParam();
-	afx_msg void OnSelchangeParam();
-	afx_msg void OnAddaction();
-	afx_msg void OnDeleteaction();
-	afx_msg void OnAdd();
-	afx_msg void OnDelete();
-	virtual BOOL OnInitDialog();
-	//}}AFX_MSG
-	DECLARE_MESSAGE_MAP()
-
+  // Implementierung
+ protected:
+  void ListBehaviours(CComboBox& cb);
+  // Generierte Nachrichtenzuordnungsfunktionen
+  //{{AFX_MSG(CScriptTypes)
+  afx_msg void OnEditchangeScripttype();
+  afx_msg void OnSelchangeScripttype();
+  afx_msg void OnSelchangeAction();
+  afx_msg void OnChangeName();
+  afx_msg void OnEditchangeType();
+  afx_msg void OnSelchangeType();
+  afx_msg void OnEditchangeParam();
+  afx_msg void OnSelchangeParam();
+  afx_msg void OnAddaction();
+  afx_msg void OnDeleteaction();
+  afx_msg void OnAdd();
+  afx_msg void OnDelete();
+  virtual BOOL OnInitDialog();
+  //}}AFX_MSG
+  DECLARE_MESSAGE_MAP()
 };
 
 //{{AFX_INSERT_LOCATION}}
 // Microsoft Visual C++ fügt unmittelbar vor der vorhergehenden Zeile zusätzliche Deklarationen ein.
 
-#endif // AFX_SCRIPTTYPES_H__981EF700_951E_11D3_B63B_BCCF9C98B341__INCLUDED_
+#endif  // AFX_SCRIPTTYPES_H__981EF700_951E_11D3_B63B_BCCF9C98B341__INCLUDED_

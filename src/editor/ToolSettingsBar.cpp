@@ -21,122 +21,109 @@
 // ToolSettingsBar.cpp: Implementierungsdatei
 //
 
-#include "stdafx.h"
-#include "finalsun.h"
 #include "ToolSettingsBar.h"
 #include "FinalSunDlg.h"
+#include "finalsun.h"
 #include "mapdata.h"
+#include "stdafx.h"
 #include "variables.h"
 
 #ifdef _DEBUG
-#define new DEBUG_NEW
-#undef THIS_FILE
+#  define new DEBUG_NEW
+#  undef THIS_FILE
 static char THIS_FILE[] = __FILE__;
 #endif
 
 /////////////////////////////////////////////////////////////////////////////
-// Dialogfeld CToolSettingsBar 
+// Dialogfeld CToolSettingsBar
 
-
-CToolSettingsBar::CToolSettingsBar(CWnd* pParent /*=NULL*/)
-	: CDialogBar()
-{
-	//{{AFX_DATA_INIT(CToolSettingsBar)
-	m_BrushSize = 0;
-	//}}AFX_DATA_INIT
+CToolSettingsBar::CToolSettingsBar(CWnd* pParent /*=NULL*/) : CDialogBar() {
+  //{{AFX_DATA_INIT(CToolSettingsBar)
+  m_BrushSize = 0;
+  //}}AFX_DATA_INIT
 }
 
-
-void CToolSettingsBar::DoDataExchange(CDataExchange* pDX)
-{
-	CDialogBar::DoDataExchange(pDX);
-	//{{AFX_DATA_MAP(CToolSettingsBar)
-	DDX_CBIndex(pDX, IDC_BRUSHSIZE, m_BrushSize);
-	//}}AFX_DATA_MAP
+void CToolSettingsBar::DoDataExchange(CDataExchange* pDX) {
+  CDialogBar::DoDataExchange(pDX);
+  //{{AFX_DATA_MAP(CToolSettingsBar)
+  DDX_CBIndex(pDX, IDC_BRUSHSIZE, m_BrushSize);
+  //}}AFX_DATA_MAP
 }
-
 
 BEGIN_MESSAGE_MAP(CToolSettingsBar, CDialogBar)
-	//{{AFX_MSG_MAP(CToolSettingsBar)
-	ON_CBN_SELCHANGE(IDC_BRUSHSIZE, OnSelchangeBrushsize)
-	ON_WM_SHOWWINDOW()
-	//}}AFX_MSG_MAP
+//{{AFX_MSG_MAP(CToolSettingsBar)
+ON_CBN_SELCHANGE(IDC_BRUSHSIZE, OnSelchangeBrushsize)
+ON_WM_SHOWWINDOW()
+//}}AFX_MSG_MAP
 END_MESSAGE_MAP()
 
 /////////////////////////////////////////////////////////////////////////////
-// Behandlungsroutinen für Nachrichten CToolSettingsBar 
+// Behandlungsroutinen für Nachrichten CToolSettingsBar
 
+void CToolSettingsBar::OnSelchangeBrushsize() {
+  UpdateData(TRUE);
 
+  int bx, by;
 
-void CToolSettingsBar::OnSelchangeBrushsize() 
-{
+  switch (m_BrushSize) {
+    case 0:
+      bx = 1;
+      by = 1;
+      break;
+    case 1:
+      bx = 2;
+      by = 2;
+      break;
+    case 2:
+      bx = 3;
+      by = 3;
+      break;
+    case 3:
+      bx = 4;
+      by = 4;
+      break;
+    case 4:
+      bx = 5;
+      by = 5;
+      break;
+    case 5:
+      bx = 10;
+      by = 10;
+      break;
+    case 6:
+      bx = 1;
+      by = 2;
+      break;
+    case 7:
+      bx = 2;
+      by = 1;
+      break;
+    case 8:
+      bx = 1;
+      by = 3;
+      break;
+    case 9:
+      bx = 3;
+      by = 1;
+      break;
+  }
 
-	UpdateData(TRUE);
-	
-	int bx,by;
-
-	switch(m_BrushSize)
-	{
-	case 0:
-		bx=1;
-		by=1;
-		break;
-	case 1:
-		bx=2;
-		by=2;
-		break;
-	case 2:
-		bx=3;
-		by=3;
-		break;
-	case 3:
-		bx=4;
-		by=4;
-		break;
-	case 4:
-		bx=5;
-		by=5;
-		break;
-	case 5:
-		bx=10;
-		by=10;
-		break;
-	case 6:
-		bx=1;
-		by=2;
-		break;
-	case 7:
-		bx=2;
-		by=1;
-		break;
-	case 8:
-		bx=1;
-		by=3;
-		break;
-	case 9:
-		bx=3;
-		by=1;
-		break;
-	}
-
-	((CFinalSunDlg*)theApp.m_pMainWnd)->m_view.m_isoview->m_BrushSize_x=bx;	
-	((CFinalSunDlg*)theApp.m_pMainWnd)->m_view.m_isoview->m_BrushSize_y=by;	
+  ((CFinalSunDlg*)theApp.m_pMainWnd)->m_view.m_isoview->m_BrushSize_x = bx;
+  ((CFinalSunDlg*)theApp.m_pMainWnd)->m_view.m_isoview->m_BrushSize_y = by;
 }
 
-BOOL CToolSettingsBar::OnInitDialog() 
-{
-	m_BrushSize=0;
-	UpdateData(FALSE);
+BOOL CToolSettingsBar::OnInitDialog() {
+  m_BrushSize = 0;
+  UpdateData(FALSE);
 
-	((CComboBox*)GetDlgItem(IDC_BRUSHSIZE))->SetCurSel(0);
-	
-	return TRUE;  // return TRUE unless you set the focus to a control
-	              // EXCEPTION: OCX-Eigenschaftenseiten sollten FALSE zurückgeben
+  ((CComboBox*)GetDlgItem(IDC_BRUSHSIZE))->SetCurSel(0);
+
+  return TRUE;  // return TRUE unless you set the focus to a control
+                // EXCEPTION: OCX-Eigenschaftenseiten sollten FALSE zurückgeben
 }
 
-void CToolSettingsBar::OnShowWindow(BOOL bShow, UINT nStatus) 
-{
-	CDialogBar::OnShowWindow(bShow, nStatus);
+void CToolSettingsBar::OnShowWindow(BOOL bShow, UINT nStatus) {
+  CDialogBar::OnShowWindow(bShow, nStatus);
 
-	UpdateData(FALSE);	
+  UpdateData(FALSE);
 }

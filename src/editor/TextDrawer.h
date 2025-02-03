@@ -18,30 +18,29 @@
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-#include <ddraw.h>
 #include <afx.h>
+#include <ddraw.h>
 #include <string>
 #include "Vec2.h"
 
 // Very simple class that renders text through a prepared DirectDraw surface
 // Only supports ASCII chars 32 to 126, only supports monospace font
 // This is for rendering waypoint ids or credits on map without using GDI during rendering, nothing fancy
-class TextDrawer
-{
-public:
-    TextDrawer(IDirectDraw4* pDirectDraw, int fontSizeInPoints, COLORREF col, COLORREF shadowCol=CLR_INVALID);
+class TextDrawer {
+ public:
+  TextDrawer(IDirectDraw4* pDirectDraw, int fontSizeInPoints, COLORREF col, COLORREF shadowCol = CLR_INVALID);
 
-    bool isValid() const;
+  bool isValid() const;
 
-    void RenderText(IDirectDrawSurface4* target, int x, int y, const std::string& text, bool centered=false) const;
+  void RenderText(IDirectDrawSurface4* target, int x, int y, const std::string& text, bool centered = false) const;
 
-    ProjectedVec GetExtent(const std::string& text) const;
+  ProjectedVec GetExtent(const std::string& text) const;
 
-private:
-    CComPtr<IDirectDrawSurface4> m_fontSurface;
-    ProjectedVec m_charExtent;
-    int m_fontSizeInPoints;
-    int m_fontSizeInPixels;
-    COLORREF m_col;
-    COLORREF m_shadowCol;
+ private:
+  CComPtr<IDirectDrawSurface4> m_fontSurface;
+  ProjectedVec m_charExtent;
+  int m_fontSizeInPoints;
+  int m_fontSizeInPixels;
+  COLORREF m_col;
+  COLORREF m_shadowCol;
 };

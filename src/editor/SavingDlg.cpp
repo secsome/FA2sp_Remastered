@@ -21,51 +21,43 @@
 // SavingDlg.cpp: Implementierungsdatei
 //
 
-#include "stdafx.h"
-#include "finalsun.h"
 #include "SavingDlg.h"
+#include "finalsun.h"
+#include "stdafx.h"
 
 #ifdef _DEBUG
-#define new DEBUG_NEW
-#undef THIS_FILE
+#  define new DEBUG_NEW
+#  undef THIS_FILE
 static char THIS_FILE[] = __FILE__;
 #endif
 
 /////////////////////////////////////////////////////////////////////////////
-// Dialogfeld CSavingDlg 
+// Dialogfeld CSavingDlg
 
+CSavingDlg::CSavingDlg(CWnd* pParent /*=NULL*/) : CDialog(CSavingDlg::IDD, pParent) {
+  //{{AFX_DATA_INIT(CSavingDlg)
+  // HINWEIS: Der Klassen-Assistent fügt hier Elementinitialisierung ein
+  //}}AFX_DATA_INIT
 
-CSavingDlg::CSavingDlg(CWnd* pParent /*=NULL*/)
-	: CDialog(CSavingDlg::IDD, pParent)
-{
-	//{{AFX_DATA_INIT(CSavingDlg)
-		// HINWEIS: Der Klassen-Assistent fügt hier Elementinitialisierung ein
-	//}}AFX_DATA_INIT
-
-	Create(CSavingDlg::IDD, pParent);
+  Create(CSavingDlg::IDD, pParent);
 }
 
-
-void CSavingDlg::DoDataExchange(CDataExchange* pDX)
-{
-	CDialog::DoDataExchange(pDX);
-	//{{AFX_DATA_MAP(CSavingDlg)
-		// HINWEIS: Der Klassen-Assistent fügt hier DDX- und DDV-Aufrufe ein
-	//}}AFX_DATA_MAP
+void CSavingDlg::DoDataExchange(CDataExchange* pDX) {
+  CDialog::DoDataExchange(pDX);
+  //{{AFX_DATA_MAP(CSavingDlg)
+  // HINWEIS: Der Klassen-Assistent fügt hier DDX- und DDV-Aufrufe ein
+  //}}AFX_DATA_MAP
 }
-
 
 BEGIN_MESSAGE_MAP(CSavingDlg, CDialog)
-	//{{AFX_MSG_MAP(CSavingDlg)
-		// HINWEIS: Der Klassen-Assistent fügt hier Zuordnungsmakros für Nachrichten ein
-	//}}AFX_MSG_MAP
+//{{AFX_MSG_MAP(CSavingDlg)
+// HINWEIS: Der Klassen-Assistent fügt hier Zuordnungsmakros für Nachrichten ein
+//}}AFX_MSG_MAP
 END_MESSAGE_MAP()
 
 /////////////////////////////////////////////////////////////////////////////
-// Behandlungsroutinen für Nachrichten CSavingDlg 
+// Behandlungsroutinen für Nachrichten CSavingDlg
 
-void CSavingDlg::PostNcDestroy() 
-{
-	
-	// CDialog::PostNcDestroy();
+void CSavingDlg::PostNcDestroy() {
+  // CDialog::PostNcDestroy();
 }

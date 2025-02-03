@@ -19,62 +19,61 @@
 */
 
 #if !defined(AFX_UNIT_H__44A11CC3_84B6_11D3_B63B_F881F458F743__INCLUDED_)
-#define AFX_UNIT_H__44A11CC3_84B6_11D3_B63B_F881F458F743__INCLUDED_
+#  define AFX_UNIT_H__44A11CC3_84B6_11D3_B63B_F881F458F743__INCLUDED_
 
-#if _MSC_VER > 1000
-#pragma once
-#endif // _MSC_VER > 1000
+#  if _MSC_VER > 1000
+#    pragma once
+#  endif  // _MSC_VER > 1000
 // Unit.h : Header-Datei
 //
 
 /////////////////////////////////////////////////////////////////////////////
-// Dialogfeld CUnit 
+// Dialogfeld CUnit
 
-class CUnit : public CDialog
-{
-// Konstruktion
-public:
-	void UpdateStrings();
-	CString m_strength;
-	void Init(CString house="", CString strength="256", CString direction="64", CString action="Guard", CString tag="None", CString flag1="0", CString flag2="0", CString flag3="0", CString flag4="0", CString flag5="0", CString flag6="0");
-	CUnit(CWnd* pParent = NULL);   // Standardkonstruktor
+class CUnit : public CDialog {
+  // Konstruktion
+ public:
+  void UpdateStrings();
+  CString m_strength;
+  void Init(CString house = "", CString strength = "256", CString direction = "64", CString action = "Guard",
+            CString tag = "None", CString flag1 = "0", CString flag2 = "0", CString flag3 = "0", CString flag4 = "0",
+            CString flag5 = "0", CString flag6 = "0");
+  CUnit(CWnd* pParent = NULL);  // Standardkonstruktor
 
-// Dialogfelddaten
-	//{{AFX_DATA(CUnit)
-	enum { IDD = IDD_UNIT };
-	CSliderCtrl	m_strength_ctrl;
-	CString	m_direction;
-	CString	m_flag1;
-	CString	m_flag2;
-	CString	m_house;
-	CString	m_flag3;
-	CString	m_flag4;
-	CString	m_flag5;
-	CString	m_flag6;
-	CString	m_action;
-	CString	m_tag;
-	//}}AFX_DATA
+  // Dialogfelddaten
+  //{{AFX_DATA(CUnit)
+  enum { IDD = IDD_UNIT };
+  CSliderCtrl m_strength_ctrl;
+  CString m_direction;
+  CString m_flag1;
+  CString m_flag2;
+  CString m_house;
+  CString m_flag3;
+  CString m_flag4;
+  CString m_flag5;
+  CString m_flag6;
+  CString m_action;
+  CString m_tag;
+  //}}AFX_DATA
 
+  // Überschreibungen
+  // Vom Klassen-Assistenten generierte virtuelle Funktionsüberschreibungen
+  //{{AFX_VIRTUAL(CUnit)
+ protected:
+  virtual void DoDataExchange(CDataExchange* pDX);  // DDX/DDV-Unterstützung
+                                                    //}}AFX_VIRTUAL
 
-// Überschreibungen
-	// Vom Klassen-Assistenten generierte virtuelle Funktionsüberschreibungen
-	//{{AFX_VIRTUAL(CUnit)
-	protected:
-	virtual void DoDataExchange(CDataExchange* pDX);    // DDX/DDV-Unterstützung
-	//}}AFX_VIRTUAL
-
-// Implementierung
-protected:
-
-	// Generierte Nachrichtenzuordnungsfunktionen
-	//{{AFX_MSG(CUnit)
-	virtual BOOL OnInitDialog();
-	virtual void OnOK();
-	//}}AFX_MSG
-	DECLARE_MESSAGE_MAP()
+  // Implementierung
+ protected:
+  // Generierte Nachrichtenzuordnungsfunktionen
+  //{{AFX_MSG(CUnit)
+  virtual BOOL OnInitDialog();
+  virtual void OnOK();
+  //}}AFX_MSG
+  DECLARE_MESSAGE_MAP()
 };
 
 //{{AFX_INSERT_LOCATION}}
 // Microsoft Visual C++ fügt unmittelbar vor der vorhergehenden Zeile zusätzliche Deklarationen ein.
 
-#endif // AFX_UNIT_H__44A11CC3_84B6_11D3_B63B_F881F458F743__INCLUDED_
+#endif  // AFX_UNIT_H__44A11CC3_84B6_11D3_B63B_F881F458F743__INCLUDED_

@@ -19,49 +19,46 @@
 */
 
 #if !defined(AFX_NEWMAPCREATEDLG_H__F7D62442_C6DF_11D4_9C87_E63AC3E34349__INCLUDED_)
-#define AFX_NEWMAPCREATEDLG_H__F7D62442_C6DF_11D4_9C87_E63AC3E34349__INCLUDED_
+#  define AFX_NEWMAPCREATEDLG_H__F7D62442_C6DF_11D4_9C87_E63AC3E34349__INCLUDED_
 
-#if _MSC_VER > 1000
-#pragma once
-#endif // _MSC_VER > 1000
+#  if _MSC_VER > 1000
+#    pragma once
+#  endif  // _MSC_VER > 1000
 // NewMapCreateDlg.h : Header-Datei
 //
 
 /////////////////////////////////////////////////////////////////////////////
-// Dialogfeld CNewMapCreateDlg 
+// Dialogfeld CNewMapCreateDlg
 
-class CNewMapCreateDlg : public CDialog
-{
-// Konstruktion
-public:
-	CNewMapCreateDlg(CWnd* pParent = NULL);   // Standardkonstruktor
+class CNewMapCreateDlg : public CDialog {
+  // Konstruktion
+ public:
+  CNewMapCreateDlg(CWnd* pParent = NULL);  // Standardkonstruktor
 
-// Dialogfelddaten
-	//{{AFX_DATA(CNewMapCreateDlg)
-	enum { IDD = IDD_NEWMAPCREATE };
-	int		m_CreateType;
-	BOOL	m_AITriggers;
-	//}}AFX_DATA
+  // Dialogfelddaten
+  //{{AFX_DATA(CNewMapCreateDlg)
+  enum { IDD = IDD_NEWMAPCREATE };
+  int m_CreateType;
+  BOOL m_AITriggers;
+  //}}AFX_DATA
 
+  // Überschreibungen
+  // Vom Klassen-Assistenten generierte virtuelle Funktionsüberschreibungen
+  //{{AFX_VIRTUAL(CNewMapCreateDlg)
+ protected:
+  virtual void DoDataExchange(CDataExchange* pDX);  // DDX/DDV-Unterstützung
+                                                    //}}AFX_VIRTUAL
 
-// Überschreibungen
-	// Vom Klassen-Assistenten generierte virtuelle Funktionsüberschreibungen
-	//{{AFX_VIRTUAL(CNewMapCreateDlg)
-	protected:
-	virtual void DoDataExchange(CDataExchange* pDX);    // DDX/DDV-Unterstützung
-	//}}AFX_VIRTUAL
-
-// Implementierung
-protected:
-
-	// Generierte Nachrichtenzuordnungsfunktionen
-	//{{AFX_MSG(CNewMapCreateDlg)
-	virtual BOOL OnInitDialog();
-	//}}AFX_MSG
-	DECLARE_MESSAGE_MAP()
+  // Implementierung
+ protected:
+  // Generierte Nachrichtenzuordnungsfunktionen
+  //{{AFX_MSG(CNewMapCreateDlg)
+  virtual BOOL OnInitDialog();
+  //}}AFX_MSG
+  DECLARE_MESSAGE_MAP()
 };
 
 //{{AFX_INSERT_LOCATION}}
 // Microsoft Visual C++ fügt unmittelbar vor der vorhergehenden Zeile zusätzliche Deklarationen ein.
 
-#endif // AFX_NEWMAPCREATEDLG_H__F7D62442_C6DF_11D4_9C87_E63AC3E34349__INCLUDED_
+#endif  // AFX_NEWMAPCREATEDLG_H__F7D62442_C6DF_11D4_9C87_E63AC3E34349__INCLUDED_

@@ -19,50 +19,47 @@
 */
 
 #if !defined(AFX_TOOLSETTINGSBAR_H__582DFEA1_7F44_11D4_9C87_F809D2CDBE4A__INCLUDED_)
-#define AFX_TOOLSETTINGSBAR_H__582DFEA1_7F44_11D4_9C87_F809D2CDBE4A__INCLUDED_
+#  define AFX_TOOLSETTINGSBAR_H__582DFEA1_7F44_11D4_9C87_F809D2CDBE4A__INCLUDED_
 
-#if _MSC_VER > 1000
-#pragma once
-#endif // _MSC_VER > 1000
+#  if _MSC_VER > 1000
+#    pragma once
+#  endif  // _MSC_VER > 1000
 // ToolSettingsBar.h : Header-Datei
 //
 
 /////////////////////////////////////////////////////////////////////////////
-// Dialogfeld CToolSettingsBar 
+// Dialogfeld CToolSettingsBar
 
-class CToolSettingsBar : public CDialogBar
-{
-// Konstruktion
-public:
-	CToolSettingsBar(CWnd* pParent = NULL);   // Standardkonstruktor
+class CToolSettingsBar : public CDialogBar {
+  // Konstruktion
+ public:
+  CToolSettingsBar(CWnd* pParent = NULL);  // Standardkonstruktor
 
-// Dialogfelddaten
-	//{{AFX_DATA(CToolSettingsBar)
-	enum { IDD = IDD_TOOLSETTINGS };
-	int		m_BrushSize;
-	//}}AFX_DATA
+  // Dialogfelddaten
+  //{{AFX_DATA(CToolSettingsBar)
+  enum { IDD = IDD_TOOLSETTINGS };
+  int m_BrushSize;
+  //}}AFX_DATA
 
+  // Überschreibungen
+  // Vom Klassen-Assistenten generierte virtuelle Funktionsüberschreibungen
+  //{{AFX_VIRTUAL(CToolSettingsBar)
+ protected:
+  virtual void DoDataExchange(CDataExchange* pDX);  // DDX/DDV-Unterstützung
+                                                    //}}AFX_VIRTUAL
 
-// Überschreibungen
-	// Vom Klassen-Assistenten generierte virtuelle Funktionsüberschreibungen
-	//{{AFX_VIRTUAL(CToolSettingsBar)
-	protected:
-	virtual void DoDataExchange(CDataExchange* pDX);    // DDX/DDV-Unterstützung
-	//}}AFX_VIRTUAL
-
-// Implementierung
-protected:
-
-	// Generierte Nachrichtenzuordnungsfunktionen
-	//{{AFX_MSG(CToolSettingsBar)
-	afx_msg void OnSelchangeBrushsize();
-	virtual BOOL OnInitDialog();
-	afx_msg void OnShowWindow(BOOL bShow, UINT nStatus);
-	//}}AFX_MSG
-	DECLARE_MESSAGE_MAP()
+  // Implementierung
+ protected:
+  // Generierte Nachrichtenzuordnungsfunktionen
+  //{{AFX_MSG(CToolSettingsBar)
+  afx_msg void OnSelchangeBrushsize();
+  virtual BOOL OnInitDialog();
+  afx_msg void OnShowWindow(BOOL bShow, UINT nStatus);
+  //}}AFX_MSG
+  DECLARE_MESSAGE_MAP()
 };
 
 //{{AFX_INSERT_LOCATION}}
 // Microsoft Visual C++ fügt unmittelbar vor der vorhergehenden Zeile zusätzliche Deklarationen ein.
 
-#endif // AFX_TOOLSETTINGSBAR_H__582DFEA1_7F44_11D4_9C87_F809D2CDBE4A__INCLUDED_
+#endif  // AFX_TOOLSETTINGSBAR_H__582DFEA1_7F44_11D4_9C87_F809D2CDBE4A__INCLUDED_

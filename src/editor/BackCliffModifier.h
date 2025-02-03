@@ -23,24 +23,23 @@
 //////////////////////////////////////////////////////////////////////
 
 #if !defined(AFX_BACKCLIFFMODIFIER_H__3853D325_CD37_11D4_9C87_F2DC6A2E6849__INCLUDED_)
-#define AFX_BACKCLIFFMODIFIER_H__3853D325_CD37_11D4_9C87_F2DC6A2E6849__INCLUDED_
+#  define AFX_BACKCLIFFMODIFIER_H__3853D325_CD37_11D4_9C87_F2DC6A2E6849__INCLUDED_
 
-#if _MSC_VER > 1000
-#pragma once
-#endif // _MSC_VER > 1000
+#  if _MSC_VER > 1000
+#    pragma once
+#  endif  // _MSC_VER > 1000
 
-#include "CliffModifier.h"
+#  include "CliffModifier.h"
 
-class CBackCliffModifier : public CCliffModifier  
-{
-public:
-	CBackCliffModifier();
-	virtual ~CBackCliffModifier();
+class CBackCliffModifier : public CCliffModifier {
+ public:
+  CBackCliffModifier();
+  virtual ~CBackCliffModifier();
 
-protected:
-	virtual CString GetDataSection();
-	virtual void ModifyStartPos(DWORD* dwPos, BOOL bSmall);
-	virtual void ModifyCurrentPos(DWORD* dwPos, BOOL bBeforePlacing, BOOL bSmall);
+ protected:
+  virtual CString GetDataSection();
+  virtual void ModifyStartPos(DWORD* dwPos, BOOL bSmall);
+  virtual void ModifyCurrentPos(DWORD* dwPos, BOOL bBeforePlacing, BOOL bSmall);
 };
 
-#endif // !defined(AFX_BACKCLIFFMODIFIER_H__3853D325_CD37_11D4_9C87_F2DC6A2E6849__INCLUDED_)
+#endif  // !defined(AFX_BACKCLIFFMODIFIER_H__3853D325_CD37_11D4_9C87_F2DC6A2E6849__INCLUDED_)

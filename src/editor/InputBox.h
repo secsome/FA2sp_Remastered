@@ -19,60 +19,57 @@
 */
 
 #if !defined(AFX_INPUTBOX_H__90BA0F00_6AD4_11D3_99E1_FA6209BA1804__INCLUDED_)
-#define AFX_INPUTBOX_H__90BA0F00_6AD4_11D3_99E1_FA6209BA1804__INCLUDED_
+#  define AFX_INPUTBOX_H__90BA0F00_6AD4_11D3_99E1_FA6209BA1804__INCLUDED_
 
-#if _MSC_VER > 1000
-#pragma once
-#endif // _MSC_VER > 1000
+#  if _MSC_VER > 1000
+#    pragma once
+#  endif  // _MSC_VER > 1000
 // InputBox.h : Header-Datei
 //
 
-#include "resource.h"
+#  include "resource.h"
 
 /////////////////////////////////////////////////////////////////////////////
-// Dialogfeld CInputBox 
+// Dialogfeld CInputBox
 
 CString InputBox(const char* Sentence, const char* Caption);
 
-class CInputBox : public CDialog
-{
-// Konstruktion
-public:
-	void SetSentence(CString Sentence);
-	void SetCaption(CString Caption);
-    CString& GetResult();
-	CInputBox(CWnd* pParent = NULL);   // Standardkonstruktor
+class CInputBox : public CDialog {
+  // Konstruktion
+ public:
+  void SetSentence(CString Sentence);
+  void SetCaption(CString Caption);
+  CString& GetResult();
+  CInputBox(CWnd* pParent = NULL);  // Standardkonstruktor
 
-// Dialogfelddaten
-	//{{AFX_DATA(CInputBox)
-	enum { IDD = IDD_INPUTBOX };
-	//}}AFX_DATA
+  // Dialogfelddaten
+  //{{AFX_DATA(CInputBox)
+  enum { IDD = IDD_INPUTBOX };
+  //}}AFX_DATA
 
+  // Überschreibungen
+  // Vom Klassen-Assistenten generierte virtuelle Funktionsüberschreibungen
+  //{{AFX_VIRTUAL(CInputBox)
+ protected:
+  virtual void DoDataExchange(CDataExchange* pDX);  // DDX/DDV-Unterstützung
+                                                    //}}AFX_VIRTUAL
 
-// Überschreibungen
-	// Vom Klassen-Assistenten generierte virtuelle Funktionsüberschreibungen
-	//{{AFX_VIRTUAL(CInputBox)
-	protected:
-	virtual void DoDataExchange(CDataExchange* pDX);    // DDX/DDV-Unterstützung
-	//}}AFX_VIRTUAL
-
-// Implementierung
-protected:
-
-	// Generierte Nachrichtenzuordnungsfunktionen
-	//{{AFX_MSG(CInputBox)
-	virtual void OnOK();
-	virtual void OnCancel();
-	virtual BOOL OnInitDialog();
-	//}}AFX_MSG
-	DECLARE_MESSAGE_MAP()
-private:
-	CString m_Text;
-	CString m_Caption;
-	CString m_Result;
+  // Implementierung
+ protected:
+  // Generierte Nachrichtenzuordnungsfunktionen
+  //{{AFX_MSG(CInputBox)
+  virtual void OnOK();
+  virtual void OnCancel();
+  virtual BOOL OnInitDialog();
+  //}}AFX_MSG
+  DECLARE_MESSAGE_MAP()
+ private:
+  CString m_Text;
+  CString m_Caption;
+  CString m_Result;
 };
 
 //{{AFX_INSERT_LOCATION}}
 // Microsoft Visual C++ fügt unmittelbar vor der vorhergehenden Zeile zusätzliche Deklarationen ein.
 
-#endif // AFX_INPUTBOX_H__90BA0F00_6AD4_11D3_99E1_FA6209BA1804__INCLUDED_
+#endif  // AFX_INPUTBOX_H__90BA0F00_6AD4_11D3_99E1_FA6209BA1804__INCLUDED_

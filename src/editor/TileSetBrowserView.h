@@ -19,67 +19,64 @@
 */
 
 #if !defined(AFX_TILESETBROWSERVIEW_H__3DD92021_7D37_11D4_9C87_97337B61A44A__INCLUDED_)
-#define AFX_TILESETBROWSERVIEW_H__3DD92021_7D37_11D4_9C87_97337B61A44A__INCLUDED_
+#  define AFX_TILESETBROWSERVIEW_H__3DD92021_7D37_11D4_9C87_97337B61A44A__INCLUDED_
 
-#if _MSC_VER > 1000
-#pragma once
-#endif // _MSC_VER > 1000
+#  if _MSC_VER > 1000
+#    pragma once
+#  endif  // _MSC_VER > 1000
 // TileSetBrowserView.h : Header-Datei
 //
 
 /////////////////////////////////////////////////////////////////////////////
-// Ansicht CTileSetBrowserView 
+// Ansicht CTileSetBrowserView
 
-class CTileSetBrowserView : public CScrollView
-{
-public:
-	CTileSetBrowserView();           // Dynamische Erstellung verwendet geschützten Konstruktor
-	DECLARE_DYNCREATE(CTileSetBrowserView)
+class CTileSetBrowserView : public CScrollView {
+ public:
+  CTileSetBrowserView();  // Dynamische Erstellung verwendet geschützten Konstruktor
+  DECLARE_DYNCREATE(CTileSetBrowserView)
 
-// Attribute
-public:
+  // Attribute
+ public:
+  // Operationen
+ public:
+  // Überschreibungen
+  // Vom Klassen-Assistenten generierte virtuelle Funktionsüberschreibungen
+  //{{AFX_VIRTUAL(CTileSetBrowserView)
+ protected:
+  virtual void OnDraw(CDC* pDC);   // Überschrieben zum Zeichnen dieser Ansicht
+  virtual void OnInitialUpdate();  // Zum ersten Mal nach der Konstruktion
+  virtual void PostNcDestroy();
+  //}}AFX_VIRTUAL
 
-// Operationen
-public:
+  // Implementierung
+ public:
+  void SetOverlay(DWORD dwID);
+  int m_currentOverlay;
+  int GetAddedHeight(DWORD dwID);
+  int m_bottom_needed;
+  void DrawIt();
+  LPDIRECTDRAWSURFACE4* m_lpDDS;
+  void SetTileSet(DWORD dwTileSet, BOOL bOnlyRedraw = FALSE);
+  DWORD GetTileID(DWORD dwTileSet, DWORD dwType);
+  int m_currentTileSet;
+  virtual ~CTileSetBrowserView();
+#  ifdef _DEBUG
+  virtual void AssertValid() const;
+  virtual void Dump(CDumpContext& dc) const;
+#  endif
 
-// Überschreibungen
-	// Vom Klassen-Assistenten generierte virtuelle Funktionsüberschreibungen
-	//{{AFX_VIRTUAL(CTileSetBrowserView)
-	protected:
-	virtual void OnDraw(CDC* pDC);      // Überschrieben zum Zeichnen dieser Ansicht
-	virtual void OnInitialUpdate();     // Zum ersten Mal nach der Konstruktion
-	virtual void PostNcDestroy();
-	//}}AFX_VIRTUAL
-
-// Implementierung
-public:
-	void SetOverlay(DWORD dwID);
-	int m_currentOverlay;
-	int GetAddedHeight(DWORD dwID);
-	int m_bottom_needed;
-	void DrawIt();
-	LPDIRECTDRAWSURFACE4* m_lpDDS;
-	void SetTileSet(DWORD dwTileSet, BOOL bOnlyRedraw=FALSE);
-	DWORD GetTileID(DWORD dwTileSet, DWORD dwType);
-	int m_currentTileSet;
-	virtual ~CTileSetBrowserView();
-#ifdef _DEBUG
-	virtual void AssertValid() const;
-	virtual void Dump(CDumpContext& dc) const;
-#endif
-
-	// Generierte Nachrichtenzuordnungsfunktionen
-	//{{AFX_MSG(CTileSetBrowserView)
-	afx_msg void OnLButtonDown(UINT nFlags, CPoint point);
-	afx_msg void OnVScroll(UINT nSBCode, UINT nPos, CScrollBar* pScrollBar);
-	//}}AFX_MSG
-	DECLARE_MESSAGE_MAP()
-protected:
-	int m_CurrentMode;
-	LPDIRECTDRAWSURFACE4 RenderTile(DWORD dwID);
-	int m_tilecount;
-	int m_tile_height;
-	int m_tile_width;
+  // Generierte Nachrichtenzuordnungsfunktionen
+  //{{AFX_MSG(CTileSetBrowserView)
+  afx_msg void OnLButtonDown(UINT nFlags, CPoint point);
+  afx_msg void OnVScroll(UINT nSBCode, UINT nPos, CScrollBar* pScrollBar);
+  //}}AFX_MSG
+  DECLARE_MESSAGE_MAP()
+ protected:
+  int m_CurrentMode;
+  LPDIRECTDRAWSURFACE4 RenderTile(DWORD dwID);
+  int m_tilecount;
+  int m_tile_height;
+  int m_tile_width;
 };
 
 /////////////////////////////////////////////////////////////////////////////
@@ -87,4 +84,4 @@ protected:
 //{{AFX_INSERT_LOCATION}}
 // Microsoft Visual C++ fügt unmittelbar vor der vorhergehenden Zeile zusätzliche Deklarationen ein.
 
-#endif // AFX_TILESETBROWSERVIEW_H__3DD92021_7D37_11D4_9C87_97337B61A44A__INCLUDED_
+#endif  // AFX_TILESETBROWSERVIEW_H__3DD92021_7D37_11D4_9C87_97337B61A44A__INCLUDED_

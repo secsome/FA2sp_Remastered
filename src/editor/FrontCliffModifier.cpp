@@ -22,82 +22,56 @@
 //
 //////////////////////////////////////////////////////////////////////
 
-#include "stdafx.h"
-#include "stdafx.h"
 #include "FrontCliffModifier.h"
 #include <vector>
+#include "stdafx.h"
 #include "variables.h"
 
 #ifdef _DEBUG
-#undef THIS_FILE
-static char THIS_FILE[]=__FILE__;
-#define new DEBUG_NEW
+#  undef THIS_FILE
+static char THIS_FILE[] = __FILE__;
+#  define new DEBUG_NEW
 #endif
 
 //////////////////////////////////////////////////////////////////////
 // Konstruktion/Destruktion
 //////////////////////////////////////////////////////////////////////
 
-CFrontCliffModifier::CFrontCliffModifier()
-{
+CFrontCliffModifier::CFrontCliffModifier() {}
 
+CFrontCliffModifier::~CFrontCliffModifier() {}
+
+void CFrontCliffModifier::ModifyStartPos(DWORD *dwStartPos, BOOL bSmall) {
+  if (m_direction == cd_horiz_right) (*dwStartPos) -= 1 + 0 * Map->GetIsoSize();
+  if (m_direction == cd_horiz_left) (*dwStartPos) += -(1) + Map->GetIsoSize();
+  if (m_direction == cd_vertic_top) (*dwStartPos) -= -1 + 0 * Map->GetIsoSize();
+  if (m_direction == cd_vertic_bottom) (*dwStartPos) -= 0 * Map->GetIsoSize();
+
+  if (m_direction == cd_verticdiag_top) (*dwStartPos) += 1 + Map->GetIsoSize();
+  if (m_direction == cd_verticdiag_bottom) (*dwStartPos) += 0 - Map->GetIsoSize();
+
+  if (m_direction == cd_horizdiag_right) (*dwStartPos) += 1 + 0 * Map->GetIsoSize();
+  if (m_direction == cd_horizdiag_left) (*dwStartPos) += 0 + 1 * Map->GetIsoSize();
 }
 
-CFrontCliffModifier::~CFrontCliffModifier()
-{
-
+void CFrontCliffModifier::ModifyCurrentPos(DWORD *dwPos, BOOL bBeforePlacing, BOOL bSmall) {
+  if (!bBeforePlacing) {
+    if (!bSmall) {
+      if (m_direction == cd_verticdiag_top) (*dwPos) += 0 + 2 * Map->GetIsoSize();
+      if (m_direction == cd_verticdiag_bottom) (*dwPos) += 0 - 2 * Map->GetIsoSize();
+    } else {
+      if (m_direction == cd_verticdiag_top) (*dwPos) += 0 + 2 * Map->GetIsoSize();
+      if (m_direction == cd_verticdiag_bottom) (*dwPos) += 0 - 2 * Map->GetIsoSize();
+    }
+  } else {
+    if (bSmall) {
+      if (m_direction == cd_verticdiag_top) (*dwPos) += 0 - 1 * Map->GetIsoSize();
+      if (m_direction == cd_verticdiag_bottom) (*dwPos) += 0 + 1 * Map->GetIsoSize();
+    }
+  }
 }
 
-
-
-
-
-void CFrontCliffModifier::ModifyStartPos(DWORD *dwStartPos, BOOL bSmall)
-{
-	
-	if(m_direction==cd_horiz_right) (*dwStartPos)-=1+0*Map->GetIsoSize();
-	if(m_direction==cd_horiz_left) (*dwStartPos)+=-(1)+Map->GetIsoSize();
-	if(m_direction==cd_vertic_top) (*dwStartPos)-=-1+0*Map->GetIsoSize();
-	if(m_direction==cd_vertic_bottom) (*dwStartPos)-=0*Map->GetIsoSize();
-
-	if(m_direction==cd_verticdiag_top) (*dwStartPos)+=1+Map->GetIsoSize();
-	if(m_direction==cd_verticdiag_bottom) (*dwStartPos)+=0-Map->GetIsoSize();
-	
-	
-	if(m_direction==cd_horizdiag_right) (*dwStartPos)+=1+0*Map->GetIsoSize();
-	if(m_direction==cd_horizdiag_left) (*dwStartPos)+=0+1*Map->GetIsoSize();
-}
-
-void CFrontCliffModifier::ModifyCurrentPos(DWORD *dwPos, BOOL bBeforePlacing, BOOL bSmall)
-{
-	if(!bBeforePlacing)
-	{
-		if(!bSmall)
-		{
-			if(m_direction==cd_verticdiag_top) (*dwPos)+=0+2*Map->GetIsoSize();	
-			if(m_direction==cd_verticdiag_bottom) (*dwPos)+=0-2*Map->GetIsoSize();	
-		}
-		else
-		{
-			if(m_direction==cd_verticdiag_top) (*dwPos)+=0+2*Map->GetIsoSize();	
-			if(m_direction==cd_verticdiag_bottom) (*dwPos)+=0-2*Map->GetIsoSize();	
-		}
-	}
-	else
-	{
-		if(bSmall)
-		{
-			if(m_direction==cd_verticdiag_top) (*dwPos)+=0-1*Map->GetIsoSize();	
-			if(m_direction==cd_verticdiag_bottom) (*dwPos)+=0+1*Map->GetIsoSize();	
-
-
-		}
-
-	}
-}
-
-CString CFrontCliffModifier::GetDataSection()
-{
-	if(m_bAlternative) return ("CliffFrontDataAlt");
-	return("CliffFrontData");
+CString CFrontCliffModifier::GetDataSection() {
+  if (m_bAlternative) return ("CliffFrontDataAlt");
+  return ("CliffFrontData");
 }

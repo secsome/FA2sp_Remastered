@@ -19,50 +19,47 @@
 */
 
 #if !defined(AFX_SEARCHWAYPOINTDLG_H__28D1CCC0_874C_11D5_89B3_00E07D97C331__INCLUDED_)
-#define AFX_SEARCHWAYPOINTDLG_H__28D1CCC0_874C_11D5_89B3_00E07D97C331__INCLUDED_
+#  define AFX_SEARCHWAYPOINTDLG_H__28D1CCC0_874C_11D5_89B3_00E07D97C331__INCLUDED_
 
-#if _MSC_VER > 1000
-#pragma once
-#endif // _MSC_VER > 1000
+#  if _MSC_VER > 1000
+#    pragma once
+#  endif  // _MSC_VER > 1000
 // SearchWaypointDlg.h : Header-Datei
 //
 
 /////////////////////////////////////////////////////////////////////////////
-// Dialogfeld CSearchWaypointDlg 
+// Dialogfeld CSearchWaypointDlg
 
-class CSearchWaypointDlg : public CDialog
-{
-// Konstruktion
-public:
-	int m_WaypointIndex;
-	CSearchWaypointDlg(CWnd* pParent = NULL);   // Standardkonstruktor
+class CSearchWaypointDlg : public CDialog {
+  // Konstruktion
+ public:
+  int m_WaypointIndex;
+  CSearchWaypointDlg(CWnd* pParent = NULL);  // Standardkonstruktor
 
-// Dialogfelddaten
-	//{{AFX_DATA(CSearchWaypointDlg)
-	enum { IDD = IDD_SEARCHWAYPOINT };
-	CString	m_Waypoints;
-	//}}AFX_DATA
+  // Dialogfelddaten
+  //{{AFX_DATA(CSearchWaypointDlg)
+  enum { IDD = IDD_SEARCHWAYPOINT };
+  CString m_Waypoints;
+  //}}AFX_DATA
 
+  // Überschreibungen
+  // Vom Klassen-Assistenten generierte virtuelle Funktionsüberschreibungen
+  //{{AFX_VIRTUAL(CSearchWaypointDlg)
+ protected:
+  virtual void DoDataExchange(CDataExchange* pDX);  // DDX/DDV-Unterstützung
+                                                    //}}AFX_VIRTUAL
 
-// Überschreibungen
-	// Vom Klassen-Assistenten generierte virtuelle Funktionsüberschreibungen
-	//{{AFX_VIRTUAL(CSearchWaypointDlg)
-	protected:
-	virtual void DoDataExchange(CDataExchange* pDX);    // DDX/DDV-Unterstützung
-	//}}AFX_VIRTUAL
-
-// Implementierung
-protected:
-
-	// Generierte Nachrichtenzuordnungsfunktionen
-	//{{AFX_MSG(CSearchWaypointDlg)
-	virtual BOOL OnInitDialog();
-	virtual void OnOK();
-	//}}AFX_MSG
-	DECLARE_MESSAGE_MAP()
+  // Implementierung
+ protected:
+  // Generierte Nachrichtenzuordnungsfunktionen
+  //{{AFX_MSG(CSearchWaypointDlg)
+  virtual BOOL OnInitDialog();
+  virtual void OnOK();
+  //}}AFX_MSG
+  DECLARE_MESSAGE_MAP()
 };
 
 //{{AFX_INSERT_LOCATION}}
 // Microsoft Visual C++ fügt unmittelbar vor der vorhergehenden Zeile zusätzliche Deklarationen ein.
 
-#endif // AFX_SEARCHWAYPOINTDLG_H__28D1CCC0_874C_11D5_89B3_00E07D97C331__INCLUDED_
+#endif  // AFX_SEARCHWAYPOINTDLG_H__28D1CCC0_874C_11D5_89B3_00E07D97C331__INCLUDED_

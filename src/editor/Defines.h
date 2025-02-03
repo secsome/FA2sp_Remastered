@@ -19,13 +19,13 @@
 */
 
 /**************************
-	Defines.h
+        Defines.h
  Place any definitions here
 **************************/
 
 // set NOSURFACES to use palettized tile drawing - probably slower, but using less memory
 #define NOSURFACES
-#define NOSURFACES_EXTRACT // this will cause tiles to be extracted
+#define NOSURFACES_EXTRACT  // this will cause tiles to be extracted
 // #undef NOSURFACES // enable this if display is too slow
 
 // set NOSURFACES_OBJECTS to use palettized object & overlay drawing - slower, but better display
@@ -61,22 +61,22 @@
 #define SOUND_DELETETILE 4
 
 // actiondata modes (isoview user interface)
-#define ACTIONMODE_PLACE 1 // place any unit, building, tree or overlay
-#define ACTIONMODE_ERASEFIELD 2 // delete any unit, building, or tree
-#define ACTIONMODE_WAYPOINT 3 // any waypoint editing
-#define ACTIONMODE_CELLTAG 4 // any celltag editing
-#define ACTIONMODE_NODE 5 // any node editing
+#define ACTIONMODE_PLACE 1       // place any unit, building, tree or overlay
+#define ACTIONMODE_ERASEFIELD 2  // delete any unit, building, or tree
+#define ACTIONMODE_WAYPOINT 3    // any waypoint editing
+#define ACTIONMODE_CELLTAG 4     // any celltag editing
+#define ACTIONMODE_NODE 5        // any node editing
 #define ACTIONMODE_MAPTOOL 6
-#define ACTIONMODE_SETTILE 10 // setting ground tiles
-#define ACTIONMODE_HEIGHTEN 11 // heighten ground
-#define ACTIONMODE_LOWER 12 // lower ground
+#define ACTIONMODE_SETTILE 10   // setting ground tiles
+#define ACTIONMODE_HEIGHTEN 11  // heighten ground
+#define ACTIONMODE_LOWER 12     // lower ground
 #define ACTIONMODE_LOWERTILE 13
 #define ACTIONMODE_HEIGHTENTILE 14
 #define ACTIONMODE_FLATTENGROUND 15
-#define ACTIONMODE_HIDETILESET 16 // make specific tileset invisible
-#define ACTIONMODE_HIDEFIELD 17 // make specific field invisible
-#define ACTIONMODE_CLIFFFRONT 18 // add front cliff
-#define ACTIONMODE_CLIFFBACK 19 // add back cliff
+#define ACTIONMODE_HIDETILESET 16  // make specific tileset invisible
+#define ACTIONMODE_HIDEFIELD 17    // make specific field invisible
+#define ACTIONMODE_CLIFFFRONT 18   // add front cliff
+#define ACTIONMODE_CLIFFBACK 19    // add back cliff
 #define ACTIONMODE_COPY 20
 #define ACTIONMODE_PASTE 21
 #define ACTIONMODE_RANDOMTERRAIN 22
@@ -145,7 +145,7 @@
 #define SLOPE_DOWN_RIGHTTOP 10
 #define SLOPE_DOWN_RIGHTBOTTOM 11
 #define SLOPE_DOWN_LEFTBOTTOM 12
-#define SLOPE_DOWN_TOP 13   // z difference of x-1/y-1 to x+1/y+1 is -2, to x+1/y 1, to x/y+1 1
+#define SLOPE_DOWN_TOP 13  // z difference of x-1/y-1 to x+1/y+1 is -2, to x+1/y 1, to x/y+1 1
 #define SLOPE_DOWN_RIGHT 14
 #define SLOPE_DOWN_BOTTOM 15
 #define SLOPE_DOWN_LEFT 16
@@ -155,4 +155,4 @@
 #define SLOPE_UP_LEFTTOP_AND_RIGHTBOTTOM2 20
 
 // max images loaded from one overlay graphic file (SHP)
-#define max_ovrl_img 60 
+#define max_ovrl_img 60

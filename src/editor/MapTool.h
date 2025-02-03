@@ -20,68 +20,55 @@
 
 #pragma once
 
+#include <winnt.h>
 #include <cstdint>
 #include "structs.h"
-#include <winnt.h>
 
 class CMapData;
 class CIsoView;
 
-enum class MapToolMouseFlags
-{
-    DEFAULT = 0,
-    LBUTTON = 1,
-    MBUTTON = 2,
-    RBUTTON = 4,
-    SHIFT = 8
-};
+enum class MapToolMouseFlags { DEFAULT = 0, LBUTTON = 1, MBUTTON = 2, RBUTTON = 4, SHIFT = 8 };
 DEFINE_ENUM_FLAG_OPERATORS(MapToolMouseFlags);
 
 inline MapToolMouseFlags MapToolMouseFlagsFromWin32(UINT nFlags) {
+  MapToolMouseFlags flags = MapToolMouseFlags::DEFAULT;
 
-    MapToolMouseFlags flags = MapToolMouseFlags::DEFAULT;
+  if ((nFlags & MK_LBUTTON) == MK_LBUTTON) flags |= MapToolMouseFlags::LBUTTON;
 
-    if ((nFlags & MK_LBUTTON) == MK_LBUTTON)
-        flags |= MapToolMouseFlags::LBUTTON;
+  if ((nFlags & MK_MBUTTON) == MK_MBUTTON) flags |= MapToolMouseFlags::MBUTTON;
 
-    if ((nFlags & MK_MBUTTON) == MK_MBUTTON)
-        flags |= MapToolMouseFlags::MBUTTON;
+  if ((nFlags & MK_RBUTTON) == MK_RBUTTON) flags |= MapToolMouseFlags::RBUTTON;
 
-    if ((nFlags & MK_RBUTTON) == MK_RBUTTON)
-        flags |= MapToolMouseFlags::RBUTTON;
+  if ((nFlags & MK_SHIFT) == MK_SHIFT) flags |= MapToolMouseFlags::SHIFT;
 
-    if ((nFlags & MK_SHIFT) == MK_SHIFT)
-        flags |= MapToolMouseFlags::SHIFT;
-        
-    return flags;
+  return flags;
 }
 
-class MapTool
-{
-public:
-    virtual ~MapTool() = default;
+class MapTool {
+ public:
+  virtual ~MapTool() = default;
 
-    // return false if tool has not handled this call (or doesn't want to override any caller behavior)
-    virtual bool onRButtonUp(const ProjectedCoords& projCoords, const MapCoords& mapCoords3d, MapToolMouseFlags flags)
-    {        
-        return false;
-    };
+  // return false if tool has not handled this call (or doesn't want to override any caller behavior)
+  virtual bool onRButtonUp(const ProjectedCoords& projCoords, const MapCoords& mapCoords3d, MapToolMouseFlags flags) {
+    return false;
+  };
 
-    virtual void onLButtonDblClick(const ProjectedCoords& projCoords, const MapCoords& mapCoords3d, MapToolMouseFlags flags) {};
-    virtual void onLButtonUp(const ProjectedCoords& projCoords, const MapCoords& mapCoords3d, MapToolMouseFlags flags) {};
-    virtual void onMouseMove(const ProjectedCoords& projCoords, const MapCoords& mapCoords3d, MapToolMouseFlags flags) {};
-    virtual void render() {};
+  virtual void onLButtonDblClick(const ProjectedCoords& projCoords, const MapCoords& mapCoords3d,
+                                 MapToolMouseFlags flags) {};
+  virtual void onLButtonUp(const ProjectedCoords& projCoords, const MapCoords& mapCoords3d, MapToolMouseFlags flags) {};
+  virtual void onMouseMove(const ProjectedCoords& projCoords, const MapCoords& mapCoords3d, MapToolMouseFlags flags) {};
+  virtual void render() {};
 
-protected:
-    MapTool(CMapData& map, CIsoView& view) : m_map(map), m_view(view) {};    
-    MapTool& operator=(const MapTool& other) = delete;
+ protected:
+  MapTool(CMapData& map, CIsoView& view) : m_map(map), m_view(view) {};
+  MapTool& operator=(const MapTool& other) = delete;
 
-    CMapData& getMap() { return m_map; }
-    const CMapData& getMap() const { return m_map; }
-    CIsoView& getView() { return m_view; }
-    const CIsoView& getView() const { return m_view; }
+  CMapData& getMap() { return m_map; }
+  const CMapData& getMap() const { return m_map; }
+  CIsoView& getView() { return m_view; }
+  const CIsoView& getView() const { return m_view; }
 
-private:
-    CMapData& m_map;
-    CIsoView& m_view;
+ private:
+  CMapData& m_map;
+  CIsoView& m_view;
 };

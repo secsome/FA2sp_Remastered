@@ -23,9 +23,6 @@
 // this is just a small helper header
 // needed because of some linking problems on certain compilers
 
-inline BOOL isGreenTiberium(int type)
-{
-	return (type>0x65 && type<=0x79) || (type>0x82 && type<0xa7);
-}
+inline BOOL isGreenTiberium(int type) { return (type > 0x65 && type <= 0x79) || (type > 0x82 && type < 0xa7); }
 
 #endif

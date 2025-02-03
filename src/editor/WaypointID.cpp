@@ -21,90 +21,78 @@
 // WaypointID.cpp: Implementierungsdatei
 //
 
-#include "stdafx.h"
-#include "FinalSun.h"
 #include "WaypointID.h"
+#include "FinalSun.h"
 #include "mapdata.h"
+#include "stdafx.h"
 #include "variables.h"
 
 #ifdef _DEBUG
-#define new DEBUG_NEW
-#undef THIS_FILE
+#  define new DEBUG_NEW
+#  undef THIS_FILE
 static char THIS_FILE[] = __FILE__;
 #endif
 
 /////////////////////////////////////////////////////////////////////////////
-// Dialogfeld CWaypointID 
+// Dialogfeld CWaypointID
 
-
-CWaypointID::CWaypointID(CWnd* pParent /*=NULL*/)
-	: CDialog(CWaypointID::IDD, pParent)
-{
-	//{{AFX_DATA_INIT(CWaypointID)
-		// HINWEIS: Der Klassen-Assistent fügt hier Elementinitialisierung ein
-	//}}AFX_DATA_INIT
+CWaypointID::CWaypointID(CWnd* pParent /*=NULL*/) : CDialog(CWaypointID::IDD, pParent) {
+  //{{AFX_DATA_INIT(CWaypointID)
+  // HINWEIS: Der Klassen-Assistent fügt hier Elementinitialisierung ein
+  //}}AFX_DATA_INIT
 }
 
-
-void CWaypointID::DoDataExchange(CDataExchange* pDX)
-{
-	CDialog::DoDataExchange(pDX);
-	//{{AFX_DATA_MAP(CWaypointID)
-	DDX_Control(pDX, IDC_ID, m_id);
-	//}}AFX_DATA_MAP
+void CWaypointID::DoDataExchange(CDataExchange* pDX) {
+  CDialog::DoDataExchange(pDX);
+  //{{AFX_DATA_MAP(CWaypointID)
+  DDX_Control(pDX, IDC_ID, m_id);
+  //}}AFX_DATA_MAP
 }
-
 
 BEGIN_MESSAGE_MAP(CWaypointID, CDialog)
-	//{{AFX_MSG_MAP(CWaypointID)
-	ON_BN_CLICKED(IDC_FREE, OnFree)
-	//}}AFX_MSG_MAP
+//{{AFX_MSG_MAP(CWaypointID)
+ON_BN_CLICKED(IDC_FREE, OnFree)
+//}}AFX_MSG_MAP
 END_MESSAGE_MAP()
 
 /////////////////////////////////////////////////////////////////////////////
-// Behandlungsroutinen für Nachrichten CWaypointID 
+// Behandlungsroutinen für Nachrichten CWaypointID
 
-void CWaypointID::OnFree() 
-{
-	CIniFile& ini=Map->GetIniFile();
+void CWaypointID::OnFree() {
+  CIniFile& ini = Map->GetIniFile();
 
-	int i;
-	CString freen;
+  int i;
+  CString freen;
 
-	for(i=0;i>-1;i++)
-	{
-		char d[50];
-		itoa(i,d,10);
-		if(ini.sections["Waypoints"].values.find(d)==ini.sections["Waypoints"].values.end())
-		{
-			freen=d;
-			break;
-		}
-	}
+  for (i = 0; i > -1; i++) {
+    char d[50];
+    itoa(i, d, 10);
+    if (ini.sections["Waypoints"].values.find(d) == ini.sections["Waypoints"].values.end()) {
+      freen = d;
+      break;
+    }
+  }
 
-	m_id.SetWindowText(freen);
+  m_id.SetWindowText(freen);
 }
 
-void CWaypointID::OnOK() 
-{
-	CString h;
-	m_id.GetWindowText(h);
-	if(h.GetLength()<1)
-	{
-		return;
-	}
-	
-	m_value=atoi(h);
+void CWaypointID::OnOK() {
+  CString h;
+  m_id.GetWindowText(h);
+  if (h.GetLength() < 1) {
+    return;
+  }
 
-	CDialog::OnOK();
+  m_value = atoi(h);
+
+  CDialog::OnOK();
 }
 
-BOOL CWaypointID::OnInitDialog() 
-{
-	CDialog::OnInitDialog();
-	
-	OnFree();
-	
-	return TRUE;  // return TRUE unless you set the focus to a control
-	              // EXCEPTION: OCX-Eigenschaftenseiten sollten FALSE zurückgeben
+BOOL CWaypointID::OnInitDialog() {
+  CDialog::OnInitDialog();
+
+  OnFree();
+
+  return TRUE;  // return TRUE unless you set the focus to a control
+                // EXCEPTION: OCX-Eigenschaftenseiten sollten FALSE zurückgeben
 }

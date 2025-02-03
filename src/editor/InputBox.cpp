@@ -21,17 +21,16 @@
 // InputBox.cpp: Implementierungsdatei
 //
 
-#include "stdafx.h"
-#include "FinalSun.h"
 #include "InputBox.h"
+#include "FinalSun.h"
 #include "functions.h"
+#include "stdafx.h"
 
 #ifdef _DEBUG
-#define new DEBUG_NEW
-#undef THIS_FILE
+#  define new DEBUG_NEW
+#  undef THIS_FILE
 static char THIS_FILE[] = __FILE__;
 #endif
-
 
 /*
 InputBox();
@@ -39,81 +38,61 @@ InputBox();
 Shows a inputbox with specified caption and text.
 Returns the user input. If the user cancels, the user input is "".
 */
-CString InputBox(const char* Sentence, const char* Caption)
-{
-	CInputBox inp;
-	inp.SetCaption(Caption);
-	inp.SetSentence(Sentence);
-	inp.DoModal();
-	return inp.GetResult();
+CString InputBox(const char* Sentence, const char* Caption) {
+  CInputBox inp;
+  inp.SetCaption(Caption);
+  inp.SetSentence(Sentence);
+  inp.DoModal();
+  return inp.GetResult();
 }
 
-CInputBox::CInputBox(CWnd* pParent /*=NULL*/)
-	: CDialog(CInputBox::IDD, pParent)
-{
-	//{{AFX_DATA_INIT(CInputBox)
-		
-	//}}AFX_DATA_INIT
+CInputBox::CInputBox(CWnd* pParent /*=NULL*/) : CDialog(CInputBox::IDD, pParent) {
+  //{{AFX_DATA_INIT(CInputBox)
+
+  //}}AFX_DATA_INIT
 }
 
+void CInputBox::DoDataExchange(CDataExchange* pDX) {
+  CDialog::DoDataExchange(pDX);
+  //{{AFX_DATA_MAP(CInputBox)
 
-void CInputBox::DoDataExchange(CDataExchange* pDX)
-{
-	CDialog::DoDataExchange(pDX);
-	//{{AFX_DATA_MAP(CInputBox)
-		
-	//}}AFX_DATA_MAP
+  //}}AFX_DATA_MAP
 }
-
 
 BEGIN_MESSAGE_MAP(CInputBox, CDialog)
-	//{{AFX_MSG_MAP(CInputBox)
-	//}}AFX_MSG_MAP
+//{{AFX_MSG_MAP(CInputBox)
+//}}AFX_MSG_MAP
 END_MESSAGE_MAP()
 
+void CInputBox::OnOK() {
+  CString text;
+  GetDlgItem(IDC_VAL)->GetWindowText(text);
 
-
-void CInputBox::OnOK() 
-{
-	CString text;
-	GetDlgItem(IDC_VAL)->GetWindowText(text);
-
-	if(text.GetLength()==0){EndDialog(NULL);};
-    m_Result = text;
-	EndDialog(IDOK);
+  if (text.GetLength() == 0) {
+    EndDialog(NULL);
+  };
+  m_Result = text;
+  EndDialog(IDOK);
 }
 
-void CInputBox::OnCancel() 
-{
-	EndDialog(NULL);
-}
+void CInputBox::OnCancel() { EndDialog(NULL); }
 
-void CInputBox::SetCaption(CString Caption)
-{
-	m_Caption=Caption;
-}
+void CInputBox::SetCaption(CString Caption) { m_Caption = Caption; }
 
-CString& CInputBox::GetResult()
-{
-    return m_Result;
-}
+CString& CInputBox::GetResult() { return m_Result; }
 
-void CInputBox::SetSentence(CString Sentence)
-{
-	m_Text=Sentence;
-}
+void CInputBox::SetSentence(CString Sentence) { m_Text = Sentence; }
 
-BOOL CInputBox::OnInitDialog() 
-{
-	CDialog::OnInitDialog();
-	
-	SetWindowText(m_Caption);
-	SetDlgItemText(IDC_SENTENCE, m_Text);
+BOOL CInputBox::OnInitDialog() {
+  CDialog::OnInitDialog();
 
-	SetDlgItemText(IDOK, GetLanguageStringACP("OK"));
-	SetDlgItemText(IDCANCEL, GetLanguageStringACP("Cancel"));
+  SetWindowText(m_Caption);
+  SetDlgItemText(IDC_SENTENCE, m_Text);
 
-	GetDlgItem(IDC_VAL)->SetFocus();
-		
-	return FALSE; 
+  SetDlgItemText(IDOK, GetLanguageStringACP("OK"));
+  SetDlgItemText(IDCANCEL, GetLanguageStringACP("Cancel"));
+
+  GetDlgItem(IDC_VAL)->SetFocus();
+
+  return FALSE;
 }

@@ -22,178 +22,150 @@
 //
 //////////////////////////////////////////////////////////////////////
 
-#include "stdafx.h"
-#include "stdafx.h"
 #include "Bitmap2MapConverter.h"
+#include "stdafx.h"
 
 #ifdef _DEBUG
-#undef THIS_FILE
-static char THIS_FILE[]=__FILE__;
-#define new DEBUG_NEW
+#  undef THIS_FILE
+static char THIS_FILE[] = __FILE__;
+#  define new DEBUG_NEW
 #endif
 
 //////////////////////////////////////////////////////////////////////
 // Konstruktion/Destruktion
 //////////////////////////////////////////////////////////////////////
 
-CBitmap2MapConverter::CBitmap2MapConverter()
-{
+CBitmap2MapConverter::CBitmap2MapConverter() {}
 
-}
-
-CBitmap2MapConverter::~CBitmap2MapConverter()
-{
-
-}
+CBitmap2MapConverter::~CBitmap2MapConverter() {}
 
 /*
 I originally intended this tool to support different theaters,
 but currently it does only support temperate. People can use
 copy/paste to convert those maps though!
 */
-BOOL CBitmap2MapConverter::Convert(HBITMAP hBitmap, CMapData & mapdata)
-{
-	BITMAP bm;
-		
-	GetObject(hBitmap, sizeof(BITMAP), &bm);
-	
-	HBITMAP hUsed=hBitmap;
-	
-	
-	if(bm.bmWidth+bm.bmHeight>255)
-	{
-		float scalex=(float)bm.bmWidth/(float)bm.bmHeight;
-		int neededheight, neededwidth;
-		neededheight=255.0f/(scalex+1.0f);
-		neededwidth=255-neededheight;
+BOOL CBitmap2MapConverter::Convert(HBITMAP hBitmap, CMapData& mapdata) {
+  BITMAP bm;
 
-		hUsed=CreateCompatibleBitmap(GetDC(NULL), neededwidth, neededheight);
-		HDC hDC=CreateCompatibleDC(GetDC(NULL));
-		SelectObject(hDC, hUsed);
-		HDC hSrcDC=CreateCompatibleDC(GetDC(NULL));
-		SelectObject(hSrcDC, hBitmap);
+  GetObject(hBitmap, sizeof(BITMAP), &bm);
 
-		StretchBlt(hDC, 0,0,neededwidth,neededheight, hSrcDC, 0,0,bm.bmWidth, bm.bmHeight, SRCCOPY);
+  HBITMAP hUsed = hBitmap;
 
-		DeleteDC(hDC);
-		DeleteDC(hSrcDC);
-		
-		GetObject(hUsed, sizeof(BITMAP), &bm);
-	}
+  if (bm.bmWidth + bm.bmHeight > 255) {
+    float scalex = (float)bm.bmWidth / (float)bm.bmHeight;
+    int neededheight, neededwidth;
+    neededheight = 255.0f / (scalex + 1.0f);
+    neededwidth = 255 - neededheight;
 
-	HDC hDC;
-	hDC=CreateCompatibleDC(GetDC(NULL));
-	SelectObject(hDC, hUsed);
-	
+    hUsed = CreateCompatibleBitmap(GetDC(NULL), neededwidth, neededheight);
+    HDC hDC = CreateCompatibleDC(GetDC(NULL));
+    SelectObject(hDC, hUsed);
+    HDC hSrcDC = CreateCompatibleDC(GetDC(NULL));
+    SelectObject(hSrcDC, hBitmap);
 
-	srand(GetTickCount());
+    StretchBlt(hDC, 0, 0, neededwidth, neededheight, hSrcDC, 0, 0, bm.bmWidth, bm.bmHeight, SRCCOPY);
 
-	int i;
-	int e;
-	int theater=0;
-	mapdata.CreateMap(bm.bmWidth, bm.bmHeight, "TEMPERATE", 0);
+    DeleteDC(hDC);
+    DeleteDC(hSrcDC);
 
-	int isosize=mapdata.GetIsoSize();
+    GetObject(hUsed, sizeof(BITMAP), &bm);
+  }
 
+  HDC hDC;
+  hDC = CreateCompatibleDC(GetDC(NULL));
+  SelectObject(hDC, hUsed);
 
-	for(i=0;i<(*tiledata_count);i++)
-		if((*tiledata)[i].wTileSet==waterset) break;
+  srand(GetTickCount());
 
-	int water_start=i+8; // to 12
+  int i;
+  int e;
+  int theater = 0;
+  mapdata.CreateMap(bm.bmWidth, bm.bmHeight, "TEMPERATE", 0);
 
+  int isosize = mapdata.GetIsoSize();
 
-	int sandset= atoi((*tiles).sections["General"].values["GreenTile"]);
-	int greenset= atoi((*tiles).sections["General"].values["RoughTile"]);
+  for (i = 0; i < (*tiledata_count); i++)
+    if ((*tiledata)[i].wTileSet == waterset) break;
 
-	for(i=0;i<(*tiledata_count);i++)
-		if((*tiledata)[i].wTileSet==sandset) break;
+  int water_start = i + 8;  // to 12
 
-	int sand_start=i; 
+  int sandset = atoi((*tiles).sections["General"].values["GreenTile"]);
+  int greenset = atoi((*tiles).sections["General"].values["RoughTile"]);
 
-	for(i=0;i<(*tiledata_count);i++)
-		if((*tiledata)[i].wTileSet==greenset) break;
+  for (i = 0; i < (*tiledata_count); i++)
+    if ((*tiledata)[i].wTileSet == sandset) break;
 
-	int green_start=i; 
+  int sand_start = i;
 
+  for (i = 0; i < (*tiledata_count); i++)
+    if ((*tiledata)[i].wTileSet == greenset) break;
 
-	for(i=0;i<bm.bmWidth;i++)
-	{
-		for(e=0;e<bm.bmHeight;e++)
-		{
-			COLORREF col=GetPixel(hDC, i, bm.bmHeight-e);
+  int green_start = i;
 
-			int x=(i)+mapdata.GetHeight()+1;
-			int y=(e)+mapdata.GetWidth();
+  for (i = 0; i < bm.bmWidth; i++) {
+    for (e = 0; e < bm.bmHeight; e++) {
+      COLORREF col = GetPixel(hDC, i, bm.bmHeight - e);
 
-			int xiso;
-			int yiso;
+      int x = (i) + mapdata.GetHeight() + 1;
+      int y = (e) + mapdata.GetWidth();
 
-			yiso=mapdata.GetIsoSize()-(y - x);
-			xiso=mapdata.GetIsoSize()-(x + y);
-			yiso-=mapdata.GetHeight();
+      int xiso;
+      int yiso;
 
-			
-			for(x=-1;x<2;x++)
-			{
-				for(y=-1;y<2;y++)
-				{
-					DWORD dwPos=xiso+x+(yiso+y)*isosize;
-					
-					if(dwPos>isosize*isosize) continue;
-					
-					FIELDDATA* fd=mapdata.GetFielddataAt(dwPos);
-					
-					int r=GetRValue(col);
-					int g=GetGValue(col);
-					int b=GetBValue(col);
+      yiso = mapdata.GetIsoSize() - (y - x);
+      xiso = mapdata.GetIsoSize() - (x + y);
+      yiso -= mapdata.GetHeight();
 
-					if(g>r && g>b)
-					{
-						if(theater!=1)
-						{
-							fd->wGround=0;
-							fd->bSubTile=0;
-						}
-					}
-					if(b>g && b>r)
-					{
-						int p=rand()*4/RAND_MAX;
-						fd->wGround=water_start+p;
-						fd->bSubTile=0;
-					}
-					if(g>b+25 && r>b+25 && g>120 && r>120)
-					{
-						if(theater!=1)
-						{
-							fd->wGround=sand_start;
-							fd->bSubTile=0;
-						}
-					}
-					if(b<20 && r<20 && g>20)
-					{
-						if(g<140) // dark only
-						{
-							fd->wGround=green_start;
-							fd->bSubTile=0;
-						}
-						
-					}
+      for (x = -1; x < 2; x++) {
+        for (y = -1; y < 2; y++) {
+          DWORD dwPos = xiso + x + (yiso + y) * isosize;
 
-				}
-			}
-		}
-	}
+          if (dwPos > isosize * isosize) continue;
 
-	mapdata.CreateShore(0,0,isosize, isosize);
+          FIELDDATA* fd = mapdata.GetFielddataAt(dwPos);
 
-	for(i=0;i<isosize*isosize;i++)
-	{
-		mapdata.SmoothAllAt(i);
-	}
+          int r = GetRValue(col);
+          int g = GetGValue(col);
+          int b = GetBValue(col);
 
-	DeleteDC(hDC);
+          if (g > r && g > b) {
+            if (theater != 1) {
+              fd->wGround = 0;
+              fd->bSubTile = 0;
+            }
+          }
+          if (b > g && b > r) {
+            int p = rand() * 4 / RAND_MAX;
+            fd->wGround = water_start + p;
+            fd->bSubTile = 0;
+          }
+          if (g > b + 25 && r > b + 25 && g > 120 && r > 120) {
+            if (theater != 1) {
+              fd->wGround = sand_start;
+              fd->bSubTile = 0;
+            }
+          }
+          if (b < 20 && r < 20 && g > 20) {
+            if (g < 140)  // dark only
+            {
+              fd->wGround = green_start;
+              fd->bSubTile = 0;
+            }
+          }
+        }
+      }
+    }
+  }
 
-	if(hUsed!=hBitmap) DeleteObject(hUsed);
+  mapdata.CreateShore(0, 0, isosize, isosize);
 
-	return TRUE;
+  for (i = 0; i < isosize * isosize; i++) {
+    mapdata.SmoothAllAt(i);
+  }
+
+  DeleteDC(hDC);
+
+  if (hUsed != hBitmap) DeleteObject(hUsed);
+
+  return TRUE;
 }

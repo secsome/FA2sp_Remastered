@@ -19,57 +19,54 @@
 */
 
 #if !defined(AFX_AIRCRAFT_H__15BD6160_8953_11D3_B63B_A583BFBD8C41__INCLUDED_)
-#define AFX_AIRCRAFT_H__15BD6160_8953_11D3_B63B_A583BFBD8C41__INCLUDED_
+#  define AFX_AIRCRAFT_H__15BD6160_8953_11D3_B63B_A583BFBD8C41__INCLUDED_
 
-#if _MSC_VER > 1000
-#pragma once
-#endif // _MSC_VER > 1000
+#  if _MSC_VER > 1000
+#    pragma once
+#  endif  // _MSC_VER > 1000
 // Aircraft.h : Header-Datei
 //
 
+class CAircraft : public CDialog {
+  // construction
+ public:
+  void UpdateStrings();
+  CString m_strength;
+  void Init(CString house = "", CString strength = "256", CString direction = "64", CString action = "Guard",
+            CString tag = "None", CString flag1 = "0", CString flag2 = "0", CString flag3 = "0", CString flag4 = "0");
+  CAircraft(CWnd* pParent = NULL);  // standard constructor
 
-class CAircraft : public CDialog
-{
-// construction
-public:
-	void UpdateStrings();
-	CString m_strength;
-	void Init(CString house="", CString strength="256", CString direction="64", CString action="Guard", CString tag="None", CString flag1="0", CString flag2="0", CString flag3="0", CString flag4="0");
-	CAircraft(CWnd* pParent = NULL);   // standard constructor
+  // dialog field data
+  //{{AFX_DATA(CAircraft)
+  enum { IDD = IDD_AIRCRAFT };
+  CSliderCtrl m_strength_ctrl;
+  CString m_direction;
+  CString m_house;
+  CString m_flag1;
+  CString m_flag2;
+  CString m_flag3;
+  CString m_flag4;
+  CString m_action;
+  CString m_tag;
+  //}}AFX_DATA
 
-// dialog field data
-	//{{AFX_DATA(CAircraft)
-	enum { IDD = IDD_AIRCRAFT };
-	CSliderCtrl	m_strength_ctrl;
-	CString	m_direction;
-	CString	m_house;
-	CString	m_flag1;
-	CString	m_flag2;
-	CString	m_flag3;
-	CString	m_flag4;
-	CString	m_action;
-	CString	m_tag;
-	//}}AFX_DATA
+  // overwriteables
+  // generated from class assistant
+  //{{AFX_VIRTUAL(CAircraft)
+ protected:
+  virtual void DoDataExchange(CDataExchange* pDX);  // DDX/DDV support
+                                                    //}}AFX_VIRTUAL
 
-
-// overwriteables
-	// generated from class assistant
-	//{{AFX_VIRTUAL(CAircraft)
-	protected:
-	virtual void DoDataExchange(CDataExchange* pDX);    // DDX/DDV support
-	//}}AFX_VIRTUAL
-
-// implementation
-protected:
-
-	// generated message maps
-	//{{AFX_MSG(CAircraft)
-	virtual BOOL OnInitDialog();
-	virtual void OnOK();
-	//}}AFX_MSG
-	DECLARE_MESSAGE_MAP()
+  // implementation
+ protected:
+  // generated message maps
+  //{{AFX_MSG(CAircraft)
+  virtual BOOL OnInitDialog();
+  virtual void OnOK();
+  //}}AFX_MSG
+  DECLARE_MESSAGE_MAP()
 };
 
 //{{AFX_INSERT_LOCATION}}
 
-#endif // AFX_AIRCRAFT_H__15BD6160_8953_11D3_B63B_A583BFBD8C41__INCLUDED_
+#endif  // AFX_AIRCRAFT_H__15BD6160_8953_11D3_B63B_A583BFBD8C41__INCLUDED_

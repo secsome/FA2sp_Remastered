@@ -19,64 +19,61 @@
 */
 
 #if !defined(AFX_ALL1_H__B5D522E4_69CE_11D3_99E1_C138647F2A00__INCLUDED_)
-#define AFX_ALL1_H__B5D522E4_69CE_11D3_99E1_C138647F2A00__INCLUDED_
+#  define AFX_ALL1_H__B5D522E4_69CE_11D3_99E1_C138647F2A00__INCLUDED_
 
-#if _MSC_VER > 1000
-#pragma once
-#endif // _MSC_VER > 1000
+#  if _MSC_VER > 1000
+#    pragma once
+#  endif  // _MSC_VER > 1000
 // All1.h : Header-Datei
 //
 
 /////////////////////////////////////////////////////////////////////////////
-// Dialogfeld CAll 
+// Dialogfeld CAll
 
-class CAll : public CDialog
-{
-// Konstruktion
-public:
-	void UpdateDialog();
-	CAll(CWnd* pParent = NULL);   // Standardkonstruktor
+class CAll : public CDialog {
+  // Konstruktion
+ public:
+  void UpdateDialog();
+  CAll(CWnd* pParent = NULL);  // Standardkonstruktor
 
-// Dialogfelddaten
-	//{{AFX_DATA(CAll)
-	enum { IDD = IDD_ALL };
-	CEdit	m_Value;
-	CListBox	m_Keys;
-	CButton	m_IniSection;
-	CButton	m_DeleteSection;
-	CButton	m_DeleteKey;
-	CButton	m_AddSection;
-	CButton	m_AddKey;
-	CComboBox	m_Sections;
-	//}}AFX_DATA
+  // Dialogfelddaten
+  //{{AFX_DATA(CAll)
+  enum { IDD = IDD_ALL };
+  CEdit m_Value;
+  CListBox m_Keys;
+  CButton m_IniSection;
+  CButton m_DeleteSection;
+  CButton m_DeleteKey;
+  CButton m_AddSection;
+  CButton m_AddKey;
+  CComboBox m_Sections;
+  //}}AFX_DATA
 
+  // Überschreibungen
+  // Vom Klassen-Assistenten generierte virtuelle Funktionsüberschreibungen
+  //{{AFX_VIRTUAL(CAll)
+ protected:
+  virtual void DoDataExchange(CDataExchange* pDX);  // DDX/DDV-Unterstützung
+                                                    //}}AFX_VIRTUAL
 
-// Überschreibungen
-	// Vom Klassen-Assistenten generierte virtuelle Funktionsüberschreibungen
-	//{{AFX_VIRTUAL(CAll)
-	protected:
-	virtual void DoDataExchange(CDataExchange* pDX);    // DDX/DDV-Unterstützung
-	//}}AFX_VIRTUAL
-
-// Implementierung
-protected:
-
-	// Generierte Nachrichtenzuordnungsfunktionen
-	//{{AFX_MSG(CAll)
-	afx_msg void OnSelchangeSections();
-	afx_msg void OnChangeValue();
-	afx_msg void OnSelchangeKeys();
-	afx_msg void OnUpdateValue();
-	afx_msg void OnAddsection();
-	afx_msg void OnDeletesection();
-	afx_msg void OnDeletekey();
-	afx_msg void OnAddkey();
-	afx_msg void OnInisection();
-	//}}AFX_MSG
-	DECLARE_MESSAGE_MAP()
+  // Implementierung
+ protected:
+  // Generierte Nachrichtenzuordnungsfunktionen
+  //{{AFX_MSG(CAll)
+  afx_msg void OnSelchangeSections();
+  afx_msg void OnChangeValue();
+  afx_msg void OnSelchangeKeys();
+  afx_msg void OnUpdateValue();
+  afx_msg void OnAddsection();
+  afx_msg void OnDeletesection();
+  afx_msg void OnDeletekey();
+  afx_msg void OnAddkey();
+  afx_msg void OnInisection();
+  //}}AFX_MSG
+  DECLARE_MESSAGE_MAP()
 };
 
 //{{AFX_INSERT_LOCATION}}
 // Microsoft Visual C++ fügt unmittelbar vor der vorhergehenden Zeile zusätzliche Deklarationen ein.
 
-#endif // AFX_ALL1_H__B5D522E4_69CE_11D3_99E1_C138647F2A00__INCLUDED_
+#endif  // AFX_ALL1_H__B5D522E4_69CE_11D3_99E1_C138647F2A00__INCLUDED_

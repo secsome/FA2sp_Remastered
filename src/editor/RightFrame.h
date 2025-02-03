@@ -19,50 +19,49 @@
 */
 
 #if !defined(AFX_RIGHTFRAME_H__22553762_8405_11D4_9C87_EE62BC46B24A__INCLUDED_)
-#define AFX_RIGHTFRAME_H__22553762_8405_11D4_9C87_EE62BC46B24A__INCLUDED_
+#  define AFX_RIGHTFRAME_H__22553762_8405_11D4_9C87_EE62BC46B24A__INCLUDED_
 
-#if _MSC_VER > 1000
-#pragma once
-#endif // _MSC_VER > 1000
+#  if _MSC_VER > 1000
+#    pragma once
+#  endif  // _MSC_VER > 1000
 // RightFrame.h : Header-Datei
 //
 
 /////////////////////////////////////////////////////////////////////////////
-// Rahmen CRightFrame 
+// Rahmen CRightFrame
 
-class CRightFrame : public CFrameWnd
-{
-	DECLARE_DYNCREATE(CRightFrame)
-protected:
-	CRightFrame();           // Dynamische Erstellung verwendet geschützten Konstruktor
+class CRightFrame : public CFrameWnd {
+  DECLARE_DYNCREATE(CRightFrame)
+ protected:
+  CRightFrame();  // Dynamische Erstellung verwendet geschützten Konstruktor
 
-// Attribute
-public:
+  // Attribute
+ public:
+  // Operationen
+ public:
+  CSplitterWnd m_Splitter;
 
-// Operationen
-public:
-	CSplitterWnd m_Splitter;
+  // Überschreibungen
+  // Vom Klassen-Assistenten generierte virtuelle Funktionsüberschreibungen
+  //{{AFX_VIRTUAL(CRightFrame)
+ public:
+  virtual void RecalcLayout(BOOL bNotify = TRUE);
 
-// Überschreibungen
-	// Vom Klassen-Assistenten generierte virtuelle Funktionsüberschreibungen
-	//{{AFX_VIRTUAL(CRightFrame)
-	public:
-	virtual void RecalcLayout(BOOL bNotify = TRUE);
-	protected:
-	virtual BOOL OnCreateClient(LPCREATESTRUCT lpcs, CCreateContext* pContext);
-	virtual BOOL PreCreateWindow(CREATESTRUCT& cs);
-	//}}AFX_VIRTUAL
+ protected:
+  virtual BOOL OnCreateClient(LPCREATESTRUCT lpcs, CCreateContext* pContext);
+  virtual BOOL PreCreateWindow(CREATESTRUCT& cs);
+  //}}AFX_VIRTUAL
 
-// Implementierung
-protected:
-	virtual ~CRightFrame();
+  // Implementierung
+ protected:
+  virtual ~CRightFrame();
 
-	// Generierte Nachrichtenzuordnungsfunktionen
-	//{{AFX_MSG(CRightFrame)
-	afx_msg void OnSize(UINT nType, int cx, int cy);
-	afx_msg void OnChar(UINT nChar, UINT nRepCnt, UINT nFlags);
-	//}}AFX_MSG
-	DECLARE_MESSAGE_MAP()
+  // Generierte Nachrichtenzuordnungsfunktionen
+  //{{AFX_MSG(CRightFrame)
+  afx_msg void OnSize(UINT nType, int cx, int cy);
+  afx_msg void OnChar(UINT nChar, UINT nRepCnt, UINT nFlags);
+  //}}AFX_MSG
+  DECLARE_MESSAGE_MAP()
 };
 
 /////////////////////////////////////////////////////////////////////////////
@@ -70,4 +69,4 @@ protected:
 //{{AFX_INSERT_LOCATION}}
 // Microsoft Visual C++ fügt unmittelbar vor der vorhergehenden Zeile zusätzliche Deklarationen ein.
 
-#endif // AFX_RIGHTFRAME_H__22553762_8405_11D4_9C87_EE62BC46B24A__INCLUDED_
+#endif  // AFX_RIGHTFRAME_H__22553762_8405_11D4_9C87_EE62BC46B24A__INCLUDED_

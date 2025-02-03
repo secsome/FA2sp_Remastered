@@ -23,110 +23,103 @@
 //
 
 #if !defined(AFX_TIBERIANSUNMISSIONEDITOR_H__9F773422_63BB_11D3_99E0_C30F10710B17__INCLUDED_)
-#define AFX_TIBERIANSUNMISSIONEDITOR_H__9F773422_63BB_11D3_99E0_C30F10710B17__INCLUDED_
+#  define AFX_TIBERIANSUNMISSIONEDITOR_H__9F773422_63BB_11D3_99E0_C30F10710B17__INCLUDED_
 
-#if _MSC_VER > 1000
-#pragma once
-#endif // _MSC_VER > 1000
+#  if _MSC_VER > 1000
+#    pragma once
+#  endif  // _MSC_VER > 1000
 
-#ifndef __AFXWIN_H__
-	#error include 'stdafx.h' before including this file for PCH
-#endif
+#  ifndef __AFXWIN_H__
+#    error include 'stdafx.h' before including this file for PCH
+#  endif
 
-#include "resource.h"		// main symbols
-#include "ddeml.h"
-#include "loading.h"
+#  include "ddeml.h"
+#  include "loading.h"
+#  include "resource.h"  // main symbols
 
-struct OPTIONS{
-	CString TSExe;
-	CString LanguageName;
-	CString prev_maps[4];
-	bool bPreferLocalTheaterFiles = true;
-	BOOL bFlat;
-	BOOL bEasy;
-	BOOL bMarbleMadness;
-	BOOL bSupportMarbleMadness;
-	BOOL bShowCells;
-	BOOL bDoNotLoadBuildingGraphics;
-	BOOL bDoNotLoadInfantryGraphics;
-	BOOL bDoNotLoadAircraftGraphics;
-	BOOL bDoNotLoadTreeGraphics;
-	BOOL bDoNotLoadSnowGraphics;
-	BOOL bDoNotLoadTemperateGraphics;
-	BOOL bDoNotLoadVehicleGraphics;
-	BOOL bDoNotLoadBMPs;
-	BOOL bDoNotLoadOverlayGraphics;
-	BOOL bDisableAutoShore;
-	BOOL bDisableAutoLat;
-	BOOL bNoSounds;
-	BOOL bDisableSlopeCorrection;
-	float fMiniMapScale = 2.0f;
-	float fLoadScreenDelayInSeconds = 3.5f;
-	bool bShowStats = false;
-	bool bHighResUI = true;
-	bool bVSync = false;
-	std::vector<float> viewScaleSteps = { 0.75f, 0.5f, 0.25f };
-	bool viewScaleUseSteps = true;
-	float viewScaleSpeed = 15.0f;
-	bool useDefaultMouseCursor = false;
+struct OPTIONS {
+  CString TSExe;
+  CString LanguageName;
+  CString prev_maps[4];
+  bool bPreferLocalTheaterFiles = true;
+  BOOL bFlat;
+  BOOL bEasy;
+  BOOL bMarbleMadness;
+  BOOL bSupportMarbleMadness;
+  BOOL bShowCells;
+  BOOL bDoNotLoadBuildingGraphics;
+  BOOL bDoNotLoadInfantryGraphics;
+  BOOL bDoNotLoadAircraftGraphics;
+  BOOL bDoNotLoadTreeGraphics;
+  BOOL bDoNotLoadSnowGraphics;
+  BOOL bDoNotLoadTemperateGraphics;
+  BOOL bDoNotLoadVehicleGraphics;
+  BOOL bDoNotLoadBMPs;
+  BOOL bDoNotLoadOverlayGraphics;
+  BOOL bDisableAutoShore;
+  BOOL bDisableAutoLat;
+  BOOL bNoSounds;
+  BOOL bDisableSlopeCorrection;
+  float fMiniMapScale = 2.0f;
+  float fLoadScreenDelayInSeconds = 3.5f;
+  bool bShowStats = false;
+  bool bHighResUI = true;
+  bool bVSync = false;
+  std::vector<float> viewScaleSteps = {0.75f, 0.5f, 0.25f};
+  bool viewScaleUseSteps = true;
+  float viewScaleSpeed = 15.0f;
+  bool useDefaultMouseCursor = false;
 
-public:
-	BOOL bSearchLikeTS;
+ public:
+  BOOL bSearchLikeTS;
 };
-
 
 /////////////////////////////////////////////////////////////////////////////
 // CFinalSunApp:
 // Look at FinalSun.cpp for the implementation of this class
 //
 
-class CFinalSunApp : public CWinApp
-{
-public:
-	DWORD pidInst;
-	OPTIONS m_Options;
-	CLoading* m_loading;
-	CFinalSunApp();
+class CFinalSunApp : public CWinApp {
+ public:
+  DWORD pidInst;
+  OPTIONS m_Options;
+  CLoading* m_loading;
+  CFinalSunApp();
 
-	const std::string& getLogFileName() const
-	{
-		return m_u8LogFileName;
-	}
+  const std::string& getLogFileName() const { return m_u8LogFileName; }
 
-	
-// Überladungen
-	// Vom Klassenassistenten generierte Überladungen virtueller Funktionen
-	//{{AFX_VIRTUAL(CFinalSunApp)
-	public:
-	virtual BOOL InitInstance();
-	virtual int Run();
-	virtual BOOL ProcessMessageFilter(int code, LPMSG lpMsg);
-	virtual LRESULT ProcessWndProcException(CException* e, const MSG* pMsg);
-	virtual BOOL PreTranslateMessage(MSG* pMsg);
-	virtual BOOL OnCmdMsg(UINT nID, int nCode, void* pExtra, AFX_CMDHANDLERINFO* pHandlerInfo);
-	virtual BOOL OnIdle(LONG lCount);
-	//}}AFX_VIRTUAL
+  // Überladungen
+  // Vom Klassenassistenten generierte Überladungen virtueller Funktionen
+  //{{AFX_VIRTUAL(CFinalSunApp)
+ public:
+  virtual BOOL InitInstance();
+  virtual int Run();
+  virtual BOOL ProcessMessageFilter(int code, LPMSG lpMsg);
+  virtual LRESULT ProcessWndProcException(CException* e, const MSG* pMsg);
+  virtual BOOL PreTranslateMessage(MSG* pMsg);
+  virtual BOOL OnCmdMsg(UINT nID, int nCode, void* pExtra, AFX_CMDHANDLERINFO* pHandlerInfo);
+  virtual BOOL OnIdle(LONG lCount);
+  //}}AFX_VIRTUAL
 
-// Implementierung
+  // Implementierung
 
-	//{{AFX_MSG(CFinalSunApp)
-	//}}AFX_MSG
-	DECLARE_MESSAGE_MAP()
-	public:
-	UINT m_cf;
-	HACCEL m_hAccel;
-	void ParseCommandLine();
-	void ShowTipAtStartup(void);
-	void ShowTipOfTheDay(void);
+  //{{AFX_MSG(CFinalSunApp)
+  //}}AFX_MSG
+  DECLARE_MESSAGE_MAP()
+ public:
+  UINT m_cf;
+  HACCEL m_hAccel;
+  void ParseCommandLine();
+  void ShowTipAtStartup(void);
+  void ShowTipOfTheDay(void);
 
-private:
-	std::string m_u8LogFileName;
+ private:
+  std::string m_u8LogFileName;
 };
-
 
 /////////////////////////////////////////////////////////////////////////////
 
 //{{AFX_INSERT_LOCATION}}
 // Microsoft Visual C++ fügt unmittelbar vor der vorhergehenden Zeile zusätzliche Deklarationen ein.
 
-#endif // !defined(AFX_TIBERIANSUNMISSIONEDITOR_H__9F773422_63BB_11D3_99E0_C30F10710B17__INCLUDED_)
+#endif  // !defined(AFX_TIBERIANSUNMISSIONEDITOR_H__9F773422_63BB_11D3_99E0_C30F10710B17__INCLUDED_)

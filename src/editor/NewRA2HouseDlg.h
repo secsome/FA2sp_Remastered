@@ -19,48 +19,45 @@
 */
 
 #if !defined(AFX_NEWRA2HOUSEDLG_H__142D23E1_ADDC_11D4_9C87_A435A7B6044F__INCLUDED_)
-#define AFX_NEWRA2HOUSEDLG_H__142D23E1_ADDC_11D4_9C87_A435A7B6044F__INCLUDED_
+#  define AFX_NEWRA2HOUSEDLG_H__142D23E1_ADDC_11D4_9C87_A435A7B6044F__INCLUDED_
 
-#if _MSC_VER > 1000
-#pragma once
-#endif // _MSC_VER > 1000
+#  if _MSC_VER > 1000
+#    pragma once
+#  endif  // _MSC_VER > 1000
 // NewRA2HouseDlg.h : Header-Datei
 //
 
 /////////////////////////////////////////////////////////////////////////////
-// Dialogfeld CNewRA2HouseDlg 
+// Dialogfeld CNewRA2HouseDlg
 
-class CNewRA2HouseDlg : public CDialog
-{
-// Konstruktion
-public:
-	CNewRA2HouseDlg(CWnd* pParent = NULL);   // Standardkonstruktor
+class CNewRA2HouseDlg : public CDialog {
+  // Konstruktion
+ public:
+  CNewRA2HouseDlg(CWnd* pParent = NULL);  // Standardkonstruktor
 
-// Dialogfelddaten
-	//{{AFX_DATA(CNewRA2HouseDlg)
-	enum { IDD = IDD_NEWRA2HOUSE };
-	CString	m_Country;
-	//}}AFX_DATA
+  // Dialogfelddaten
+  //{{AFX_DATA(CNewRA2HouseDlg)
+  enum { IDD = IDD_NEWRA2HOUSE };
+  CString m_Country;
+  //}}AFX_DATA
 
+  // Überschreibungen
+  // Vom Klassen-Assistenten generierte virtuelle Funktionsüberschreibungen
+  //{{AFX_VIRTUAL(CNewRA2HouseDlg)
+ protected:
+  virtual void DoDataExchange(CDataExchange* pDX);  // DDX/DDV-Unterstützung
+                                                    //}}AFX_VIRTUAL
 
-// Überschreibungen
-	// Vom Klassen-Assistenten generierte virtuelle Funktionsüberschreibungen
-	//{{AFX_VIRTUAL(CNewRA2HouseDlg)
-	protected:
-	virtual void DoDataExchange(CDataExchange* pDX);    // DDX/DDV-Unterstützung
-	//}}AFX_VIRTUAL
-
-// Implementierung
-protected:
-
-	// Generierte Nachrichtenzuordnungsfunktionen
-	//{{AFX_MSG(CNewRA2HouseDlg)
-	virtual BOOL OnInitDialog();
-	//}}AFX_MSG
-	DECLARE_MESSAGE_MAP()
+  // Implementierung
+ protected:
+  // Generierte Nachrichtenzuordnungsfunktionen
+  //{{AFX_MSG(CNewRA2HouseDlg)
+  virtual BOOL OnInitDialog();
+  //}}AFX_MSG
+  DECLARE_MESSAGE_MAP()
 };
 
 //{{AFX_INSERT_LOCATION}}
 // Microsoft Visual C++ fügt unmittelbar vor der vorhergehenden Zeile zusätzliche Deklarationen ein.
 
-#endif // AFX_NEWRA2HOUSEDLG_H__142D23E1_ADDC_11D4_9C87_A435A7B6044F__INCLUDED_
+#endif  // AFX_NEWRA2HOUSEDLG_H__142D23E1_ADDC_11D4_9C87_A435A7B6044F__INCLUDED_

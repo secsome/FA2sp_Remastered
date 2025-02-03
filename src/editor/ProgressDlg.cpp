@@ -21,91 +21,77 @@
 // ProgressDlg.cpp: Implementierungsdatei
 //
 
-#include "stdafx.h"
-#include "finalsun.h"
 #include "ProgressDlg.h"
+#include "finalsun.h"
+#include "stdafx.h"
 
 #ifdef _DEBUG
-#define new DEBUG_NEW
-#undef THIS_FILE
+#  define new DEBUG_NEW
+#  undef THIS_FILE
 static char THIS_FILE[] = __FILE__;
 #endif
 
 /////////////////////////////////////////////////////////////////////////////
-// Dialogfeld CProgressDlg 
+// Dialogfeld CProgressDlg
 
+CProgressDlg::CProgressDlg(CString lpDescription, CWnd* pParent /*=NULL*/) : CDialog(CProgressDlg::IDD, pParent) {
+  //{{AFX_DATA_INIT(CProgressDlg)
+  m_Label = lpDescription;
+  m_ProgLabel = _T("");
+  //}}AFX_DATA_INIT
 
-CProgressDlg::CProgressDlg(CString lpDescription, CWnd* pParent /*=NULL*/)
-	: CDialog(CProgressDlg::IDD, pParent)
-{
-	//{{AFX_DATA_INIT(CProgressDlg)
-	m_Label = lpDescription;
-	m_ProgLabel = _T("");
-	//}}AFX_DATA_INIT
+  m_bCancel = FALSE;
 
-	m_bCancel=FALSE;
-
-	Create(CProgressDlg::IDD, pParent);
+  Create(CProgressDlg::IDD, pParent);
 }
 
-
-void CProgressDlg::DoDataExchange(CDataExchange* pDX)
-{
-	CDialog::DoDataExchange(pDX);
-	//{{AFX_DATA_MAP(CProgressDlg)
-	DDX_Control(pDX, IDC_PROGRESS, m_Progress);
-	DDX_Text(pDX, IDC_LABEL, m_Label);
-	DDX_Text(pDX, IDC_PROGLABEL, m_ProgLabel);
-	//}}AFX_DATA_MAP
+void CProgressDlg::DoDataExchange(CDataExchange* pDX) {
+  CDialog::DoDataExchange(pDX);
+  //{{AFX_DATA_MAP(CProgressDlg)
+  DDX_Control(pDX, IDC_PROGRESS, m_Progress);
+  DDX_Text(pDX, IDC_LABEL, m_Label);
+  DDX_Text(pDX, IDC_PROGLABEL, m_ProgLabel);
+  //}}AFX_DATA_MAP
 }
-
 
 BEGIN_MESSAGE_MAP(CProgressDlg, CDialog)
-	//{{AFX_MSG_MAP(CProgressDlg)
-	//}}AFX_MSG_MAP
+//{{AFX_MSG_MAP(CProgressDlg)
+//}}AFX_MSG_MAP
 END_MESSAGE_MAP()
 
 /////////////////////////////////////////////////////////////////////////////
-// Behandlungsroutinen für Nachrichten CProgressDlg 
+// Behandlungsroutinen für Nachrichten CProgressDlg
 
-void CProgressDlg::SetRange(int min, int max)
-{
-	m_Progress.SetRange32(min, max);
+void CProgressDlg::SetRange(int min, int max) { m_Progress.SetRange32(min, max); }
+
+void CProgressDlg::SetPosition(int nPos) {
+  m_Progress.SetPos(nPos);
+  m_Progress.UpdateWindow();
+  m_ProgLabel = "Progress: ";
+
+  float p = m_Progress.GetPos();
+  int min, max;
+  m_Progress.GetRange(min, max);
+
+  if (max - min == 0) return;
+
+  float f = p / ((float)(max - min));
+  char c[50];
+  itoa(f * 100, c, 10);
+  m_ProgLabel += c;
+  m_ProgLabel += " %";
+
+  UpdateData(FALSE);
 }
 
-void CProgressDlg::SetPosition(int nPos)
-{
-	m_Progress.SetPos(nPos);
-	m_Progress.UpdateWindow();
-	m_ProgLabel="Progress: ";
-	
-	
+void CProgressDlg::PostNcDestroy() {
+  delete this;
 
-	float p=m_Progress.GetPos();
-	int min,max;
-	m_Progress.GetRange(min,max);
-	
-	if(max-min==0) return;
-
-	float f=p/((float)(max-min));
-	char c[50];
-	itoa(f*100, c, 10);
-	m_ProgLabel+=c;
-	m_ProgLabel+=" %";
-
-	UpdateData(FALSE);
+  // CDialog::PostNcDestroy();
 }
 
-void CProgressDlg::PostNcDestroy() 
-{
-	delete this;
-	
-	//CDialog::PostNcDestroy();
-}
+void CProgressDlg::OnCancel() {
+  m_bCancel = TRUE;
 
-void CProgressDlg::OnCancel() 
-{
-	m_bCancel=TRUE;
-	
-	CDialog::OnCancel();
+  CDialog::OnCancel();
 }

@@ -19,54 +19,51 @@
 */
 
 #if !defined(AFX_IMPORTINI_H__9DC7B324_6DF2_11D3_99E1_D14A1D4DCF07__INCLUDED_)
-#define AFX_IMPORTINI_H__9DC7B324_6DF2_11D3_99E1_D14A1D4DCF07__INCLUDED_
+#  define AFX_IMPORTINI_H__9DC7B324_6DF2_11D3_99E1_D14A1D4DCF07__INCLUDED_
 
-#if _MSC_VER > 1000
-#pragma once
-#endif // _MSC_VER > 1000
+#  if _MSC_VER > 1000
+#    pragma once
+#  endif  // _MSC_VER > 1000
 // ImportINI.h : Header-Datei
 //
 
 /////////////////////////////////////////////////////////////////////////////
-// Dialogfeld CImportINI 
+// Dialogfeld CImportINI
 
-class CImportINI : public CDialog
-{
-// Konstruktion
-public:
-	CString m_FileName;
-	CImportINI(CWnd* pParent = NULL);   // Standardkonstruktor
+class CImportINI : public CDialog {
+  // Konstruktion
+ public:
+  CString m_FileName;
+  CImportINI(CWnd* pParent = NULL);  // Standardkonstruktor
 
-// Dialogfelddaten
-	//{{AFX_DATA(CImportINI)
-	enum { IDD = IDD_IMPORTINI };
-	CListBox	m_Available;
-	//}}AFX_DATA
+  // Dialogfelddaten
+  //{{AFX_DATA(CImportINI)
+  enum { IDD = IDD_IMPORTINI };
+  CListBox m_Available;
+  //}}AFX_DATA
 
+  // Überschreibungen
+  // Vom Klassen-Assistenten generierte virtuelle Funktionsüberschreibungen
+  //{{AFX_VIRTUAL(CImportINI)
+ protected:
+  virtual void DoDataExchange(CDataExchange* pDX);  // DDX/DDV-Unterstützung
+                                                    //}}AFX_VIRTUAL
 
-// Überschreibungen
-	// Vom Klassen-Assistenten generierte virtuelle Funktionsüberschreibungen
-	//{{AFX_VIRTUAL(CImportINI)
-	protected:
-	virtual void DoDataExchange(CDataExchange* pDX);    // DDX/DDV-Unterstützung
-	//}}AFX_VIRTUAL
-
-// Implementierung
-protected:
-
-	// Generierte Nachrichtenzuordnungsfunktionen
-	//{{AFX_MSG(CImportINI)
-	afx_msg void OnAllsections();
-	afx_msg void OnSpecifysections();
-	virtual BOOL OnInitDialog();
-	virtual void OnOK();
-	//}}AFX_MSG
-	DECLARE_MESSAGE_MAP()
-private:
-	WORD m_inicount;
+  // Implementierung
+ protected:
+  // Generierte Nachrichtenzuordnungsfunktionen
+  //{{AFX_MSG(CImportINI)
+  afx_msg void OnAllsections();
+  afx_msg void OnSpecifysections();
+  virtual BOOL OnInitDialog();
+  virtual void OnOK();
+  //}}AFX_MSG
+  DECLARE_MESSAGE_MAP()
+ private:
+  WORD m_inicount;
 };
 
 //{{AFX_INSERT_LOCATION}}
 // Microsoft Visual C++ fügt unmittelbar vor der vorhergehenden Zeile zusätzliche Deklarationen ein.
 
-#endif // AFX_IMPORTINI_H__9DC7B324_6DF2_11D3_99E1_D14A1D4DCF07__INCLUDED_
+#endif  // AFX_IMPORTINI_H__9DC7B324_6DF2_11D3_99E1_D14A1D4DCF07__INCLUDED_

@@ -21,51 +21,43 @@
 // ShutDownDlg.cpp: Implementierungsdatei
 //
 
-#include "stdafx.h"
-#include "finalsun.h"
 #include "ShutDownDlg.h"
+#include "finalsun.h"
+#include "stdafx.h"
 
 #ifdef _DEBUG
-#define new DEBUG_NEW
-#undef THIS_FILE
+#  define new DEBUG_NEW
+#  undef THIS_FILE
 static char THIS_FILE[] = __FILE__;
 #endif
 
 /////////////////////////////////////////////////////////////////////////////
-// Dialogfeld CShutDownDlg 
+// Dialogfeld CShutDownDlg
 
+CShutDownDlg::CShutDownDlg(CWnd* pParent /*=NULL*/) : CDialog(CShutDownDlg::IDD, pParent) {
+  //{{AFX_DATA_INIT(CShutDownDlg)
+  // HINWEIS: Der Klassen-Assistent fügt hier Elementinitialisierung ein
+  //}}AFX_DATA_INIT
 
-CShutDownDlg::CShutDownDlg(CWnd* pParent /*=NULL*/)
-	: CDialog(CShutDownDlg::IDD, pParent)
-{
-	//{{AFX_DATA_INIT(CShutDownDlg)
-		// HINWEIS: Der Klassen-Assistent fügt hier Elementinitialisierung ein
-	//}}AFX_DATA_INIT
-
-	Create(CShutDownDlg::IDD, pParent);
+  Create(CShutDownDlg::IDD, pParent);
 }
 
-
-void CShutDownDlg::DoDataExchange(CDataExchange* pDX)
-{
-	CDialog::DoDataExchange(pDX);
-	//{{AFX_DATA_MAP(CShutDownDlg)
-		// HINWEIS: Der Klassen-Assistent fügt hier DDX- und DDV-Aufrufe ein
-	//}}AFX_DATA_MAP
+void CShutDownDlg::DoDataExchange(CDataExchange* pDX) {
+  CDialog::DoDataExchange(pDX);
+  //{{AFX_DATA_MAP(CShutDownDlg)
+  // HINWEIS: Der Klassen-Assistent fügt hier DDX- und DDV-Aufrufe ein
+  //}}AFX_DATA_MAP
 }
-
 
 BEGIN_MESSAGE_MAP(CShutDownDlg, CDialog)
-	//{{AFX_MSG_MAP(CShutDownDlg)
-		// HINWEIS: Der Klassen-Assistent fügt hier Zuordnungsmakros für Nachrichten ein
-	//}}AFX_MSG_MAP
+//{{AFX_MSG_MAP(CShutDownDlg)
+// HINWEIS: Der Klassen-Assistent fügt hier Zuordnungsmakros für Nachrichten ein
+//}}AFX_MSG_MAP
 END_MESSAGE_MAP()
 
 /////////////////////////////////////////////////////////////////////////////
-// Behandlungsroutinen für Nachrichten CShutDownDlg 
+// Behandlungsroutinen für Nachrichten CShutDownDlg
 
-
-void CShutDownDlg::PostNcDestroy() 
-{
-	// delete this;	
+void CShutDownDlg::PostNcDestroy() {
+  // delete this;
 }

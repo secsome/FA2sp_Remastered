@@ -19,57 +19,54 @@
 */
 
 #if !defined(AFX_GLOBALSDLG_H__A8AAF461_9DE3_11D4_9C87_A7C4798A5242__INCLUDED_)
-#define AFX_GLOBALSDLG_H__A8AAF461_9DE3_11D4_9C87_A7C4798A5242__INCLUDED_
+#  define AFX_GLOBALSDLG_H__A8AAF461_9DE3_11D4_9C87_A7C4798A5242__INCLUDED_
 
-#if _MSC_VER > 1000
-#pragma once
-#endif // _MSC_VER > 1000
+#  if _MSC_VER > 1000
+#    pragma once
+#  endif  // _MSC_VER > 1000
 // GlobalsDlg.h : Header-Datei
 //
 
 /////////////////////////////////////////////////////////////////////////////
-// Dialogfeld CGlobalsDlg 
+// Dialogfeld CGlobalsDlg
 
-class CGlobalsDlg : public CDialog
-{
-// Konstruktion
-public:
-	void UpdateDialog();
-	CGlobalsDlg(CWnd* pParent = NULL);   // Standardkonstruktor
+class CGlobalsDlg : public CDialog {
+  // Konstruktion
+ public:
+  void UpdateDialog();
+  CGlobalsDlg(CWnd* pParent = NULL);  // Standardkonstruktor
 
-// Dialogfelddaten
-	//{{AFX_DATA(CGlobalsDlg)
-	enum { IDD = IDD_GLOBALS };
-	CMyComboBox	m_Value;
-	CComboBox	m_Global;
-	CString	m_Description;
-	//}}AFX_DATA
+  // Dialogfelddaten
+  //{{AFX_DATA(CGlobalsDlg)
+  enum { IDD = IDD_GLOBALS };
+  CMyComboBox m_Value;
+  CComboBox m_Global;
+  CString m_Description;
+  //}}AFX_DATA
 
+  // Überschreibungen
+  // Vom Klassen-Assistenten generierte virtuelle Funktionsüberschreibungen
+  //{{AFX_VIRTUAL(CGlobalsDlg)
+ protected:
+  virtual void DoDataExchange(CDataExchange* pDX);  // DDX/DDV-Unterstützung
+                                                    //}}AFX_VIRTUAL
 
-// Überschreibungen
-	// Vom Klassen-Assistenten generierte virtuelle Funktionsüberschreibungen
-	//{{AFX_VIRTUAL(CGlobalsDlg)
-	protected:
-	virtual void DoDataExchange(CDataExchange* pDX);    // DDX/DDV-Unterstützung
-	//}}AFX_VIRTUAL
-
-// Implementierung
-protected:
-
-	// Generierte Nachrichtenzuordnungsfunktionen
-	//{{AFX_MSG(CGlobalsDlg)
-	virtual void OnOK();
-	virtual void OnCancel();
-	afx_msg void OnChangeDescription();
-	afx_msg void OnSelchangeGlobal();
-	virtual BOOL OnInitDialog();
-	afx_msg void OnSelchangeValue();
-	afx_msg void OnEditchangeValue();
-	//}}AFX_MSG
-	DECLARE_MESSAGE_MAP()
+  // Implementierung
+ protected:
+  // Generierte Nachrichtenzuordnungsfunktionen
+  //{{AFX_MSG(CGlobalsDlg)
+  virtual void OnOK();
+  virtual void OnCancel();
+  afx_msg void OnChangeDescription();
+  afx_msg void OnSelchangeGlobal();
+  virtual BOOL OnInitDialog();
+  afx_msg void OnSelchangeValue();
+  afx_msg void OnEditchangeValue();
+  //}}AFX_MSG
+  DECLARE_MESSAGE_MAP()
 };
 
 //{{AFX_INSERT_LOCATION}}
 // Microsoft Visual C++ fügt unmittelbar vor der vorhergehenden Zeile zusätzliche Deklarationen ein.
 
-#endif // AFX_GLOBALSDLG_H__A8AAF461_9DE3_11D4_9C87_A7C4798A5242__INCLUDED_
+#endif  // AFX_GLOBALSDLG_H__A8AAF461_9DE3_11D4_9C87_A7C4798A5242__INCLUDED_

@@ -19,58 +19,55 @@
 */
 
 #if !defined(AFX_MMXSAVINGOPTIONSDLG_H__1A62AFE1_E8CA_11D4_9C88_444553540000__INCLUDED_)
-#define AFX_MMXSAVINGOPTIONSDLG_H__1A62AFE1_E8CA_11D4_9C88_444553540000__INCLUDED_
+#  define AFX_MMXSAVINGOPTIONSDLG_H__1A62AFE1_E8CA_11D4_9C88_444553540000__INCLUDED_
 
-#if _MSC_VER > 1000
-#pragma once
-#endif // _MSC_VER > 1000
+#  if _MSC_VER > 1000
+#    pragma once
+#  endif  // _MSC_VER > 1000
 // MMXSavingOptionsDlg.h : Header-Datei
 //
 
 /////////////////////////////////////////////////////////////////////////////
-// Dialogfeld CMMXSavingOptionsDlg 
+// Dialogfeld CMMXSavingOptionsDlg
 
-class CMMXSavingOptionsDlg : public CDialog
-{
-// Konstruktion
-public:
-	CMMXSavingOptionsDlg(CWnd* pParent = NULL);   // Standardkonstruktor
+class CMMXSavingOptionsDlg : public CDialog {
+  // Konstruktion
+ public:
+  CMMXSavingOptionsDlg(CWnd* pParent = NULL);  // Standardkonstruktor
 
-// Dialogfelddaten
-	//{{AFX_DATA(CMMXSavingOptionsDlg)
-	enum { IDD = IDD_MMXOPTIONS };
-	CString	m_Description;
-	BOOL	m_AirWar;
-	BOOL	m_Cooperative;
-	BOOL	m_Duel;
-	int		m_Maxplayers;
-	BOOL	m_Meatgrind;
-	BOOL	m_MegaWealth;
-	int		m_MinPlayers;
-	BOOL	m_NavalWar;
-	BOOL	m_NukeWar;
-	BOOL	m_Standard;
-	//}}AFX_DATA
+  // Dialogfelddaten
+  //{{AFX_DATA(CMMXSavingOptionsDlg)
+  enum { IDD = IDD_MMXOPTIONS };
+  CString m_Description;
+  BOOL m_AirWar;
+  BOOL m_Cooperative;
+  BOOL m_Duel;
+  int m_Maxplayers;
+  BOOL m_Meatgrind;
+  BOOL m_MegaWealth;
+  int m_MinPlayers;
+  BOOL m_NavalWar;
+  BOOL m_NukeWar;
+  BOOL m_Standard;
+  //}}AFX_DATA
 
+  // Überschreibungen
+  // Vom Klassen-Assistenten generierte virtuelle Funktionsüberschreibungen
+  //{{AFX_VIRTUAL(CMMXSavingOptionsDlg)
+ protected:
+  virtual void DoDataExchange(CDataExchange* pDX);  // DDX/DDV-Unterstützung
+                                                    //}}AFX_VIRTUAL
 
-// Überschreibungen
-	// Vom Klassen-Assistenten generierte virtuelle Funktionsüberschreibungen
-	//{{AFX_VIRTUAL(CMMXSavingOptionsDlg)
-	protected:
-	virtual void DoDataExchange(CDataExchange* pDX);    // DDX/DDV-Unterstützung
-	//}}AFX_VIRTUAL
-
-// Implementierung
-protected:
-
-	// Generierte Nachrichtenzuordnungsfunktionen
-	//{{AFX_MSG(CMMXSavingOptionsDlg)
-		// HINWEIS: Der Klassen-Assistent fügt hier Member-Funktionen ein
-	//}}AFX_MSG
-	DECLARE_MESSAGE_MAP()
+  // Implementierung
+ protected:
+  // Generierte Nachrichtenzuordnungsfunktionen
+  //{{AFX_MSG(CMMXSavingOptionsDlg)
+  // HINWEIS: Der Klassen-Assistent fügt hier Member-Funktionen ein
+  //}}AFX_MSG
+  DECLARE_MESSAGE_MAP()
 };
 
 //{{AFX_INSERT_LOCATION}}
 // Microsoft Visual C++ fügt unmittelbar vor der vorhergehenden Zeile zusätzliche Deklarationen ein.
 
-#endif // AFX_MMXSAVINGOPTIONSDLG_H__1A62AFE1_E8CA_11D4_9C88_444553540000__INCLUDED_
+#endif  // AFX_MMXSAVINGOPTIONSDLG_H__1A62AFE1_E8CA_11D4_9C88_444553540000__INCLUDED_

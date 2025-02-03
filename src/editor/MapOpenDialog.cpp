@@ -21,68 +21,58 @@
 // MapOpenDialog.cpp: Implementierungsdatei
 //
 
-#include "stdafx.h"
-#include "FinalSun.h"
 #include "MapOpenDialog.h"
+#include "FinalSun.h"
 #include "inlines.h"
+#include "stdafx.h"
 
 #ifdef _DEBUG
-#define new DEBUG_NEW
-#undef THIS_FILE
+#  define new DEBUG_NEW
+#  undef THIS_FILE
 static char THIS_FILE[] = __FILE__;
 #endif
 
 /////////////////////////////////////////////////////////////////////////////
 // CMapOpenDialog
 
-UINT_PTR CALLBACK OFNHookProc(
-  HWND hdlg,      // handle to child dialog window
-  UINT uiMsg,     // message identifier
-  WPARAM wParam,  // message parameter
-  LPARAM lParam   // message parameter
-)
-{
-	if(uiMsg==WM_NOTIFY)
-	{
-		OFNOTIFY ofn;
-		ofn=*((OFNOTIFY*)lParam);
-		if(ofn.hdr.code==CDN_SELCHANGE)
-		{
-			// user selected another file
-			wchar_t psz[MAX_PATH] = { 0 }; // filename
-			CommDlg_OpenSave_GetFilePathW(GetParent(hdlg), psz, MAX_PATH);
-			
-			// lets parse the file. Only load Basic section
-			CIniFile CurMap;
-			CurMap.InsertFile(utf16ToUtf8(psz),"Basic");
+UINT_PTR CALLBACK OFNHookProc(HWND hdlg,      // handle to child dialog window
+                              UINT uiMsg,     // message identifier
+                              WPARAM wParam,  // message parameter
+                              LPARAM lParam   // message parameter
+) {
+  if (uiMsg == WM_NOTIFY) {
+    OFNOTIFY ofn;
+    ofn = *((OFNOTIFY*)lParam);
+    if (ofn.hdr.code == CDN_SELCHANGE) {
+      // user selected another file
+      wchar_t psz[MAX_PATH] = {0};  // filename
+      CommDlg_OpenSave_GetFilePathW(GetParent(hdlg), psz, MAX_PATH);
 
-			SetDlgItemText(hdlg, IDC_MAPNAME, CurMap.sections["Basic"].values["Name"]);
-			
-			
-		}
-		else if (ofn.hdr.code==CDN_FOLDERCHANGE)
-			RedrawWindow(GetParent(hdlg),NULL,NULL,RDW_INVALIDATE | RDW_UPDATENOW | RDW_ERASE );
-	}
+      // lets parse the file. Only load Basic section
+      CIniFile CurMap;
+      CurMap.InsertFile(utf16ToUtf8(psz), "Basic");
 
-	return 0;
+      SetDlgItemText(hdlg, IDC_MAPNAME, CurMap.sections["Basic"].values["Name"]);
+
+    } else if (ofn.hdr.code == CDN_FOLDERCHANGE)
+      RedrawWindow(GetParent(hdlg), NULL, NULL, RDW_INVALIDATE | RDW_UPDATENOW | RDW_ERASE);
+  }
+
+  return 0;
 }
-
 
 IMPLEMENT_DYNAMIC(CMapOpenDialog, CFileDialog)
 
-CMapOpenDialog::CMapOpenDialog(BOOL bOpenFileDialog, LPCTSTR lpszDefExt, LPCTSTR lpszFileName,
-		DWORD dwFlags, LPCTSTR lpszFilter, CWnd* pParentWnd) :
-		CFileDialog(bOpenFileDialog, lpszDefExt, lpszFileName, dwFlags, lpszFilter, pParentWnd)
-{
-	m_ofn.Flags|=OFN_EXPLORER | OFN_ENABLETEMPLATE | OFN_ENABLEHOOK;
-	m_ofn.lpTemplateName=MAKEINTRESOURCE(IDD_MYOPENDIALOG);
-	m_ofn.lpfnHook=OFNHookProc;
+CMapOpenDialog::CMapOpenDialog(BOOL bOpenFileDialog, LPCTSTR lpszDefExt, LPCTSTR lpszFileName, DWORD dwFlags,
+                               LPCTSTR lpszFilter, CWnd* pParentWnd)
+    : CFileDialog(bOpenFileDialog, lpszDefExt, lpszFileName, dwFlags, lpszFilter, pParentWnd) {
+  m_ofn.Flags |= OFN_EXPLORER | OFN_ENABLETEMPLATE | OFN_ENABLEHOOK;
+  m_ofn.lpTemplateName = MAKEINTRESOURCE(IDD_MYOPENDIALOG);
+  m_ofn.lpfnHook = OFNHookProc;
 }
 
-
 BEGIN_MESSAGE_MAP(CMapOpenDialog, CFileDialog)
-	//{{AFX_MSG_MAP(CMapOpenDialog)
-		// HINWEIS - Der Klassen-Assistent fügt hier Zuordnungsmakros ein und entfernt diese.
-	//}}AFX_MSG_MAP
+//{{AFX_MSG_MAP(CMapOpenDialog)
+// HINWEIS - Der Klassen-Assistent fügt hier Zuordnungsmakros ein und entfernt diese.
+//}}AFX_MSG_MAP
 END_MESSAGE_MAP()
-

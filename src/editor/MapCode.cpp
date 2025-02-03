@@ -18,135 +18,115 @@
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-// This code determines the cell values for 
+// This code determines the cell values for
 // StartX, StartY, Width & Height for the [Header] section
 
-#include "stdafx.h"
 #include "MapCode.h"
-#include "mapdata.h"
 #include "defines.h"
+#include "mapdata.h"
+#include "stdafx.h"
 
+int calcXPos(int x, int y) {
+  int x1 = x * 256 + 128;
 
+  int y1 = y * 256 + 128;
 
+  int x2 = (x1 - y1) * 30;
 
-int calcXPos(int x, int y)
-{
-	int x1=x*256+128;
-	
-	int y1 = y*256 + 128;
+  int y2 = (x1 + y1) * 15;
 
-	int x2 = (x1 - y1) * 30;
+  int x3 = (x2 / 256 + 512 * 30) / 60;
 
-	int y2 = (x1 + y1) * 15;
+  int y3 = (y2 / 256) / 30;
 
-	int x3 = (x2/256 + 512*30) / 60;
-
-	int y3 = (y2/256) / 30;
-
-	return x3;
+  return x3;
 }
 
-int calcYPos(int x, int y)
-{
-	int x1=x*256+128;
-	
-	int y1 = y*256 + 128;
+int calcYPos(int x, int y) {
+  int x1 = x * 256 + 128;
 
-	int x2 = (x1 - y1) * 30;
+  int y1 = y * 256 + 128;
 
-	int y2 = (x1 + y1) * 15;
+  int x2 = (x1 - y1) * 30;
 
-	int x3 = (x2/256 + 512*30) / 60;
+  int y2 = (x1 + y1) * 15;
 
-	int y3 = (y2/256) / 30;
+  int x3 = (x2 / 256 + 512 * 30) / 60;
 
-	return y3;
+  int y3 = (y2 / 256) / 30;
+
+  return y3;
 }
 
-struct MRECT
-{
-	int X;
-	int Y;
-	int Width;
-	int Height;
-};	
-	
+struct MRECT {
+  int X;
+  int Y;
+  int Width;
+  int Height;
+};
 
-void MC_GetHeaderRect(int& startx, int& starty, int& width, int& height)
-{
-	int leastx=10000;
-	int leasty=10000;
-	int mostx=0;
-	int mosty=0;
+void MC_GetHeaderRect(int& startx, int& starty, int& width, int& height) {
+  int leastx = 10000;
+  int leasty = 10000;
+  int mostx = 0;
+  int mosty = 0;
 
-	MRECT LocalRect, PlayRect;
+  MRECT LocalRect, PlayRect;
 
-	RECT r;
-	Map->GetLocalSize(&r);
-	LocalRect.X=r.left;
-	LocalRect.Y=r.top;
-	LocalRect.Width=r.right;
-	LocalRect.Height=r.bottom;
+  RECT r;
+  Map->GetLocalSize(&r);
+  LocalRect.X = r.left;
+  LocalRect.Y = r.top;
+  LocalRect.Width = r.right;
+  LocalRect.Height = r.bottom;
 
-	CIniFile& ini=Map->GetIniFile();
-	PlayRect.X=0;
-	PlayRect.Y=0;
-	PlayRect.Width=Map->GetWidth();
-	PlayRect.Height=Map->GetHeight();
+  CIniFile& ini = Map->GetIniFile();
+  PlayRect.X = 0;
+  PlayRect.Y = 0;
+  PlayRect.Width = Map->GetWidth();
+  PlayRect.Height = Map->GetHeight();
 
-	char c[50];
-	char d[50];
-	itoa(LocalRect.Width, c, 10);
-	
-	int x,y;
-	int max=Map->GetIsoSize();
-	for(x=0;x<max;x++)
-	{
-		for(y=0;y<max;y++)
-		{
-			int height=0;
+  char c[50];
+  char d[50];
+  itoa(LocalRect.Width, c, 10);
 
-			 if (TRUE) {		  
+  int x, y;
+  int max = Map->GetIsoSize();
+  for (x = 0; x < max; x++) {
+    for (y = 0; y < max; y++) {
+      int height = 0;
 
-			  height = Map->GetHeightAt(y+x*max); // remember: x/y switched here, WS coordinate system
- 
-			  // fudge ramps at the top of the map so that they end up considered not in the local rect
-			  //if (cell->ramp && x + y < PlayRect.Width + 2*LocalRect.Y + 4 + height) {
-			   //height++;
-			  //}
-			 }
+      if (TRUE) {
+        height = Map->GetHeightAt(y + x * max);  // remember: x/y switched here, WS coordinate system
 
+        // fudge ramps at the top of the map so that they end up considered not in the local rect
+        // if (cell->ramp && x + y < PlayRect.Width + 2*LocalRect.Y + 4 + height) {
+        // height++;
+        //}
+      }
 
-			if ((x + y > PlayRect.Width + 2*LocalRect.Y + height) &&
-			(x + y <= PlayRect.Width + 2*(LocalRect.Y + LocalRect.Height + 1) + height) &&
-			(x - y < 2*(LocalRect.X + LocalRect.Width) - PlayRect.Width) &&
-			(y - x < PlayRect.Width - 2*LocalRect.X))
-			//if ((x + y > PlayRect.Width) && (x - y < PlayRect.Width) && (y - x < PlayRect.Width) && (x + y <= PlayRect.Width + 2 * PlayRect.Height)) 
-			 {
-				int rx=calcXPos(x,y);
-				int ry=calcYPos(x,y);
+      if ((x + y > PlayRect.Width + 2 * LocalRect.Y + height) &&
+          (x + y <= PlayRect.Width + 2 * (LocalRect.Y + LocalRect.Height + 1) + height) &&
+          (x - y < 2 * (LocalRect.X + LocalRect.Width) - PlayRect.Width) && (y - x < PlayRect.Width - 2 * LocalRect.X))
+      // if ((x + y > PlayRect.Width) && (x - y < PlayRect.Width) && (y - x < PlayRect.Width) && (x + y <=
+      // PlayRect.Width + 2 * PlayRect.Height))
+      {
+        int rx = calcXPos(x, y);
+        int ry = calcYPos(x, y);
 
-				if (rx < leastx)
-					leastx = rx;
- 
-				   if (rx > mostx)
-					mostx = rx;
- 
-				   if (ry < leasty)
-					leasty = ry;
- 
-				   if (ry > mosty)
-					mosty = ry;
-			}
+        if (rx < leastx) leastx = rx;
 
-		}
-	}
+        if (rx > mostx) mostx = rx;
 
-	startx=leastx;
-	starty=leasty;
-	width=mostx-leastx;
-	height=mosty-leasty;
+        if (ry < leasty) leasty = ry;
+
+        if (ry > mosty) mosty = ry;
+      }
+    }
+  }
+
+  startx = leastx;
+  starty = leasty;
+  width = mostx - leastx;
+  height = mosty - leasty;
 }
-
-
- 

@@ -20,66 +20,65 @@
 
 #pragma once
 
-#include "MapTool.h"
 #include <vector>
+#include "MapTool.h"
 class CTube;
 
-class AddTubeTool: public MapTool
-{
-public:
-    AddTubeTool(CMapData& map, CIsoView& view, bool bidirectional);
-    virtual ~AddTubeTool() = default;
+class AddTubeTool : public MapTool {
+ public:
+  AddTubeTool(CMapData& map, CIsoView& view, bool bidirectional);
+  virtual ~AddTubeTool() = default;
 
-    void finish();
+  void finish();
 
-    virtual bool onRButtonUp(const ProjectedCoords& projCoords, const MapCoords& mapCoords3d, MapToolMouseFlags flags);
-    virtual void onLButtonDblClick(const ProjectedCoords& projCoords, const MapCoords& mapCoords3d, MapToolMouseFlags flags);
-    virtual void onLButtonUp(const ProjectedCoords& projCoords, const MapCoords& mapCoords3d, MapToolMouseFlags flags);
-    virtual void onMouseMove(const ProjectedCoords& projCoords, const MapCoords& mapCoords3d, MapToolMouseFlags flags);
-    virtual void render();
+  virtual bool onRButtonUp(const ProjectedCoords& projCoords, const MapCoords& mapCoords3d, MapToolMouseFlags flags);
+  virtual void onLButtonDblClick(const ProjectedCoords& projCoords, const MapCoords& mapCoords3d,
+                                 MapToolMouseFlags flags);
+  virtual void onLButtonUp(const ProjectedCoords& projCoords, const MapCoords& mapCoords3d, MapToolMouseFlags flags);
+  virtual void onMouseMove(const ProjectedCoords& projCoords, const MapCoords& mapCoords3d, MapToolMouseFlags flags);
+  virtual void render();
 
-protected:
-    AddTubeTool& operator=(const AddTubeTool& other) = delete;
+ protected:
+  AddTubeTool& operator=(const AddTubeTool& other) = delete;
 
-    virtual std::unique_ptr<CTube> getTubeToModify(const MapCoords& mapCoords3d, const ProjectedCoords& projCoords, MapToolMouseFlags flags) const;
-    virtual std::unique_ptr<CTube> createNewTube(const MapCoords& mapCoords3d) const;
+  virtual std::unique_ptr<CTube> getTubeToModify(const MapCoords& mapCoords3d, const ProjectedCoords& projCoords,
+                                                 MapToolMouseFlags flags) const;
+  virtual std::unique_ptr<CTube> createNewTube(const MapCoords& mapCoords3d) const;
 
-private:
-    std::unique_ptr<CTube> m_tube;
-    std::unique_ptr<CTube> m_mm_tube;
-    std::unique_ptr<CTube> m_hover_tube;
-    std::vector<std::unique_ptr<CTube>> m_modified_tubes;
-    bool m_bidirectional;
+ private:
+  std::unique_ptr<CTube> m_tube;
+  std::unique_ptr<CTube> m_mm_tube;
+  std::unique_ptr<CTube> m_hover_tube;
+  std::vector<std::unique_ptr<CTube>> m_modified_tubes;
+  bool m_bidirectional;
 };
 
-class ModifyTubeTool : public AddTubeTool
-{
-public:
-    ModifyTubeTool(CMapData& map, CIsoView& view, bool bidirectional);
-    virtual ~ModifyTubeTool() = default;
+class ModifyTubeTool : public AddTubeTool {
+ public:
+  ModifyTubeTool(CMapData& map, CIsoView& view, bool bidirectional);
+  virtual ~ModifyTubeTool() = default;
 
-protected:
-    ModifyTubeTool& operator=(const AddTubeTool& other) = delete;
+ protected:
+  ModifyTubeTool& operator=(const AddTubeTool& other) = delete;
 
-    virtual std::unique_ptr<CTube> getTubeToModify(const MapCoords& mapCoords3d, const ProjectedCoords& projCoords, MapToolMouseFlags flags) const;
-    virtual std::unique_ptr<CTube> createNewTube(const MapCoords& mapCoords3d) const;
+  virtual std::unique_ptr<CTube> getTubeToModify(const MapCoords& mapCoords3d, const ProjectedCoords& projCoords,
+                                                 MapToolMouseFlags flags) const;
+  virtual std::unique_ptr<CTube> createNewTube(const MapCoords& mapCoords3d) const;
 
-private:
+ private:
 };
 
-class RemoveTubeTool : public MapTool
-{
-public:
-    RemoveTubeTool(CMapData& map, CIsoView& view);
-    virtual ~RemoveTubeTool() = default;
+class RemoveTubeTool : public MapTool {
+ public:
+  RemoveTubeTool(CMapData& map, CIsoView& view);
+  virtual ~RemoveTubeTool() = default;
 
-    virtual void onMouseMove(const ProjectedCoords& projCoords, const MapCoords& mapCoords3d, MapToolMouseFlags flags);
-    virtual void render();
+  virtual void onMouseMove(const ProjectedCoords& projCoords, const MapCoords& mapCoords3d, MapToolMouseFlags flags);
+  virtual void render();
 
-protected:
-    RemoveTubeTool& operator=(const RemoveTubeTool& other) = delete;
+ protected:
+  RemoveTubeTool& operator=(const RemoveTubeTool& other) = delete;
 
-private:
-    std::vector<std::unique_ptr<CTube>> m_hover_tubes;
+ private:
+  std::vector<std::unique_ptr<CTube>> m_hover_tubes;
 };
-

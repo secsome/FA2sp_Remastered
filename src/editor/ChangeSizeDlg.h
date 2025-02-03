@@ -19,52 +19,49 @@
 */
 
 #if !defined(AFX_CHANGESIZEDLG_H__60391D80_1E15_11D5_89B2_444553540000__INCLUDED_)
-#define AFX_CHANGESIZEDLG_H__60391D80_1E15_11D5_89B2_444553540000__INCLUDED_
+#  define AFX_CHANGESIZEDLG_H__60391D80_1E15_11D5_89B2_444553540000__INCLUDED_
 
-#if _MSC_VER > 1000
-#pragma once
-#endif // _MSC_VER > 1000
+#  if _MSC_VER > 1000
+#    pragma once
+#  endif  // _MSC_VER > 1000
 // ChangeSizeDlg.h : Header-Datei
 //
 
 /////////////////////////////////////////////////////////////////////////////
-// Dialogfeld CChangeSizeDlg 
+// Dialogfeld CChangeSizeDlg
 
-class CChangeSizeDlg : public CDialog
-{
-// Konstruktion
-public:
-	CChangeSizeDlg(CWnd* pParent = NULL);   // Standardkonstruktor
+class CChangeSizeDlg : public CDialog {
+  // Konstruktion
+ public:
+  CChangeSizeDlg(CWnd* pParent = NULL);  // Standardkonstruktor
 
-// Dialogfelddaten
-	//{{AFX_DATA(CChangeSizeDlg)
-	enum { IDD = IDD_CHANGESIZE };
-	int		m_Left;
-	int		m_Height;
-	int		m_Top;
-	int		m_Width;
-	//}}AFX_DATA
+  // Dialogfelddaten
+  //{{AFX_DATA(CChangeSizeDlg)
+  enum { IDD = IDD_CHANGESIZE };
+  int m_Left;
+  int m_Height;
+  int m_Top;
+  int m_Width;
+  //}}AFX_DATA
 
+  // Überschreibungen
+  // Vom Klassen-Assistenten generierte virtuelle Funktionsüberschreibungen
+  //{{AFX_VIRTUAL(CChangeSizeDlg)
+ protected:
+  virtual void DoDataExchange(CDataExchange* pDX);  // DDX/DDV-Unterstützung
+                                                    //}}AFX_VIRTUAL
 
-// Überschreibungen
-	// Vom Klassen-Assistenten generierte virtuelle Funktionsüberschreibungen
-	//{{AFX_VIRTUAL(CChangeSizeDlg)
-	protected:
-	virtual void DoDataExchange(CDataExchange* pDX);    // DDX/DDV-Unterstützung
-	//}}AFX_VIRTUAL
-
-// Implementierung
-protected:
-
-	// Generierte Nachrichtenzuordnungsfunktionen
-	//{{AFX_MSG(CChangeSizeDlg)
-	afx_msg void OnChangeWidth();
-	afx_msg void OnChangeHeight();
-	//}}AFX_MSG
-	DECLARE_MESSAGE_MAP()
+  // Implementierung
+ protected:
+  // Generierte Nachrichtenzuordnungsfunktionen
+  //{{AFX_MSG(CChangeSizeDlg)
+  afx_msg void OnChangeWidth();
+  afx_msg void OnChangeHeight();
+  //}}AFX_MSG
+  DECLARE_MESSAGE_MAP()
 };
 
 //{{AFX_INSERT_LOCATION}}
 // Microsoft Visual C++ fügt unmittelbar vor der vorhergehenden Zeile zusätzliche Deklarationen ein.
 
-#endif // AFX_CHANGESIZEDLG_H__60391D80_1E15_11D5_89B2_444553540000__INCLUDED_
+#endif  // AFX_CHANGESIZEDLG_H__60391D80_1E15_11D5_89B2_444553540000__INCLUDED_

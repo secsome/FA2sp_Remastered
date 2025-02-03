@@ -19,45 +19,42 @@
 */
 
 #if !defined(AFX_FLOATEDIT_H__D0F98066_6E8E_11D3_99E1_D18E6230AA05__INCLUDED_)
-#define AFX_FLOATEDIT_H__D0F98066_6E8E_11D3_99E1_D18E6230AA05__INCLUDED_
+#  define AFX_FLOATEDIT_H__D0F98066_6E8E_11D3_99E1_D18E6230AA05__INCLUDED_
 
-#if _MSC_VER > 1000
-#pragma once
-#endif // _MSC_VER > 1000
+#  if _MSC_VER > 1000
+#    pragma once
+#  endif  // _MSC_VER > 1000
 // FloatEdit.h : Header-Datei
 //
 
 /////////////////////////////////////////////////////////////////////////////
-// Fenster CFloatEdit 
+// Fenster CFloatEdit
 
-class CFloatEdit : public CEdit
-{
-// Konstruktion
-public:
-	CFloatEdit();
+class CFloatEdit : public CEdit {
+  // Konstruktion
+ public:
+  CFloatEdit();
 
-// Attribute
-public:
+  // Attribute
+ public:
+  // Operationen
+ public:
+  // Überschreibungen
+  // Vom Klassen-Assistenten generierte virtuelle Funktionsüberschreibungen
+  //{{AFX_VIRTUAL(CFloatEdit)
+  //}}AFX_VIRTUAL
 
-// Operationen
-public:
+  // Implementierung
+ public:
+  virtual ~CFloatEdit();
 
-// Überschreibungen
-	// Vom Klassen-Assistenten generierte virtuelle Funktionsüberschreibungen
-	//{{AFX_VIRTUAL(CFloatEdit)
-	//}}AFX_VIRTUAL
+  // Generierte Nachrichtenzuordnungsfunktionen
+ protected:
+  //{{AFX_MSG(CFloatEdit)
+  afx_msg void OnKillfocus();
+  //}}AFX_MSG
 
-// Implementierung
-public:
-	virtual ~CFloatEdit();
-
-	// Generierte Nachrichtenzuordnungsfunktionen
-protected:
-	//{{AFX_MSG(CFloatEdit)
-	afx_msg void OnKillfocus();
-	//}}AFX_MSG
-
-	DECLARE_MESSAGE_MAP()
+  DECLARE_MESSAGE_MAP()
 };
 
 /////////////////////////////////////////////////////////////////////////////
@@ -65,4 +62,4 @@ protected:
 //{{AFX_INSERT_LOCATION}}
 // Microsoft Visual C++ fügt unmittelbar vor der vorhergehenden Zeile zusätzliche Deklarationen ein.
 
-#endif // AFX_FLOATEDIT_H__D0F98066_6E8E_11D3_99E1_D18E6230AA05__INCLUDED_
+#endif  // AFX_FLOATEDIT_H__D0F98066_6E8E_11D3_99E1_D18E6230AA05__INCLUDED_

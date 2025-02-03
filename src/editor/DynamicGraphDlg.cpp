@@ -18,50 +18,43 @@
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-#include "stdafx.h"
-#include "finalsun.h"
 #include "DynamicGraphDlg.h"
+#include "finalsun.h"
+#include "stdafx.h"
 
 #ifdef _DEBUG
-#define new DEBUG_NEW
-#undef THIS_FILE
+#  define new DEBUG_NEW
+#  undef THIS_FILE
 static char THIS_FILE[] = __FILE__;
 #endif
 
 /////////////////////////////////////////////////////////////////////////////
-// Dialogfeld CDynamicGraphDlg 
+// Dialogfeld CDynamicGraphDlg
 
+CDynamicGraphDlg::CDynamicGraphDlg(CWnd* pParent /*=NULL*/) : CDialog(CDynamicGraphDlg::IDD, pParent) {
+  //{{AFX_DATA_INIT(CDynamicGraphDlg)
+  // HINWEIS: Der Klassen-Assistent fügt hier Elementinitialisierung ein
+  //}}AFX_DATA_INIT
 
-CDynamicGraphDlg::CDynamicGraphDlg(CWnd* pParent /*=NULL*/)
-	: CDialog(CDynamicGraphDlg::IDD, pParent)
-{
-	//{{AFX_DATA_INIT(CDynamicGraphDlg)
-		// HINWEIS: Der Klassen-Assistent fügt hier Elementinitialisierung ein
-	//}}AFX_DATA_INIT
-
-	Create(CDynamicGraphDlg::IDD, pParent);
+  Create(CDynamicGraphDlg::IDD, pParent);
 }
 
-
-void CDynamicGraphDlg::DoDataExchange(CDataExchange* pDX)
-{
-	CDialog::DoDataExchange(pDX);
-	//{{AFX_DATA_MAP(CDynamicGraphDlg)
-	DDX_Control(pDX, IDC_PROGRESS, m_Progress);
-	//}}AFX_DATA_MAP
+void CDynamicGraphDlg::DoDataExchange(CDataExchange* pDX) {
+  CDialog::DoDataExchange(pDX);
+  //{{AFX_DATA_MAP(CDynamicGraphDlg)
+  DDX_Control(pDX, IDC_PROGRESS, m_Progress);
+  //}}AFX_DATA_MAP
 }
-
 
 BEGIN_MESSAGE_MAP(CDynamicGraphDlg, CDialog)
-	//{{AFX_MSG_MAP(CDynamicGraphDlg)
-		// HINWEIS: Der Klassen-Assistent fügt hier Zuordnungsmakros für Nachrichten ein
-	//}}AFX_MSG_MAP
+//{{AFX_MSG_MAP(CDynamicGraphDlg)
+// HINWEIS: Der Klassen-Assistent fügt hier Zuordnungsmakros für Nachrichten ein
+//}}AFX_MSG_MAP
 END_MESSAGE_MAP()
 
 /////////////////////////////////////////////////////////////////////////////
-// Behandlungsroutinen für Nachrichten CDynamicGraphDlg 
+// Behandlungsroutinen für Nachrichten CDynamicGraphDlg
 
-void CDynamicGraphDlg::PostNcDestroy() 
-{
-	// delete this;	
+void CDynamicGraphDlg::PostNcDestroy() {
+  // delete this;
 }

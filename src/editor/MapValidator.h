@@ -19,55 +19,52 @@
 */
 
 #if !defined(AFX_MAPVALIDATOR_H__B290D180_F761_11D3_B63B_00485453E8BA__INCLUDED_)
-#define AFX_MAPVALIDATOR_H__B290D180_F761_11D3_B63B_00485453E8BA__INCLUDED_
+#  define AFX_MAPVALIDATOR_H__B290D180_F761_11D3_B63B_00485453E8BA__INCLUDED_
 
-#if _MSC_VER > 1000
-#pragma once
-#endif // _MSC_VER > 1000
+#  if _MSC_VER > 1000
+#    pragma once
+#  endif  // _MSC_VER > 1000
 // MapValidator.h : Header file
 //
 
-#include "resource.h"
+#  include "resource.h"
 
 /////////////////////////////////////////////////////////////////////////////
-// dialog field CMapValidator 
+// dialog field CMapValidator
 
-class CMapValidator : public CDialog
-{
-// construction
-public:
-	CMapValidator(CWnd* pParent = NULL);   // standard constructor
+class CMapValidator : public CDialog {
+  // construction
+ public:
+  CMapValidator(CWnd* pParent = NULL);  // standard constructor
 
-// dialog field data
-	//{{AFX_DATA(CMapValidator)
-	enum { IDD = IDD_MAPVALIDATOR };
-	
-	//}}AFX_DATA
+  // dialog field data
+  //{{AFX_DATA(CMapValidator)
+  enum { IDD = IDD_MAPVALIDATOR };
 
+  //}}AFX_DATA
 
-// overwriteables
-	//{{AFX_VIRTUAL(CMapValidator)
-	protected:
-	virtual void DoDataExchange(CDataExchange* pDX);    // DDX/DDV support
-	//}}AFX_VIRTUAL
+  // overwriteables
+  //{{AFX_VIRTUAL(CMapValidator)
+ protected:
+  virtual void DoDataExchange(CDataExchange* pDX);  // DDX/DDV support
+                                                    //}}AFX_VIRTUAL
 
-// implementation
-protected:
-
-	// generated message maps
-	//{{AFX_MSG(CMapValidator)
-	virtual BOOL OnInitDialog();
-	//}}AFX_MSG
-	DECLARE_MESSAGE_MAP()
-private:
-	CImageList m_ProblemImages;
-	CListCtrl m_MapProblemList;
-	void UpdateStrings();
-	BOOL CheckMap();
+  // implementation
+ protected:
+  // generated message maps
+  //{{AFX_MSG(CMapValidator)
+  virtual BOOL OnInitDialog();
+  //}}AFX_MSG
+  DECLARE_MESSAGE_MAP()
+ private:
+  CImageList m_ProblemImages;
+  CListCtrl m_MapProblemList;
+  void UpdateStrings();
+  BOOL CheckMap();
 };
 
 //{{AFX_INSERT_LOCATION}}
 
-#endif // AFX_MAPVALIDATOR_H__B290D180_F761_11D3_B63B_00485453E8BA__INCLUDED_
+#endif  // AFX_MAPVALIDATOR_H__B290D180_F761_11D3_B63B_00485453E8BA__INCLUDED_
 
 CString TranslateTubeString(const char* error_, const CTube& tube, int count);

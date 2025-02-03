@@ -21,55 +21,46 @@
 // Info.cpp: Implementierungsdatei
 //
 
-#include "stdafx.h"
-#include "FinalSun.h"
 #include "Info.h"
+#include "FinalSun.h"
+#include "stdafx.h"
 
 #ifdef _DEBUG
-#define new DEBUG_NEW
-#undef THIS_FILE
+#  define new DEBUG_NEW
+#  undef THIS_FILE
 static char THIS_FILE[] = __FILE__;
 #endif
 
 /////////////////////////////////////////////////////////////////////////////
-// Dialogfeld CInfo 
+// Dialogfeld CInfo
 
-
-CInfo::CInfo(CWnd* pParent /*=NULL*/)
-	: CDialog(CInfo::IDD, pParent)
-{
-	//{{AFX_DATA_INIT(CInfo)
-		// HINWEIS: Der Klassen-Assistent fügt hier Elementinitialisierung ein
-	//}}AFX_DATA_INIT
+CInfo::CInfo(CWnd* pParent /*=NULL*/) : CDialog(CInfo::IDD, pParent) {
+  //{{AFX_DATA_INIT(CInfo)
+  // HINWEIS: Der Klassen-Assistent fügt hier Elementinitialisierung ein
+  //}}AFX_DATA_INIT
 }
 
-
-void CInfo::DoDataExchange(CDataExchange* pDX)
-{
-	CDialog::DoDataExchange(pDX);
-	//{{AFX_DATA_MAP(CInfo)
-		// HINWEIS: Der Klassen-Assistent fügt hier DDX- und DDV-Aufrufe ein
-	//}}AFX_DATA_MAP
+void CInfo::DoDataExchange(CDataExchange* pDX) {
+  CDialog::DoDataExchange(pDX);
+  //{{AFX_DATA_MAP(CInfo)
+  // HINWEIS: Der Klassen-Assistent fügt hier DDX- und DDV-Aufrufe ein
+  //}}AFX_DATA_MAP
 }
-
 
 BEGIN_MESSAGE_MAP(CInfo, CDialog)
-	//{{AFX_MSG_MAP(CInfo)
-		// HINWEIS: Der Klassen-Assistent fügt hier Zuordnungsmakros für Nachrichten ein
-	//}}AFX_MSG_MAP
+//{{AFX_MSG_MAP(CInfo)
+// HINWEIS: Der Klassen-Assistent fügt hier Zuordnungsmakros für Nachrichten ein
+//}}AFX_MSG_MAP
 //	ON_EN_CHANGE(IDC_EDIT1, &CInfo::OnEnChangeEdit1)
 END_MESSAGE_MAP()
 
 /////////////////////////////////////////////////////////////////////////////
-// Behandlungsroutinen für Nachrichten CInfo 
+// Behandlungsroutinen für Nachrichten CInfo
 
+BOOL CInfo::OnInitDialog() {
+  CDialog::OnInitDialog();
 
-
-BOOL CInfo::OnInitDialog()
-{
-	CDialog::OnInitDialog();
-
-	CStringA license = R"(FinalAlert 2: Yuri's Revenge Mission Editor
+  CStringA license = R"(FinalAlert 2: Yuri's Revenge Mission Editor
 Copyright (C) 1999-2024 Electronic Arts, Inc.
 Authored by Matthias Wagner
 
@@ -86,8 +77,8 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.)";
 
-	license.Replace("\n", "\r\n");
-	GetDlgItem(IDC_LICENSE_AND_COPYRIGHT)->SetWindowTextA(license);
+  license.Replace("\n", "\r\n");
+  GetDlgItem(IDC_LICENSE_AND_COPYRIGHT)->SetWindowTextA(license);
 
-	return TRUE;
+  return TRUE;
 }

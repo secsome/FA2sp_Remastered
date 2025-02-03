@@ -19,63 +19,60 @@
 */
 
 #if !defined(AFX_VIEWOBJECTS_H__360F4320_9B82_11D3_B63B_EC44EDA1D441__INCLUDED_)
-#define AFX_VIEWOBJECTS_H__360F4320_9B82_11D3_B63B_EC44EDA1D441__INCLUDED_
+#  define AFX_VIEWOBJECTS_H__360F4320_9B82_11D3_B63B_EC44EDA1D441__INCLUDED_
 
-#if _MSC_VER > 1000
-#pragma once
-#endif // _MSC_VER > 1000
+#  if _MSC_VER > 1000
+#    pragma once
+#  endif  // _MSC_VER > 1000
 // ViewObjects.h : Header-Datei
 //
-#include <afxcview.h>
-
-
+#  include <afxcview.h>
 
 /////////////////////////////////////////////////////////////////////////////
-// Ansicht CViewObjects 
+// Ansicht CViewObjects
 
-class CViewObjects : public CTreeView
-{
-protected:
-	CViewObjects();           // Dynamische Erstellung verwendet geschützten Konstruktor
-	DECLARE_DYNCREATE(CViewObjects)
+class CViewObjects : public CTreeView {
+ protected:
+  CViewObjects();  // Dynamische Erstellung verwendet geschützten Konstruktor
+  DECLARE_DYNCREATE(CViewObjects)
 
-// Attribute
-public:
+  // Attribute
+ public:
+  // Operationen
+ public:
+  CTreeCtrl* tree;
+  BOOL m_ready;
+  void UpdateDialog();
 
-// Operationen
-public:
-	CTreeCtrl* tree;
-	BOOL m_ready;
-	void UpdateDialog();
+  // Überschreibungen
+  // Vom Klassen-Assistenten generierte virtuelle Funktionsüberschreibungen
+  //{{AFX_VIRTUAL(CViewObjects)
+ public:
+  virtual void OnInitialUpdate();
 
-// Überschreibungen
-	// Vom Klassen-Assistenten generierte virtuelle Funktionsüberschreibungen
-	//{{AFX_VIRTUAL(CViewObjects)
-	public:
-	virtual void OnInitialUpdate();
-	protected:
-	virtual void OnDraw(CDC* pDC);      // Überschrieben zum Zeichnen dieser Ansicht
-	//}}AFX_VIRTUAL
+ protected:
+  virtual void OnDraw(CDC* pDC);  // Überschrieben zum Zeichnen dieser Ansicht
+                                  //}}AFX_VIRTUAL
 
-// Implementierung
-protected:
-	virtual ~CViewObjects();
-#ifdef _DEBUG
-	virtual void AssertValid() const;
-	virtual void Dump(CDumpContext& dc) const;
-#endif
+  // Implementierung
+ protected:
+  virtual ~CViewObjects();
+#  ifdef _DEBUG
+  virtual void AssertValid() const;
+  virtual void Dump(CDumpContext& dc) const;
+#  endif
 
-	// Generierte Nachrichtenzuordnungsfunktionen
-protected:
-	//{{AFX_MSG(CViewObjects)
-	afx_msg void OnSelchanged(NMHDR* pNMHDR, LRESULT* pResult);
-	afx_msg int OnCreate(LPCREATESTRUCT lpCreateStruct);
-	afx_msg void OnKeydown(NMHDR* pNMHDR, LRESULT* pResult);
-	afx_msg void OnKeyDown(UINT nChar, UINT nRepCnt, UINT nFlags);
-	//}}AFX_MSG
-	DECLARE_MESSAGE_MAP()
-private:
-	void HandleBrushSize(int iTile);
+  // Generierte Nachrichtenzuordnungsfunktionen
+ protected:
+  //{{AFX_MSG(CViewObjects)
+  afx_msg void OnSelchanged(NMHDR* pNMHDR, LRESULT* pResult);
+  afx_msg int OnCreate(LPCREATESTRUCT lpCreateStruct);
+  afx_msg void OnKeydown(NMHDR* pNMHDR, LRESULT* pResult);
+  afx_msg void OnKeyDown(UINT nChar, UINT nRepCnt, UINT nFlags);
+  //}}AFX_MSG
+  DECLARE_MESSAGE_MAP()
+ private:
+  void HandleBrushSize(int iTile);
 };
 
 /////////////////////////////////////////////////////////////////////////////
@@ -83,4 +80,4 @@ private:
 //{{AFX_INSERT_LOCATION}}
 // Microsoft Visual C++ fügt unmittelbar vor der vorhergehenden Zeile zusätzliche Deklarationen ein.
 
-#endif // AFX_VIEWOBJECTS_H__360F4320_9B82_11D3_B63B_EC44EDA1D441__INCLUDED_
+#endif  // AFX_VIEWOBJECTS_H__360F4320_9B82_11D3_B63B_EC44EDA1D441__INCLUDED_

@@ -21,294 +21,257 @@
 // RTPDlg.cpp: Implementierungsdatei
 //
 
-#include "stdafx.h"
-#include "finalsun.h"
 #include "RTPDlg.h"
-#include "variables.h"
+#include "finalsun.h"
 #include "functions.h"
+#include "stdafx.h"
+#include "variables.h"
 
 #ifdef _DEBUG
-#define new DEBUG_NEW
-#undef THIS_FILE
+#  define new DEBUG_NEW
+#  undef THIS_FILE
 static char THIS_FILE[] = __FILE__;
 #endif
 
 /////////////////////////////////////////////////////////////////////////////
-// Dialogfeld CRTPDlg 
+// Dialogfeld CRTPDlg
 
-
-CRTPDlg::CRTPDlg(CWnd* pParent /*=NULL*/)
-	: CDialog(CRTPDlg::IDD, pParent)
-{
-	//{{AFX_DATA_INIT(CRTPDlg)
-		// HINWEIS: Der Klassen-Assistent fügt hier Elementinitialisierung ein
-	//}}AFX_DATA_INIT
+CRTPDlg::CRTPDlg(CWnd* pParent /*=NULL*/) : CDialog(CRTPDlg::IDD, pParent) {
+  //{{AFX_DATA_INIT(CRTPDlg)
+  // HINWEIS: Der Klassen-Assistent fügt hier Elementinitialisierung ein
+  //}}AFX_DATA_INIT
 }
 
-
-void CRTPDlg::DoDataExchange(CDataExchange* pDX)
-{
-	CDialog::DoDataExchange(pDX);
-	//{{AFX_DATA_MAP(CRTPDlg)
-	DDX_Control(pDX, IDC_PREVIEW, m_Preview);
-	DDX_Control(pDX, IDC_USED, m_Used);
-	DDX_Control(pDX, IDC_AVAIL, m_Available);
-	//}}AFX_DATA_MAP
+void CRTPDlg::DoDataExchange(CDataExchange* pDX) {
+  CDialog::DoDataExchange(pDX);
+  //{{AFX_DATA_MAP(CRTPDlg)
+  DDX_Control(pDX, IDC_PREVIEW, m_Preview);
+  DDX_Control(pDX, IDC_USED, m_Used);
+  DDX_Control(pDX, IDC_AVAIL, m_Available);
+  //}}AFX_DATA_MAP
 }
-
 
 BEGIN_MESSAGE_MAP(CRTPDlg, CDialog)
-	//{{AFX_MSG_MAP(CRTPDlg)
-	ON_BN_CLICKED(IDC_ADD, OnAdd)
-	ON_BN_CLICKED(IDC_REMOVE, OnRemove)
-	ON_LBN_SELCHANGE(IDC_AVAIL, OnSelchangeAvail)
-	ON_LBN_DBLCLK(IDC_AVAIL, OnDblclkAvail)
-	ON_LBN_SELCHANGE(IDC_USED, OnSelchangeUsed)
-	ON_LBN_DBLCLK(IDC_USED, OnDblclkUsed)
-	ON_WM_PAINT()
-	//}}AFX_MSG_MAP
+//{{AFX_MSG_MAP(CRTPDlg)
+ON_BN_CLICKED(IDC_ADD, OnAdd)
+ON_BN_CLICKED(IDC_REMOVE, OnRemove)
+ON_LBN_SELCHANGE(IDC_AVAIL, OnSelchangeAvail)
+ON_LBN_DBLCLK(IDC_AVAIL, OnDblclkAvail)
+ON_LBN_SELCHANGE(IDC_USED, OnSelchangeUsed)
+ON_LBN_DBLCLK(IDC_USED, OnDblclkUsed)
+ON_WM_PAINT()
+//}}AFX_MSG_MAP
 END_MESSAGE_MAP()
 
 /////////////////////////////////////////////////////////////////////////////
-// Behandlungsroutinen für Nachrichten CRTPDlg 
+// Behandlungsroutinen für Nachrichten CRTPDlg
 
-BOOL CRTPDlg::OnInitDialog() 
-{
-	CDialog::OnInitDialog();
+BOOL CRTPDlg::OnInitDialog() {
+  CDialog::OnInitDialog();
 
-	int i;
-	for(i=0;i<rules.sections["TerrainTypes"].values.size();i++)
-	{
-		CString unitname=*rules.sections["TerrainTypes"].GetValue(i);
-		CString addedString=unitname;
+  int i;
+  for (i = 0; i < rules.sections["TerrainTypes"].values.size(); i++) {
+    CString unitname = *rules.sections["TerrainTypes"].GetValue(i);
+    CString addedString = unitname;
 
-		if(g_data.sections["IgnoreRA2"].FindValue(unitname)>=0) continue;
-	
-		addedString=TranslateStringACP(addedString);
-			
-				
-		if(unitname.Find("TREE")>=0) 
-		{
-			
-						
-			if(unitname.GetLength()>0 && unitname!="VEINTREE") // out with it :-)
-			{
-				int TreeMin=atoi(g_data.sections[Map->GetTheater()+"Limits"].values["TreeMin"]);
-				int TreeMax=atoi(g_data.sections[Map->GetTheater()+"Limits"].values["TreeMax"]);
-				
-				CString id=unitname;
-				id.Delete(0, 4);
-				int n=atoi(id);
+    if (g_data.sections["IgnoreRA2"].FindValue(unitname) >= 0) continue;
 
-				
-				if(n<TreeMin || n>TreeMax) continue;
+    addedString = TranslateStringACP(addedString);
 
-				m_Available.AddString(unitname);			
-			}
-		}
-	}
-	
-	return TRUE;  // return TRUE unless you set the focus to a control
-	              // EXCEPTION: OCX-Eigenschaftenseiten sollten FALSE zurückgeben
+    if (unitname.Find("TREE") >= 0) {
+      if (unitname.GetLength() > 0 && unitname != "VEINTREE")  // out with it :-)
+      {
+        int TreeMin = atoi(g_data.sections[Map->GetTheater() + "Limits"].values["TreeMin"]);
+        int TreeMax = atoi(g_data.sections[Map->GetTheater() + "Limits"].values["TreeMax"]);
+
+        CString id = unitname;
+        id.Delete(0, 4);
+        int n = atoi(id);
+
+        if (n < TreeMin || n > TreeMax) continue;
+
+        m_Available.AddString(unitname);
+      }
+    }
+  }
+
+  return TRUE;  // return TRUE unless you set the focus to a control
+                // EXCEPTION: OCX-Eigenschaftenseiten sollten FALSE zurückgeben
 }
 
-void CRTPDlg::OnAdd() 
-{
-	int sel=m_Available.GetCurSel();
-	if(sel<0) return;
+void CRTPDlg::OnAdd() {
+  int sel = m_Available.GetCurSel();
+  if (sel < 0) return;
 
-	CString currentname;
-	m_Available.GetText(sel, currentname);
+  CString currentname;
+  m_Available.GetText(sel, currentname);
 
-	m_Available.DeleteString(sel);
-	m_Used.AddString(currentname);
+  m_Available.DeleteString(sel);
+  m_Used.AddString(currentname);
 }
 
-void CRTPDlg::OnRemove() 
-{
-	int sel=m_Used.GetCurSel();
-	if(sel<0) return;
+void CRTPDlg::OnRemove() {
+  int sel = m_Used.GetCurSel();
+  if (sel < 0) return;
 
-	CString currentname;
-	m_Used.GetText(sel, currentname);
+  CString currentname;
+  m_Used.GetText(sel, currentname);
 
-	m_Used.DeleteString(sel);
-	m_Available.AddString(currentname);
+  m_Used.DeleteString(sel);
+  m_Available.AddString(currentname);
 }
 
-void CRTPDlg::OnOK() 
-{
-	if(m_Used.GetCount()<=0)
-	{
-		//AfxMessageBox("Please select at least one tree","Error", MB_OK);
-		return;
-	}
+void CRTPDlg::OnOK() {
+  if (m_Used.GetCount() <= 0) {
+    // AfxMessageBox("Please select at least one tree","Error", MB_OK);
+    return;
+  }
 
-	rndterrainsrc.clear();
+  rndterrainsrc.clear();
 
-	int i;
-	for(i=0;i<m_Used.GetCount();i++)
-	{
-		CString str;
-		m_Used.GetText(i, str);
-		rndterrainsrc.push_back(str);
-	}
-	
-	CDialog::OnOK();
+  int i;
+  for (i = 0; i < m_Used.GetCount(); i++) {
+    CString str;
+    m_Used.GetText(i, str);
+    rndterrainsrc.push_back(str);
+  }
+
+  CDialog::OnOK();
 }
 
-void CRTPDlg::OnSelchangeAvail() 
-{
-	int sel=m_Available.GetCurSel();
+void CRTPDlg::OnSelchangeAvail() {
+  int sel = m_Available.GetCurSel();
 
-	if(sel<0)
-	{
-		m_LastSelected="";
-		RedrawWindow(NULL, NULL, RDW_INVALIDATE | RDW_UPDATENOW);
-		return;
-	}
+  if (sel < 0) {
+    m_LastSelected = "";
+    RedrawWindow(NULL, NULL, RDW_INVALIDATE | RDW_UPDATENOW);
+    return;
+  }
 
-	CString s;
-	m_Available.GetText(sel, s);
-	m_LastSelected=s;
-	RedrawWindow(NULL, NULL, RDW_INVALIDATE | RDW_UPDATENOW);
-	
+  CString s;
+  m_Available.GetText(sel, s);
+  m_LastSelected = s;
+  RedrawWindow(NULL, NULL, RDW_INVALIDATE | RDW_UPDATENOW);
 }
 
-void CRTPDlg::OnDblclkAvail() 
-{
-	int sel=m_Available.GetCurSel();
-	if(sel<0) return;
+void CRTPDlg::OnDblclkAvail() {
+  int sel = m_Available.GetCurSel();
+  if (sel < 0) return;
 
-	CString currentname;
-	m_Available.GetText(sel, currentname);
+  CString currentname;
+  m_Available.GetText(sel, currentname);
 
-	m_Available.DeleteString(sel);
-	m_Used.AddString(currentname);
+  m_Available.DeleteString(sel);
+  m_Used.AddString(currentname);
 }
 
-void CRTPDlg::OnSelchangeUsed() 
-{
-	int sel=m_Used.GetCurSel();
+void CRTPDlg::OnSelchangeUsed() {
+  int sel = m_Used.GetCurSel();
 
-	if(sel<0)
-	{
-		m_LastSelected="";
-		RedrawWindow(NULL, NULL, RDW_INVALIDATE | RDW_UPDATENOW);
-		return;
-	}
+  if (sel < 0) {
+    m_LastSelected = "";
+    RedrawWindow(NULL, NULL, RDW_INVALIDATE | RDW_UPDATENOW);
+    return;
+  }
 
-	CString s;
-	m_Used.GetText(sel, s);
-	m_LastSelected=s;
-	RedrawWindow(NULL, NULL, RDW_INVALIDATE | RDW_UPDATENOW);
-	
+  CString s;
+  m_Used.GetText(sel, s);
+  m_LastSelected = s;
+  RedrawWindow(NULL, NULL, RDW_INVALIDATE | RDW_UPDATENOW);
 }
 
-void CRTPDlg::OnDblclkUsed() 
-{
-	int sel=m_Used.GetCurSel();
-	if(sel<0) return;
+void CRTPDlg::OnDblclkUsed() {
+  int sel = m_Used.GetCurSel();
+  if (sel < 0) return;
 
-	CString currentname;
-	m_Used.GetText(sel, currentname);
+  CString currentname;
+  m_Used.GetText(sel, currentname);
 
-	m_Used.DeleteString(sel);
-	m_Available.AddString(currentname);
+  m_Used.DeleteString(sel);
+  m_Available.AddString(currentname);
 }
 
-void CRTPDlg::OnPaint() 
-{
-	
-	if(m_LastSelected=="") return;
+void CRTPDlg::OnPaint() {
+  if (m_LastSelected == "") return;
 
-	CPaintDC dc(this); // device context for painting
-	
-	int id=Map->GetUnitTypeID(m_LastSelected);
-	
-	PICDATA* p=&treeinfo[id].pic; //ovrlpics[m_currentOverlay][i];
-			
+  CPaintDC dc(this);  // device context for painting
 
-	if(p->pic==NULL)
-	{
-		CString type;
-		type=m_LastSelected;
+  int id = Map->GetUnitTypeID(m_LastSelected);
 
-		if(missingimages.find(type)==missingimages.end())
-		{			
-			theApp.m_loading->LoadUnitGraphic(type);
-			Map->UpdateTreeInfo(type);
-			p=&treeinfo[id].pic;
-		}
-		if(p->pic==NULL)
-		{
-		  missingimages[type]=TRUE;
-		}
-	}
+  PICDATA* p = &treeinfo[id].pic;  // ovrlpics[m_currentOverlay][i];
 
-	int curwidth=p->wMaxWidth;
-	int curheight=p->wMaxHeight;
+  if (p->pic == NULL) {
+    CString type;
+    type = m_LastSelected;
 
-	BITMAPINFO biinfo;
-	memset(&biinfo, 0, sizeof(BITMAPINFO));
-	biinfo.bmiHeader.biBitCount=24;
-	biinfo.bmiHeader.biWidth=curwidth;
-	biinfo.bmiHeader.biHeight=curheight;
-	biinfo.bmiHeader.biSize=sizeof(BITMAPINFOHEADER);
-	biinfo.bmiHeader.biClrUsed=0;
-	biinfo.bmiHeader.biPlanes=1;
-	biinfo.bmiHeader.biCompression=BI_RGB;
-	biinfo.bmiHeader.biClrImportant=0;
+    if (missingimages.find(type) == missingimages.end()) {
+      theApp.m_loading->LoadUnitGraphic(type);
+      Map->UpdateTreeInfo(type);
+      p = &treeinfo[id].pic;
+    }
+    if (p->pic == NULL) {
+      missingimages[type] = TRUE;
+    }
+  }
 
+  int curwidth = p->wMaxWidth;
+  int curheight = p->wMaxHeight;
 
-	int pitch=curwidth*3;
-	if(pitch==0) return;
+  BITMAPINFO biinfo;
+  memset(&biinfo, 0, sizeof(BITMAPINFO));
+  biinfo.bmiHeader.biBitCount = 24;
+  biinfo.bmiHeader.biWidth = curwidth;
+  biinfo.bmiHeader.biHeight = curheight;
+  biinfo.bmiHeader.biSize = sizeof(BITMAPINFOHEADER);
+  biinfo.bmiHeader.biClrUsed = 0;
+  biinfo.bmiHeader.biPlanes = 1;
+  biinfo.bmiHeader.biCompression = BI_RGB;
+  biinfo.bmiHeader.biClrImportant = 0;
 
-	if(pitch%sizeof(DWORD))
-	{
-		pitch+=sizeof(DWORD)-(curwidth*3)%sizeof(DWORD);
-	}
+  int pitch = curwidth * 3;
+  if (pitch == 0) return;
 
-	BYTE* colors=new(BYTE[pitch*curheight]);
-	memset(colors, 255, pitch*(curheight));
+  if (pitch % sizeof(DWORD)) {
+    pitch += sizeof(DWORD) - (curwidth * 3) % sizeof(DWORD);
+  }
 
-	RGBTRIPLE* pal=palIso;
+  BYTE* colors = new (BYTE[pitch * curheight]);
+  memset(colors, 255, pitch * (curheight));
+
+  RGBTRIPLE* pal = palIso;
 #ifdef NOSURFACES
-	if(p->pal==iPalTheater) pal=palTheater;
-	if(p->pal==iPalUnit) pal=palUnit;
+  if (p->pal == iPalTheater) pal = palTheater;
+  if (p->pal == iPalUnit) pal = palUnit;
 #endif
 
-	int k,l;
-	for(k=0;k<curheight;k++)
-	{
-		for(l=0;l<curwidth;l++)
-		{
-			if(((BYTE*)p->pic)[l+k*curwidth])
-			{
-				memcpy(&colors[l*3+(curheight-k-1)*pitch], &pal[((BYTE*)p->pic)[l+k*curwidth]], 3);
-			}
-		}
-	}
+  int k, l;
+  for (k = 0; k < curheight; k++) {
+    for (l = 0; l < curwidth; l++) {
+      if (((BYTE*)p->pic)[l + k * curwidth]) {
+        memcpy(&colors[l * 3 + (curheight - k - 1) * pitch], &pal[((BYTE*)p->pic)[l + k * curwidth]], 3);
+      }
+    }
+  }
 
-	RECT pr;
-	m_Preview.GetWindowRect(&pr);
-	this->ScreenToClient(&pr);
+  RECT pr;
+  m_Preview.GetWindowRect(&pr);
+  this->ScreenToClient(&pr);
 
-	pr.top += 15;
-	pr.bottom -= 5;
-	pr.left += 5;
-	pr.right -= 5;
+  pr.top += 15;
+  pr.bottom -= 5;
+  pr.left += 5;
+  pr.right -= 5;
 
-	CBrush f;
-	f.Attach(GetStockObject(WHITE_BRUSH));
-	dc.FillRect(&pr,&f);
-	f.Detach();
+  CBrush f;
+  f.Attach(GetStockObject(WHITE_BRUSH));
+  dc.FillRect(&pr, &f);
+  f.Detach();
 
-	auto clientDC = m_Preview.GetWindowDC();
-	StretchDIBits(clientDC->GetSafeHdc(), 20, 30,curwidth, curheight,
-		0, 0, curwidth, curheight, colors, &biinfo, DIB_RGB_COLORS, SRCCOPY);
+  auto clientDC = m_Preview.GetWindowDC();
+  StretchDIBits(clientDC->GetSafeHdc(), 20, 30, curwidth, curheight, 0, 0, curwidth, curheight, colors, &biinfo,
+                DIB_RGB_COLORS, SRCCOPY);
 
-	delete[] colors;
-	
-	// Kein Aufruf von CDialog::OnPaint() für Zeichnungsnachrichten
+  delete[] colors;
+
+  // Kein Aufruf von CDialog::OnPaint() für Zeichnungsnachrichten
 }

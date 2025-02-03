@@ -21,82 +21,73 @@
 // SearchWaypointDlg.cpp: Implementierungsdatei
 //
 
-#include "stdafx.h"
-#include "finalsun.h"
 #include "SearchWaypointDlg.h"
+#include "finalsun.h"
+#include "stdafx.h"
 #include "variables.h"
 
 #ifdef _DEBUG
-#define new DEBUG_NEW
-#undef THIS_FILE
+#  define new DEBUG_NEW
+#  undef THIS_FILE
 static char THIS_FILE[] = __FILE__;
 #endif
 
 /////////////////////////////////////////////////////////////////////////////
-// Dialogfeld CSearchWaypointDlg 
+// Dialogfeld CSearchWaypointDlg
 
-
-CSearchWaypointDlg::CSearchWaypointDlg(CWnd* pParent /*=NULL*/)
-	: CDialog(CSearchWaypointDlg::IDD, pParent)
-{
-	//{{AFX_DATA_INIT(CSearchWaypointDlg)
-	m_Waypoints = _T("");
-	//}}AFX_DATA_INIT
+CSearchWaypointDlg::CSearchWaypointDlg(CWnd* pParent /*=NULL*/) : CDialog(CSearchWaypointDlg::IDD, pParent) {
+  //{{AFX_DATA_INIT(CSearchWaypointDlg)
+  m_Waypoints = _T("");
+  //}}AFX_DATA_INIT
 }
 
-
-void CSearchWaypointDlg::DoDataExchange(CDataExchange* pDX)
-{
-	CDialog::DoDataExchange(pDX);
-	//{{AFX_DATA_MAP(CSearchWaypointDlg)
-	DDX_LBString(pDX, IDC_WAYPOINTS, m_Waypoints);
-	//}}AFX_DATA_MAP
+void CSearchWaypointDlg::DoDataExchange(CDataExchange* pDX) {
+  CDialog::DoDataExchange(pDX);
+  //{{AFX_DATA_MAP(CSearchWaypointDlg)
+  DDX_LBString(pDX, IDC_WAYPOINTS, m_Waypoints);
+  //}}AFX_DATA_MAP
 }
-
 
 BEGIN_MESSAGE_MAP(CSearchWaypointDlg, CDialog)
-	//{{AFX_MSG_MAP(CSearchWaypointDlg)
-	//}}AFX_MSG_MAP
+//{{AFX_MSG_MAP(CSearchWaypointDlg)
+//}}AFX_MSG_MAP
 END_MESSAGE_MAP()
 
 /////////////////////////////////////////////////////////////////////////////
-// Behandlungsroutinen für Nachrichten CSearchWaypointDlg 
+// Behandlungsroutinen für Nachrichten CSearchWaypointDlg
 
-BOOL CSearchWaypointDlg::OnInitDialog() 
-{
-	CDialog::OnInitDialog();
+BOOL CSearchWaypointDlg::OnInitDialog() {
+  CDialog::OnInitDialog();
 
-	CListBox& ctrl=*(CListBox*)GetDlgItem(IDC_WAYPOINTS);
+  CListBox& ctrl = *(CListBox*)GetDlgItem(IDC_WAYPOINTS);
 
-	while(ctrl.DeleteString(0)!=LB_ERR);
+  while (ctrl.DeleteString(0) != LB_ERR);
 
-	int i;
-	int count=Map->GetWaypointCount();
+  int i;
+  int count = Map->GetWaypointCount();
 
-	for(i=0;i<count;i++)
-	{
-		CString id;
-		DWORD pos;
-		Map->GetWaypointData(i, &id, &pos);
+  for (i = 0; i < count; i++) {
+    CString id;
+    DWORD pos;
+    Map->GetWaypointData(i, &id, &pos);
 
-		ctrl.SetItemData(ctrl.InsertString(i, id), i);
-	}
-	
-	return TRUE;  // return TRUE unless you set the focus to a control
-	              // EXCEPTION: OCX-Eigenschaftenseiten sollten FALSE zurückgeben
+    ctrl.SetItemData(ctrl.InsertString(i, id), i);
+  }
+
+  return TRUE;  // return TRUE unless you set the focus to a control
+                // EXCEPTION: OCX-Eigenschaftenseiten sollten FALSE zurückgeben
 }
 
-void CSearchWaypointDlg::OnOK() 
-{
-	CListBox& ctrl=*(CListBox*)GetDlgItem(IDC_WAYPOINTS);
+void CSearchWaypointDlg::OnOK() {
+  CListBox& ctrl = *(CListBox*)GetDlgItem(IDC_WAYPOINTS);
 
-	int sel=ctrl.GetCurSel();
+  int sel = ctrl.GetCurSel();
 
-	if(sel<0) m_WaypointIndex=-1;
-	else
-	{
-		m_WaypointIndex=ctrl.GetItemData(sel);
-	}
-	
-	CDialog::OnOK();
+  if (sel < 0)
+    m_WaypointIndex = -1;
+  else {
+    m_WaypointIndex = ctrl.GetItemData(sel);
+  }
+
+  CDialog::OnOK();
 }

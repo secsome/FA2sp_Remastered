@@ -21,43 +21,37 @@
 // MultiSaveOptionsDlg.cpp: Implementierungsdatei
 //
 
-#include "stdafx.h"
-#include "finalsun.h"
 #include "MultiSaveOptionsDlg.h"
+#include "finalsun.h"
+#include "stdafx.h"
 
 #ifdef _DEBUG
-#define new DEBUG_NEW
-#undef THIS_FILE
+#  define new DEBUG_NEW
+#  undef THIS_FILE
 static char THIS_FILE[] = __FILE__;
 #endif
 
 /////////////////////////////////////////////////////////////////////////////
-// Dialogfeld CMultiSaveOptionsDlg 
+// Dialogfeld CMultiSaveOptionsDlg
 
-
-CMultiSaveOptionsDlg::CMultiSaveOptionsDlg(CWnd* pParent /*=NULL*/)
-	: CDialog(CMultiSaveOptionsDlg::IDD, pParent)
-{
-	//{{AFX_DATA_INIT(CMultiSaveOptionsDlg)
-	m_mmx = 0;
-	//}}AFX_DATA_INIT
+CMultiSaveOptionsDlg::CMultiSaveOptionsDlg(CWnd* pParent /*=NULL*/) : CDialog(CMultiSaveOptionsDlg::IDD, pParent) {
+  //{{AFX_DATA_INIT(CMultiSaveOptionsDlg)
+  m_mmx = 0;
+  //}}AFX_DATA_INIT
 }
 
-
-void CMultiSaveOptionsDlg::DoDataExchange(CDataExchange* pDX)
-{
-	CDialog::DoDataExchange(pDX);
-	//{{AFX_DATA_MAP(CMultiSaveOptionsDlg)
-	DDX_Radio(pDX, IDC_MMX, m_mmx);
-	//}}AFX_DATA_MAP
+void CMultiSaveOptionsDlg::DoDataExchange(CDataExchange* pDX) {
+  CDialog::DoDataExchange(pDX);
+  //{{AFX_DATA_MAP(CMultiSaveOptionsDlg)
+  DDX_Radio(pDX, IDC_MMX, m_mmx);
+  //}}AFX_DATA_MAP
 }
-
 
 BEGIN_MESSAGE_MAP(CMultiSaveOptionsDlg, CDialog)
-	//{{AFX_MSG_MAP(CMultiSaveOptionsDlg)
-		// HINWEIS: Der Klassen-Assistent fügt hier Zuordnungsmakros für Nachrichten ein
-	//}}AFX_MSG_MAP
+//{{AFX_MSG_MAP(CMultiSaveOptionsDlg)
+// HINWEIS: Der Klassen-Assistent fügt hier Zuordnungsmakros für Nachrichten ein
+//}}AFX_MSG_MAP
 END_MESSAGE_MAP()
 
 /////////////////////////////////////////////////////////////////////////////
-// Behandlungsroutinen für Nachrichten CMultiSaveOptionsDlg 
+// Behandlungsroutinen für Nachrichten CMultiSaveOptionsDlg

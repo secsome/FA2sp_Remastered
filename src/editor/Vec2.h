@@ -25,212 +25,182 @@
 struct CSMap {};
 struct CSProjected {};
 
-template<class CS, class T>
-struct Vec2
-{
-public:
-	Vec2() = default;
-	Vec2(T x_, T y_) : x(x_), y(y_) {}
-	bool operator==(const Vec2& other) const = default;
+template <class CS, class T>
+struct Vec2 {
+ public:
+  Vec2() = default;
+  Vec2(T x_, T y_) : x(x_), y(y_) {}
+  bool operator==(const Vec2& other) const = default;
 
-	inline Vec2& operator +=(const Vec2& other) {
-		x += other.x;
-		y += other.y;
-		return *this;
-	}
+  inline Vec2& operator+=(const Vec2& other) {
+    x += other.x;
+    y += other.y;
+    return *this;
+  }
 
-	inline Vec2& operator -=(const Vec2& other) {
-		x -= other.x;
-		y -= other.y;
-		return *this;
-	}
+  inline Vec2& operator-=(const Vec2& other) {
+    x -= other.x;
+    y -= other.y;
+    return *this;
+  }
 
-	inline Vec2& operator *=(const T v)
-	{
-		x *= v;
-		y *= v;
-		return *this;
-	}
+  inline Vec2& operator*=(const T v) {
+    x *= v;
+    y *= v;
+    return *this;
+  }
 
-	inline Vec2& operator *=(const Vec2& other)
-	{
-		x *= other.x;
-		y *= other.y;
-		return *this;
-	}
+  inline Vec2& operator*=(const Vec2& other) {
+    x *= other.x;
+    y *= other.y;
+    return *this;
+  }
 
-	inline Vec2& operator /=(const Vec2& other)
-	{
-		x /= other.x;
-		y /= other.y;
-		return *this;
-	}
+  inline Vec2& operator/=(const Vec2& other) {
+    x /= other.x;
+    y /= other.y;
+    return *this;
+  }
 
-	inline Vec2& operator /=(const T v)
-	{
-		x /= v;
-		y /= v;
-		return *this;
-	}
+  inline Vec2& operator/=(const T v) {
+    x /= v;
+    y /= v;
+    return *this;
+  }
 
-	void set(const T x_, const T y_)
-	{
-		x = x_;
-		y = y_;
-	}
+  void set(const T x_, const T y_) {
+    x = x_;
+    y = y_;
+  }
 
-	template<class T1>
-	inline Vec2<CS, T1> convertT() const
-	{
-		return Vec2<CS, T1>(static_cast<T1>(x), static_cast<T1>(y));
-	}
+  template <class T1>
+  inline Vec2<CS, T1> convertT() const {
+    return Vec2<CS, T1>(static_cast<T1>(x), static_cast<T1>(y));
+  }
 
-	inline Vec2<CS, float> inverted() const
-	{
-		return Vec2<CS, float>(1.0f / static_cast<float>(x), 1.0f / static_cast<float>(y));
-	}
+  inline Vec2<CS, float> inverted() const {
+    return Vec2<CS, float>(1.0f / static_cast<float>(x), 1.0f / static_cast<float>(y));
+  }
 
-	inline Vec2 negated() const
-	{
-		return Vec2(-x, -y);
-	}
+  inline Vec2 negated() const { return Vec2(-x, -y); }
 
-public:
-	T x = 0;
-	T y = 0;
+ public:
+  T x = 0;
+  T y = 0;
 };
 
-template<class CS, class T>
-inline Vec2<CS, T> operator+(const Vec2<CS, T>& l, const Vec2<CS, T>& r)
-{
-	auto res = l;
-	res += r;
-	return res;
+template <class CS, class T>
+inline Vec2<CS, T> operator+(const Vec2<CS, T>& l, const Vec2<CS, T>& r) {
+  auto res = l;
+  res += r;
+  return res;
 }
 
-template<class CS, class T>
-inline Vec2<CS, T> operator-(const Vec2<CS, T>& l, const Vec2<CS, T>& r)
-{
-	auto res = l;
-	res -= r;
-	return res;
+template <class CS, class T>
+inline Vec2<CS, T> operator-(const Vec2<CS, T>& l, const Vec2<CS, T>& r) {
+  auto res = l;
+  res -= r;
+  return res;
 }
 
-template<class CS, class T>
-inline Vec2<CS, T> operator*(const Vec2<CS, T>& l, const Vec2<CS, T>& r)
-{
-	auto res = l;
-	res *= r;
-	return res;
+template <class CS, class T>
+inline Vec2<CS, T> operator*(const Vec2<CS, T>& l, const Vec2<CS, T>& r) {
+  auto res = l;
+  res *= r;
+  return res;
 }
 
-template<class CS>
-inline Vec2<CS, float> operator*(const Vec2<CS, std::int32_t>& l, const Vec2<CS, float>& r)
-{
-	return Vec2<CS, float>(l.x * r.x, l.y * r.y);
+template <class CS>
+inline Vec2<CS, float> operator*(const Vec2<CS, std::int32_t>& l, const Vec2<CS, float>& r) {
+  return Vec2<CS, float>(l.x * r.x, l.y * r.y);
 }
 
-template<class CS, class T>
-inline Vec2<CS, T> operator*(const Vec2<CS, T>& l, const T r)
-{
-	auto res = l;
-	res *= r;
-	return res;
+template <class CS, class T>
+inline Vec2<CS, T> operator*(const Vec2<CS, T>& l, const T r) {
+  auto res = l;
+  res *= r;
+  return res;
 }
 
-template<class CS, class T>
-inline Vec2<CS, T> operator/(const Vec2<CS, T>& l, const Vec2<CS, T>& r)
-{
-	auto res = l;
-	res /= r;
-	return res;
+template <class CS, class T>
+inline Vec2<CS, T> operator/(const Vec2<CS, T>& l, const Vec2<CS, T>& r) {
+  auto res = l;
+  res /= r;
+  return res;
 }
 
-template<class CS>
-inline Vec2<CS, float> operator/(const Vec2<CS, std::int32_t>& l, const Vec2<CS, float>& r)
-{
-	return Vec2<CS, float>(l.x / r.x, l.y / r.y);
+template <class CS>
+inline Vec2<CS, float> operator/(const Vec2<CS, std::int32_t>& l, const Vec2<CS, float>& r) {
+  return Vec2<CS, float>(l.x / r.x, l.y / r.y);
 }
 
-template<class CS, class T>
-inline Vec2<CS, T> operator/(const Vec2<CS, T>& l, const T r)
-{
-	auto res = l;
-	res /= r;
-	return res;
+template <class CS, class T>
+inline Vec2<CS, T> operator/(const Vec2<CS, T>& l, const T r) {
+  auto res = l;
+  res /= r;
+  return res;
 }
 
-template<class CS, class T>
-struct Coords2
-{
-	Coords2() = default;
-	Coords2(T x_, T y_) : x(x_), y(y_) {}
-	bool operator==(const Coords2& other) const = default;
-	T x = 0;
-	T y = 0;
-	Coords2& operator +=(const Vec2<CS, T>& other) {
-		x += other.x;
-		y += other.y;
-		return *this;
-	}
-	Coords2& operator -=(const Vec2<CS, T>& other) {
-		x -= other.x;
-		y -= other.y;
-		return *this;
-	}
-	void set(const T x_, const T y_)
-	{
-		x = x_;
-		y = y_;
-	}
-	template<class T1>
-	inline Coords2<CS, T1> convertT() const
-	{
-		return Coords2<CS, T1>(static_cast<T1>(x), static_cast<T1>(y));
-	}
+template <class CS, class T>
+struct Coords2 {
+  Coords2() = default;
+  Coords2(T x_, T y_) : x(x_), y(y_) {}
+  bool operator==(const Coords2& other) const = default;
+  T x = 0;
+  T y = 0;
+  Coords2& operator+=(const Vec2<CS, T>& other) {
+    x += other.x;
+    y += other.y;
+    return *this;
+  }
+  Coords2& operator-=(const Vec2<CS, T>& other) {
+    x -= other.x;
+    y -= other.y;
+    return *this;
+  }
+  void set(const T x_, const T y_) {
+    x = x_;
+    y = y_;
+  }
+  template <class T1>
+  inline Coords2<CS, T1> convertT() const {
+    return Coords2<CS, T1>(static_cast<T1>(x), static_cast<T1>(y));
+  }
 };
 
-
-template<class CS, class T>
-inline Coords2<CS, T> operator+(const Coords2<CS, T>& l, const Vec2<CS, T>& r)
-{
-	auto res = l;
-	res += r;
-	return res;
+template <class CS, class T>
+inline Coords2<CS, T> operator+(const Coords2<CS, T>& l, const Vec2<CS, T>& r) {
+  auto res = l;
+  res += r;
+  return res;
 }
 
-template<class CS, class T>
-inline Coords2<CS, T> operator-(const Coords2<CS, T>& l, const Vec2<CS, T>& r)
-{
-	auto res = l;
-	res -= r;
-	return res;
+template <class CS, class T>
+inline Coords2<CS, T> operator-(const Coords2<CS, T>& l, const Vec2<CS, T>& r) {
+  auto res = l;
+  res -= r;
+  return res;
 }
 
-template<class CS, class T>
-inline Vec2<CS, T> operator-(const Coords2<CS, T>& l, const Coords2<CS, T >& r)
-{
-	return Vec2<CS, T>(l.x - r.x, l.y - r.y);
+template <class CS, class T>
+inline Vec2<CS, T> operator-(const Coords2<CS, T>& l, const Coords2<CS, T>& r) {
+  return Vec2<CS, T>(l.x - r.x, l.y - r.y);
 }
 
-template<class CS, class T>
-inline Coords2<CS, T> operator*(const Coords2<CS, T>& l, const Vec2<CS, T>& r)
-{
-	return Coords2<CS, float>(l.x * r.x, l.y * r.y);
+template <class CS, class T>
+inline Coords2<CS, T> operator*(const Coords2<CS, T>& l, const Vec2<CS, T>& r) {
+  return Coords2<CS, float>(l.x * r.x, l.y * r.y);
 }
 
-template<class CS>
-inline Coords2<CS, float> operator*(const Coords2<CS, std::int32_t>& l, const Vec2<CS, float>& r)
-{
-	return Coords2<CS, float>(l.x * r.x, l.y * r.y);
+template <class CS>
+inline Coords2<CS, float> operator*(const Coords2<CS, std::int32_t>& l, const Vec2<CS, float>& r) {
+  return Coords2<CS, float>(l.x * r.x, l.y * r.y);
 }
 
-template<class CS>
-inline Coords2<CS, float> operator/(const Coords2<CS, std::int32_t>& l, const Vec2<CS, float>& r)
-{
-	return Coords2<CS, float>(l.x / r.x, l.y / r.y);
+template <class CS>
+inline Coords2<CS, float> operator/(const Coords2<CS, std::int32_t>& l, const Vec2<CS, float>& r) {
+  return Coords2<CS, float>(l.x / r.x, l.y / r.y);
 }
-
 
 typedef Vec2<CSMap, std::int16_t> MapVec;
 

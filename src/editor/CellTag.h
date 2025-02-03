@@ -19,50 +19,47 @@
 */
 
 #if !defined(AFX_CELLTAG_H__F41D5900_9133_11D3_B63B_D010F279DC93__INCLUDED_)
-#define AFX_CELLTAG_H__F41D5900_9133_11D3_B63B_D010F279DC93__INCLUDED_
+#  define AFX_CELLTAG_H__F41D5900_9133_11D3_B63B_D010F279DC93__INCLUDED_
 
-#if _MSC_VER > 1000
-#pragma once
-#endif // _MSC_VER > 1000
+#  if _MSC_VER > 1000
+#    pragma once
+#  endif  // _MSC_VER > 1000
 // CellTag.h : Header-Datei
 //
 
 /////////////////////////////////////////////////////////////////////////////
-// Dialogfeld CCellTag 
+// Dialogfeld CCellTag
 
-class CCellTag : public CDialog
-{
-// Konstruktion
-public:
-	void UpdateStrings();
-	CCellTag(CWnd* pParent = NULL);   // Standardkonstruktor
+class CCellTag : public CDialog {
+  // Konstruktion
+ public:
+  void UpdateStrings();
+  CCellTag(CWnd* pParent = NULL);  // Standardkonstruktor
 
-// Dialogfelddaten
-	//{{AFX_DATA(CCellTag)
-	enum { IDD = IDD_CELLTAG };
-	CString	m_tag;
-	//}}AFX_DATA
+  // Dialogfelddaten
+  //{{AFX_DATA(CCellTag)
+  enum { IDD = IDD_CELLTAG };
+  CString m_tag;
+  //}}AFX_DATA
 
+  // Überschreibungen
+  // Vom Klassen-Assistenten generierte virtuelle Funktionsüberschreibungen
+  //{{AFX_VIRTUAL(CCellTag)
+ protected:
+  virtual void DoDataExchange(CDataExchange* pDX);  // DDX/DDV-Unterstützung
+                                                    //}}AFX_VIRTUAL
 
-// Überschreibungen
-	// Vom Klassen-Assistenten generierte virtuelle Funktionsüberschreibungen
-	//{{AFX_VIRTUAL(CCellTag)
-	protected:
-	virtual void DoDataExchange(CDataExchange* pDX);    // DDX/DDV-Unterstützung
-	//}}AFX_VIRTUAL
-
-// Implementierung
-protected:
-
-	// Generierte Nachrichtenzuordnungsfunktionen
-	//{{AFX_MSG(CCellTag)
-	virtual BOOL OnInitDialog();
-	virtual void OnOK();
-	//}}AFX_MSG
-	DECLARE_MESSAGE_MAP()
+  // Implementierung
+ protected:
+  // Generierte Nachrichtenzuordnungsfunktionen
+  //{{AFX_MSG(CCellTag)
+  virtual BOOL OnInitDialog();
+  virtual void OnOK();
+  //}}AFX_MSG
+  DECLARE_MESSAGE_MAP()
 };
 
 //{{AFX_INSERT_LOCATION}}
 // Microsoft Visual C++ fügt unmittelbar vor der vorhergehenden Zeile zusätzliche Deklarationen ein.
 
-#endif // AFX_CELLTAG_H__F41D5900_9133_11D3_B63B_D010F279DC93__INCLUDED_
+#endif  // AFX_CELLTAG_H__F41D5900_9133_11D3_B63B_D010F279DC93__INCLUDED_

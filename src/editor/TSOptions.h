@@ -19,56 +19,53 @@
 */
 
 #if !defined(AFX_TSOPTIONS_H__AFDC93E0_651A_11D3_99E0_B9A145C86B12__INCLUDED_)
-#define AFX_TSOPTIONS_H__AFDC93E0_651A_11D3_99E0_B9A145C86B12__INCLUDED_
+#  define AFX_TSOPTIONS_H__AFDC93E0_651A_11D3_99E0_B9A145C86B12__INCLUDED_
 
-#if _MSC_VER > 1000
-#pragma once
-#endif // _MSC_VER > 1000
+#  if _MSC_VER > 1000
+#    pragma once
+#  endif  // _MSC_VER > 1000
 // TSOptions.h : Header-Datei
 //
 
 /////////////////////////////////////////////////////////////////////////////
-// Dialogfeld CTSOptions 
+// Dialogfeld CTSOptions
 
-class CTSOptions : public CDialog
-{
-// Konstruktion
-public:
-	BOOL m_PreferLocalTheaterFiles;
-	CString m_LanguageName;
-	CString m_TSEXE;
-	CTSOptions(CWnd* pParent = NULL);   // Standardkonstruktor
+class CTSOptions : public CDialog {
+  // Konstruktion
+ public:
+  BOOL m_PreferLocalTheaterFiles;
+  CString m_LanguageName;
+  CString m_TSEXE;
+  CTSOptions(CWnd* pParent = NULL);  // Standardkonstruktor
 
-// Dialogfelddaten
-	//{{AFX_DATA(CTSOptions)
-	enum { IDD = IDD_TSOPTIONS };
-	CComboBox	m_Language;
-	CEdit	m_TSExe;
-	int		m_LikeTS;
-	//}}AFX_DATA
+  // Dialogfelddaten
+  //{{AFX_DATA(CTSOptions)
+  enum { IDD = IDD_TSOPTIONS };
+  CComboBox m_Language;
+  CEdit m_TSExe;
+  int m_LikeTS;
+  //}}AFX_DATA
 
+  // Überschreibungen
+  // Vom Klassen-Assistenten generierte virtuelle Funktionsüberschreibungen
+  //{{AFX_VIRTUAL(CTSOptions)
+ protected:
+  virtual void DoDataExchange(CDataExchange* pDX);  // DDX/DDV-Unterstützung
+                                                    //}}AFX_VIRTUAL
 
-// Überschreibungen
-	// Vom Klassen-Assistenten generierte virtuelle Funktionsüberschreibungen
-	//{{AFX_VIRTUAL(CTSOptions)
-	protected:
-	virtual void DoDataExchange(CDataExchange* pDX);    // DDX/DDV-Unterstützung
-	//}}AFX_VIRTUAL
-
-// Implementierung
-protected:
-
-	// Generierte Nachrichtenzuordnungsfunktionen
-	//{{AFX_MSG(CTSOptions)
-	afx_msg void OnChoose();
-	virtual void OnOK();
-	virtual BOOL OnInitDialog();
-	//}}AFX_MSG
-	DECLARE_MESSAGE_MAP()
-private:	
+  // Implementierung
+ protected:
+  // Generierte Nachrichtenzuordnungsfunktionen
+  //{{AFX_MSG(CTSOptions)
+  afx_msg void OnChoose();
+  virtual void OnOK();
+  virtual BOOL OnInitDialog();
+  //}}AFX_MSG
+  DECLARE_MESSAGE_MAP()
+ private:
 };
 
 //{{AFX_INSERT_LOCATION}}
 // Microsoft Visual C++ fügt unmittelbar vor der vorhergehenden Zeile zusätzliche Deklarationen ein.
 
-#endif // AFX_TSOPTIONS_H__AFDC93E0_651A_11D3_99E0_B9A145C86B12__INCLUDED_
+#endif  // AFX_TSOPTIONS_H__AFDC93E0_651A_11D3_99E0_B9A145C86B12__INCLUDED_

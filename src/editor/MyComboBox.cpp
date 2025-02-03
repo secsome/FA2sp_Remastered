@@ -21,55 +21,46 @@
 // MyComboBox.cpp: Implementierungsdatei
 //
 
-#include "stdafx.h"
-#include "FinalSun.h"
 #include "MyComboBox.h"
+#include "FinalSun.h"
+#include "stdafx.h"
 
 #ifdef _DEBUG
-#define new DEBUG_NEW
-#undef THIS_FILE
+#  define new DEBUG_NEW
+#  undef THIS_FILE
 static char THIS_FILE[] = __FILE__;
 #endif
 
 /////////////////////////////////////////////////////////////////////////////
 // CMyComboBox
 
-CMyComboBox::CMyComboBox()
-{
-}
+CMyComboBox::CMyComboBox() {}
 
-CMyComboBox::~CMyComboBox()
-{
-}
-
+CMyComboBox::~CMyComboBox() {}
 
 BEGIN_MESSAGE_MAP(CMyComboBox, CComboBox)
-	//{{AFX_MSG_MAP(CMyComboBox)
-	ON_CONTROL_REFLECT(CBN_SELCHANGE, OnSelchange)
-	//}}AFX_MSG_MAP
+//{{AFX_MSG_MAP(CMyComboBox)
+ON_CONTROL_REFLECT(CBN_SELCHANGE, OnSelchange)
+//}}AFX_MSG_MAP
 END_MESSAGE_MAP()
 
 /////////////////////////////////////////////////////////////////////////////
-// Behandlungsroutinen für Nachrichten CMyComboBox 
-
+// Behandlungsroutinen für Nachrichten CMyComboBox
 
 /*
 This will automatically send a CBN_EDITCHANGE command.
 Also it will set the window text to the selected item
 */
-void CMyComboBox::OnSelchange() 
-{
-	CString SelectedItem;
-	GetLBText(GetCurSel(),SelectedItem);
+void CMyComboBox::OnSelchange() {
+  CString SelectedItem;
+  GetLBText(GetCurSel(), SelectedItem);
 
-	
-	SetWindowText(SelectedItem);
-	
-	WPARAM wparam;
-	int ctrlid=GetDlgCtrlID();
-	WORD command=CBN_EDITCHANGE;
-	memcpy((BYTE*)&wparam+2, &command, 2);
-	memcpy((BYTE*)&wparam, &ctrlid, 2);
-	GetOwner()->SendMessage(WM_COMMAND,wparam,(LPARAM)m_hWnd);
-	
+  SetWindowText(SelectedItem);
+
+  WPARAM wparam;
+  int ctrlid = GetDlgCtrlID();
+  WORD command = CBN_EDITCHANGE;
+  memcpy((BYTE*)&wparam + 2, &command, 2);
+  memcpy((BYTE*)&wparam, &ctrlid, 2);
+  GetOwner()->SendMessage(WM_COMMAND, wparam, (LPARAM)m_hWnd);
 }

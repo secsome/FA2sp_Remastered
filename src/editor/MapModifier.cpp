@@ -22,26 +22,19 @@
 //
 //////////////////////////////////////////////////////////////////////
 
-#include "stdafx.h"
-#include "stdafx.h"
 #include "MapModifier.h"
+#include "stdafx.h"
 
 #ifdef _DEBUG
-#undef THIS_FILE
-static char THIS_FILE[]=__FILE__;
-#define new DEBUG_NEW
+#  undef THIS_FILE
+static char THIS_FILE[] = __FILE__;
+#  define new DEBUG_NEW
 #endif
 
 //////////////////////////////////////////////////////////////////////
 // Konstruktion/Destruktion
 //////////////////////////////////////////////////////////////////////
 
-CMapModifier::CMapModifier()
-{
+CMapModifier::CMapModifier() {}
 
-}
-
-CMapModifier::~CMapModifier()
-{
-
-}
+CMapModifier::~CMapModifier() {}

@@ -19,20 +19,20 @@
 */
 
 /*
-	macros.h
+        macros.h
 
-	FinalSun Macros (mainly constant variables)
+        FinalSun Macros (mainly constant variables)
 */
 
 #ifndef FINALSUN_MACROS_INCLUDED
 #define FINALSUN_MACROS_INCLUDED
 
 /* Overlay types */
-#define OVRL_VEINS			0x7e
-#define OVRL_VEINHOLE		0xa7
-#define OVRL_VEINHOLEBORDER	0xb2
+#define OVRL_VEINS 0x7e
+#define OVRL_VEINHOLE 0xa7
+#define OVRL_VEINHOLEBORDER 0xb2
 
-#define OVRL_TRACK_BEGIN	0x27
-#define OVRL_TRACK_END		0x36 // 0x32 was old end [changed on 2/13/2000]
+#define OVRL_TRACK_BEGIN 0x27
+#define OVRL_TRACK_END 0x36  // 0x32 was old end [changed on 2/13/2000]
 
 #endif

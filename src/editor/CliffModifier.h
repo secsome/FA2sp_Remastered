@@ -23,40 +23,44 @@
 //////////////////////////////////////////////////////////////////////
 
 #if !defined(AFX_CLIFFMODIFIER_H__3853D323_CD37_11D4_9C87_F2DC6A2E6849__INCLUDED_)
-#define AFX_CLIFFMODIFIER_H__3853D323_CD37_11D4_9C87_F2DC6A2E6849__INCLUDED_
+#  define AFX_CLIFFMODIFIER_H__3853D323_CD37_11D4_9C87_F2DC6A2E6849__INCLUDED_
 
-#if _MSC_VER > 1000
-#pragma once
-#endif // _MSC_VER > 1000
+#  if _MSC_VER > 1000
+#    pragma once
+#  endif  // _MSC_VER > 1000
 
-#include "TerrainModifier.h"
+#  include "TerrainModifier.h"
 
+class CCliffModifier : public CTerrainModifier {
+ public:
+  virtual BOOL PlaceCliff(DWORD dwXFrom, DWORD dwYFrom, DWORD dwXDest, DWORD dwYDest, BOOL bAlternative = FALSE);
+  CCliffModifier();
+  virtual ~CCliffModifier();
 
+ protected:
+  virtual CString GetDataSection() = 0;
+  virtual void ModifyCurrentPos(DWORD* dwPos, BOOL bBeforePlacing, BOOL bSmall);
+  virtual void ModifyStartPos(DWORD* dwStartPos, BOOL bSmall);
 
-class CCliffModifier : public CTerrainModifier  
-{
-	
-public:
-	virtual BOOL PlaceCliff(DWORD dwXFrom, DWORD dwYFrom, DWORD dwXDest, DWORD dwYDest, BOOL bAlternative=FALSE);
-	CCliffModifier();
-	virtual ~CCliffModifier();
+  enum e_cliffdirections {
+    cd_horiz_left,
+    cd_horiz_right,
+    cd_horizdiag_left,
+    cd_horizdiag_right,
+    cd_vertic_top,
+    cd_vertic_bottom,
+    cd_verticdiag_top,
+    cd_verticdiag_bottom
+  };
 
-protected:
-	virtual CString GetDataSection()=0;
-	virtual void ModifyCurrentPos(DWORD* dwPos, BOOL bBeforePlacing, BOOL bSmall);
-	virtual void ModifyStartPos(DWORD* dwStartPos, BOOL bSmall);
-	
-	enum e_cliffdirections {cd_horiz_left, cd_horiz_right, cd_horizdiag_left,
-		cd_horizdiag_right, cd_vertic_top, cd_vertic_bottom, cd_verticdiag_top, cd_verticdiag_bottom };
+  DWORD m_dwTo;
+  DWORD m_dwFrom;
+  e_cliffdirections m_direction;
 
-	DWORD m_dwTo;
-	DWORD m_dwFrom;
-	e_cliffdirections m_direction;
-
-	int m_addx;
-	int m_addy;
-	BOOL m_bAlternative;
-	virtual DWORD GetTileToPlace(DWORD dwPos, BOOL* bSmall) ;
+  int m_addx;
+  int m_addy;
+  BOOL m_bAlternative;
+  virtual DWORD GetTileToPlace(DWORD dwPos, BOOL* bSmall);
 };
 
-#endif // !defined(AFX_CLIFFMODIFIER_H__3853D323_CD37_11D4_9C87_F2DC6A2E6849__INCLUDED_)
+#endif  // !defined(AFX_CLIFFMODIFIER_H__3853D323_CD37_11D4_9C87_F2DC6A2E6849__INCLUDED_)

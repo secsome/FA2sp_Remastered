@@ -19,49 +19,44 @@
 */
 
 #if !defined(AFX_ISOPAINTTHREAD_H__13F04541_01CB_11D5_9C88_FB4495B57649__INCLUDED_)
-#define AFX_ISOPAINTTHREAD_H__13F04541_01CB_11D5_9C88_FB4495B57649__INCLUDED_
+#  define AFX_ISOPAINTTHREAD_H__13F04541_01CB_11D5_9C88_FB4495B57649__INCLUDED_
 
-#if _MSC_VER > 1000
-#pragma once
-#endif // _MSC_VER > 1000
+#  if _MSC_VER > 1000
+#    pragma once
+#  endif  // _MSC_VER > 1000
 // IsoPaintThread.h : Header-Datei
 //
 
-
-
 /////////////////////////////////////////////////////////////////////////////
-// Thread CIsoPaintThread 
+// Thread CIsoPaintThread
 
-class CIsoPaintThread : public CWinThread
-{
-	DECLARE_DYNCREATE(CIsoPaintThread)
-protected:
-	CIsoPaintThread();           // Dynamische Erstellung verwendet geschützten Konstruktor
+class CIsoPaintThread : public CWinThread {
+  DECLARE_DYNCREATE(CIsoPaintThread)
+ protected:
+  CIsoPaintThread();  // Dynamische Erstellung verwendet geschützten Konstruktor
 
-// Attribute
-public:
+  // Attribute
+ public:
+  // Operationen
+ public:
+  // Überschreibungen
+  // Vom Klassen-Assistenten generierte virtuelle Funktionsüberschreibungen
+  //{{AFX_VIRTUAL(CIsoPaintThread)
+ public:
+  virtual BOOL InitInstance();
+  virtual int ExitInstance();
+  //}}AFX_VIRTUAL
 
-// Operationen
-public:
+  // Implementierung
+ protected:
+  virtual ~CIsoPaintThread();
 
-// Überschreibungen
-	// Vom Klassen-Assistenten generierte virtuelle Funktionsüberschreibungen
-	//{{AFX_VIRTUAL(CIsoPaintThread)
-	public:
-	virtual BOOL InitInstance();
-	virtual int ExitInstance();
-	//}}AFX_VIRTUAL
+  // Generierte Nachrichtenzuordnungsfunktionen
+  //{{AFX_MSG(CIsoPaintThread)
+  // HINWEIS - Der Klassen-Assistent fügt hier Member-Funktionen ein und entfernt diese.
+  //}}AFX_MSG
 
-// Implementierung
-protected:
-	virtual ~CIsoPaintThread();
-
-	// Generierte Nachrichtenzuordnungsfunktionen
-	//{{AFX_MSG(CIsoPaintThread)
-		// HINWEIS - Der Klassen-Assistent fügt hier Member-Funktionen ein und entfernt diese.
-	//}}AFX_MSG
-
-	DECLARE_MESSAGE_MAP()
+  DECLARE_MESSAGE_MAP()
 };
 
 /////////////////////////////////////////////////////////////////////////////
@@ -69,4 +64,4 @@ protected:
 //{{AFX_INSERT_LOCATION}}
 // Microsoft Visual C++ fügt unmittelbar vor der vorhergehenden Zeile zusätzliche Deklarationen ein.
 
-#endif // AFX_ISOPAINTTHREAD_H__13F04541_01CB_11D5_9C88_FB4495B57649__INCLUDED_
+#endif  // AFX_ISOPAINTTHREAD_H__13F04541_01CB_11D5_9C88_FB4495B57649__INCLUDED_

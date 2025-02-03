@@ -19,55 +19,52 @@
 */
 
 #if !defined(AFX_AITRIGGERTYPESENABLE_H__5CA6D080_A4D2_11D3_B63B_808EC7AC6440__INCLUDED_)
-#define AFX_AITRIGGERTYPESENABLE_H__5CA6D080_A4D2_11D3_B63B_808EC7AC6440__INCLUDED_
+#  define AFX_AITRIGGERTYPESENABLE_H__5CA6D080_A4D2_11D3_B63B_808EC7AC6440__INCLUDED_
 
-#if _MSC_VER > 1000
-#pragma once
-#endif // _MSC_VER > 1000
+#  if _MSC_VER > 1000
+#    pragma once
+#  endif  // _MSC_VER > 1000
 // AiTriggerTypesEnable.h : Header-Datei
 //
 
 /////////////////////////////////////////////////////////////////////////////
-// Dialogfeld CAiTriggerTypesEnable 
+// Dialogfeld CAiTriggerTypesEnable
 
-class CAiTriggerTypesEnable : public CDialog
-{
-	DECLARE_DYNCREATE(CAiTriggerTypesEnable)
+class CAiTriggerTypesEnable : public CDialog {
+  DECLARE_DYNCREATE(CAiTriggerTypesEnable)
 
-// Konstruktion
-public:
-	void UpdateDialog();
-	CAiTriggerTypesEnable();
-	~CAiTriggerTypesEnable();
+  // Konstruktion
+ public:
+  void UpdateDialog();
+  CAiTriggerTypesEnable();
+  ~CAiTriggerTypesEnable();
 
-// Dialogfelddaten
-	//{{AFX_DATA(CAiTriggerTypesEnable)
-	enum { IDD = IDD_AITRIGGERTYPESENABLE };
-	CComboBox	m_AITriggerType;
-	//}}AFX_DATA
+  // Dialogfelddaten
+  //{{AFX_DATA(CAiTriggerTypesEnable)
+  enum { IDD = IDD_AITRIGGERTYPESENABLE };
+  CComboBox m_AITriggerType;
+  //}}AFX_DATA
 
+  // Überschreibungen
+  // Der Klassen-Assistent generiert virtuelle Funktionsüberschreibungen
+  //{{AFX_VIRTUAL(CAiTriggerTypesEnable)
+ protected:
+  virtual void DoDataExchange(CDataExchange* pDX);  // DDX/DDV-Unterstützung
+                                                    //}}AFX_VIRTUAL
 
-// Überschreibungen
-	// Der Klassen-Assistent generiert virtuelle Funktionsüberschreibungen
-	//{{AFX_VIRTUAL(CAiTriggerTypesEnable)
-	protected:
-	virtual void DoDataExchange(CDataExchange* pDX);    // DDX/DDV-Unterstützung
-	//}}AFX_VIRTUAL
-
-// Implementierung
-protected:
-	// Generierte Nachrichtenzuordnungsfunktionen
-	//{{AFX_MSG(CAiTriggerTypesEnable)
-	afx_msg void OnEnableall();
-	afx_msg void OnSelchangeAitriggertype();
-	afx_msg void OnDelete();
-	afx_msg void OnAdd();
-	//}}AFX_MSG
-	DECLARE_MESSAGE_MAP()
-
+  // Implementierung
+ protected:
+  // Generierte Nachrichtenzuordnungsfunktionen
+  //{{AFX_MSG(CAiTriggerTypesEnable)
+  afx_msg void OnEnableall();
+  afx_msg void OnSelchangeAitriggertype();
+  afx_msg void OnDelete();
+  afx_msg void OnAdd();
+  //}}AFX_MSG
+  DECLARE_MESSAGE_MAP()
 };
 
 //{{AFX_INSERT_LOCATION}}
 // Microsoft Visual C++ fügt unmittelbar vor der vorhergehenden Zeile zusätzliche Deklarationen ein.
 
-#endif // AFX_AITRIGGERTYPESENABLE_H__5CA6D080_A4D2_11D3_B63B_808EC7AC6440__INCLUDED_
+#endif  // AFX_AITRIGGERTYPESENABLE_H__5CA6D080_A4D2_11D3_B63B_808EC7AC6440__INCLUDED_

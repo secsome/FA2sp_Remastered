@@ -19,59 +19,57 @@
 */
 
 #if !defined(AFX_RTPDLG_H__8E65AA00_2C54_11D5_89B2_444553540000__INCLUDED_)
-#define AFX_RTPDLG_H__8E65AA00_2C54_11D5_89B2_444553540000__INCLUDED_
+#  define AFX_RTPDLG_H__8E65AA00_2C54_11D5_89B2_444553540000__INCLUDED_
 
-#if _MSC_VER > 1000
-#pragma once
-#endif // _MSC_VER > 1000
+#  if _MSC_VER > 1000
+#    pragma once
+#  endif  // _MSC_VER > 1000
 // RTPDlg.h : Header-Datei
 //
 
 /////////////////////////////////////////////////////////////////////////////
-// Dialogfeld CRTPDlg 
+// Dialogfeld CRTPDlg
 
-class CRTPDlg : public CDialog
-{
-// Konstruktion
-public:
-	CRTPDlg(CWnd* pParent = NULL);   // Standardkonstruktor
+class CRTPDlg : public CDialog {
+  // Konstruktion
+ public:
+  CRTPDlg(CWnd* pParent = NULL);  // Standardkonstruktor
 
-// Dialogfelddaten
-	//{{AFX_DATA(CRTPDlg)
-	enum { IDD = IDD_TERRAINPLACING };
-	CButton	m_Preview;
-	CListBox	m_Used;
-	CListBox	m_Available;
-	//}}AFX_DATA
+  // Dialogfelddaten
+  //{{AFX_DATA(CRTPDlg)
+  enum { IDD = IDD_TERRAINPLACING };
+  CButton m_Preview;
+  CListBox m_Used;
+  CListBox m_Available;
+  //}}AFX_DATA
 
+  // Überschreibungen
+  // Vom Klassen-Assistenten generierte virtuelle Funktionsüberschreibungen
+  //{{AFX_VIRTUAL(CRTPDlg)
+ protected:
+  virtual void DoDataExchange(CDataExchange* pDX);  // DDX/DDV-Unterstützung
+                                                    //}}AFX_VIRTUAL
 
-// Überschreibungen
-	// Vom Klassen-Assistenten generierte virtuelle Funktionsüberschreibungen
-	//{{AFX_VIRTUAL(CRTPDlg)
-	protected:
-	virtual void DoDataExchange(CDataExchange* pDX);    // DDX/DDV-Unterstützung
-	//}}AFX_VIRTUAL
+  // Implementierung
+ protected:
+  CString m_LastSelected;
 
-// Implementierung
-protected:
-	CString m_LastSelected;
-
-	// Generierte Nachrichtenzuordnungsfunktionen
-	//{{AFX_MSG(CRTPDlg)
-	virtual BOOL OnInitDialog();
-	afx_msg void OnAdd();
-	afx_msg void OnRemove();
-	virtual void OnOK();
-	afx_msg void OnSelchangeAvail();
-	afx_msg void OnDblclkAvail();
-	afx_msg void OnSelchangeUsed();
-	afx_msg void OnDblclkUsed();
-	afx_msg void OnPaint();
-	//}}AFX_MSG
-	DECLARE_MESSAGE_MAP()
+  // Generierte Nachrichtenzuordnungsfunktionen
+  //{{AFX_MSG(CRTPDlg)
+  virtual BOOL OnInitDialog();
+  afx_msg void OnAdd();
+  afx_msg void OnRemove();
+  virtual void OnOK();
+  afx_msg void OnSelchangeAvail();
+  afx_msg void OnDblclkAvail();
+  afx_msg void OnSelchangeUsed();
+  afx_msg void OnDblclkUsed();
+  afx_msg void OnPaint();
+  //}}AFX_MSG
+  DECLARE_MESSAGE_MAP()
 };
 
 //{{AFX_INSERT_LOCATION}}
 // Microsoft Visual C++ fügt unmittelbar vor der vorhergehenden Zeile zusätzliche Deklarationen ein.
 
-#endif // AFX_RTPDLG_H__8E65AA00_2C54_11D5_89B2_444553540000__INCLUDED_
+#endif  // AFX_RTPDLG_H__8E65AA00_2C54_11D5_89B2_444553540000__INCLUDED_

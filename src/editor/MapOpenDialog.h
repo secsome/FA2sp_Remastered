@@ -19,37 +19,34 @@
 */
 
 #if !defined(AFX_MAPOPENDIALOG_H__BA196F80_ACBA_11D3_B63B_8A39ED4C0940__INCLUDED_)
-#define AFX_MAPOPENDIALOG_H__BA196F80_ACBA_11D3_B63B_8A39ED4C0940__INCLUDED_
+#  define AFX_MAPOPENDIALOG_H__BA196F80_ACBA_11D3_B63B_8A39ED4C0940__INCLUDED_
 
-#if _MSC_VER > 1000
-#pragma once
-#endif // _MSC_VER > 1000
+#  if _MSC_VER > 1000
+#    pragma once
+#  endif  // _MSC_VER > 1000
 // MapOpenDialog.h : Header-Datei
 //
 
 /////////////////////////////////////////////////////////////////////////////
-// Dialogfeld CMapOpenDialog 
+// Dialogfeld CMapOpenDialog
 
-class CMapOpenDialog : public CFileDialog
-{
-	DECLARE_DYNAMIC(CMapOpenDialog)
+class CMapOpenDialog : public CFileDialog {
+  DECLARE_DYNAMIC(CMapOpenDialog)
 
-public:
-	CMapOpenDialog(BOOL bOpenFileDialog, // TRUE for FileOpen, FALSE for FileSaveAs
-		LPCTSTR lpszDefExt = NULL,
-		LPCTSTR lpszFileName = NULL,
-		DWORD dwFlags = OFN_EXPLORER | OFN_ENABLETEMPLATE | OFN_HIDEREADONLY | OFN_OVERWRITEPROMPT,
-		LPCTSTR lpszFilter = NULL,
-		CWnd* pParentWnd = NULL);
+ public:
+  CMapOpenDialog(BOOL bOpenFileDialog,  // TRUE for FileOpen, FALSE for FileSaveAs
+                 LPCTSTR lpszDefExt = NULL, LPCTSTR lpszFileName = NULL,
+                 DWORD dwFlags = OFN_EXPLORER | OFN_ENABLETEMPLATE | OFN_HIDEREADONLY | OFN_OVERWRITEPROMPT,
+                 LPCTSTR lpszFilter = NULL, CWnd* pParentWnd = NULL);
 
-protected:
-	//{{AFX_MSG(CMapOpenDialog)
-		// HINWEIS - Der Klassen-Assistent fügt hier Member-Funktionen ein und entfernt diese.
-	//}}AFX_MSG
-	DECLARE_MESSAGE_MAP()
+ protected:
+  //{{AFX_MSG(CMapOpenDialog)
+  // HINWEIS - Der Klassen-Assistent fügt hier Member-Funktionen ein und entfernt diese.
+  //}}AFX_MSG
+  DECLARE_MESSAGE_MAP()
 };
 
 //{{AFX_INSERT_LOCATION}}
 // Microsoft Visual C++ fügt unmittelbar vor der vorhergehenden Zeile zusätzliche Deklarationen ein.
 
-#endif // AFX_MAPOPENDIALOG_H__BA196F80_ACBA_11D3_B63B_8A39ED4C0940__INCLUDED_
+#endif  // AFX_MAPOPENDIALOG_H__BA196F80_ACBA_11D3_B63B_8A39ED4C0940__INCLUDED_
